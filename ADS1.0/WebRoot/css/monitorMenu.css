@@ -1,0 +1,88 @@
+/*==========================================================Menu============================================*/
+
+body,td,input,select {
+	line-height:22px;
+	font-family:"宋体";
+	font-size:12px;
+	color:#3D3D3D;
+}
+body.menuBody {
+margin:0;
+width:148px;
+/*background-color:#4A5D8D;*/
+}
+
+.menuTop {
+	background:url(images/nfez_wsjy_07.jpg);
+	height:13px;
+	width: 148px;
+}
+* {
+margin:0;
+padding:0;
+}
+.menu{width:148px;}
+.menu2 {
+font-family:Arial, Helvetica, sans-serif;
+font-size:9pt;
+background-color:#666;
+color:#333;
+}
+.menu ul {
+	overflow: hidden;
+	background:url(images/nfez_wsjy_40.jpg);
+	padding: 3px;
+
+}
+.menu ul.collapsed {
+height:27px;
+}
+/*.menu ul div {
+line-height:150%;
+text-align:center;
+font-size:9pt;
+height:19px;
+color:#000;
+cursor:pointer;
+background:#FFFFFF url(img/menuItemBack.gif);
+border-bottom:1px solid #333;
+}*/
+.menu ul div {
+	/*line-height:26px;*/
+	font-size:10pt;
+	height:26px;
+	text-indent:10px;
+	color:#142C52;
+	cursor:pointer;
+	font-weight:bold;
+	/*background: url(images/nfez_wsjy_btn1.jpg) no-repeat;*/
+	/*width: 143px;*/
+
+}
+.menu ul.collapsed div {
+height:26px;
+cursor:pointer;
+/*background: url(images/nfez_wsjy_btn1.jpg) no-repeat;*/
+}
+.menu ul li {
+	list-style-type:none;
+	background: url(images/nfez_wsjy_31.jpg);
+	text-indent:35px;
+	display:block;
+	height:30px;
+	line-height: 30px;
+}
+.menu ul li.hover{
+color:#FF7800;
+cursor:pointer;
+}
+.menuBottom {
+	background-image:url(images/nfez_wsjy_41.jpg);
+	background-repeat:no-repeat;
+	height:9px;
+	width: 148px;
+}
+.menuBottom2 {
+background-image:url(img/menu_back2.gif);
+background-repeat:repeat-x;
+height:110px;}

@@ -1,0 +1,16 @@
+#Thu Jun 20 11:35:36 CST 2013
+eclipse.preferences.version=1
+encoding//WebRoot/common.jar/readme.txt=UTF-8
+encoding//WebRoot/test.jsp=UTF-8
+encoding//src/java/com/avit=UTF-8
+encoding//src/java/com/avit/ads/pushads/task/dao/PushAdsDao.java=UTF-8
+encoding//src/java/com/avit/ads/pushads/task/dao/impl/PushAdsDaoImpl.java=UTF-8
+encoding//src/java/com/avit/ads/pushads/task/service/impl/PushAdsServiceImpl.java=UTF-8
+encoding//src/java/com/avit/ads/pushads/unt=UTF-8
+encoding//src/java/com/avit/ads/requestads/action/AdReqAction.java=UTF-8
+encoding//src/java/com/avit/ads/requestads/service/impl/ADPlayListServiceImp.java=UTF-8
+encoding//src/java/com/avit/ads/util/ConstantsAdsCode.java=UTF-8
+encoding//src/properties/jdbc.properties=UTF-8
+encoding//src/properties/message.txt=UTF-8
+encoding//src/properties/system.properties=UTF-8
+encoding/<project>=UTF-8

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<menu>
+	<item id="start" text="Start">	
+	</item>
+	<item id="stop" text="Stop"/>
+	
+	<item id="help" text="Help">
+		<item id="about" text="About..." img="about.gif" imgdis="about_dis.gif"/>
+		<item id="needhelp" text="Help" img="help.gif" imgdis="help_dis.gif"/>
+		<item id="bugReporting" text="Bug Reporting" img="bug_reporting.gif" imgdis="bug_reporting_dis.gif"/>
+	</item>
+</menu>
