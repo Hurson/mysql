@@ -611,22 +611,22 @@ public class OcgServiceImpl implements OcgService{
 		uNTMessage.setSendType(sendType+"");
 		
 		switch (sendType) {
-		case 1:
+		case ConstantsHelper.REALTIME_UNT_MESSAGE_WEATHER:
 			uNTMessage.setWeatherforecast((Weatherforecast)message);
 			break;
-        case 2:
+        case ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE:
         	uNTMessage.setMsubtitleInfo((MsubtitleInfo)message);
 			break;
-        case 3:
+        case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
         	uNTMessage.setAdsConfig((AdsConfig)message);
 	       break;
-        case 4:
+        case ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE:
         	uNTMessage.setAdsImage((AdsImage)message);
  	       break;
-        case 5:
+        case ConstantsHelper.REALTIME_UNT_MESSAGE_STB:
         	uNTMessage.setSystemMaintain((SystemMaintain)message);
  	       break;
-        case 6:
+        case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE:
         	uNTMessage.setChannelrecomendurl((Channelrecomendurl)message);
  	       break;
 		default:
