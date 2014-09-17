@@ -25,13 +25,12 @@ import com.avit.ads.util.message.OcgPlayMsg;
 import com.avit.ads.util.message.RetMsg;
 import com.avit.ads.util.message.SystemMaintain;
 import com.avit.ads.util.message.UNTMessage;
+import com.avit.ads.util.message.UiUpdateMsg;
 import com.avit.ads.util.message.Weatherforecast;
 import com.avit.ads.util.warn.WarnHelper;
 import com.avit.ads.xml.JaxbXmlObjectConvertor;
 import com.avit.common.ftp.service.FtpService;
 import com.ipanel.http.util.HttpCommon;
-import com.ipanel.ocg3api.manage.OCGConnect;
-import com.ipanel.ocg3api.manage.OCGManager;
 
 @Service("OcgService")
 public class OcgServiceImpl implements OcgService{
@@ -99,15 +98,13 @@ public class OcgServiceImpl implements OcgService{
 	}
 
 	public boolean startOcgPlay(String areaCode, String sendPath, String sendType) {
-		
-		
-		JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
-		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
+
+		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();	
 		sendMsgEntity.setSendPath(sendPath);
 		sendMsgEntity.setSendType(sendType);
+		
 		String sendMsg = helper.toXML(sendMsgEntity);
-		
-		
+				
 		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
 		for(Ocg ocg : ocgList){
 			if(ocg.getAreaCode().equals(areaCode)){
@@ -130,7 +127,7 @@ public class OcgServiceImpl implements OcgService{
 						logger.error("OCG投放广告失败： 为获取广告文件");
 					}
 				} catch (Exception e) {
-					logger.error("OCG返回消息解析异常",e);
+					logger.error("OCG投放广告，返回XML格式消息解析异常",e);
 				}
 				break;
 			}
@@ -138,7 +135,45 @@ public class OcgServiceImpl implements OcgService{
 		return false;
 	}
 	
-	private byte[] sendUdpMsg(String ip, int port, String xmlMsg){
+	
+	public boolean sendUiDesc(String areaCode, String description) {
+		UiUpdateMsg sendMsgEntity = new UiUpdateMsg();
+		sendMsgEntity.setUpdateType(description);
+		
+		String sendMsg = helper.toXML(sendMsgEntity);
+		
+		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		for(Ocg ocg : ocgList){
+			if(ocg.getAreaCode().equals(areaCode)){
+				String ip = ocg.getIp();
+				int port = ConstantsHelper.OCG_UDP_PORT;
+				byte[] retBuf = sendUdpMsg(ip, port, sendMsg);
+				if(null == retBuf || retBuf.length == 0){
+					return false;
+				}
+				String retMsg = new String(retBuf);
+				RetMsg retMsgEntity = null;
+				try {
+					retMsgEntity = (RetMsg)helper.fromXML(retMsg);
+					if("200".equals(retMsgEntity.getCode())){
+						logger.info("UI更新成功");
+						return true;
+					}else if("400".equals(retMsgEntity.getCode())){
+						logger.error("UI更新失败: 请求格式不对 ");
+					}else if("401".equals(retMsgEntity.getCode())){
+						logger.error("UI更新失败： 发送失败");
+					}
+				} catch (Exception e) {
+					logger.error("UI更新，返回XML格式消息解析异常",e);
+				}
+				break;
+			}
+		}
+		return false;
+	}
+
+
+	private byte[] sendUdpMsg(String ip, int port, String xmlMsg) {
 		
 		byte[] retBuf = new byte[ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH];  //接口文档定义的最大长度 
 		DatagramSocket ds = null;
@@ -150,9 +185,8 @@ public class OcgServiceImpl implements OcgService{
 			
 			ds.send(sendPacket);
 			
-            DatagramPacket retPacket = new DatagramPacket(retBuf,ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH); //接口文档定义的最大长度 
+            DatagramPacket retPacket = new DatagramPacket(retBuf,ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH); 
             ds.receive(retPacket);  
-		
 		} catch (Exception e) {
 			logger.error("向OCG发送UDP请求异常",e);
 			return null;
@@ -161,12 +195,6 @@ public class OcgServiceImpl implements OcgService{
 		}
 		return retBuf;
 	}
-	
-	
-	
-	
-	
-	
 	
 
 
@@ -441,128 +469,19 @@ public class OcgServiceImpl implements OcgService{
 	{
 		
 	}
-	/**
-	 * 启动OCG发送
-	 * 
-	 */
-	public void startPlay(String areaCode,String name){
-		
-		//调用OCG消息通知接口 TODO
-		//startPlay(name);
-		if (areaCode!=null && !areaCode.equals(""))
-		{
-			Ocg ocg = InitConfig.getOcgConfig(areaCode);
-			//调用ＯＣＧ接口
-			try
-			{
-				boolean flag = OCGConnect.getInstance().connect(ocg.getIp());                      
-		        int  retint;// =OCGManager.getInstance().stopPlay("/OC/unt/adPic/");                   
-		        retint =OCGManager.getInstance().stopPlay(name);   
-		        retint =OCGManager.getInstance().startPlay(name);                   
-		        OCGConnect.getInstance().disconnect();        
-
-		       
-			}
-			catch(Exception e)
-			{
-				 e.printStackTrace();
-			}
-			//uploadDir(targetPath,sourcePath);
-			//非开机广告素材，上传整个临时目录
-			//toDir =ocg.getTargetPath();	
-			//ftpService.deleteDirFile(toDir);				
-			//ftpService.sendAFilePath2ResourceServer(InitConfig.getAdsTempPath(), toDir);
-		}
-		//如果区域编码为空，则投放所有已配置区域
-		else
-		{
-			List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-			for (int i=0;i<ocgList.size();i++)
-			{
-				Ocg ocg = ocgList.get(i);
-				//System.out.println("start send file to ocg --areaCode:"+ocg.getAreaCode());
-				try
-				{
-					OCGConnect.getInstance().connect(ocg.getIp());                      
-			        OCGManager.getInstance().startPlay(name);
-			        OCGConnect.getInstance().disconnect(); 
-			       
-				}
-				catch(Exception e)
-				{
-					
-				}
-				//调用ＯＣＧ接口
-				//uploadDir(targetPath,sourcePath);			
-			}
-		}
-		
-	}
 	
 	/**
 	 * 设置OCG更新标识.
 	 *
 	 * @param updateType 1:开机画面 (initPic.iframe)更新   5:开机视频或动画（initVideo.ts)更新
 	 */
-	public void startOcg(String updateType ){
+	public void startOcg(String updateType ){}
+		
+	public void startPlay(String areaCode, String name) {}
 
-	}
-	
-	/**
-	 * 分区域启动OCG发送
-	 * 
-	 */
-	public void startPlayPgm(String areaCode, String pgmname,String outputname)
-	{
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		for (int i=0;i<ocgList.size();i++)
-		{
-			Ocg ocg = ocgList.get(i);//InitConfig.getOcgConfig("0");
-			try
-			{
-				if(ocg.getAreaCode().equals(areaCode)){
-					boolean flag = OCGConnect.getInstance().connect(ocg.getIp());                      
-			        int  retint;// =OCGManager.getInstance().stopPlay("/OC/unt/adPic/");   
-			        logger.info("startPlay :"+ ocg.getIp() );
-			        retint =OCGManager.getInstance().unLinkInputOutput(pgmname, outputname); 
-			        if (retint==0)
-			        {
-			        	logger.info("unLinkInputOutput success:"+ pgmname );
-			        }
-			        else
-			        {
-			        	logger.error("unLinkInputOutput error:"+ pgmname );	
-			        }
-			        retint =OCGManager.getInstance().linkInputOutput(pgmname, outputname); 
-			        if (retint==0)
-			        {
-			        	logger.info("linkInputOutput success:"+ pgmname );
-			        }
-			        else
-			        {
-			        	logger.error("linkInputOutput error:"+ pgmname );	
-			        }
-			         retint =OCGManager.getInstance().startPlay(outputname);  
-			         if (retint==0)
-				        {
-			        	    logger.info("startPlay success:"+ outputname );
-				        }
-				        else
-				        {
-				        	logger.error("startPlay error:"+ outputname );	
-				        }
-			         OCGConnect.getInstance().disconnect();     
-				}
-	
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-				logger.error("startPlay "+ocg.getIp()+"Exception"+ocg.getIp()+e.getMessage());
-			}
-		}
-	}
-	// add by liuwenping 
+	public void startPlayPgm(String areaCode, String pgmname, String outputname) {}
+
+
 	public void downloadDir(String areaCode, String savePath, String serverPath) {
 		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
 		for(Ocg ocg : ocgList){
@@ -581,7 +500,6 @@ public class OcgServiceImpl implements OcgService{
 		}
 	}
 	
-	// add by liuwenping 
 	public void downloadFile(String areaCode, String savePath, String serverPath) {
 		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
 		for(Ocg ocg : ocgList){
@@ -666,17 +584,5 @@ public class OcgServiceImpl implements OcgService{
 		return false;
 	}
 
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

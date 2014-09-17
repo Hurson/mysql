@@ -37,7 +37,7 @@ public interface OcgService {
 	public boolean startOcgPlay(String areaCode, String sendPath, String sendType);
 	
 	
-	//public boolean sendUiDesc(String area)
+	public boolean sendUiDesc(String areaCode, String description);
 	
 	/**
 	 * 发送文件到OCG系统
