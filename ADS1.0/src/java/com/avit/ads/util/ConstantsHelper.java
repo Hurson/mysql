@@ -122,4 +122,12 @@ public class ConstantsHelper {
     
     public static final int OCG_UDP_RET_MSG_MAX_LENGTH = 212; 
     
+    
+    public static final int REALTIME_UNT_MESSAGE_WEATHER= 1; 
+    public static final int REALTIME_UNT_MESSAGE_MSUBTITLE= 2; 
+    public static final int REALTIME_UNT_MESSAGE_ADCONFIG= 3; 
+    public static final int REALTIME_UNT_MESSAGE_ADIMAGE= 4; 
+    public static final int REALTIME_UNT_MESSAGE_STB= 5; 
+    public static final int REALTIME_UNT_MESSAGE_CHANNE= 6; 
+    
 }

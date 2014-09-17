@@ -131,6 +131,23 @@ public interface OcgService {
 	
 	public void downloadFile(String areaCode, String savePath, String serverPath);
 	
+	/**
+	 * UNT更新通知集成到OCG，
+	 * @param areaCode
+	 * @param sendType
+	 * @param filename
+	 * @param uiId
+	 * @return
+	 */
+	public boolean sendUNTMessageUpdate(String areaCode,int sendType,Object message);
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

@@ -17,8 +17,15 @@ import com.avit.ads.pushads.ocg.service.OcgService;
 import com.avit.ads.util.ConstantsHelper;
 import com.avit.ads.util.InitConfig;
 import com.avit.ads.util.bean.Ocg;
+import com.avit.ads.util.message.AdsConfig;
+import com.avit.ads.util.message.AdsImage;
+import com.avit.ads.util.message.Channelrecomendurl;
+import com.avit.ads.util.message.MsubtitleInfo;
 import com.avit.ads.util.message.OcgPlayMsg;
 import com.avit.ads.util.message.RetMsg;
+import com.avit.ads.util.message.SystemMaintain;
+import com.avit.ads.util.message.UNTMessage;
+import com.avit.ads.util.message.Weatherforecast;
 import com.avit.ads.util.warn.WarnHelper;
 import com.avit.ads.xml.JaxbXmlObjectConvertor;
 import com.avit.common.ftp.service.FtpService;
@@ -38,6 +45,8 @@ public class OcgServiceImpl implements OcgService{
 	private WarnHelper warnHelper;
 	
 	JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
+	
+
 	
 	public boolean connectFtpServer(String areaCode) {
 		
@@ -92,8 +101,8 @@ public class OcgServiceImpl implements OcgService{
 	public boolean startOcgPlay(String areaCode, String sendPath, String sendType) {
 		
 		
+		JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
 		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
-		
 		sendMsgEntity.setSendPath(sendPath);
 		sendMsgEntity.setSendType(sendType);
 		String sendMsg = helper.toXML(sendMsgEntity);
@@ -141,8 +150,9 @@ public class OcgServiceImpl implements OcgService{
 			
 			ds.send(sendPacket);
 			
-            DatagramPacket retPacket = new DatagramPacket(retBuf,ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH); 
+            DatagramPacket retPacket = new DatagramPacket(retBuf,ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH); //接口文档定义的最大长度 
             ds.receive(retPacket);  
+		
 		} catch (Exception e) {
 			logger.error("向OCG发送UDP请求异常",e);
 			return null;
@@ -151,6 +161,12 @@ public class OcgServiceImpl implements OcgService{
 		}
 		return retBuf;
 	}
+	
+	
+	
+	
+	
+	
 	
 
 
@@ -583,6 +599,84 @@ public class OcgServiceImpl implements OcgService{
 			}
 		}
 	}
+	
+	
+	/**
+	 * OCG集成UNT信息发送
+	 */
+	
+	public boolean sendUNTMessageUpdate(String areaCode,int sendType,Object message){
+		
+		UNTMessage uNTMessage = new UNTMessage();
+		uNTMessage.setSendType(sendType);
+		
+		switch (sendType) {
+		case 1:
+			uNTMessage.setWeatherforecast((Weatherforecast)message);
+			break;
+        case 2:
+        	uNTMessage.setMsubtitleInfo((MsubtitleInfo)message);
+			break;
+        case 3:
+        	uNTMessage.setAdsConfig((AdsConfig)message);
+	       break;
+        case 4:
+        	uNTMessage.setAdsImage((AdsImage)message);
+ 	       break;
+        case 5:
+        	uNTMessage.setSystemMaintain((SystemMaintain)message);
+ 	       break;
+        case 6:
+        	uNTMessage.setChannelrecomendurl((Channelrecomendurl)message);
+ 	       break;
+		default:
+		   break;
+		}
+
+		String sendMsg = helper.toXML(uNTMessage);
+		
+		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		for(Ocg ocg : ocgList){
+			if(ocg.getAreaCode().equals(areaCode)){
+				String ip = ocg.getIp();
+				int port = ConstantsHelper.OCG_UDP_PORT;
+				byte[] retBuf = sendUdpMsg(ip, port, sendMsg);
+				if(null == retBuf || retBuf.length == 0){
+					return false;
+				}
+				String retMsg = new String(retBuf);
+				RetMsg retMsgEntity = null;
+				try {
+					retMsgEntity = (RetMsg)helper.fromXML(retMsg);
+					if("200".equals(retMsgEntity.getCode())){
+						logger.info("UNT更新信息成功");
+						return true;
+					}else if("400".equals(retMsgEntity.getCode())){
+						logger.error("UNT更新信息失败：请求参数格式不正确 ");
+					}else if("401".equals(retMsgEntity.getCode())){
+						logger.error("UNT更新信息失败");
+					}
+				} catch (Exception e) {
+						logger.error("OCG返回消息解析异常",e);
+				}
+				break;
+			}
+		}
+
+		return false;
+	}
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }
