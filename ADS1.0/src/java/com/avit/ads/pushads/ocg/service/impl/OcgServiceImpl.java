@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.avit.ads.pushads.ocg.service.OcgService;
+import com.avit.ads.util.ConstantsHelper;
 import com.avit.ads.util.InitConfig;
 import com.avit.ads.util.bean.Ocg;
 import com.avit.ads.util.message.OcgPlayMsg;
@@ -36,8 +37,7 @@ public class OcgServiceImpl implements OcgService{
 	@Autowired
 	private WarnHelper warnHelper;
 	
-	
-
+	JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
 	
 	public boolean connectFtpServer(String areaCode) {
 		
@@ -89,59 +89,68 @@ public class OcgServiceImpl implements OcgService{
 		ftpService.disConnectFtpServer();
 	}
 
-	public boolean startOcgPlay(String sendPath, String sendType) {
+	public boolean startOcgPlay(String areaCode, String sendPath, String sendType) {
 		
-		JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
+		
 		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
+		
 		sendMsgEntity.setSendPath(sendPath);
 		sendMsgEntity.setSendType(sendType);
 		String sendMsg = helper.toXML(sendMsgEntity);
 		
-		String ip = "localhost";
-		int port = 8600;
-		byte[] retBuf = new byte[100];  
-		DatagramSocket ds = null;
-		try {
-			ds = new DatagramSocket();
-			
-			DatagramPacket sendPacket = new DatagramPacket(sendMsg.getBytes(),0,sendMsg.length(), 
-					InetAddress.getByName(ip),port);
-			
-			ds.send(sendPacket);
-			
-            DatagramPacket retPacket = new DatagramPacket(retBuf,202); //接口文档定义的最大长度 
-            ds.receive(retPacket);  
 		
-		} catch (Exception e) {
-			logger.error("向OCG发送UDP请求异常",e);
-			return false;
-		} finally{
-			ds.close();
-		}
-		String retMsg = new String(retBuf);
-		
-		RetMsg retMsgEntity = null;
-		try {
-			retMsgEntity = (RetMsg)helper.fromXML(retMsg);
-			if("200".equals(retMsgEntity.getCode())){
-				logger.info("OCG投放广告成功");
-				return true;
-			}else if("400".equals(retMsgEntity.getCode())){
-				logger.error("OCG投放广告失败: 请求格式不对 ");
-			}else if("401".equals(retMsgEntity.getCode())){
-				logger.error("OCG投放广告失败： 为获取广告文件");
+		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		for(Ocg ocg : ocgList){
+			if(ocg.getAreaCode().equals(areaCode)){
+				String ip = ocg.getIp();
+				int port = ConstantsHelper.OCG_UDP_PORT;
+				byte[] retBuf = sendUdpMsg(ip, port, sendMsg);
+				if(null == retBuf || retBuf.length == 0){
+					return false;
+				}
+				String retMsg = new String(retBuf);
+				RetMsg retMsgEntity = null;
+				try {
+					retMsgEntity = (RetMsg)helper.fromXML(retMsg);
+					if("200".equals(retMsgEntity.getCode())){
+						logger.info("OCG投放广告成功");
+						return true;
+					}else if("400".equals(retMsgEntity.getCode())){
+						logger.error("OCG投放广告失败: 请求格式不对 ");
+					}else if("401".equals(retMsgEntity.getCode())){
+						logger.error("OCG投放广告失败： 为获取广告文件");
+					}
+				} catch (Exception e) {
+					logger.error("OCG返回消息解析异常",e);
+				}
+				break;
 			}
-		} catch (Exception e) {
-			logger.error("OCG返回消息解析异常",e);
 		}
 		return false;
 	}
 	
-	
-	
-	
-	
-	
+	private byte[] sendUdpMsg(String ip, int port, String xmlMsg){
+		
+		byte[] retBuf = new byte[ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH];  //接口文档定义的最大长度 
+		DatagramSocket ds = null;
+		try {
+			ds = new DatagramSocket();
+			
+			DatagramPacket sendPacket = new DatagramPacket(xmlMsg.getBytes(),0,xmlMsg.length(), 
+					InetAddress.getByName(ip),port);
+			
+			ds.send(sendPacket);
+			
+            DatagramPacket retPacket = new DatagramPacket(retBuf,ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH); 
+            ds.receive(retPacket);  
+		} catch (Exception e) {
+			logger.error("向OCG发送UDP请求异常",e);
+			return null;
+		} finally{
+			ds.close();
+		}
+		return retBuf;
+	}
 	
 
 

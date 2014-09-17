@@ -34,10 +34,10 @@ public interface OcgService {
 	/**
 	 * OCG投放广告
 	 */
-	public boolean startOcgPlay(String sendPath, String sendType);
+	public boolean startOcgPlay(String areaCode, String sendPath, String sendType);
 	
 	
-	
+	//public boolean sendUiDesc(String area)
 	
 	/**
 	 * 发送文件到OCG系统
