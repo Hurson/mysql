@@ -7,22 +7,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="channelrecomendurl")
+@XmlRootElement(name="channelInfo")
 public class Channelrecomendurl {
 
-	@XmlAttribute(name="ServiceID", required = true)
+	@XmlAttribute(name="serviceID", required = true)
 	private String serviceID;
-	@XmlAttribute(name="TVNType", required = true)
+	@XmlAttribute(name="tvnType", required = true)
 	private String tVNType;
-	@XmlAttribute(name="TVN", required = true)
+	@XmlAttribute(name="tvn", required = true)
 	private String tVN;
-	@XmlAttribute(name="CAIndustryType", required = true)
+	@XmlAttribute(name="caIndustryType", required = true)
 	private String cAIndustryType;
-	@XmlAttribute(name="CAUserLevel", required = true)
+	@XmlAttribute(name="caUserLevel", required = true)
 	private String cAUserLevel;
-	@XmlAttribute(name="Type", required = true)
-	private String type;
-	@XmlAttribute(name="URL", required = true)
+
+	@XmlAttribute(name="url", required = true)
 	private String uRL;
 	public String getServiceID() {
 		return serviceID;
@@ -54,12 +53,7 @@ public class Channelrecomendurl {
 	public void setcAUserLevel(String cAUserLevel) {
 		this.cAUserLevel = cAUserLevel;
 	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
+
 	public String getuRL() {
 		return uRL;
 	}

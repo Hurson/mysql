@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="adsConfig")
 public class AdsConfig {
 
-	@XmlAttribute(name="filepath", required = true)
+	@XmlAttribute(name="filePath", required = true)
 	private String filepath;
 
 	@XmlAttribute(name="uiId", required = true)

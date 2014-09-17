@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class AdsImage {
 
 	
-	@XmlAttribute(name="filepath", required = true)
+	@XmlAttribute(name="filePath", required = true)
 	private String filepath;
 
 	@XmlAttribute(name="uiId", required = true)

@@ -7,32 +7,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="msubtitleInfo")
+@XmlRootElement(name="subtitleInfo")
 public class MsubtitleInfo {
 
-	@XmlAttribute(name="ServiceID", required = true)
+	@XmlAttribute(name="serviceID", required = true)
 	private String serviceID;
-	@XmlAttribute(name="ActionType", required = true)
+	@XmlAttribute(name="actionType", required = true)
 	private String actionType;
-	@XmlAttribute(name="Timeout", required = true)
+	@XmlAttribute(name="timeout", required = true)
 	private String timeout;
-	@XmlAttribute(name="FontSize", required = true)
+	@XmlAttribute(name="fontSize", required = true)
 	private String fontSize;
-	@XmlAttribute(name="FontColor", required = true)
+	@XmlAttribute(name="fontColor", required = true)
 	private String fontColor;
-	@XmlAttribute(name="BackgroundX", required = true)
+	@XmlAttribute(name="backgroundX", required = true)
 	private String backgroundX;
-	@XmlAttribute(name="BackgroundY", required = true)
+	@XmlAttribute(name="backgroundY", required = true)
 	private String backgroundY;
-	@XmlAttribute(name="BackgroundWidth", required = true)
+	@XmlAttribute(name="backgroundWidth", required = true)
 	private String backgroundWidth;
-	@XmlAttribute(name="BackgroundHeight", required = true)
+	@XmlAttribute(name="backgroundHeight", required = true)
 	private String backgroundHeight;
-	@XmlAttribute(name="BackgroundColor", required = true)
+	@XmlAttribute(name="backgroundColor", required = true)
 	private String backgroundColor;
-	@XmlAttribute(name="ShowFrequency", required = true)
+	@XmlAttribute(name="showFrequency", required = true)
 	private String showFrequency;
-	@XmlAttribute(name="Word", required = true)
+	@XmlAttribute(name="word", required = true)
 	private String word;
 	
 	@XmlAttribute(name="uiId", required = true)

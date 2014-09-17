@@ -7,17 +7,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="weatherforecast")
+@XmlRootElement(name="weatherForecast")
 public class Weatherforecast {
 
-	@XmlAttribute(name="Word", required = true)
+	@XmlAttribute(name="word", required = true)
 	private String word;
+	@XmlAttribute(name="networkId", required = true)
+	private String networkId;
 	@XmlAttribute(name="uiId", required = true)
 	private String uiId;
 	
-	
 
-	
+	public String getNetworkId() {
+		return networkId;
+	}
+
+	public void setNetworkId(String networkId) {
+		this.networkId = networkId;
+	}
 
 	public String getUiId() {
 		return uiId;
