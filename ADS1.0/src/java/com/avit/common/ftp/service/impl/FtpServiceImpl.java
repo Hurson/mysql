@@ -9,6 +9,7 @@ import java.io.OutputStream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPFile;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.avit.ads.util.ConstantsHelper;
@@ -16,6 +17,7 @@ import com.avit.ads.util.InitConfig;
 import com.avit.common.ftp.service.FtpService;
 
 @Service("FtpService")
+@Scope("prototype")
 public class FtpServiceImpl extends FtpBase implements FtpService{
 	
 	public FtpServiceImpl(){
@@ -83,8 +85,7 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 	 * @return true发送成功 false发送失败
 	 * @throws Exception
 	 */
-	private boolean sendAFileToFtp(String localFilePath, String romteFileDir)
-			throws Exception {
+	public boolean sendAFileToFtp(String localFilePath, String romteFileDir) throws Exception {
 		String workingDir = FtpClient.printWorkingDirectory();
 		romteFileDir = this.getPathRegular(romteFileDir);
 		if (!workingDir.equals(romteFileDir)) {
@@ -95,13 +96,10 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		}
 		File file = new File(localFilePath);
 		InputStream is = new FileInputStream(file);
-		logger.debug(file.getName());
+
 		//如已存在先删除
 		try {
-			//FTPFile[] files = FtpClient.listFiles(file.getName());
-			//if (files.length > 0)
-			if (1 > 2)
-				FtpClient.deleteFile(file.getName());
+			FtpClient.deleteFile(file.getName());
 		} catch (IOException e) {
 			logger.info("删除FTP上的文件【"+file.getName()+"】时发生错误：", e);
 		}
@@ -236,6 +234,11 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 	throws IOException {
 		super.setServer(ip, port, username, password);
 	}
+	
+	public void disConnectFtpServer() {
+		closeFTP();
+	}
+
 	/**
 	 * 下载文件至本地目录中 
 	 * @param remoteFileName

@@ -821,9 +821,8 @@ public class PushAdsServiceImpl implements PushAdsService {
 		{
 			log.error("create adConfig.js error", e);
 		}
-		//TODO 上传文件至ＯＣＧ
 		
-		//TODO 发送UNT更新通知  是否需要待定
+		// 上传文件至ＯＣＧ
 		boolean rePush = pushFalierHelper.rePush(areaCode);
 		if ( rePush || sendFlagHelper.needSent(areaCode) || !oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+File.separator+areaCode+File.separator+configFile)))
 		{	

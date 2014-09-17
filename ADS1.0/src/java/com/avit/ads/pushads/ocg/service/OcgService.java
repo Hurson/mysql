@@ -1,8 +1,44 @@
 package com.avit.ads.pushads.ocg.service;
 
-import java.io.File;
-
 public interface OcgService {
+	
+	/**
+	 * 建立FTP连接
+	 */
+	public boolean connectFtpServer(String areaCode);
+	
+	/**
+	 * 删除目录下所有文件
+	 */
+	public void deleteFtpDirFiles(String dirPath);
+	
+	
+	/**
+	 * 上传目录下所有文件到FTP
+	 */
+	public void sendDirFilesToFtp(String localDirPath, String remotDirPath);
+	
+	
+	/**
+	 * 上传文件到FTP
+	 */
+	public void sendFileToFtp(String localFilePath, String remotDirPath);
+	
+	
+	/**
+	 * 断开FTP连接
+	 */
+	public void disConnectFtpServer();
+	
+	
+	/**
+	 * OCG投放广告
+	 */
+	public boolean startOcgPlay(String sendPath, String sendType);
+	
+	
+	
+	
 	/**
 	 * 发送文件到OCG系统
 	 * @param areaCode 区域ID
@@ -84,7 +120,6 @@ public interface OcgService {
 	
 	
 	/**
-	 * add by liuwenping
 	 * 
 	 * 从OCG下载文件夹到本地系统，和原始文件进行比较，作为startPlay之前的校验
 	 * @param areaCode 区域ID

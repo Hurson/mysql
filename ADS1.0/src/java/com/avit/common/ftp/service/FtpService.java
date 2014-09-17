@@ -29,6 +29,9 @@ public interface FtpService {
 	 */
 	public void sendAFilePath2ResourceServer(String fromDir, String toDir);
 	
+	public boolean sendAFileToFtp(String localFilePath, String romteFileDir) throws Exception;
+	
+	public void disConnectFtpServer();
 	
 	/**
 	 * 删除资源服务器上的文件

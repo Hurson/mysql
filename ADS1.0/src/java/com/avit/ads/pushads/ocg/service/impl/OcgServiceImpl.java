@@ -2,12 +2,13 @@ package com.avit.ads.pushads.ocg.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,24 +16,135 @@ import org.springframework.stereotype.Service;
 import com.avit.ads.pushads.ocg.service.OcgService;
 import com.avit.ads.util.InitConfig;
 import com.avit.ads.util.bean.Ocg;
-import com.avit.ads.util.bean.WarnInfo;
+import com.avit.ads.util.message.OcgPlayMsg;
+import com.avit.ads.util.message.RetMsg;
 import com.avit.ads.util.warn.WarnHelper;
+import com.avit.ads.xml.JaxbXmlObjectConvertor;
 import com.avit.common.ftp.service.FtpService;
 import com.ipanel.http.util.HttpCommon;
-import com.ipanel.ocg3api.exception.TimeOutException;
 import com.ipanel.ocg3api.manage.OCGConnect;
 import com.ipanel.ocg3api.manage.OCGManager;
 
 @Service("OcgService")
 public class OcgServiceImpl implements OcgService{
 	
+	private Logger logger = Logger.getLogger(this.getClass());
+	
 	@Inject
-	private FtpService ftpService;
-	private Logger logger = Logger.getLogger(OcgServiceImpl.class);
+	private FtpService ftpService;	
 	
 	@Autowired
 	private WarnHelper warnHelper;
 	
+	
+
+	
+	public boolean connectFtpServer(String areaCode) {
+		
+		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		for(Ocg ocg : ocgList){
+			if(ocg.getAreaCode().equals(areaCode)){
+				String ip = ocg.getIp();
+				int port = Integer.parseInt(ocg.getPort());
+				String user = ocg.getUser();
+				String pwd = ocg.getPwd();
+				try {
+					ftpService.setServer(ip, port, user, pwd);
+				} catch (IOException e) {
+					String errMsg = "OCG系统的FTP无法连接   areaCode:" + areaCode + ", ip: " + ip + ", port: " + port + ", user: " + user + ", pwd: " + pwd;
+					logger.error(errMsg, e);
+					warnHelper.writeWarnMsgToDb(errMsg);
+					return false;
+				}
+				return true;
+			}
+		}
+		
+		String errMsg = "未配置区域【" + areaCode+ "】的OCG FTP连接信息";
+		logger.error(errMsg);
+		warnHelper.writeWarnMsgToDb(errMsg);			
+		return false;
+	}
+		
+	
+	public void deleteFtpDirFiles(String dirPath) {
+		ftpService.deleteDirFile(dirPath);
+	}
+
+
+	public void sendDirFilesToFtp(String localDirPath, String remotDirPath) {
+		ftpService.sendAFilePath2ResourceServer(localDirPath, remotDirPath);
+	}
+	
+
+	public void sendFileToFtp(String localFilePath, String remotDirPath) {
+		try {
+			ftpService.sendAFileToFtp(localFilePath, remotDirPath);
+		} catch (Exception e) {
+			logger.error("通过FTP发送文件到OCG失败", e);
+		}
+	}
+
+	public void disConnectFtpServer() {
+		ftpService.disConnectFtpServer();
+	}
+
+	public boolean startOcgPlay(String sendPath, String sendType) {
+		
+		JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
+		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
+		sendMsgEntity.setSendPath(sendPath);
+		sendMsgEntity.setSendType(sendType);
+		String sendMsg = helper.toXML(sendMsgEntity);
+		
+		String ip = "localhost";
+		int port = 8600;
+		byte[] retBuf = new byte[100];  
+		DatagramSocket ds = null;
+		try {
+			ds = new DatagramSocket();
+			
+			DatagramPacket sendPacket = new DatagramPacket(sendMsg.getBytes(),0,sendMsg.length(), 
+					InetAddress.getByName(ip),port);
+			
+			ds.send(sendPacket);
+			
+            DatagramPacket retPacket = new DatagramPacket(retBuf,202); //接口文档定义的最大长度 
+            ds.receive(retPacket);  
+		
+		} catch (Exception e) {
+			logger.error("向OCG发送UDP请求异常",e);
+			return false;
+		} finally{
+			ds.close();
+		}
+		String retMsg = new String(retBuf);
+		
+		RetMsg retMsgEntity = null;
+		try {
+			retMsgEntity = (RetMsg)helper.fromXML(retMsg);
+			if("200".equals(retMsgEntity.getCode())){
+				logger.info("OCG投放广告成功");
+				return true;
+			}else if("400".equals(retMsgEntity.getCode())){
+				logger.error("OCG投放广告失败: 请求格式不对 ");
+			}else if("401".equals(retMsgEntity.getCode())){
+				logger.error("OCG投放广告失败： 为获取广告文件");
+			}
+		} catch (Exception e) {
+			logger.error("OCG返回消息解析异常",e);
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	
+	
+
+
 	/**
 	 * 发送文件到OCG系统
 	 * @param areaCode 区域ID
@@ -77,41 +189,7 @@ public class OcgServiceImpl implements OcgService{
 			}
 		}
 		return true;
-		/*
-		if (areaCode!=null && !areaCode.equals(""))
-		{
-			Ocg ocg = InitConfig.getOcgConfig(areaCode);
-			System.out.println("start send file to ocg --areaCode:"+areaCode+"sourcePath:"+sourceFile+"gargetPath:"+targetPath);
-			//调用ＯＣＧ接口
-			try
-			{
-				HttpCommon.getInstance().initHttp(ocg.getIp());
-		        boolean isuploadSuccess = HttpCommon.getInstance().uploadFile(sourceFile, targetPath);
-
-			}
-			catch(Exception e)
-			{
-				
-			}
-			//uploadDir(targetPath,sourcePath);
-			//非开机广告素材，上传整个临时目录
-			//toDir =ocg.getTargetPath();	
-			//ftpService.deleteDirFile(toDir);				
-			//ftpService.sendAFilePath2ResourceServer(InitConfig.getAdsTempPath(), toDir);
-		}
-		//如果区域编码为空，则投放所有已配置区域
-		else
-		{
-			List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-			for (int i=0;i<ocgList.size();i++)
-			{
-				Ocg ocg = ocgList.get(i);
-				System.out.println("start send file to ocg --areaCode:"+ocg.getAreaCode());
-				//调用ＯＣＧ接口
-				//uploadDir(targetPath,sourcePath);			
-			}
-		}
-		*/
+		
 	}
 	/**
 	 * 发送文件到OCG系统
@@ -152,41 +230,6 @@ public class OcgServiceImpl implements OcgService{
 			}
 		}
 		return true;
-		/*
-		if (areaCode!=null && !areaCode.equals(""))
-		{
-			Ocg ocg = InitConfig.getOcgConfig(areaCode);
-			logger.info("delete file to ocg --areaCode:"+areaCode+"sourcePath:"+sourceFile+"gargetPath:"+targetPath);
-			//调用ＯＣＧ接口
-			//uploadDir(targetPath,sourcePath);
-			try
-			{
-				HttpCommon.getInstance().initHttp(ocg.getIp());
-		        boolean isuploadSuccess = HttpCommon.getInstance().deleteFile(targetPath);
-
-			}
-			catch(Exception e)
-			{
-				
-			}
-			//非开机广告素材，上传整个临时目录
-			//toDir =ocg.getTargetPath();	
-			//ftpService.deleteDirFile(toDir);				
-			//ftpService.sendAFilePath2ResourceServer(InitConfig.getAdsTempPath(), toDir);
-		}
-		//如果区域编码为空，则投放所有已配置区域
-		else
-		{
-			List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-			for (int i=0;i<ocgList.size();i++)
-			{
-				Ocg ocg = ocgList.get(i);
-				System.out.println("delete file to ocg --areaCode:"+ocg.getAreaCode());
-				//调用ＯＣＧ接口
-				//uploadDir(targetPath,sourcePath);			
-			}
-		}
-		*/
 	}
 	/**
 	 * 发送文件到OCG系统
@@ -235,41 +278,6 @@ public class OcgServiceImpl implements OcgService{
 		}
 		
 		return true;
-		
-		/*if (areaCode!=null && !areaCode.equals(""))
-		{
-			Ocg ocg = InitConfig.getOcgConfig(areaCode);
-			System.out.println("start send file to ocg --areaCode:"+areaCode+"sourcePath:"+sourcePath+"gargetPath:"+targetPath);
-			//调用ＯＣＧ接口
-			//uploadDir(targetPath,sourcePath);
-			try
-			{
-				HttpCommon.getInstance().initHttp(ocg.getIp());
-		        boolean isuploadSuccess = HttpCommon.getInstance().uploadDirContent(sourcePath,targetPath);
-		        System.out.println("dd");
-			}
-			catch(Exception e)
-			{
-				
-			}
-			//非开机广告素材，上传整个临时目录
-			//toDir =ocg.getTargetPath();	
-			//ftpService.deleteDirFile(toDir);				
-			//ftpService.sendAFilePath2ResourceServer(InitConfig.getAdsTempPath(), toDir);
-		}
-		//如果区域编码为空，则投放所有已配置区域
-		else
-		{
-			List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-			for (int i=0;i<ocgList.size();i++)
-			{
-				Ocg ocg = ocgList.get(i);
-				System.out.println("start send file to ocg --areaCode:"+ocg.getAreaCode());
-				//调用ＯＣＧ接口
-				//uploadDir(targetPath,sourcePath);			
-			}
-		}
-		*/
 	}
 	/**
 	 * 发送文件到OCG系统
@@ -277,83 +285,8 @@ public class OcgServiceImpl implements OcgService{
 	 * @param adsTypeCode 广告位编码
 	 * @param areaCode 区域编码
 	 */
-	public void sendFile(String fileName,String adsTypeCode,String adsIdentification,String areaCode){
-		
-		/*
-		//根据广告位编码adsTypeCode，可能需要获取不同的目标目录toDir
-
-		String fromFile = InitConfig.getAdsTempPath()+File.separator+fileName;
-
-		String toDir =InitConfig.getAdsTargetPath()+File.separator;	
-
-		//针对开机广告位，可能需要根据区域编码areaCode获取不同的目标目录toDir
-		String targetFilename;
-		if (ConstantsAdsCode.PUSH_STARTSTB.equals(adsTypeCode)){
-			//开机广告位
-			List<AdsArea> areaList = InitConfig.getAdsConfigByCode(adsTypeCode).getAdsAreaList();
-			if(areaList != null && areaList.size()>0){
-				for(AdsArea area : areaList){
-					if(area.getAreaCode().equals(areaCode)){
-						fromFile = area.getTargetPath()+File.separator+fileName;
-						toDir = area.getTargetPath()+File.separator;						
-						if (fileName.endsWith(".iframe")){
-							targetFilename="initPic-"+(adsIdentification.equals("SD")?"a":"b")+".iframe";
-						}else{
-							targetFilename="initPic-"+(adsIdentification.equals("SD")?"a":"b")+".ts";	
-						}
-						ftpService.deleteFile(targetFilename, toDir);						
-						//copy本地文件到资源服务上
-						ftpService.sendAFile2ResourceServer(fromFile, toDir);
-						//重命名资源服务器上的文件
-						ftpService.rename(toDir,fileName,targetFilename);
-						break;
-					}
-				}
-			}
-			
-		}else{
-
-			
-			//如果区域编码不为空，则只投放对应区域
-			if (areaCode!=null && !areaCode.equals(""))
-			{
-				Ocg ocg = InitConfig.getOcgConfig(areaCode);
-				try
-				{
-					ftpService.setServer(ocg.getIp(),Integer.parseInt(ocg.getPort()), ocg.getUser(),ocg.getPwd());
-				}
-				catch (Exception e)
-				{
-					
-				}
-				//非开机广告素材，上传整个临时目录
-				toDir =ocg.getTargetPath();	
-				ftpService.deleteDirFile(toDir);				
-				ftpService.sendAFilePath2ResourceServer(InitConfig.getAdsTempPath(), toDir);
-			}
-			//如果区域编码为空，则投放所有已配置区域
-			else
-			{
-				List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-				for (int i=0;i<ocgList.size();i++)
-				{
-					Ocg ocg = ocgList.get(i);
-					try
-					{
-						ftpService.setServer(ocg.getIp(),Integer.parseInt(ocg.getPort()), ocg.getUser(),ocg.getPwd());
-					}
-					catch (Exception e)
-					{
-						
-					}
-					toDir =ocg.getTargetPath();	
-					ftpService.deleteDirFile(toDir);
-					ftpService.sendAFilePath2ResourceServer(InitConfig.getAdsTempPath(), toDir);
-				}
-			}
-
-		}
-		*/
+	public void sendFile(String fileName,String adsTypeCode,String adsIdentification,String areaCode){		
+	
 	}
 	/**
 	 * 发送文件到OCG系统
@@ -364,42 +297,6 @@ public class OcgServiceImpl implements OcgService{
 	public void sendFile(String fileName,String adsTypeCode,String adsIdentification,String areaCode,String contentType)
 	{
 		
-		//根据广告位编码adsTypeCode，可能需要获取不同的目标目录toDir
-		//针对开机广告位，可能需要根据区域编码areaCode获取不同的目标目录toDir
-		/*String targetFilename;
-		if (ConstantsAdsCode.PUSH_STARTSTB.equals(adsTypeCode)){
-			//开机广告位
-			List<AdsArea> areaList = InitConfig.getAdsConfigByCode(adsTypeCode).getAdsAreaList();
-			if(areaList != null && areaList.size()>0){
-				for(AdsArea area : areaList){
-					if(area.getAreaCode().equals(areaCode)){
-						String toDir = area.getTargetPath()+File.separator;						
-						if (contentType.equals(ConstantsHelper.START_CONTENT_PIC_TYPE)){
-							targetFilename="initPic-"+(adsIdentification.equals("SD")?"a":"b")+".iframe";
-						}else{
-							targetFilename="initVideo-"+(adsIdentification.equals("SD")?"a":"b")+".ts";	
-						}
-						Ocg ocg=InitConfig.getOcgConfig(areaCode);
-						try
-						{
-							ftpService.setServer(ocg.getIp(),Integer.parseInt(ocg.getPort()), ocg.getUser(),ocg.getPwd());
-						}
-						catch (Exception e)
-						{
-							
-						}
-						ftpService.deleteFile(toDir+File.separator+targetFilename, toDir);						
-						//copy本地文件到资源服务上
-						ftpService.sendAFile2ResourceServer(InitConfig.getAdsResourcePath()+File.separator+fileName, toDir);
-						//重命名资源服务器上的文件
-						ftpService.rename(toDir,fileName,targetFilename);
-						break;
-					}
-				}
-			}
-			
-		}
-		*/
 	}
 	/**
 	 * 删除文件
@@ -517,37 +414,7 @@ public class OcgServiceImpl implements OcgService{
 	 */
 	public void deleteFile(String fileName,String adsTypeCode,String adsIdentification,String areaCode,String contentType)
 	{
-		//根据文件名fileName获取待发送文件全路径
-		//开机广告以外的其他广告位目标目录为统一的目标目录
-		/*String targetFilename;
-		if (ConstantsAdsCode.PUSH_STARTSTB.equals(adsTypeCode)){
-			//开机广告位
-			List<AdsArea> areaList = InitConfig.getAdsConfigByCode(adsTypeCode).getAdsAreaList();
-			if(areaList != null && areaList.size()>0){
-				for(AdsArea area : areaList){
-					if(area.getAreaCode().equals(areaCode)){
-						String toDir = area.getTargetPath()+File.separator;						
-						if (contentType.equals(ConstantsHelper.START_CONTENT_PIC_TYPE)){
-							targetFilename="initPic-"+(adsIdentification.equals("SD")?"a":"b")+".iframe";
-						}else{
-							targetFilename="initVideo-"+(adsIdentification.equals("SD")?"a":"b")+".ts";	
-						}
-						Ocg ocg=InitConfig.getOcgConfig(areaCode);
-						try
-						{
-							ftpService.setServer(ocg.getIp(),Integer.parseInt(ocg.getPort()), ocg.getUser(),ocg.getPwd());
-						}
-						catch (Exception e)
-						{
-							
-						}
-						ftpService.deleteFile(toDir+File.separator+targetFilename, toDir);
-						break;
-					}
-				}
-			}
-			
-		}*/
+		
 	}
 	/**
 	 * 启动OCG发送
@@ -613,62 +480,8 @@ public class OcgServiceImpl implements OcgService{
 	 * @param updateType 1:开机画面 (initPic.iframe)更新   5:开机视频或动画（initVideo.ts)更新
 	 */
 	public void startOcg(String updateType ){
-		
-		//写NIT更新描述符 TODO
-		
+
 	}
-	/**
-	 * 启动OCG发送
-	 * 
-	 */
-//	public void startPlayPgm(String pgmname,String outputname)
-//	{
-//		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-//		for (int i=0;i<ocgList.size();i++)
-//		{
-//			Ocg ocg = ocgList.get(i);//InitConfig.getOcgConfig("0");
-//			try
-//			{
-//				boolean flag = OCGConnect.getInstance().connect(ocg.getIp());                      
-//		        int  retint;// =OCGManager.getInstance().stopPlay("/OC/unt/adPic/");   
-//		        logger.info("startPlay :"+ ocg.getIp() );
-//		        retint =OCGManager.getInstance().unLinkInputOutput(pgmname, outputname); 
-//		        if (retint==0)
-//		        {
-//		        	logger.info("unLinkInputOutput success:"+ pgmname );
-//		        }
-//		        else
-//		        {
-//		        	logger.error("unLinkInputOutput error:"+ pgmname );	
-//		        }
-//		        retint =OCGManager.getInstance().linkInputOutput(pgmname, outputname); 
-//		        if (retint==0)
-//		        {
-//		        	logger.info("linkInputOutput success:"+ pgmname );
-//		        }
-//		        else
-//		        {
-//		        	logger.error("linkInputOutput error:"+ pgmname );	
-//		        }
-//		         retint =OCGManager.getInstance().startPlay(outputname);  
-//		         if (retint==0)
-//			        {
-//		        	    logger.info("startPlay success:"+ outputname );
-//			        }
-//			        else
-//			        {
-//			        	logger.error("startPlay error:"+ outputname );	
-//			        }
-//		         OCGConnect.getInstance().disconnect();     
-//
-//			}
-//			catch(Exception e)
-//			{
-//				e.printStackTrace();
-//				logger.error("startPlay "+ocg.getIp()+"Exception"+ocg.getIp()+e.getMessage());
-//			}
-//		}
-//	}
 	
 	/**
 	 * 分区域启动OCG发送
