@@ -118,4 +118,8 @@ public class ConstantsHelper {
     public static final String UNT_UPDATE_ADCONFIG="/adconfigurationfile?update&templateid=a";
     public static final String UNT_UPDATE_ADLINGK="";
     
+    public static final int OCG_UDP_PORT = 30005;
+    
+    public static final int OCG_UDP_RET_MSG_MAX_LENGTH = 212; 
+    
 }
