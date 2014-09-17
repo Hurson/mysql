@@ -608,7 +608,7 @@ public class OcgServiceImpl implements OcgService{
 	public boolean sendUNTMessageUpdate(String areaCode,int sendType,Object message){
 		
 		UNTMessage uNTMessage = new UNTMessage();
-		uNTMessage.setSendType(sendType);
+		uNTMessage.setSendType(sendType+"");
 		
 		switch (sendType) {
 		case 1:
