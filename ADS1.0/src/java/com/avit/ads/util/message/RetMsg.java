@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="ServerResponse")
+@XmlRootElement(name="serverResponse")
 public class RetMsg {
 	@XmlAttribute(name="code", required = true)
 	private String code;
