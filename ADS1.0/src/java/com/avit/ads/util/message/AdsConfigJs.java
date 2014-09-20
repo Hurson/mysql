@@ -7,12 +7,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="adsConfig")
-public class AdsConfig {
+public class AdsConfigJs {
 
 	@XmlAttribute(name="filePath", required = true)
 	private String filepath;
 
-	@XmlAttribute(name="uiId", required = true)
+	@XmlAttribute(name="uiID", required = true)
 	private String uiId;
 	
 	

@@ -3,6 +3,7 @@ package com.avit.ads.util.message;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
@@ -13,17 +14,17 @@ public class UNTMessage {
 	@XmlAttribute(name="sendType", required = true)
 	private String sendType;
 	
-	@XmlAttribute(name="systemMaintain")
+	@XmlElement(name="systemMaintain")
 	private SystemMaintain systemMaintain;
-	@XmlAttribute(name="weatherforecast")
+	@XmlElement(name="weatherForecast")
 	private Weatherforecast weatherforecast;
-	@XmlAttribute(name="channelrecomendurl")
+	@XmlElement(name="channelInfo")
 	private Channelrecomendurl channelrecomendurl;
-	@XmlAttribute(name="msubtitleInfo")
+	@XmlElement(name="subtitleInfo")
 	private MsubtitleInfo msubtitleInfo;
-	@XmlAttribute(name="adsConfig")
-	private AdsConfig adsConfig;
-	@XmlAttribute(name="adsImage")
+	@XmlElement(name="adsConfig")
+	private AdsConfigJs adsConfig;
+	@XmlElement(name="adsImage")
 	private AdsImage adsImage;
 	
 	
@@ -57,10 +58,10 @@ public class UNTMessage {
 	public void setMsubtitleInfo(MsubtitleInfo msubtitleInfo) {
 		this.msubtitleInfo = msubtitleInfo;
 	}
-	public AdsConfig getAdsConfig() {
+	public AdsConfigJs getAdsConfig() {
 		return adsConfig;
 	}
-	public void setAdsConfig(AdsConfig adsConfig) {
+	public void setAdsConfigJs(AdsConfigJs adsConfig) {
 		this.adsConfig = adsConfig;
 	}
 	public AdsImage getAdsImage() {

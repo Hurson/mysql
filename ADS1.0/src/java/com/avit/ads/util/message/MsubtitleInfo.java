@@ -14,7 +14,7 @@ public class MsubtitleInfo {
 	private String serviceID;
 	@XmlAttribute(name="actionType", required = true)
 	private String actionType;
-	@XmlAttribute(name="timeout", required = true)
+	@XmlAttribute(name="Timeout", required = true)
 	private String timeout;
 	@XmlAttribute(name="fontSize", required = true)
 	private String fontSize;
@@ -35,7 +35,7 @@ public class MsubtitleInfo {
 	@XmlAttribute(name="word", required = true)
 	private String word;
 	
-	@XmlAttribute(name="uiId", required = true)
+	@XmlAttribute(name="uiID", required = true)
 	private String uiId;
 	
 	

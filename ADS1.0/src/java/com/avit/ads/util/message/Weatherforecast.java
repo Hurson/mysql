@@ -12,9 +12,9 @@ public class Weatherforecast {
 
 	@XmlAttribute(name="word", required = true)
 	private String word;
-	@XmlAttribute(name="networkId", required = true)
+	@XmlAttribute(name="networkID", required = true)
 	private String networkId;
-	@XmlAttribute(name="uiId", required = true)
+	@XmlAttribute(name="uiID", required = true)
 	private String uiId;
 	
 

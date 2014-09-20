@@ -14,7 +14,7 @@ public class AdsImage {
 	@XmlAttribute(name="filePath", required = true)
 	private String filepath;
 
-	@XmlAttribute(name="uiId", required = true)
+	@XmlAttribute(name="uiID", required = true)
 	private String uiId;
 	
 	
