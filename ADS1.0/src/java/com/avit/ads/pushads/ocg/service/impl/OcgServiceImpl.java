@@ -590,56 +590,7 @@ public class OcgServiceImpl implements OcgService {
 	 * @param xmlMsg
 	 * @return
 	 */
-	private byte[] sendUdpMsgTest(String ip, int port, String xmlMsg) {
-
-		byte[] retBuf = new byte[ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH]; // 接口文档定义的最大长度
-		DatagramSocket ds = null;
-		try {
-			ds = new DatagramSocket(30005);
-			
-			/*
-			 * 		
-			DataOutputStream dataStream = null;
-
-			ByteArrayOutputStream ostream = new ByteArrayOutputStream();  
-		    dataStream = new DataOutputStream(ostream); 
-		    
-		    byte[] data = xmlMsg.getBytes("UTF-8");
-		    dataStream.write(data,0,data.length); */ 
-		           
-		    //byte[] data = ostream.toByteArray(); 
-		    byte[] data = xmlMsg.getBytes(); 
-			
-			DatagramPacket sendPacket = new DatagramPacket(data,
-					0, data.length, InetAddress.getByName(ip), port);
-		    /*DatagramPacket sendPacket = new DatagramPacket(data,
-					0, data.length, InetAddress.getByName(ip), port);*/
-		    
-			System.out.println("Send_Data:" + new String(xmlMsg));
-			ds.send(sendPacket);
-			System.out.println("Send_Port:"+ds.getLocalPort());
-			DatagramPacket retPacket = new DatagramPacket(retBuf,
-					ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH);
-			
-			
-   
-            // 创建接收方的套接字,并制定端口号和IP地址  
-            
-			System.out.println("Start_Recieve-------------------->" );
-	        ds.receive(retPacket);// 接收信息  
-			System.out.println("Recieve_Data:" + new String(retBuf));
 	
-			//System.out.println("Recieve_Data:" + new String(new String(retBuf).getBytes(),"Unicode"));
-			
-		} catch (Exception e) {
-			logger.error("向OCG发送UDP请求异常", e);
-			return null;
-		} finally {
-			//dataStream = null;
-			//ds.close();
-		}
-		return retBuf;
-	}
 
 	public static void main(String[] args) throws Exception {
 		OcgServiceImpl ocgService = new OcgServiceImpl();
@@ -650,7 +601,7 @@ public class OcgServiceImpl implements OcgService {
 		String ip = "192.168.112.65";
 		int port = 30005;
 		System.out.println("Start Send---------------->");
-		byte[] retBuf = ocgService.sendUdpMsgTest(ip, port,ocgXml);
+		byte[] retBuf = ocgService.sendUdpMsg(ip, port,ocgXml);
 		if (null == retBuf || retBuf.length == 0) {
 			System.out.println("没有返回数据");
 			return;
