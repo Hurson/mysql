@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class RetMsg {
 	@XmlAttribute(name="code", required = true)
 	private String code;
-	@XmlAttribute(name="message", required = true)
+	@XmlAttribute(name="message")
 	private String message;
 	public String getCode() {
 		return code;
