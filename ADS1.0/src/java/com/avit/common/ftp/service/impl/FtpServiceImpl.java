@@ -8,17 +8,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.avit.ads.util.ConstantsHelper;
 import com.avit.ads.util.InitConfig;
+import com.avit.ads.util.warn.WarnHelper;
 import com.avit.common.ftp.service.FtpService;
 
 @Service("FtpService")
 @Scope("prototype")
 public class FtpServiceImpl extends FtpBase implements FtpService{
+	
+	@Autowired
+	private WarnHelper warnHelper;
 	
 	public FtpServiceImpl(){
 	}
@@ -207,6 +213,19 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 	}
 	
 	/**
+	 * 删除目录下下指定文件
+	 */
+	public void deleteFileIfExist(String fileName, String remoteDirectory){
+		try {
+			if(FtpClient.changeWorkingDirectory(remoteDirectory)){
+				FtpClient.deleteFile(fileName);
+			}
+		} catch (IOException e) {
+			logger.error("删除FTP文件出现异常",e);
+		}
+	}
+	
+	/**
 	 * 获取FTP服务
 	 * @param systemName
 	 * @return
@@ -230,9 +249,16 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		}
 		return ftp;
 	}
-	public void setServer(String ip, int port, String username, String password)
-	throws IOException {
-		super.setServer(ip, port, username, password);
+	public boolean connectServer(String ip, int port, String username, String password) {
+		try {
+			super.setServer(ip, port, username, password);
+		} catch (IOException e) {
+			String errMsg = "FTP连接失败   ip: " + ip + ", port: " + port + ", user: " + username + ", pwd: " + password;
+			logger.error(errMsg, e);
+			warnHelper.writeWarnMsgToDb(errMsg);
+			return false;
+		}
+		return true;
 	}
 	
 	public void disConnectFtpServer() {
@@ -260,8 +286,7 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 			if (StringUtils.isNotBlank(localDirectory)) {
 				if (StringUtils.isNotBlank(remoteDirectory)) {
 					remoteDirectory = getPathRegular(remoteDirectory);
-					//if (!changeDirectory(remoteDirectory)) {
-					if (!changeDirectoryIsExsits(remoteDirectory)) {
+					if (!changeDirectory(remoteDirectory)) {
 						logger.info("切换远程目录失败，请检查所传路径是否正确，具体路径为"
 								+ remoteDirectory);
 						return flag;
@@ -301,4 +326,46 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		}
 		return flag;
 	}
+	
+	
+	
+	
+	public boolean downloadFile(String remoteFileName, String localFileName,String remoteDirectory,String localDirectory){
+					
+		try {
+			//切换FTP目录
+			if(!FtpClient.changeWorkingDirectory(remoteDirectory)){
+				logger.error("从FTP下载文件失败：FTP不存在目录 " + remoteDirectory);
+				return false;
+			}
+			
+			//查看要下载的文件是否存在
+			FTPFile[] ftpFiles = FtpClient.listFiles(remoteFileName);
+			if(ftpFiles.length == 0){
+				logger.error("从FTP下载文件失败： FTP不存在文件 " + remoteDirectory + "/" + remoteFileName);
+				return false;
+			}
+			
+			//下载文件
+			OutputStream outputStream = new FileOutputStream(new File(localDirectory + "/" + localFileName));	
+			if(!FtpClient.retrieveFile(remoteFileName, outputStream)){
+				logger.error("从FTP下载文件失败 " + remoteDirectory + "/" + remoteFileName);
+				return false;
+			}
+			
+		} catch (IOException e) {
+			logger.error("从FTP下载文件出现异常：", e);
+			return false;
+		}	
+		return true;
+	}
+
+	public boolean downloadFile(String remoteAbsoluteFilePath, String localFileName, String localDirectory) {
+		String remoteFileName = remoteAbsoluteFilePath.substring(remoteAbsoluteFilePath.lastIndexOf("/")+1);
+		String remoteDirectory = remoteAbsoluteFilePath.substring(0,remoteAbsoluteFilePath.lastIndexOf("/"));
+		return download(remoteFileName, localFileName, remoteDirectory, localDirectory);
+	}
+	
+	
+
 }

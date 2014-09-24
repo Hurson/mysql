@@ -64,12 +64,14 @@ import com.avit.ads.util.ConstantsHelper;
 import com.avit.ads.util.FileDigestUtil;
 import com.avit.ads.util.InitAreas;
 import com.avit.ads.util.InitConfig;
+import com.avit.ads.util.PushFalierHelper;
 import com.avit.ads.util.SendFlagHelper;
 import com.avit.ads.util.UnRealTimeAdsPushHelper;
 import com.avit.ads.util.bean.Ads;
 import com.avit.ads.util.bean.Ocg;
 import com.avit.ads.util.json.Json2ObjUtil;
-import com.avit.ads.util.PushFalierHelper;
+import com.avit.ads.util.message.AdsConfigJs;
+import com.avit.ads.util.message.AdsImage;
 import com.avit.ads.util.warn.WarnHelper;
 import com.avit.common.ftp.service.FtpService;
 import com.google.gson.Gson;
@@ -622,18 +624,18 @@ public class PushAdsServiceImpl implements PushAdsService {
 	private boolean validateBeforePlay(String areaCode, String sourceFilePath, String serverPath ){
 		
 		File sourceFile = new File(sourceFilePath);
-		log.info("download file from ocg and validate " + areaCode + " " + serverPath + File.separator + sourceFile.getName());
+		log.info("download file from ocg and validate " + areaCode + " " + serverPath + "/" + sourceFile.getName());
 		if(!sourceFile.exists()){                      //文件不存在，向OCG发送的时候就会告警，此处无需再产生告警信息
 			return false;
 		}
-		String downloadDirPath = System.getProperty("user.dir") + File.separator + "tempDir";
+		String downloadDirPath = System.getProperty("user.dir") + "/" + "tempDir";
 		File downloadDir = new File(downloadDirPath);
 		if(!downloadDir.exists()){
 			downloadDir.mkdirs();
 		}
 		String fileName = sourceFile.getName();
-		String downloadFilePath = downloadDirPath + File.separator + fileName;  //本地暂存文件路径
-		String serverFilePath = serverPath + File.separator + fileName;        //服务器文件路径
+		String downloadFilePath = downloadDirPath + "/" + fileName;  //本地暂存文件路径
+		String serverFilePath = serverPath + "/" + fileName;        //服务器文件路径
 		
 		ocgService.downloadFile(areaCode, downloadFilePath, serverFilePath);	//从OCG下载文件	
 		
@@ -686,11 +688,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 		String prechannelCode="";
 		String dataline = "";
 		String configFile = InitConfig.getAdsConfig().getRealTimeAds().getAdsConfigFile();
-		String oldmd5=FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+File.separator+areaCode+File.separator+configFile);
+		String oldmd5=FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+"/"+areaCode+"/"+configFile);
 		Map<String, AdsElement> adsMap = SendAdsElementMap.getAdsMap();
 		try
 		{
-			BufferedWriter osw= new BufferedWriter(new OutputStreamWriter(new FileOutputStream(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+File.separator+areaCode+File.separator+configFile,false)));//Files.newBufferedWriter(InitConfig.getAdsConfigByCode(adsTypeCode).getResourcPath()+filename, "UTF-8",false);
+			BufferedWriter osw= new BufferedWriter(new OutputStreamWriter(new FileOutputStream(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+"/"+areaCode+"/"+configFile,false)));//Files.newBufferedWriter(InitConfig.getAdsConfigByCode(adsTypeCode).getResourcPath()+filename, "UTF-8",false);
 			osw.write(dataline);
 			
 			for (int i=0;i<list.size();i++)
@@ -822,47 +824,49 @@ public class PushAdsServiceImpl implements PushAdsService {
 			log.error("create adConfig.js error", e);
 		}
 		
-		// 上传文件至ＯＣＧ
+		// 从广告ftp下载素材至本地
 		boolean rePush = pushFalierHelper.rePush(areaCode);
-		if ( rePush || sendFlagHelper.needSent(areaCode) || !oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+File.separator+areaCode+File.separator+configFile)))
+		if ( rePush || sendFlagHelper.needSent(areaCode) || !oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+"/"+areaCode+"/"+configFile)))
 		{	
 			if(rePush){
 				pushFalierHelper.resetRePushFlag(areaCode);
 			}
 			//删除临时目录非.JS文件       应该不会存在js文件
-			deleteAllfile(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempPath()+File.separator+areaCode);
-			//初始化FTP
-			try
-			{
-				ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(),InitConfig.getAdsConfig().getAdResource().getPwd());
-			}
-			catch (Exception e)
-			{
-				log.error("FTP服务器无法连接",e);
-				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+			deleteAllfile(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempPath()+"/"+areaCode);
+			
+			/*
+			 * 下载广告素材
+			 */
+			
+			String ip = InitConfig.getAdsConfig().getAdResource().getIp();
+			int port = Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort());
+			String username = InitConfig.getAdsConfig().getAdResource().getUser();
+			String password = InitConfig.getAdsConfig().getAdResource().getPwd();
+			
+			if(!ftpService.connectServer(ip, port, username, password)){
 				sendFlagHelper.decreaseSendTimes(areaCode);
 				return;
-			}
+			}			
+		
 			
 			//读取FTP文件至本地临时目录   主菜单广告和视频外框广告不用写配置文件，从ftp下载广告素材文件，文件使用特定命名"adfilename"
 			List<String> sentList = new ArrayList<String>();
-			String localPicPath = InitConfig.getAdsConfig().getRealTimeAds().getAdsTempPath()+File.separator+areaCode;
+			String localPicPath = InitConfig.getAdsConfig().getRealTimeAds().getAdsTempPath()+"/"+areaCode;
 			for (int i =0;i<list.size();i++)
 			{
 				//视频外框广告
 				if (ConstantsAdsCode.PUSH_MENU_FRAME.equals(list.get(i).getAdsTypeCode().substring(0,4)))
 				{
-					String resourcPath = InitConfig.getAdsResourcePath();
-					String fullpath   = resourcPath+"/"+list.get(i).getFilepath();//File.separator+
+					String fullpath   = list.get(i).getFilepath();
 					String key = list.get(i).getAdsTypeCode() + ":" + areaCode + ":" + list.get(i).getParamCode();
 					
 					if(adsMap.containsKey(key)){
 						AdsElement realEntity = adsMap.get(key);
-						fullpath = resourcPath + "/" + realEntity.getFilepath();
+						fullpath = realEntity.getFilepath();
 					}
 					
 					String filename = fullpath.substring(fullpath.lastIndexOf("/")+1);
-					resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
+					String resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
 					String adfilename = "";
 					if (ConstantsAdsCode.PUSH_MENU_FRAME_HD.equals(list.get(i).getAdsTypeCode()))
 					{
@@ -874,16 +878,15 @@ public class PushAdsServiceImpl implements PushAdsService {
 					}
 					if (!sentList.contains(adfilename))
 					{
-						ftpService.download(filename, adfilename, resourcPath, localPicPath);
+						log.info("areacode:" + areaCode + " adsCode: " + list.get(i).getAdsTypeCode() +  " download realtime file: "+ resourcPath + "/" + filename + " and rename it to " + adfilename);
+						ftpService.downloadFile(filename, adfilename, resourcPath, localPicPath);
 						sentList.add(adfilename);
-						log.info("areacode:" + areaCode + " adsCode: " + list.get(i).getAdsTypeCode() +  " download realtime file: "+ resourcPath + File.separatorChar + filename + " and rename it to " + adfilename);
 					}
 					
 				}
 				//主菜单广告，素材轮询
 				else if (list.get(i).getFilepath().indexOf(ConstantsHelper.COMMA)>=0)
-				{
-					
+				{				
 					String[] filenames = list.get(i).getFilepath().split(ConstantsHelper.COMMA);
 					String key = list.get(i).getAdsTypeCode() + ":" + areaCode + ":" + list.get(i).getParamCode();
 					if(adsMap.containsKey(key)){
@@ -892,10 +895,9 @@ public class PushAdsServiceImpl implements PushAdsService {
 					}
 					for (int j=0;j<filenames.length;j++)
 					{
-						String resourcPath = InitConfig.getAdsResourcePath();
-						String fullpath   = resourcPath+"/"+filenames[j];//File.separator+
+						String fullpath = filenames[j];
 						String filename = fullpath.substring(fullpath.lastIndexOf("/")+1);
-						resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
+						String resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
 						String adfilename = "";
 						if (ConstantsAdsCode.PUSH_MENU_HD.equals(list.get(i).getAdsTypeCode()))
 						{
@@ -907,91 +909,96 @@ public class PushAdsServiceImpl implements PushAdsService {
 						}
 						if (!sentList.contains(adfilename))
 						{
-							ftpService.download(filename, adfilename, resourcPath, localPicPath);
+							log.info("areacode:" + areaCode + " adsCode: " + list.get(i).getAdsTypeCode() +  " download realtime file: "+ resourcPath + "/" + filename + " and rename it to " + adfilename);
+							ftpService.downloadFile(filename, adfilename, resourcPath, localPicPath);
 							sentList.add(adfilename);
-							log.info("areacode:" + areaCode + " adsCode: " + list.get(i).getAdsTypeCode() +  " download realtime file: "+ resourcPath + File.separatorChar + filename + " and rename it to " + adfilename);
 						}
 					}
 					continue;
 				}
 				else{
-					String resourcPath = InitConfig.getAdsResourcePath();
 					String key = list.get(i).getAdsTypeCode() + ":" + areaCode + ":" + list.get(i).getParamCode();
-					String fullpath = resourcPath+"/"+list.get(i).getFilepath();
+					String fullpath = list.get(i).getFilepath();
 					if(adsMap.containsKey(key)){
 						AdsElement realEntity = adsMap.get(key);
-						fullpath = resourcPath + "/" + realEntity.getFilepath();
+						fullpath = realEntity.getFilepath();
 					}
 					String filename = fullpath.substring(fullpath.lastIndexOf("/")+1);
-					resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
+					String resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
 					if (!sentList.contains(filename))
 					{
-						ftpService.download(filename, filename, resourcPath, localPicPath);
+						log.info("areacode:" + areaCode + " adsCode: " + list.get(i).getAdsTypeCode() +  " download realtime file: "+ resourcPath + "/" + filename);
+						ftpService.downloadFile(filename, filename, resourcPath, localPicPath);
 						sentList.add(filename);
-						log.info("areacode:" + areaCode + " adsCode: " + list.get(i).getAdsTypeCode() +  " download realtime file: "+ resourcPath + File.separatorChar + filename);
 					}
 				}
 				
 			}
-			//TODO 上传文件至ＯＣＧ
-			//log.info("copy files from ads temppath to ocg targetpath");
-			//删除OCG服务器上的素材文件
-			List<String> picList = InitConfig.getAdsConfig().getRealTimeAds().getAreaPicMap().get(areaCode);
-			if(null != picList){
-				for(String pic : picList){
-					boolean success = ocgService.deleteFile(areaCode, pic, InitConfig.getAdsConfig().getRealTimeAds().getAdsTargetPath());
-					if(!success){
-						sendFlagHelper.decreaseSendTimes(areaCode);
-						return;
-					}
-				}
-			}
 			
-			//发送素材文件
-			boolean success1 = ocgService.sendPath(areaCode, localPicPath, InitConfig.getAdsConfig().getRealTimeAds().getAdsTargetPath());
-			//发送配置文件
-			boolean success2 = ocgService.sendFile(areaCode, InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+File.separator+areaCode+"/"+InitConfig.getAdsConfig().getRealTimeAds().getAdsConfigFile(), InitConfig.getAdsConfig().getRealTimeAds().getAdsTargetConfigPath());
+			/*
+			 *  上传文件至OCG
+			 */		
 			
-			if(!success1 || !success2){
+			//建立OCG服务器的FTP连接
+			if(!ocgService.connectFtpServer(areaCode)){
 				sendFlagHelper.decreaseSendTimes(areaCode);
-				log.error("send files to ocg failed!");
-				return;
-			}else{
-				log.info("send files to ocg success!");
-				InitConfig.getAdsConfig().getRealTimeAds().getAreaPicMap().put(areaCode, sentList);
-			}
-			
-            String serverPath = InitConfig.getAdsConfig().getRealTimeAds().getAdsTargetPath();
-            boolean isContentFilesValidated = true;
-			File dir = new File(localPicPath);
-			for(File file : dir.listFiles()){
-				String sourceFilePath = file.getAbsolutePath();
-				if(!validateBeforePlay(areaCode, sourceFilePath, serverPath)){
-					isContentFilesValidated = false;
-					break;
-				}
-			}
-			
-            String sourceFilePath = InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+File.separator+areaCode+"/"+InitConfig.getAdsConfig().getRealTimeAds().getAdsConfigFile();
-			serverPath = InitConfig.getAdsConfig().getRealTimeAds().getAdsTargetConfigPath();
-			boolean isConfigFileValidated = validateBeforePlay(areaCode, sourceFilePath, serverPath);
-			
-			if(isContentFilesValidated && isConfigFileValidated){
-				log.info("download all files from ocg and validate them success, start to play..");
-				ocgService.startPlayPgm(areaCode,InitConfig.getConfigProperty(ConstantsAdsCode.UNTPGM),InitConfig.getConfigProperty(ConstantsAdsCode.OCGOUTPUT));
-			}else{
-				sendFlagHelper.decreaseSendTimes(areaCode);
-				log.error("download file from ocg and validate it failed!");
 				return;
 			}
-			//unt通知
-			boolean successUnt1 = untService.sendUpdateFlag(areaCode,ConstantsHelper.UNT_UPDATE_FLAG_CONFIG,ConstantsHelper.UNT_UPDATE_ADPIC);
-			boolean successUnt2 = untService.sendUpdateFlag(areaCode,ConstantsHelper.UNT_UPDATE_FLAG_CONFIG,ConstantsHelper.UNT_UPDATE_ADCONFIG);
-			if(!successUnt1 || !successUnt2){
+			
+			//删除OCG服务器上的素材文件 （配置文件应该不用删，上传会直接覆盖掉原来的）
+			String targetPicDir = InitConfig.getAdsConfig().getRealTimeAds().getAdsTargetPath();
+			ocgService.deleteFtpDirFiles(targetPicDir);
+					
+			//发送素材文件至OCG
+			ocgService.sendDirFilesToFtp(localPicPath, targetPicDir);
+
+			//发送配置文件至OCG
+			String targetConfigDirPath = InitConfig.getAdsConfig().getRealTimeAds().getAdsTargetConfigPath();
+			String localConfigFilePath = InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+"/"+areaCode+"/"+InitConfig.getAdsConfig().getRealTimeAds().getAdsConfigFile();
+			
+			ocgService.sendFileToFtp(localConfigFilePath, targetConfigDirPath);
+			
+			//断开OCG服务器的FTP连接（非必须，建立连接的时候有断开连接的操作）
+			ocgService.disConnectFtpServer();
+			
+			
+			/* 
+			 * 向OCG发送投放广告消息
+			 */
+			
+			String sendPath = getParentPath(targetPicDir);
+			boolean ocgPlaySuccess = ocgService.startOcgPlay(areaCode, sendPath, ConstantsHelper.ALL_CHANNEL);
+			
+			if(!ocgPlaySuccess){
+				sendFlagHelper.decreaseSendTimes(areaCode);
+				log.error("start ocg play failed!");
+				return;
+			}			
+			
+			/*
+			 * 发UNT更新通知
+			 */
+			
+			//发UNT素材更新通知
+			AdsImage imageUpdateMsg = new AdsImage();
+			imageUpdateMsg.setFilepath(ConstantsHelper.UNT_UPDATE_ADPIC_PATH);
+			imageUpdateMsg.setUiId(ConstantsHelper.UNT_UPDATE_TEMPLATE);
+			
+			boolean picUpdateSuccess = ocgService.sendUNTMessageUpdate(areaCode, ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE, imageUpdateMsg);
+			
+			
+			//发UNT配置文件更新通知
+			AdsConfigJs configUpdateMsg = new AdsConfigJs();
+			configUpdateMsg.setFilepath(ConstantsHelper.UNT_UPDATE_ADCONFIG);
+			configUpdateMsg.setUiId(ConstantsHelper.UNT_UPDATE_TEMPLATE);
+			boolean confUpdateSuccess = ocgService.sendUNTMessageUpdate(areaCode, ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG, configUpdateMsg);
+			
+			if(!picUpdateSuccess || !confUpdateSuccess){
 				sendFlagHelper.decreaseSendTimes(areaCode);
 				log.error("send unt update message failed!");
 				return;
 			}
+			
 			log.info("areaCode: " + areaCode + " adConfig.js is changed, send file to ocg,  update unt flag ");
 		}
 		else if(sendFlagHelper.tryAllChance(areaCode)){
@@ -1000,9 +1007,9 @@ public class PushAdsServiceImpl implements PushAdsService {
 		}
 		//从list中清除对象
 		pushFalierHelper.deletePlayListEntity(areaCode);
-		sendFlagHelper.reset(areaCode);
 		
-		
+		//重置投放失败次数标志
+		sendFlagHelper.reset(areaCode);		
 	}
 	/**
 	 * Send 合成CPS广告配置文件
@@ -1022,11 +1029,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 		String paramCode="";
 		String dataline = "";
 		String configFile = InitConfig.getAdsConfig().getCpsAds().getAdsConfigFile();
-		String oldmd5=FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getCpsAds().getAdsTempPath()+File.separator+configFile);
+		String oldmd5=FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getCpsAds().getAdsTempPath()+"/"+configFile);
 		
 		try
 		{
-			BufferedWriter osw= new BufferedWriter(new OutputStreamWriter(new FileOutputStream(InitConfig.getAdsConfig().getCpsAds().getAdsTempPath()+File.separator+configFile,false)));
+			BufferedWriter osw= new BufferedWriter(new OutputStreamWriter(new FileOutputStream(InitConfig.getAdsConfig().getCpsAds().getAdsTempPath()+"/"+configFile,false)));
 			//Files.newBufferedWriter(InitConfig.getAdsConfigByCode(adsTypeCode).getResourcPath()+filename, "UTF-8",false);
 			osw.write(dataline);			
 			osw.newLine();
@@ -1332,7 +1339,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 		//发送CPS更新通知
 		List<Ads> adsList = InitConfig.getAdsConfig().getCpsAds().getAdsList();
 		boolean rePush = pushFalierHelper.rePush(adsList);
-		if ( rePush || (cpsSendFlag && cpsSendTimes > 0) || !oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getCpsAds().getAdsTempPath()+File.separator+configFile)))
+		if ( rePush || (cpsSendFlag && cpsSendTimes > 0) || !oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getCpsAds().getAdsTempPath()+"/"+configFile)))
 		{
 			if(rePush){
 				pushFalierHelper.resetRePushFlag(adsList);
@@ -1377,10 +1384,10 @@ public class PushAdsServiceImpl implements PushAdsService {
 		String preTypeCode="";
 		String dataline = "";
 		String configFile = InitConfig.getAdsConfig().getNpvrAds().getAdsConfigFile();
-		String oldmd5=FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getNpvrAds().getAdsTempPath()+File.separator+configFile);
+		String oldmd5=FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getNpvrAds().getAdsTempPath()+"/"+configFile);
 		try
 		{
-			BufferedWriter osw= new BufferedWriter(new OutputStreamWriter(new FileOutputStream(InitConfig.getAdsConfig().getNpvrAds().getAdsTempPath()+File.separator+configFile,false)));//Files.newBufferedWriter(InitConfig.getAdsConfigByCode(adsTypeCode).getResourcPath()+filename, "UTF-8",false);
+			BufferedWriter osw= new BufferedWriter(new OutputStreamWriter(new FileOutputStream(InitConfig.getAdsConfig().getNpvrAds().getAdsTempPath()+"/"+configFile,false)));//Files.newBufferedWriter(InitConfig.getAdsConfigByCode(adsTypeCode).getResourcPath()+filename, "UTF-8",false);
 			osw.write(dataline);
 			osw.newLine();
 			
@@ -1558,7 +1565,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 		//发送NPVR更新通知  是否需要待定
 		List<Ads> adsList = InitConfig.getAdsConfig().getNpvrAds().getAdsList();
 		boolean rePush = pushFalierHelper.rePush(adsList);
-		if ( rePush || (npvrSendFlag && npvrSendTimes > 0) ||  !oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getNpvrAds().getAdsTempPath()+File.separator+configFile)))
+		if ( rePush || (npvrSendFlag && npvrSendTimes > 0) ||  !oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getNpvrAds().getAdsTempPath()+"/"+configFile)))
 		{	
 			if(rePush){
 				pushFalierHelper.resetRePushFlag(adsList);
@@ -1775,20 +1782,20 @@ public class PushAdsServiceImpl implements PushAdsService {
 					StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);//Json2ObjUtil.getObject4JsonString(adGis.getContentPath(), StartMaterial.class);
 					if (startMaterial.getPic()!=null && !startMaterial.getPic().equals(""))
 					{
-						ftpService.download(startMaterial.getPic(), "24.iframe", InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeSDTempPath()+File.separator+areaCode);
+						ftpService.download(startMaterial.getPic(), "24.iframe", InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeSDTempPath()+"/"+areaCode);
 						iframeSDflag=true;	
 						UiDesMap.setDefaultstartflag(ConstantsAdsCode.STARTDEFAULT);
 					}
 					if (startMaterial.getVideo()!=null && !startMaterial.getVideo().equals(""))
 					{
-						ftpService.download(startMaterial.getVideo(), ConstantsAdsCode.PUSH_STARTSTB_SD_VIDEO_FILE, InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode);
+						ftpService.download(startMaterial.getVideo(), ConstantsAdsCode.PUSH_STARTSTB_SD_VIDEO_FILE, InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode);
 //								UiDesMap.addsdUiDesc("5", ConstantsAdsCode.PUSH_STARTSTB_SD_VIDEO_FILE,areaCode);
 						if(!"".equals(bodyContent)){
 							bodyContent += ";";
 						}
 						bodyContent += "5:initVideo-a.ts";
 						//视频素材
-						boolean success = ocgService.sendFile(areaCode, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/initVideo-a.ts", InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath());
+						boolean success = ocgService.sendFile(areaCode, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/initVideo-a.ts", InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath());
 						sendFile1 = true;
 						if(!success){
 							continue;
@@ -1799,7 +1806,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 					{	
 						for (int k=0;k<startMaterial.getPics().size();k++)
 						{
-							ftpService.download(startMaterial.getPics().get(k).getImage(), startMaterial.getPics().get(k).getTimeInterval()+".iframe", InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeSDTempPath()+File.separator+areaCode);
+							ftpService.download(startMaterial.getPics().get(k).getImage(), startMaterial.getPics().get(k).getTimeInterval()+".iframe", InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeSDTempPath()+"/"+areaCode);
 						}
 						iframeSDflag=true;
 
@@ -1808,13 +1815,13 @@ public class PushAdsServiceImpl implements PushAdsService {
 					//图片素材
 					if (iframeSDflag==true)
 					{
-						String oldmd5=FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE);
+						String oldmd5=FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE);
 					
 						if (ConstantsAdsCode.WIN)
 						{
 							try{
 								File inFile = new File(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeSDTempPath());
-								ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE));
+								ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE));
 		                        zos.setComment("多文件处理");
 		                        zipFile(inFile, zos, ConstantsAdsCode.START_RESOURCE_PATH);
 		                        zos.close(); 
@@ -1824,11 +1831,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 						}
 						else
 						{
-							String inpath=InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeSDTempPath()+File.separator+areaCode;
-							String outfile=InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE;
+							String inpath=InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeSDTempPath()+"/"+areaCode;
+							String outfile=InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE;
 							linuxRun("zip -r",inpath,outfile);
 						}
-                        if (oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE)))
+                        if (oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE)))
                         {//开机图片没有任何变化
 //		                        	UiDesMap.addsdUiDesc("1", "1",areaCode);
                         	if(!"".equals(bodyContent)){
@@ -1836,7 +1843,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 							}
 							bodyContent += "1:1";
                         }else{//开机图片有变化
-                        	boolean sendFileFlag =  ocgService.sendFile(areaCode, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath());
+                        	boolean sendFileFlag =  ocgService.sendFile(areaCode, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath());
                         	sendFile2 = true;
                         	if(!sendFileFlag){
                         		continue;
@@ -1859,14 +1866,14 @@ public class PushAdsServiceImpl implements PushAdsService {
 					
 					boolean isFileValidated = true;
 					if(sendFile1){
-						String sourceFilePath1 = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/initVideo-a.ts";
+						String sourceFilePath1 = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/initVideo-a.ts";
 						String serverPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
 						if(!validateBeforePlay(areaCode, sourceFilePath1, serverPath)){
 							isFileValidated = false;
 						}
 					}
 					if(sendFile2){
-						String sourceFilePath2 = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE;
+						String sourceFilePath2 = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE;
 						String serverPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
 						if(!validateBeforePlay(areaCode, sourceFilePath2, serverPath)){
 							isFileValidated = false;
@@ -1896,8 +1903,8 @@ public class PushAdsServiceImpl implements PushAdsService {
 					StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);//Json2ObjUtil.getObject4JsonString(adGis.getContentPath(), StartMaterial.class);
 					if (startMaterial.getVideo()!=null && !startMaterial.getVideo().equals(""))
 					{
-						ftpService.download(startMaterial.getVideo(), ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode);
-						boolean success = ocgService.sendFile(areaCode, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath());
+						ftpService.download(startMaterial.getVideo(), ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode);
+						boolean success = ocgService.sendFile(areaCode, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath());
 						if(!success){
 							continue;
 						}
@@ -1911,7 +1918,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 					}
 					if (startMaterial.getPic()!=null && !startMaterial.getPic().equals(""))
 					{	
-						ftpService.download(startMaterial.getPic(), "24.iframe", InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+File.separator+areaCode);
+						ftpService.download(startMaterial.getPic(), "24.iframe", InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+"/"+areaCode);
 						iframeHDflag=true;
 
 						UiDesMap.setDefaultstartflag(ConstantsAdsCode.STARTDEFAULT);
@@ -1920,7 +1927,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 					{	
 						for (int k=0;k<startMaterial.getPics().size();k++)
 						{
-							ftpService.download(startMaterial.getPics().get(k).getImage(), startMaterial.getPics().get(k).getTimeInterval()+".iframe", InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+File.separator+areaCode);
+							ftpService.download(startMaterial.getPics().get(k).getImage(), startMaterial.getPics().get(k).getTimeInterval()+".iframe", InitConfig.getAdsResourcePath(), InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+"/"+areaCode);
 						}
 						iframeHDflag=true;
 
@@ -1933,8 +1940,8 @@ public class PushAdsServiceImpl implements PushAdsService {
 						if (ConstantsAdsCode.WIN)
 						{
 							try{
-								File inFile = new File(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+File.separator+areaCode);
-								ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE));
+								File inFile = new File(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+"/"+areaCode);
+								ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE));
 		                        zos.setComment("多文件处理");
 		                        zipFile(inFile, zos,  ConstantsAdsCode.START_RESOURCE_PATH);
 		                        zos.close(); 
@@ -1944,12 +1951,12 @@ public class PushAdsServiceImpl implements PushAdsService {
 						}
 						else
 						{
-							String inpath=InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+File.separator+areaCode;
-							String outfile=InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE;
+							String inpath=InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+"/"+areaCode;
+							String outfile=InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE;
 							linuxRun("zip -r",inpath,outfile);
 						
 						}
-                        if (oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE)))
+                        if (oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE)))
                         {//开机图片没有任何变化
 //		                        	UiDesMap.addhdUiDesc("1", "1",areaCode);
                         	if(!"".equals(bodyContent)){
@@ -1957,7 +1964,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 							}
 							bodyContent += "1:1";
                         }else{//开机图片有变化
-                        	boolean success = ocgService.sendFile(areaCode, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath());
+                        	boolean success = ocgService.sendFile(areaCode, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath());
 							if(!success){
 								continue;
 							}
@@ -1980,14 +1987,14 @@ public class PushAdsServiceImpl implements PushAdsService {
 					
 					boolean isFileValidated = true;
 					if(sendFile1Flag){
-						String sourceFilePath1 = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE;
+						String sourceFilePath1 = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE;
 						String serverPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
 						if(!validateBeforePlay(areaCode, sourceFilePath1, serverPath)){
 							isFileValidated = false;
 						}
 					}
 					if(sendFile2Flag){
-						String sourceFilePath2 = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE;
+						String sourceFilePath2 = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE;
 						String serverPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
 						if(!validateBeforePlay(areaCode, sourceFilePath2, serverPath)){
 							isFileValidated = false;
@@ -2014,25 +2021,55 @@ public class PushAdsServiceImpl implements PushAdsService {
 		}
 		
 	}
-
 	
-	public void sendStartHdVideoAds(Date startTime) {
-		
-		//查询过期播出单，删除OCG上的广告素材
-		List<AdPlaylistGis> deadAdsList = pushAdsDao.queryEndAds(startTime, ConstantsAdsCode.PUSH_STARTSTB_VIDEO_HD);		
+	//查询过期播出单，删除OCG上的广告素材
+	private void processOverduePlayList(Date startTime, String adsCode, String adsDesc){
+		List<AdPlaylistGis> deadAdsList = pushAdsDao.queryEndAds(startTime, adsCode);		
 		if (deadAdsList!=null && deadAdsList.size()>0){
 			for(AdPlaylistGis adGis : deadAdsList){
 				long playListId = adGis.getId().longValue();
 				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-				if(!ocgService.deleteFile(areaCode, ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath())){
+				
+				//建立OCG服务器的FTP连接
+				if(!ocgService.connectFtpServer(areaCode) ){
+					//还可以重试
 					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
+						continue;
+					}else{  //三次都失败
+						unRealTimeAdsPushHelper.cleanDelMap(playListId);
+						pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
 						continue;
 					}
 				}
+				
+				//通过FTP删除OCG上的文件			
+				String remoteFileName = ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE;
+				String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+				
+				log.info(adsDesc + "广告播出单到期，删除OCG素材   areaCode: " + areaCode + ", file: " + remoteDir+ "/" + remoteFileName);
+				
+				ocgService.deleteFtpFileIfExist(remoteFileName, remoteDir);
+				
+				//断开OCG服务器的FTP连接
+				ocgService.disConnectFtpServer();
+				
 				unRealTimeAdsPushHelper.cleanDelMap(playListId);
 				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
 			}
 		}
+	}
+	
+	private void failedToPush(Long playListId){
+		unRealTimeAdsPushHelper.cleanPushMap(playListId);
+		pushAdsDao.updateAdsFlag(playListId, "2");
+		unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+	}
+	
+	
+	public void sendStartHdVideoAds(Date startTime) {
+		
+		//查询过期播出单，删除OCG上的广告素材
+		processOverduePlayList(startTime, ConstantsAdsCode.PUSH_STARTSTB_VIDEO_HD, "高清开机视频");
 			
 		//查询新增播出单
 		List<AdPlaylistGis> newAdsList = pushAdsDao.queryStartAds( startTime, ConstantsAdsCode.PUSH_STARTSTB_VIDEO_HD);
@@ -2047,75 +2084,80 @@ public class PushAdsServiceImpl implements PushAdsService {
 				log.info("开始往区域"+areaCode+"发送高清开机视频广告");
 				
 				//连接素材FTP服务器
-				try {
-					ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
-				} catch (Exception e) {
-					log.error("FTP服务器无法连接",e);
-					warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + ", USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+				
+				boolean conSuccessful = ftpService.connectServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
+				
+				if(!conSuccessful){
+					//还可以重新投放
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+					}else{ //投放三次失败
+						failedToPush(playListId);
 						continue;
 					}
 				}
-				
+								
 				Gson gson = new Gson();
 				StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);//Json2ObjUtil.getObject4JsonString(adGis.getContentPath(), StartMaterial.class);
+				
 				if (StringUtils.isNotBlank(startMaterial.getVideo())){
-					String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath() + File.separator + areaCode;
-					//原来是有对比素材文件的md5值，md5相同的话不投放（出现场景：一个播出单过期，删除OCG素材，盒子依然放着原来的广告，新增的播出单还是这份素材，就不用投放了），
-					//后续版本，播出单过期后，会通知盒子更新，所有即便新增播出单素材没变化，依然要重新投放
-					//String oldMd5 = FileDigestUtil.getFileNameMD5(downLoadPath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE);
-					log.info("从OCG下载视频素材..");
-					ftpService.download(startMaterial.getVideo(), ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, InitConfig.getAdsResourcePath(), downLoadPath);
-					//if(oldMd5.equals(FileDigestUtil.getFileNameMD5(downLoadPath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE))){
+					
+					String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath() + "/" + areaCode;
+					
+					/*
+					 * 原来是有对比素材文件的md5值，md5相同的话不投放（出现场景：一个播出单过期，删除OCG素材，盒子依然放着原来的广告，新增的播出单还是这份素材，就不用投放了），
+					 * 
+					 * 后续版本，播出单过期后，会通知盒子更新，所以即便新增播出单素材没变化，依然要重新投放
+					 */
+					
+					//String oldMd5 = FileDigestUtil.getFileNameMD5(downLoadPath+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE);
+					
+					log.info("下载开机视频素材到本地..");
+					ftpService.downloadFile(startMaterial.getVideo(), ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, downLoadPath);
+					
+					//if(oldMd5.equals(FileDigestUtil.getFileNameMD5(downLoadPath+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE))){
 					//	log.info("素材内容未发生变化，不重新投放");
 					//	continue;
 					//}else{
-						
-					bodyContent += "5:initVideo-c.ts";
-					//向OCG发送素材
-					String serverPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
-					log.info("向OCG发送素材");
-					boolean success = ocgService.sendFile(areaCode, downLoadPath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, serverPath);
-					if(!success){
-						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
+					
+					//建立OCG服务器的FTP连接
+					if(!ocgService.connectFtpServer(areaCode) ){
+						//还可以重试
+						if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
 							continue;
-						}else{
-							unRealTimeAdsPushHelper.cleanPushMap(playListId);
-							pushAdsDao.updateAdsFlag(playListId, "2");
-							unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+						}else{  //三次都失败
+							failedToPush(playListId);
 							continue;
 						}
 					}
+						
+					//向OCG发送素材					
+					log.info("向OCG发送素材");
+					String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+					ocgService.sendFileToFtp(downLoadPath+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, remoteDir);
+					
+					//断开OCG服务器的FTP连接
+					ocgService.disConnectFtpServer();
 					
 					//往区域发送NID描述符插入信息
-					String ret = uiService.sendUiDesc(bodyContent, areaCode);
-					
-					if("0".equals(ret)){
-						//播放前从OCG下载素材进行校验
-						if(!validateBeforePlay(areaCode, downLoadPath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, serverPath)){
+					bodyContent += "5:initVideo-c.ts";
+					//UI更新通知成功
+					if(ocgService.sendUiDesc(areaCode, bodyContent)){
+						//通知OCG投放广告
+						if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
 							if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 								continue;
 							}else{
-								unRealTimeAdsPushHelper.cleanPushMap(playListId);
-								pushAdsDao.updateAdsFlag(playListId, "2");
-								unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+								failedToPush(playListId);
 								continue;
 							}
 						}
-						ocgService.startPlayPgm(areaCode, InitConfig.getConfigProperty(ConstantsAdsCode.UIPGM),InitConfig.getConfigProperty(ConstantsAdsCode.OCGOUTPUT));						
-					}else{
-						log.error("往"+areaCode+"区域NID描述符插入信息失败！return="+ret);
+					}else{ //UI更新通知失败
+						log.error("往"+areaCode+"区域NID描述符插入信息失败!");
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{
-							unRealTimeAdsPushHelper.cleanPushMap(playListId);
-							pushAdsDao.updateAdsFlag(playListId, "2");
-							unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+							failedToPush(playListId);
 							continue;
 						}
 					}
@@ -2125,8 +2167,6 @@ public class PushAdsServiceImpl implements PushAdsService {
 					//更新播出单状态为已执行
 					unRealTimeAdsPushHelper.cleanPushMap(playListId);
 					pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "1");
-					
-					//}
 				}
 			}
 		}
@@ -2136,21 +2176,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 	public void sendStartHdPicAds(Date startTime) {
 		
 		//查询过期播出单，删除OCG上的广告素材
-		List<AdPlaylistGis> deadAdsList = pushAdsDao.queryEndAds(startTime, ConstantsAdsCode.PUSH_STARTSTB_HD);		
-		if (deadAdsList!=null && deadAdsList.size()>0){
-			for(AdPlaylistGis adGis : deadAdsList){
-				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-				long playListId = adGis.getId().longValue();
-				log.info("高清开机图片广告播出单到期，删除OCG素材   areaCode: " + areaCode + ", file: " + InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath()+ File.separator + ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE );
-				if(!ocgService.deleteFile(areaCode, ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath())){
-					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
-						continue;
-					}
-				}
-				unRealTimeAdsPushHelper.cleanDelMap(playListId);
-				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
-			}
-		}
+		processOverduePlayList(startTime, ConstantsAdsCode.PUSH_STARTSTB_HD, "高清开机图片");
 		
 		//查询新增播出单
 		List<AdPlaylistGis> newAdsList = pushAdsDao.queryStartAds( startTime, ConstantsAdsCode.PUSH_STARTSTB_HD);
@@ -2161,146 +2187,99 @@ public class PushAdsServiceImpl implements PushAdsService {
 			for (AdPlaylistGis adGis : newAdsList)
 			{
 				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-				String bodyContent = "";
 				long playListId = adGis.getId().longValue();
 			
 				log.info("开始往区域"+areaCode+"发送高清开机图片广告");
+								
+				//连接素材FTP服务器
+				boolean conSuccessful = ftpService.connectServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
 				
-				try {
-					ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
-				} catch (Exception e) {
-					log.error("FTP服务器无法连接",e);
-					warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+				if(!conSuccessful){
+					//还可以重新投放
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+					}else{ //投放三次失败
+						failedToPush(playListId);
 						continue;
 					}
 				}
-				
-				Gson gson = new Gson();
-				
-				StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);//Json2ObjUtil.getObject4JsonString(adGis.getContentPath(), StartMaterial.class);
-				
-				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.START_RESOURCE_PATH;
-				String zipFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode;
+												
 				log.info("下载开机图片素材到本地..");
+				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeHDTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.START_RESOURCE_PATH;
+				Gson gson = new Gson();				
+				StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);
+				
 				if (StringUtils.isNotBlank(startMaterial.getPic())){	
-					ftpService.download(startMaterial.getPic(), "24.iframe", InitConfig.getAdsResourcePath(), downLoadPath);
-					UiDesMap.setDefaultstartflag(ConstantsAdsCode.STARTDEFAULT);
+					
+					ftpService.downloadFile(startMaterial.getPic(), "24.iframe", downLoadPath);
+					
 				}else if (startMaterial.getPics()!=null && startMaterial.getPics().size()>0){	
+					
 					for (ImageInfo entity : startMaterial.getPics()){
-						ftpService.download(entity.getImage(), entity.getTimeInterval()+".iframe", InitConfig.getAdsResourcePath(), downLoadPath);
+						ftpService.downloadFile(entity.getImage(), entity.getTimeInterval()+".iframe",downLoadPath);
 					}
-					UiDesMap.setDefaultstartflag(ConstantsAdsCode.START24);
+					
 				}
 		
-				//String oldmd5=FileDigestUtil.getFileNameMD5(zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE);
 				log.info("压缩开机图片素材..");
-				if (ConstantsAdsCode.WIN){
-					try{
-						File inFile = new File(downLoadPath);
-						ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE));
-                        zos.setComment("多文件处理");
-                        zipFile(inFile, zos,  ConstantsAdsCode.START_RESOURCE_PATH);
-                        zos.close(); 
-					}catch(Exception e){
-						log.error("压缩文件出现异常", e);
+				String zipFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode;
+				linuxRun("zip -r",downLoadPath,zipFilePath+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE);
+
+				//建立OCG服务器的FTP连接
+				if(!ocgService.connectFtpServer(areaCode) ){
+					//还可以重试
+					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
+						continue;
+					}else{  //三次都失败
+						failedToPush(playListId);
+						continue;
 					}
 				}
-				else{
-					linuxRun("zip -r",downLoadPath,zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE);
-				}
-				//开机图片没有任何变化
-//               if (oldmd5.equals(FileDigestUtil.getFileNameMD5(zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE))){
-//                	if(!"".equals(bodyContent)){
-//						bodyContent += ";";
-//					}
-//					bodyContent += "1:1";
-//                	continue;
-//                }
-                //开机图片有变化
-//               else{
-            	String ocgServerPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+				
             	//向OCG发送开机素材
             	log.info("向OCG发送开机图片素材..");
-            	boolean success = ocgService.sendFile(areaCode, zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE, ocgServerPath);
-				if(!success){
-					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
-						continue;
-					}
-				}
-            	if(ConstantsAdsCode.START24.equals(UiDesMap.getDefaultstartflag())){//有变化24张图片
-					if(!"".equals(bodyContent)){
-						bodyContent += ";";
-					}
-					bodyContent += "1:initPic-c.iframe";
-				}else if(ConstantsAdsCode.STARTDEFAULT.equals(UiDesMap.getDefaultstartflag())){//有变化的一张默认图片
-					if(!"".equals(bodyContent)){
-						bodyContent += ";";
-					}
-					bodyContent += "1:0";
-				}
-				//往区域发送NID描述符插入信息
-				String ret = uiService.sendUiDesc(bodyContent, areaCode);
-				if("0".equals(ret)){
-					//播放前从OCG下载素材进行校验
-                	if(!validateBeforePlay(areaCode, zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE, ocgServerPath)){
-                		if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-    						continue;
-    					}else{
-							unRealTimeAdsPushHelper.cleanPushMap(playListId);
-							pushAdsDao.updateAdsFlag(playListId, "2");
-							unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+            	String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+            	ocgService.sendFileToFtp(zipFilePath+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE, remoteDir);
+			     							           	
+				//断开OCG服务器的FTP连接
+            	ocgService.disConnectFtpServer();
+            	
+            	//往区域发送NID描述符插入信息
+            	String bodyContent = "1:initPic-c.iframe";
+								
+				if(ocgService.sendUiDesc(areaCode, bodyContent)){ //UI更新通知成功
+					//通知OCG投放广告
+					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
+						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
+							continue;
+						}else{
+							failedToPush(playListId);
 							continue;
 						}
 					}
-					ocgService.startPlayPgm(areaCode, InitConfig.getConfigProperty(ConstantsAdsCode.UIPGM),InitConfig.getConfigProperty(ConstantsAdsCode.OCGOUTPUT));						
-				}else{
-					log.error("往"+areaCode+"区域NID描述符插入信息失败！return="+ret);
+				}else{ //UI更新通知失败
+					log.error("往"+areaCode+"区域NID描述符插入信息失败!");
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
 					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+						failedToPush(playListId);
 						continue;
 					}
 				}
+								
 				log.info("往区域"+areaCode+"发送高清开机图片广告结束");
 				
 				//更新播出单状态为已执行
 				unRealTimeAdsPushHelper.cleanPushMap(playListId);
 				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "1");               	
-                }				
-//			}
+            }				
 		}
 	}
 
 	public void sendStartSdPicAds(Date startTime) {
+		
 		//查询过期播出单，删除OCG上的广告素材
-		List<AdPlaylistGis> deadAdsList = pushAdsDao.queryEndAds(startTime, ConstantsAdsCode.PUSH_STARTSTB_SD);		
-		if (deadAdsList!=null && deadAdsList.size()>0){
-			for(AdPlaylistGis adGis : deadAdsList){
-				long playListId = adGis.getId().longValue();
-				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-				if(!ocgService.deleteFile(areaCode, ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath())){
-					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
-						continue;
-					}
-				}
-				unRealTimeAdsPushHelper.cleanDelMap(playListId);
-				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
-			}
-		}
+		processOverduePlayList(startTime, ConstantsAdsCode.PUSH_STARTSTB_SD, "标清开机图片");
 		
 		//查询新增播出单
 		List<AdPlaylistGis> newAdsList = pushAdsDao.queryStartAds( startTime, ConstantsAdsCode.PUSH_STARTSTB_SD);
@@ -2311,123 +2290,90 @@ public class PushAdsServiceImpl implements PushAdsService {
 			for (AdPlaylistGis adGis : newAdsList)
 			{
 				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-				String bodyContent = "";
 				long playListId = adGis.getId().longValue();
 				log.info("开始往区域"+areaCode+"发送标清开机图片广告");
-				try {
-					ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
-				} catch (Exception e) {
-					log.error("FTP服务器无法连接",e);
-					warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+				
+				//连接素材FTP服务器
+				boolean conSuccessful = ftpService.connectServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
+				
+				if(!conSuccessful){
+					//还可以重新投放
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+					}else{ //投放三次失败
+						failedToPush(playListId);
 						continue;
 					}
 				}
-				Gson gson = new Gson();
+			
+				log.info("下载开机图片素材到本地..");		
+				Gson gson = new Gson();				
+				StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);
+				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeSDTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.START_RESOURCE_PATH;								
 				
-				StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);//Json2ObjUtil.getObject4JsonString(adGis.getContentPath(), StartMaterial.class);
-				
-				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsIframeSDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.START_RESOURCE_PATH;
-				String zipFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode;
-				log.info("下载开机图片素材到本地..");
-				if (StringUtils.isNotBlank(startMaterial.getPic())){	
-					ftpService.download(startMaterial.getPic(), "24.iframe", InitConfig.getAdsResourcePath(), downLoadPath);
-					UiDesMap.setDefaultstartflag(ConstantsAdsCode.STARTDEFAULT);
+				if (StringUtils.isNotBlank(startMaterial.getPic())){
+					
+					ftpService.downloadFile(startMaterial.getPic(), "24.iframe", downLoadPath);
+	
 				}else if (startMaterial.getPics()!=null && startMaterial.getPics().size()>0){	
+					
 					for (ImageInfo entity : startMaterial.getPics()){
-						ftpService.download(entity.getImage(), entity.getTimeInterval()+".iframe", InitConfig.getAdsResourcePath(), downLoadPath);
+						ftpService.downloadFile(entity.getImage(), entity.getTimeInterval()+".iframe", downLoadPath);
 					}
-					UiDesMap.setDefaultstartflag(ConstantsAdsCode.START24);
+
 				}
 		
-				//String oldmd5=FileDigestUtil.getFileNameMD5(zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE);
 				log.info("压缩开机图片素材");
-				if (ConstantsAdsCode.WIN){
-					try{
-						File inFile = new File(downLoadPath);
-						ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE));
-                        zos.setComment("多文件处理");
-                        zipFile(inFile, zos,  ConstantsAdsCode.START_RESOURCE_PATH);
-                        zos.close(); 
-					}catch(Exception e){
-						log.error("压缩文件出现异常",e);
+				String zipFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode;
+				linuxRun("zip -r",downLoadPath,zipFilePath+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE);
+				
+				//建立OCG服务器的FTP连接
+				if(!ocgService.connectFtpServer(areaCode) ){
+					//还可以重试
+					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
+						continue;
+					}else{  //三次都失败
+						failedToPush(playListId);
+						continue;
 					}
 				}
-				else{
-					linuxRun("zip -r",downLoadPath,zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE);
-				}
-				//开机图片没有任何变化
-//               if (oldmd5.equals(FileDigestUtil.getFileNameMD5(zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE))){
-//                	if(!"".equals(bodyContent)){
-//						bodyContent += ";";
-//					}
-//					bodyContent += "1:1";
-//                	continue;
-//                }
-                //开机图片有变化
-//                else{
-                	String ocgServerPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
-                	//向OCG发送开机素材
-                	log.info("向OCG发送开机图片素材");
-                	boolean success = ocgService.sendFile(areaCode, zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE, ocgServerPath);
-					if(!success){
+				
+				//向OCG发送开机素材
+            	log.info("向OCG发送开机图片素材");
+                String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+                ocgService.sendFileToFtp(zipFilePath+"/"+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE, remoteDir);	
+                
+                ocgService.disConnectFtpServer();
+                
+                //往区域发送NID描述符插入信息
+				String bodyContent = "1:initPic-a.iframe";
+				
+				if(ocgService.sendUiDesc(areaCode, bodyContent)){ //UI更新通知成功
+					//通知OCG投放广告
+					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{
-							unRealTimeAdsPushHelper.cleanPushMap(playListId);
-							pushAdsDao.updateAdsFlag(playListId, "2");
-							unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+							failedToPush(playListId);
 							continue;
 						}
 					}
-                	if(ConstantsAdsCode.START24.equals(UiDesMap.getDefaultstartflag())){//有变化24张图片
-						if(!"".equals(bodyContent)){
-							bodyContent += ";";
-						}
-						bodyContent += "1:initPic-a.iframe";
-					}else if(ConstantsAdsCode.STARTDEFAULT.equals(UiDesMap.getDefaultstartflag())){//有变化的一张默认图片
-						if(!"".equals(bodyContent)){
-							bodyContent += ";";
-						}
-						bodyContent += "1:0";
+				}else{ //UI更新通知失败
+					log.error("往"+areaCode+"区域NID描述符插入信息失败!");
+					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
+						continue;
+					}else{
+						failedToPush(playListId);
+						continue;
 					}
-    				//往区域发送NID描述符插入信息
-    				String ret = uiService.sendUiDesc(bodyContent, areaCode);
-    				if("0".equals(ret)){
-    					//播放前从OCG下载素材进行校验
-                    	if(!validateBeforePlay(areaCode, zipFilePath+File.separator+ConstantsAdsCode.PUSH_STARTSTB_SD_IFRAME_FILE, ocgServerPath)){
-                    		if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-        						continue;
-        					}else{
-    							unRealTimeAdsPushHelper.cleanPushMap(playListId);
-    							pushAdsDao.updateAdsFlag(playListId, "2");
-    							unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
-    							continue;
-    						}
-    					}
-    					ocgService.startPlayPgm(areaCode, InitConfig.getConfigProperty(ConstantsAdsCode.UIPGM),InitConfig.getConfigProperty(ConstantsAdsCode.OCGOUTPUT));						
-    				}else{
-    					log.error("往"+areaCode+"区域NID描述符插入信息失败！return="+ret);
-    					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-    						continue;
-    					}else{
-							unRealTimeAdsPushHelper.cleanPushMap(playListId);
-							pushAdsDao.updateAdsFlag(playListId, "2");
-							unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
-							continue;
-						}
-    				}
-    				log.info("往区域"+areaCode+"发送标清开机图片广告结束");
-    				
-    				//更新播出单状态为已执行
-    				unRealTimeAdsPushHelper.cleanPushMap(playListId);
-    				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "1");               	
-//                }				
+				}
+				
+				log.info("往区域"+areaCode+"发送标清开机图片广告结束");
+				
+				//更新播出单状态为已执行
+				unRealTimeAdsPushHelper.cleanPushMap(playListId);
+				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "1");               	
+			
 			}
 		}
 		
@@ -2436,20 +2382,9 @@ public class PushAdsServiceImpl implements PushAdsService {
 
 	public void sendHdAudioAds(Date startTime) {
 		
-		//查询过期播出单，删除OCG上的广告素材
-		List<AdPlaylistGis> deadAdsList = pushAdsDao.queryEndAds(startTime, ConstantsAdsCode.PUSH_FREQUENCE_HD);		
-		if (deadAdsList!=null && deadAdsList.size()>0){
-			for(AdPlaylistGis adGis : deadAdsList){
-				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-				long playListId = adGis.getId().longValue();
-				if(!ocgService.deleteFile(areaCode, ConstantsAdsCode.ADVRESOURCE_C, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath())){
-					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
-						continue;
-					}
-				}
-				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
-			}
-		}
+		//查询过期播出单，删除OCG上的广告素材		
+		processOverduePlayList(startTime, ConstantsAdsCode.PUSH_FREQUENCE_HD, "高清音频广播");
+		
 		
 		//查询新增播出单
 		List<AdPlaylistGis> newAdsList = pushAdsDao.queryStartAds( startTime, ConstantsAdsCode.PUSH_FREQUENCE_HD);
@@ -2459,112 +2394,89 @@ public class PushAdsServiceImpl implements PushAdsService {
 			for (AdPlaylistGis adGis : newAdsList)
 			{				
 				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-				String bodyContent = "1:1";
 				long playListId = adGis.getId().longValue();
 				
 				log.info("往区域"+areaCode+"发送高清音频广播广告开始");
-				try {
-					ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
-				} catch (Exception e) {
-					log.error("FTP服务器无法连接",e);
-					warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+				
+				//连接素材FTP服务器
+				boolean conSuccessful = ftpService.connectServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
+				
+				if(!conSuccessful){
+					//还可以重新投放
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+					}else{ //投放三次失败
+						failedToPush(playListId);
 						continue;
 					}
-				} 
+				}
 				
+				//从素材FTP服务器下载素材
 				List<String> serviceIdList = getListFromJson(adGis.getChannelId());
 				
-				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioHDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.ADVRESOURCE_HD_PATH;
-				
-				String zipFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode;
-				
-				String serverPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
-				
+				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioHDTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.ADVRESOURCE_HD_PATH;				
+				String zipFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode;
+												
 				if(serviceIdList == null || serviceIdList.size()<=0 ){
 					log.error("广播收听背景播出单 " + adGis.getId() + " 频道列表为空");
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
 					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+						failedToPush(playListId);
 						continue;
 					}
 				}else{
 					log.info("下载广播收听背景素材到本地..");
 					for(String serviceId : serviceIdList){
-						ftpService.download(adGis.getContentPath(),serviceId+".iframe", InitConfig.getAdsResourcePath(), downLoadPath);
+						ftpService.downloadFile(adGis.getContentPath(),serviceId+".iframe", downLoadPath);
 					}
 				}				
-		
-				//String oldmd5=FileDigestUtil.getFileNameMD5(zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_C);
-				String sourcePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioHDTempPath()+File.separator+areaCode+File.separator + "advResource-c";
-				log.info("压缩广播收听背景素材..");
-				if (ConstantsAdsCode.WIN){
-					try{
-						File inFile = new File(sourcePath);
-						ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_C));
-                        zos.setComment("多文件处理");
-                        zipFile(inFile, zos, "");
-                        zos.close(); 
-					}catch(Exception e){
-						log.error("压缩文件异常",e);
+
+				log.info("压缩素材文件..");
+				String sourcePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioHDTempPath()+"/"+areaCode+"/" + "advResource-c";				
+				linuxRun("zip -r",sourcePath,zipFilePath+"/"+ConstantsAdsCode.ADVRESOURCE_C);
+				
+				//建立OCG服务器的FTP连接
+				if(!ocgService.connectFtpServer(areaCode) ){
+					//还可以重试
+					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
+						continue;
+					}else{  //三次都失败
+						failedToPush(playListId);
+						continue;
 					}
 				}
-				else{
-					linuxRun("zip -r",sourcePath,zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_C);
-				}
- //               if (!oldmd5.equals(FileDigestUtil.getFileNameMD5(zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_C)))
- //               {
+
             	//向OCG发送素材文件
 				log.info("向OCG发送广播收听背景素材..");
-            	boolean success = ocgService.sendFile(areaCode, zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_C, serverPath);
-            	if(!success){
-            		if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
-						continue;
-					}
-            	}
-            	bodyContent += ";3:advResource-c.dat";
-				
-				//往区域发送NID描述符插入信息
-				String ret = uiService.sendUiDesc(bodyContent, areaCode);
-				if("0".equals(ret)){
-					//播放素材前下载文件进行校验
-					if(!validateBeforePlay(areaCode, zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_C, serverPath)){
+				String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+            	ocgService.sendFileToFtp(zipFilePath+"/"+ConstantsAdsCode.ADVRESOURCE_C, remoteDir);
+            	
+            	ocgService.disConnectFtpServer();
+            	
+            	//往区域发送NID描述符插入信息
+            	String bodyContent = "3:advResource-c.dat";
+            	
+            	if(ocgService.sendUiDesc(areaCode, bodyContent)){ //UI更新通知成功
+					//通知OCG投放广告
+					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{
-							unRealTimeAdsPushHelper.cleanPushMap(playListId);
-							pushAdsDao.updateAdsFlag(playListId, "2");
-							unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+							failedToPush(playListId);
 							continue;
 						}
 					}
-					ocgService.startPlayPgm(areaCode, InitConfig.getConfigProperty(ConstantsAdsCode.UIPGM),InitConfig.getConfigProperty(ConstantsAdsCode.OCGOUTPUT));	
-
-				}else{
-					log.error("往"+areaCode+"区域NID描述符插入信息失败！return="+ret);
+				}else{ //UI更新通知失败
+					log.error("往"+areaCode+"区域NID描述符插入信息失败!");
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
 					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+						failedToPush(playListId);
 						continue;
 					}
 				}
-//                }
+            	
                 log.info("往区域"+areaCode+"发送高清音频广播广告结束");
 					
 				//更新播出单状态为已执行
@@ -2575,21 +2487,9 @@ public class PushAdsServiceImpl implements PushAdsService {
 	}
 
 	public void sendSdAudioAds(Date startTime) {
-		//查询过期播出单，删除OCG上的广告素材
-		List<AdPlaylistGis> deadAdsList = pushAdsDao.queryEndAds(startTime, ConstantsAdsCode.PUSH_FREQUENCE_SD);		
-		if (deadAdsList!=null && deadAdsList.size()>0){
-			for(AdPlaylistGis adGis : deadAdsList){
-				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-				long playListId = adGis.getId().longValue();
-				if(!ocgService.deleteFile(areaCode, ConstantsAdsCode.ADVRESOURCE_A, InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath())){
-					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
-						continue;
-					}
-				}
-				unRealTimeAdsPushHelper.cleanDelMap(playListId);
-				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
-			}
-		}
+		
+		//查询过期播出单，删除OCG上的广告素材		
+		processOverduePlayList(startTime, ConstantsAdsCode.PUSH_FREQUENCE_SD, "标清音频广播");
 		
 		//查询新增播出单
 		List<AdPlaylistGis> newAdsList = pushAdsDao.queryStartAds( startTime, ConstantsAdsCode.PUSH_FREQUENCE_SD);
@@ -2599,113 +2499,89 @@ public class PushAdsServiceImpl implements PushAdsService {
 			for (AdPlaylistGis adGis : newAdsList)
 			{				
 				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-
-				String bodyContent = "1:1";
 				long playListId = adGis.getId().longValue();
+				
 				log.info("往区域"+areaCode+"发送标清音频广播广告开始");
 				
-				try {
-					ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
-				} catch (Exception e) {
-					log.error("FTP服务器无法连接",e);
-					warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+				//连接素材FTP服务器
+				boolean conSuccessful = ftpService.connectServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
+				
+				if(!conSuccessful){
+					//还可以重新投放
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+					}else{ //投放三次失败
+						failedToPush(playListId);
 						continue;
 					}
-				} 
+				}
 				
+				//从素材FTP服务器下载素材
 				List<String> serviceIdList = getListFromJson(adGis.getChannelId());
 				
-				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioSDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.ADVRESOURCE_SD_PATH;
-				
-				String zipFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+File.separator+areaCode;
-				
-				String serverPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
-				
+				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioSDTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.ADVRESOURCE_SD_PATH;				
+				String zipFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode;
+							
 				if(serviceIdList == null || serviceIdList.size()<=0 ){
 					log.error("播出单中的频道列表为空");
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
 					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+						failedToPush(playListId);
 						continue;
 					}
 				}else{
 					log.info("下载广播收听背景素材到本地..");
 					for(String serviceId : serviceIdList){
-						ftpService.download(adGis.getContentPath(),serviceId+".iframe", InitConfig.getAdsResourcePath(), downLoadPath);
+						ftpService.downloadFile(adGis.getContentPath(),serviceId+".iframe", downLoadPath);
 					}
 				}				
 		
-//				String oldmd5=FileDigestUtil.getFileNameMD5(zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_A);
-				String sourcePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioHDTempPath()+File.separator+areaCode+File.separator + "advResource-a";
-				log.info("压缩广播收听背景素材..");
-				if (ConstantsAdsCode.WIN){
-					try{
-						File inFile = new File(sourcePath);
-						ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_A));
-                        zos.setComment("多文件处理");
-                        zipFile(inFile, zos, "");
-                        zos.close(); 
-					}catch(Exception e){
-						log.error("压缩文件出现异常",e);
+				log.info("压缩素材文件..");
+				String sourcePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioHDTempPath()+"/"+areaCode+"/" + "advResource-a";		
+				linuxRun("zip -r",sourcePath,zipFilePath+"/"+ConstantsAdsCode.ADVRESOURCE_A);
+				
+				//建立OCG服务器的FTP连接
+				if(!ocgService.connectFtpServer(areaCode) ){
+					//还可以重试
+					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
+						continue;
+					}else{  //三次都失败
+						failedToPush(playListId);
+						continue;
 					}
 				}
-				else{
-					linuxRun("zip -r",sourcePath,zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_A);
-				}
-//               if (!oldmd5.equals(FileDigestUtil.getFileNameMD5(zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_A)))
-//                {
+
             	//向OCG发送素材文件
 				log.info("向OCG发送广播收听背景素材..");
-            	boolean success = ocgService.sendFile(areaCode, zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_A, serverPath);
-            	if(!success){
-            		if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
-						continue;
-					}
-            	}
-            	bodyContent += ";3:advResource-a.dat";
-				
+				String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+            	ocgService.sendFileToFtp(zipFilePath+"/"+ConstantsAdsCode.ADVRESOURCE_A, remoteDir);
+            	
+            	ocgService.disConnectFtpServer();
+            	
 				//往区域发送NID描述符插入信息
-				String ret = uiService.sendUiDesc(bodyContent, areaCode);
-				if("0".equals(ret)){
-					//播放素材前下载文件进行校验
-					if(!validateBeforePlay(areaCode, zipFilePath+File.separator+ConstantsAdsCode.ADVRESOURCE_A, serverPath)){
+            	String bodyContent = "3:advResource-a.dat";
+            	
+             	if(ocgService.sendUiDesc(areaCode, bodyContent)){ //UI更新通知成功
+					//通知OCG投放广告
+					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{
-							unRealTimeAdsPushHelper.cleanPushMap(playListId);
-							pushAdsDao.updateAdsFlag(playListId, "2");
-							unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+							failedToPush(playListId);
 							continue;
 						}
 					}
-					ocgService.startPlayPgm(areaCode, InitConfig.getConfigProperty(ConstantsAdsCode.UIPGM),InitConfig.getConfigProperty(ConstantsAdsCode.OCGOUTPUT));	
-
-				}else{
-					log.error("往"+areaCode+"区域NID描述符插入信息失败！return="+ret);
+				}else{ //UI更新通知失败
+					log.error("往"+areaCode+"区域NID描述符插入信息失败!");
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
 					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+						failedToPush(playListId);
 						continue;
 					}
 				}
-//              }
+
                 log.info("往区域"+areaCode+"发送标清音频广播广告结束");
 					
 				//更新播出单状态为已执行
@@ -2717,16 +2593,14 @@ public class PushAdsServiceImpl implements PushAdsService {
 
 	public void sendHdRecomendAds(Date startTime) {
 		
-		//查询过期播出单，删除OCG上的广告素材
+		//查询过期播出单，修改播出单状态
 		List<AdPlaylistGis> deadAdsList = pushAdsDao.queryEndAds(startTime, ConstantsAdsCode.PUSH_RECOMMEND);		
-		String ocgFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getRecommendTargetPath();
 		
 		if (deadAdsList!=null && deadAdsList.size()>0){
 			for(AdPlaylistGis adGis : deadAdsList){
 				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
 			}
 		}
-
 		
 		//查询新增播出单
 		List<AdPlaylistGis> newAdsList = pushAdsDao.queryStartAds( startTime, ConstantsAdsCode.PUSH_RECOMMEND);
@@ -2739,91 +2613,65 @@ public class PushAdsServiceImpl implements PushAdsService {
 		
 				log.info("往区域"+areaCode+"发送推荐页面广告开始");
 				long playListId = adGis.getId().longValue();
-				try {
-					ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
-				} catch (Exception e) {
-					log.error("FTP服务器无法连接 ",e);
-					warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+							
+				//连接素材FTP服务器
+				boolean conSuccessful = ftpService.connectServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
+				
+				if(!conSuccessful){
+					//还可以重新投放
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+					}else{ //投放三次失败
+						failedToPush(playListId);
 						continue;
 					}
 				}
+				
 				String zipFileName = "recomend.zip";   //压缩文件下载到本地，需重命名，这样可比较文件的MD5值
-				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath() + File.separator+areaCode;
-				
-//				String oldmd5=FileDigestUtil.getFileNameMD5(downLoadPath+File.separator+zipFileName);
-				
+				String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath() + "/"+areaCode;
+							
 				//下载素材到本地
 				log.info("下载热点推荐素材到本地..");
-				ftpService.download(adGis.getContentPath(),zipFileName, InitConfig.getAdsResourcePath(), downLoadPath);
-
-				//比较前后文件的MD5值，若发生变化，则解压缩文件，并进行投放
-//				if (!oldmd5.equals(FileDigestUtil.getFileNameMD5(downLoadPath+File.separator+zipFileName))){
-				log.info("压缩热点推荐素材..");
-				if (ConstantsAdsCode.WIN){
-					unZip(downLoadPath + File.separator + zipFileName, downLoadPath);
-				}else{
-					linuxUnZip("unzip -o -d",downLoadPath + File.separator + zipFileName, downLoadPath);
+				ftpService.downloadFile(adGis.getContentPath(),zipFileName, downLoadPath);
+				
+				log.info("解压热点推荐素材..");			
+				linuxUnZip("unzip -o -d",downLoadPath + "/" + zipFileName, downLoadPath);
+				
+				String jsFilePath = downLoadPath+"/"+ConstantsAdsCode.RECOMMEND+"/"+ConstantsAdsCode.HOT_RECOMMEND_JS;
+				String htmFilePath = downLoadPath+"/"+ConstantsAdsCode.RECOMMEND+"/"+ConstantsAdsCode.HOT_RECOMMEND_HTML;
+				String imageFilePath = downLoadPath+"/"+ConstantsAdsCode.RECOMMEND+"/"+ConstantsAdsCode.HOT_RECOMMEND_INAGE;
+				String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getRecommendTargetPath();
+				
+				//建立OCG服务器的FTP连接
+				if(!ocgService.connectFtpServer(areaCode) ){
+					//还可以重试
+					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
+						continue;
+					}else{  //三次都失败
+						failedToPush(playListId);
+						continue;
+					}
 				}
-				String jsFilePath = downLoadPath+File.separator+ConstantsAdsCode.RECOMMEND+File.separator+ConstantsAdsCode.HOT_RECOMMEND_JS;
-				String htmFilePath = downLoadPath+File.separator+ConstantsAdsCode.RECOMMEND+File.separator+ConstantsAdsCode.HOT_RECOMMEND_HTML;
-				String imageFilePath = downLoadPath+File.separator+ConstantsAdsCode.RECOMMEND+File.separator+ConstantsAdsCode.HOT_RECOMMEND_INAGE;
+				
 				log.info("向OCG发送热点推荐素材..");
-				if(!ocgService.sendFile(areaCode, jsFilePath, ocgFilePath)){
+				ocgService.sendFileToFtp(jsFilePath, remoteDir);					
+				ocgService.sendFileToFtp(htmFilePath, remoteDir);					
+				ocgService.sendFileToFtp(imageFilePath, remoteDir);
+				
+				ocgService.disConnectFtpServer();
+				
+				if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
 					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
+						failedToPush(playListId);
 						continue;
 					}
 				}
-				if(!ocgService.sendFile(areaCode, htmFilePath, ocgFilePath)){
-					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
-						continue;
-					}
-				}
-				if(!ocgService.sendFile(areaCode, imageFilePath, ocgFilePath)){
-					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
-						continue;
-					}
-				}
-							
-				boolean isFile1Validated = validateBeforePlay(areaCode, jsFilePath, ocgFilePath);
-				boolean isFile2Validated = validateBeforePlay(areaCode, htmFilePath, ocgFilePath);
-				boolean isFile3Validated = validateBeforePlay(areaCode, imageFilePath, ocgFilePath);
-				if(isFile1Validated && isFile2Validated && isFile3Validated){
-					ocgService.startPlayPgm(areaCode, InitConfig.getConfigProperty(ConstantsAdsCode.RECOMMEND),InitConfig.getConfigProperty(ConstantsAdsCode.OCGOUTPUT));
-				}else{
-					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-						continue;
-					}else{
-						unRealTimeAdsPushHelper.cleanPushMap(playListId);
-						pushAdsDao.updateAdsFlag(playListId, "2");
-						unRealTimeAdsPushHelper.changeOrderStateToFailed(playListId);
-						continue;
-					}
-				}
+				
 				log.info("往区域"+areaCode+"发送推荐页面广告成功");
 				unRealTimeAdsPushHelper.cleanPushMap(playListId);
-				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "1");				
-//				}		
+				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "1");												
 			}
 		}
 	}
@@ -3047,7 +2895,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 //									for (int j=0;j<filenames.length;j++)
 //									{
 //										String resourcPath = InitConfig.getAdsResourcePath();
-//										String fullpath   = resourcPath+"/"+filenames[j];//File.separator+
+//										String fullpath   = resourcPath+"/"+filenames[j];//"/"+
 //										String filename = fullpath.substring(fullpath.lastIndexOf("/")+1);
 //										resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
 //										String adfilename = "";
@@ -3067,7 +2915,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 //									for (int j=0;j<filenames.length;j++)
 //									{
 //										String resourcPath = InitConfig.getAdsResourcePath();
-//										String fullpath   = resourcPath+"/"+filenames[j];//File.separator+
+//										String fullpath   = resourcPath+"/"+filenames[j];//"/"+
 //										String filename = fullpath.substring(fullpath.lastIndexOf("/")+1);
 //										resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
 //										String adfilename = "";
@@ -3296,7 +3144,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 	{
 		File file;
 		try{
-			InputStream is= new FileInputStream (new File (InitConfig.getAdsResourcePath()+File.separator+filename));
+			InputStream is= new FileInputStream (new File (InitConfig.getAdsResourcePath()+"/"+filename));
 			Properties prop = new Properties();
 	 	    prop.load(is);
 	 	    is.close();
@@ -3354,7 +3202,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 	{
 		File file;
 		try{
-			InputStream is= new FileInputStream (new File (InitConfig.getAdsResourcePath()+File.separator+filename));
+			InputStream is= new FileInputStream (new File (InitConfig.getAdsResourcePath()+"/"+filename));
 			Properties prop = new Properties();
 	 	    prop.load(is);
 	 	    is.close();
@@ -3388,7 +3236,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 		File file;
 		String retFiles="";
 		try{
-			InputStream is= new FileInputStream (new File (InitConfig.getAdsResourcePath()+File.separator+filename));
+			InputStream is= new FileInputStream (new File (InitConfig.getAdsResourcePath()+"/"+filename));
 			Properties prop = new Properties();
 	 	    prop.load(is);
 	 	    is.close();
@@ -3452,7 +3300,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 		File file;
 		Map<String,String> retMap = new HashMap<String,String>();
 		try{
-			InputStream is= new FileInputStream (new File (InitConfig.getAdsResourcePath()+File.separator+filename));
+			InputStream is= new FileInputStream (new File (InitConfig.getAdsResourcePath()+"/"+filename));
 			Properties prop = new Properties();
 	 	    prop.load(is);
 	 	    is.close();
@@ -3680,13 +3528,13 @@ public class PushAdsServiceImpl implements PushAdsService {
 			  for (int i = 0; i < file.length; i++) 
 			  {
 				  
-				  if(oldPath.endsWith(File.separator))
+				  if(oldPath.endsWith("/"))
 				  {
 					  temp=new File(oldPath+file[i]);
 				  }
 				  else
 				  { 
-					  temp=new File(oldPath+File.separator+file[i]);
+					  temp=new File(oldPath+"/"+file[i]);
 				  }
 				  if(temp.isFile())
 				  {   
@@ -3757,7 +3605,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 	     } else if (file.isDirectory()) {  
 	      String[] filelist = file.list();  
 	      for (int i = 0; i < filelist.length; i++) {  
-	       File delfile = new File(delpath + File.separator+ filelist[i]);  
+	       File delfile = new File(delpath + "/"+ filelist[i]);  
 	       if (!delfile.isDirectory()) {  
 	    	   if (filelist[i].indexOf(".js")==filelist[i].length()-3)
 		          {
@@ -3853,8 +3701,8 @@ public class PushAdsServiceImpl implements PushAdsService {
 	   public  void linuxRun(String cmd,String inpath,String outfile)
 		{
 			try {
-				String dir = inpath.substring(0,inpath.lastIndexOf(File.separator));
-				String zippath = inpath.substring(inpath.lastIndexOf(File.separator)+1);
+				String dir = inpath.substring(0,inpath.lastIndexOf("/"));
+				String zippath = inpath.substring(inpath.lastIndexOf("/")+1);
 				File workdir =  new File(dir);
 				//Process pro1= Runtime.getRuntime().exec("cd "+dir);
 				//pro1.waitFor();
@@ -3900,14 +3748,12 @@ public class PushAdsServiceImpl implements PushAdsService {
 		   return areaList;
 	   }
 
-
-//	public static Map<String, Boolean> getSendFlagMap() {
-//		if(null == sendFlagMap){
-//			sendFlagMap = new HashMap<String, Boolean>();
-//		}
-//		return sendFlagMap;
-//	}
-	   
+	   private String getParentPath(String path){
+		   if(path.endsWith("/")){
+			   path = path.substring(0, path.length() - 1);
+		   }
+		   return path.substring(0, path.lastIndexOf("/"));
+	   }
 	   
 
 }

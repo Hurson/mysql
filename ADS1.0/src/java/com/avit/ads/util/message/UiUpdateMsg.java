@@ -12,10 +12,6 @@ public class UiUpdateMsg {
 	private String updateType;
 	@XmlAttribute(name="networkID", required = true)
 	private String networkID;
-	@XmlAttribute(name="tsID", required = true)
-	private String tsID;
-	@XmlAttribute(name="servicesID", required = true)
-	private String servicesID;
 	
 
 	public String getUpdateType() {
@@ -33,23 +29,5 @@ public class UiUpdateMsg {
 	public void setNetworkID(String networkID) {
 		this.networkID = networkID;
 	}
-
-	public String getTsID() {
-		return tsID;
-	}
-
-	public void setTsID(String tsID) {
-		this.tsID = tsID;
-	}
-
-	public String getServicesID() {
-		return servicesID;
-	}
-
-	public void setServicesID(String servicesID) {
-		this.servicesID = servicesID;
-	}
-	
-	
 	
 }

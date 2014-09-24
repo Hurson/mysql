@@ -12,6 +12,11 @@ public interface OcgService {
 	 */
 	public void deleteFtpDirFiles(String dirPath);
 	
+	/*
+	 * 删除目录下指定文件
+	 */
+	public void deleteFtpFileIfExist(String fileName, String remoteDir);
+	
 	
 	/**
 	 * 上传目录下所有文件到FTP

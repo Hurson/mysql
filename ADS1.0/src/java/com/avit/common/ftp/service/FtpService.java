@@ -41,6 +41,8 @@ public interface FtpService {
 	 */
 	public void deleteFile(String fileName, String fileDir);
 	
+	public void deleteFileIfExist(String fileName, String remoteDirectory);
+	
 	/**
 	 * 重命名远程文件
 	 * @param fromFile
@@ -55,7 +57,16 @@ public interface FtpService {
 	 * @param systemName
 	 */
 	public void deleteDirFile(String dir);
-	public void setServer(String ip, int port, String username, String password)
-	throws IOException ;
+	
+	public boolean connectServer(String ip, int port, String username, String password);
+	
+	public void setServer(String ip, int port, String username, String password) throws IOException;
+
 	public boolean download(String remoteFileName, String localFileName,String remoteDirectory,String localDirectory);
+	
+	
+	public boolean downloadFile(String remoteFileName, String localFileName,String remoteDirectory,String localDirectory);
+	
+	public boolean downloadFile(String remoteAbsoluteFilePath, String localFileName, String localDirectory);
+	
 }

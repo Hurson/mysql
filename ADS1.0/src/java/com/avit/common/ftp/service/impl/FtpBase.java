@@ -1,16 +1,13 @@
 package com.avit.common.ftp.service.impl;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
 
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
+
+import sun.net.ftp.FtpClient;
 
 /**
  * ftp基类
@@ -126,6 +123,7 @@ public class FtpBase {
 				FtpClient = new FTPClient();
 				FtpClient.setControlEncoding(ENCODING);
 				FtpClient.setDefaultPort(port);
+				//FtpClient.setConnectTimeout(5000);
 				FtpClient.connect(this.ip);
 				FtpClient.login(this.username, this.password);
 
@@ -284,23 +282,20 @@ public class FtpBase {
 					"***** FtpBase closeFTP occur a exception : {} ***** ", e);
 		}
 	}
-	public void setServer(String ip, int port, String username, String password)
-	throws IOException {
-		// TODO Auto-generated constructor stub
+	public void setServer(String ip, int port, String username, String password) throws IOException {
 		this.ip = ip;
 		this.port = port;
 		this.username = username;
 		this.password = password;
-		try {
-			closeFTP();
-			this.FtpClient = this.connectServer();
-			workingDirectory = FtpClient.printWorkingDirectory();
-			FtpClient.setFileTransferMode(2);
-		} catch (IOException e) {
-			logger.error(e.getLocalizedMessage());
-			throw e;
-		}
+		
+		closeFTP();
+
+		this.FtpClient = this.connectServer();
+		workingDirectory = FtpClient.printWorkingDirectory();
+		FtpClient.setFileTransferMode(2);
+		
 	}
+	
 	/*
 	public boolean download(String remoteFileName, String localFileName,String remoteDirectory,String localDirectory) {
 		boolean flag = false;
@@ -383,17 +378,48 @@ public class FtpBase {
         return flag;
     }
 	*/
+	
+	
 	public static void main(String[] args) {
-		FtpBase ftp = null;
-		String dir = "";
-		try {
-			ftp = new FtpBase("192.168.6.150", 21, "root", "111111");
-//			dir = ftp.getFtpFile("/home/portal/resources/resource/poster/aaaa/");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		String dir = "/usr/sbin";
+		//String mkDir = "/root/advertres/bbb/ccc";
+		
+	
+			FtpBase ftp = null;
+			try {
+				ftp = new FtpBase("192.168.2.224", 21, "root", "111111");
+			
+				FTPClient client = ftp.getFtpClient();
+			
+				System.out.println( client.changeWorkingDirectory(dir) );
+			
+				System.out.println(	client.printWorkingDirectory() );
+				
+//				String f1 = "1.txt";
+//				String f2 = "2.txt";
+//				
+//				System.out.println(  client.deleteFile(f1) );
+//				System.out.println(  client.deleteFile(f2) );
+			
+				for(String fileName : client.listNames()){
+					System.out.println(fileName);
+				}
+			} catch (IOException e) {
+			
+				e.printStackTrace();
+			}
+//		 System.out.println(	client.printWorkingDirectory() );
+//		 mkDir = ftp.getPathRegular(mkDir);
+//		 System.out.println(mkDir);
+//		 ftp.changeDirectory(mkDir);
+		// System.out.println(	 );
+			
+			
+		
+	}
 
-		//ftp.listFile(dir);
+	public FTPClient getFtpClient() {
+		return FtpClient;
 	}
 }

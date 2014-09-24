@@ -1,7 +1,6 @@
 package com.avit.ads.pushads.ocg.service.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -54,17 +53,7 @@ public class OcgServiceImpl implements OcgService {
 				int port = Integer.parseInt(ocg.getPort());
 				String user = ocg.getUser();
 				String pwd = ocg.getPwd();
-				try {
-					ftpService.setServer(ip, port, user, pwd);
-				} catch (IOException e) {
-					String errMsg = "OCG系统的FTP无法连接   areaCode:" + areaCode
-							+ ", ip: " + ip + ", port: " + port + ", user: "
-							+ user + ", pwd: " + pwd;
-					logger.error(errMsg, e);
-					warnHelper.writeWarnMsgToDb(errMsg);
-					return false;
-				}
-				return true;
+				return ftpService.connectServer(ip, port, user, pwd);
 			}
 		}
 
@@ -76,6 +65,10 @@ public class OcgServiceImpl implements OcgService {
 
 	public void deleteFtpDirFiles(String dirPath) {
 		ftpService.deleteDirFile(dirPath);
+	}
+	
+	public void deleteFtpFileIfExist(String fileName, String remoteDir) {
+		ftpService.deleteFileIfExist(fileName, remoteDir);
 	}
 
 	public void sendDirFilesToFtp(String localDirPath, String remotDirPath) {
@@ -136,7 +129,9 @@ public class OcgServiceImpl implements OcgService {
 	public boolean sendUiDesc(String areaCode, String description) {
 		UiUpdateMsg sendMsgEntity = new UiUpdateMsg();
 		sendMsgEntity.setUpdateType(description);
-
+		String nid = InitConfig.getAreaMap().get(areaCode);
+		sendMsgEntity.setNetworkID(nid);
+		
 		String sendMsg = helper.toXML(sendMsgEntity);
 
 		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
@@ -632,8 +627,8 @@ public class OcgServiceImpl implements OcgService {
 		UiUpdateMsg uiMsg = new UiUpdateMsg();
 		uiMsg.setUpdateType("1:initPic-c.iframe,5:0");
 		uiMsg.setNetworkID("6280");
-		uiMsg.setServicesID("0");
-		uiMsg.setTsID("10086");
+//		uiMsg.setServicesID("0");
+//		uiMsg.setTsID("10086");
 
 		UNTMessage uNTMsg = initUNTMsg(1);
 		//UNTMessage uNTMsg = initUNTMsg(2);

@@ -118,6 +118,13 @@ public class ConstantsHelper {
     public static final String UNT_UPDATE_ADCONFIG="/adconfigurationfile?update&templateid=a";
     public static final String UNT_UPDATE_ADLINGK="";
     
+    /** UNT更新使用模板*/
+    public static final String UNT_UPDATE_TEMPLATE="a";
+    /** UNT更新配置文件路径*/
+    public static final String UNT_UPDATE_ADCONFIG_PATH="adv://ocg/unt/adConfig";
+    /** UNT更新素材文件路径*/
+    public static final String UNT_UPDATE_ADPIC_PATH="adv://ocg/unt/adPic";
+    
     public static final int OCG_UDP_PORT = 30005;
     
     public static final int OCG_UDP_RET_MSG_MAX_LENGTH = 212; 
@@ -129,5 +136,10 @@ public class ConstantsHelper {
     public static final int REALTIME_UNT_MESSAGE_ADIMAGE= 4; 
     public static final int REALTIME_UNT_MESSAGE_STB= 5; 
     public static final int REALTIME_UNT_MESSAGE_CHANNE= 6; 
+    
+    /** 主频点，对应原UI路径*/
+    public static final String MAIN_CHANNEL = "1";
+    /** 所有频点，对应原UNT路径*/
+    public static final String ALL_CHANNEL = "2";
     
 }
