@@ -260,7 +260,8 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 			if (StringUtils.isNotBlank(localDirectory)) {
 				if (StringUtils.isNotBlank(remoteDirectory)) {
 					remoteDirectory = getPathRegular(remoteDirectory);
-					if (!changeDirectory(remoteDirectory)) {
+					//if (!changeDirectory(remoteDirectory)) {
+					if (!changeDirectoryIsExsits(remoteDirectory)) {
 						logger.info("切换远程目录失败，请检查所传路径是否正确，具体路径为"
 								+ remoteDirectory);
 						return flag;

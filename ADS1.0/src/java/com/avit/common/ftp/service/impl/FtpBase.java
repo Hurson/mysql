@@ -243,6 +243,32 @@ public class FtpBase {
 		}
 		return true;
 	}
+	
+   protected boolean changeDirectoryIsExsits(String dir){
+		
+		int start = 0;
+		int end = -1;
+		String tempdir = null;
+		boolean flag = false;
+		try {
+			FtpClient.changeWorkingDirectory("/");
+			while ((end = dir.indexOf("/", start)) > 0) {
+				tempdir = dir.substring(start, end);
+				start = end + 1;
+				flag = FtpClient.changeWorkingDirectory(tempdir);
+			}
+			if (start > 0) {
+				tempdir = dir.substring(start);
+				flag = FtpClient.changeWorkingDirectory(tempdir);
+			}
+		} catch (Exception e) {
+			logger.error("***** FtpBase changeDirectory occur a exception : {} ***** ",e);
+			return false;
+		}
+		return flag;
+	}
+	
+	
 
 	/**
 	 * 关闭FTP连接
