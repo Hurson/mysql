@@ -14,7 +14,7 @@ public class MsubtitleInfo {
 	private String serviceID;
 	@XmlAttribute(name="actionType", required = true)
 	private String actionType;
-	@XmlAttribute(name="Timeout", required = true)
+	@XmlAttribute(name="timeout", required = true)
 	private String timeout;
 	@XmlAttribute(name="fontSize", required = true)
 	private String fontSize;
