@@ -142,4 +142,9 @@ public class ConstantsHelper {
     /** 所有频点，对应原UNT路径*/
     public static final String ALL_CHANNEL = "2";
     
+    /**  OCG使用参数 */
+    public static final String UNT_TYPE = "1";
+    public static final String UI_TYPE = "2";
+    public static final String RECOMMEND_TYPE = "3";
+    
 }

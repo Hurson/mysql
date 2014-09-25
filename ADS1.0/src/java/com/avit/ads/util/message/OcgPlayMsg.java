@@ -12,6 +12,9 @@ public class OcgPlayMsg {
 	private String sendPath;
 	@XmlAttribute(name="sendType", required = true)
 	private String sendType;
+	@XmlAttribute(name="adsType", required = true)
+	private String adsType;
+	
 	public String getSendPath() {
 		return sendPath;
 	}
@@ -24,5 +27,12 @@ public class OcgPlayMsg {
 	public void setSendType(String sendType) {
 		this.sendType = sendType;
 	}
+	public String getAdsType() {
+		return adsType;
+	}
+	public void setAdsType(String adsType) {
+		this.adsType = adsType;
+	}
+	
 	
 }

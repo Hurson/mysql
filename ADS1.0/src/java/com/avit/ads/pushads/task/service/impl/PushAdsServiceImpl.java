@@ -967,7 +967,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 			 */
 			
 			String sendPath = getParentPath(targetPicDir);
-			boolean ocgPlaySuccess = ocgService.startOcgPlay(areaCode, sendPath, ConstantsHelper.ALL_CHANNEL);
+			boolean ocgPlaySuccess = ocgService.startOcgPlay(areaCode, sendPath, ConstantsHelper.ALL_CHANNEL, ConstantsHelper.UNT_TYPE);
 			
 			if(!ocgPlaySuccess){
 				sendFlagHelper.decreaseSendTimes(areaCode);
@@ -2078,7 +2078,6 @@ public class PushAdsServiceImpl implements PushAdsService {
 			for (AdPlaylistGis adGis : newAdsList)
 			{
 				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
-				String bodyContent = "";
 				long playListId = adGis.getId().longValue();
 				
 				log.info("开始往区域"+areaCode+"发送高清开机视频广告");
@@ -2140,11 +2139,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 					ocgService.disConnectFtpServer();
 					
 					//往区域发送NID描述符插入信息
-					bodyContent += "5:initVideo-c.ts";
+					String bodyContent = "5:initVideo-c.ts";
 					//UI更新通知成功
-					if(ocgService.sendUiDesc(areaCode, bodyContent)){
+					if(ocgService.sendUiDesc(areaCode, bodyContent, remoteDir)){
 						//通知OCG投放广告
-						if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
+						if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
 							if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 								continue;
 							}else{
@@ -2247,9 +2246,9 @@ public class PushAdsServiceImpl implements PushAdsService {
             	//往区域发送NID描述符插入信息
             	String bodyContent = "1:initPic-c.iframe";
 								
-				if(ocgService.sendUiDesc(areaCode, bodyContent)){ //UI更新通知成功
+				if(ocgService.sendUiDesc(areaCode, bodyContent, remoteDir)){ //UI更新通知成功
 					//通知OCG投放广告
-					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
+					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{
@@ -2348,9 +2347,9 @@ public class PushAdsServiceImpl implements PushAdsService {
                 //往区域发送NID描述符插入信息
 				String bodyContent = "1:initPic-a.iframe";
 				
-				if(ocgService.sendUiDesc(areaCode, bodyContent)){ //UI更新通知成功
+				if(ocgService.sendUiDesc(areaCode, bodyContent, remoteDir)){ //UI更新通知成功
 					//通知OCG投放广告
-					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
+					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{
@@ -2457,9 +2456,9 @@ public class PushAdsServiceImpl implements PushAdsService {
             	//往区域发送NID描述符插入信息
             	String bodyContent = "3:advResource-c.dat";
             	
-            	if(ocgService.sendUiDesc(areaCode, bodyContent)){ //UI更新通知成功
+            	if(ocgService.sendUiDesc(areaCode, bodyContent, remoteDir)){ //UI更新通知成功
 					//通知OCG投放广告
-					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
+					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{
@@ -2562,9 +2561,9 @@ public class PushAdsServiceImpl implements PushAdsService {
 				//往区域发送NID描述符插入信息
             	String bodyContent = "3:advResource-a.dat";
             	
-             	if(ocgService.sendUiDesc(areaCode, bodyContent)){ //UI更新通知成功
+             	if(ocgService.sendUiDesc(areaCode, bodyContent, remoteDir)){ //UI更新通知成功
 					//通知OCG投放广告
-					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
+					if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{
@@ -2660,7 +2659,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				
 				ocgService.disConnectFtpServer();
 				
-				if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL)){
+				if(!ocgService.startOcgPlay(areaCode, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.RECOMMEND_TYPE)){
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
 					}else{

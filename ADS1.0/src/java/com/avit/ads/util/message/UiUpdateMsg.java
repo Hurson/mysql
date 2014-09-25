@@ -12,6 +12,8 @@ public class UiUpdateMsg {
 	private String updateType;
 	@XmlAttribute(name="networkID", required = true)
 	private String networkID;
+	@XmlAttribute(name="filePath", required = true)
+	private String filePath;
 	
 
 	public String getUpdateType() {
@@ -29,5 +31,15 @@ public class UiUpdateMsg {
 	public void setNetworkID(String networkID) {
 		this.networkID = networkID;
 	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+	
+	
 	
 }

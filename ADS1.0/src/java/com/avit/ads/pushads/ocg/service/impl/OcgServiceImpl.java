@@ -88,11 +88,12 @@ public class OcgServiceImpl implements OcgService {
 	}
 
 	public boolean startOcgPlay(String areaCode, String sendPath,
-			String sendType) {
+			String sendType, String adsType) {
 
 		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
 		sendMsgEntity.setSendPath(sendPath);
 		sendMsgEntity.setSendType(sendType);
+		sendMsgEntity.setAdsType(adsType);
 
 		String sendMsg = helper.toXML(sendMsgEntity);
 
@@ -126,17 +127,18 @@ public class OcgServiceImpl implements OcgService {
 		return false;
 	}
 
-	public boolean sendUiDesc(String areaCode, String description) {
+	public boolean sendUiDesc(String areaCode, String description, String filePath) {
 		UiUpdateMsg sendMsgEntity = new UiUpdateMsg();
 		sendMsgEntity.setUpdateType(description);
 		String nid = InitConfig.getAreaMap().get(areaCode);
 		sendMsgEntity.setNetworkID(nid);
+		sendMsgEntity.setFilePath(filePath);
 		
 		String sendMsg = helper.toXML(sendMsgEntity);
 
 		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
 		for (Ocg ocg : ocgList) {
-			if (ocg.getAreaCode().equals(areaCode)) {
+			if (ocg.getAreaCode().equals("0")) {
 				String ip = ocg.getIp();
 				int port = ConstantsHelper.OCG_UDP_PORT;
 				byte[] retBuf = sendUdpMsg(ip, port, sendMsg);

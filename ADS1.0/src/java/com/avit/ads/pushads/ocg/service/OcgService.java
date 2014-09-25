@@ -39,10 +39,10 @@ public interface OcgService {
 	/**
 	 * OCG投放广告
 	 */
-	public boolean startOcgPlay(String areaCode, String sendPath, String sendType);
+	public boolean startOcgPlay(String areaCode, String sendPath, String sendType, String adsType);
 	
 	
-	public boolean sendUiDesc(String areaCode, String description);
+	public boolean sendUiDesc(String areaCode, String description, String filePath);
 	
 	/**
 	 * 发送文件到OCG系统
