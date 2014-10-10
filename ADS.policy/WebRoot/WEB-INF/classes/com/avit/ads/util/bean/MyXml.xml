@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AdInsertRequestPlaylists>
+	<adInsertRespCode>0</adInsertRespCode>
+	<AdInsertRespContent>
+		<tvnId>41257486319</tvnId>
+		<token>24157857-asfrecgthfgfg-3729854</token>
+		<InsertedAdList>
+			<insertedAd>
+				<adSeq>1528</adSeq>
+				<adType>5</adType>
+				<adUrl>http://www.baidu.com/13_32/ptest.mp4</adUrl>
+				<insertedTime>0</insertedTime>
+				<adCode>0214</adCode>
+			</insertedAd>
+			<insertedAd>
+				<adSeq>1529</adSeq>
+				<adType>4</adType>
+				<adUrl>http://www.baidu.com/17_25test.jpg</adUrl>
+				<insertedTime></insertedTime>
+				<adCode>0215</adCode>
+			</insertedAd>
+			<insertedAd>
+				<adSeq>1530</adSeq>
+				<adType>4</adType>
+				<adUrl>http://www.baidu.com/19_28test.jpg</adUrl>
+				<insertedTime></insertedTime>
+				<adCode>0216</adCode>
+			</insertedAd>
+			<insertedAd>
+				<adSeq>1531</adSeq>
+				<adType>3</adType>
+				<adText>action=控制显示动作，取值为0表示关闭，取值为1表示显示;content=字幕内容;durationTime=
+					字幕持续多长时间后消失，以毫秒为单位，0代表一直显示;fontColor=red;fontSize=12;regionAbove=1;regionHeight=2;regionLeft=2;regionWidth=3;regionColor=red;speed=1221;tvn=123123;linkurl=http://www.baidu.com
+				</adText>
+				<insertedTime></insertedTime>
+				<adCode>0217</adCode>
+			</insertedAd>
+		</InsertedAdList>
+	</AdInsertRespContent>
+</AdInsertRequestPlaylists>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr//dwr20.dtd">
+<dwr>
+	<allow>
+ <!-- add by songmiao 20110727 -->
+        <create creator="spring" javascript="ErmTsid" scope="application">
+            <param name="beanName" value="ErmTsidAction"/>
+            <include method="deleteErmTsidInfo"/>
+            <include method="getErmTsidById"/>
+            <include method="updateErmTsidInfo"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.sm.resource.beans.ErmTsidInfo" />
+     <!-- add by songmiao 20110730-->
+        <create creator="spring" javascript="EigSopg" scope="application">
+            <param name="beanName" value="EigSopgAction"/>
+            <include method="deleteEigSopgInfo"/>
+            <include method="getEigSopgById"/>
+            <include method="updateEigSopgInfo"/>
+        </create>
+        
+        <convert converter="bean" match="com.avit.mmsp.sm.resource.beans.EigSopgInfo" />
+        
+        <!-- add by songmiao 20110727 -->
+        <create creator="spring" javascript="SopgOdrm" scope="application">
+            <param name="beanName" value="SopgOdrmAction"/>
+            <include method="deleteSopgOdrmInfo"/>
+            <include method="getSopgOdrmById"/>
+            <include method="updateSopgOdrmInfo"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.sm.resource.beans.SopgOdrmInfo" />
+        
+         <!-- add by songmiao 2011083 -->
+        <create creator="spring" javascript="OdrmServer" scope="application">
+            <param name="beanName" value="odrmServerAction"/>
+            <include method="getOdrmServerById"/>
+            <include method="updateODRMServer"/>
+        </create>
+        
+        <convert converter="bean" match="com.avit.mmsp.sm.odrmserver.beans.OdrmServer"/>
+        
+       
+         <!-- ErmServer管理 add by songmiao 20110808-->
+        <create creator="spring" javascript="ErmServerSm" scope="application">
+            <param name="beanName" value="ermServerAction"/>
+            <include method="getErmServerById"/>
+            <include method="updateERMServer"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.sm.ermserver.beans.ErmServer"/>
+        <!-- add by songmiao 20110730-->
+        <create creator="spring" javascript="Session" scope="application">
+            <param name="beanName" value="QuerySessionAction"/>
+            <include method="getSessionById"/>
+          <include method="updateSessionInfo"/>
+        </create>
+         <convert converter="bean" match="com.avit.mmsp.sm.session.beans.SessionInfo"/>
+ 
+ 
+ <!-- odrm -->
+ 
+         <create creator="spring" javascript="SopGroup" scope="application">
+			<param name="beanName" value="vsSopManagerAction"/>
+			<include method="getSopGroupById"/>
+			<include method="updateSopGroup"/>
+		</create>
+        <convert converter="bean" match="com.avit.mmsp.odrm.sopg.beans.SOPGroup" />
+        
+        <!-- add by liaotiansheng 20110727 -->
+        <create creator="spring" javascript="VsType" scope="application">
+            <param name="beanName" value="vsTypeManagerAction"/>
+            <include method="getVsTypeById"/>
+            <include method="updateVsTypeInfo"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.odrm.vs.beans.VsTypeInfo"/>
+        
+         
+        <!-- add by liaotiansheng 20110801 -->
+        <create creator="spring" javascript="VsInfo" scope="application">
+            <param name="beanName" value="vsManagerAction"/>
+            <include method="getVsInfoById"/>
+            <include method="updateVsInfo"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.odrm.vs.beans.VsInfo"/>
+        <convert converter="bean" match="com.avit.mmsp.odrm.serviceArea.beans.ServiceAreaBean"/>
+        
+         <!-- add by liaotiansheng 20111018 -->
+        <create creator="spring" javascript="AutoDiscoverServer" scope="application">
+            <param name="beanName" value="autoDiscoverManagerAction"/>
+            <include method="getAutoDiscoverServerById"/>
+            <include method="updateAutoDiscoverServer"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.odrm.autodiscover.beans.AutoDiscoverServer"/>
+<!-- iscg -->
+	<create creator="spring" javascript="ServiceAction" scope="application">
+            <param name="beanName" value="serviceAction"/>
+            <include method="getServiceById"/>
+            <include method="isServiceCodeExist"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.service.beans.ServiceBean"/>
+        
+        <create creator="spring" javascript="Storage" scope="application">
+            <param name="beanName" value="storageAction"/>
+            <include method="getStorageById"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.storage.beans.StorageBean"/>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.storage.beans.StorageTypeInfo"/>
+        
+         <create creator="spring" javascript="StorageType" scope="application">
+            <param name="beanName" value="StorageTypeManagerAction"/>
+            <include method="getVsTypeById"/>
+            <include method="updateVsTypeInfo"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.storage.beans.StorageTypeInfo"/>
+        
+        <create creator="spring" javascript="ServiceArea" scope="application">
+            <param name="beanName" value="serviceAreaAction"/>
+            <include method="getServiceAreaById"/>
+             <include method="getServiceAreaListByService"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.serviceArea.beans.ServiceAreaBean"/>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.service.beans.ServiceBean"/>
+        
+        <create creator="spring" javascript="AreaRelation" scope="application">
+            <param name="beanName" value="areaRelationAction"/>
+            <include method="getAreaRelationById"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.areaRelation.beans.AreaRelationBean"/>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.subArea.beans.SubAreaBean"/>
+        
+        <create creator="spring" javascript="VsStorage" scope="application">
+            <param name="beanName" value="vsStorageAction"/>
+            <include method="getVsStorageById"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.vsStorage.bean.VsStorageBean"/>
+        
+        <create creator="spring" javascript="CustomerBaseService" scope="application">
+            <param name="beanName" value="customerBaseServiceAction"/>
+            <include method="getCustomerBaseServiceById"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.customerBaseService.beans.CustomerBaseServiceBean"/>
+        
+        <create creator="spring" javascript="ServiceCharacter" scope="application">
+            <param name="beanName" value="serviceCharacterAction"/>
+            <include method="getServiceCharacterById"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.serviceCharacter.beans.ServiceCharacterBean"/>
+        
+        <create creator="spring" javascript="CustomerService" scope="application">
+            <param name="beanName" value="customerServiceAction"/>
+            <include method="getCustomerServiceById"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.customerService.beans.CustomerServiceBean"/>
+        
+        <create creator="spring" javascript="AreaIp" scope="application">
+            <param name="beanName" value="areaIpAction"/>
+            <include method="getAreaIpById"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.serviceArea.beans.AreaIpBean"/>
+        
+        <create creator="spring" javascript="Frequency" scope="application">
+            <param name="beanName" value="FrequencyAction"/>
+            <include method="getFrequencyById"/>
+        </create>
+        <convert converter="bean" match="cn.com.avit.mmsp.siag.resource.beans.FrequencyBean"/>
+         
+ <!-- erm -->
+  <!-- qamgroup 管理 add by hemeijin 20110803-->
+        <create creator="spring" javascript="channelgroup" scope="application">
+            <param name="beanName" value="qamGroupManagerAction"/>
+            <include method="getQamGroupById"/>
+            <include method="updateQamGroup"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.erm.qamgroup.beans.ChannelGroup"/>
+
+        <!-- ipqam 管理 add by hemeijin 20110811-->
+        <create creator="spring" javascript="ipQam" scope="application">
+            <param name="beanName" value="ipQamManagerAtion"/>
+            <include method="getIpqamById"/>
+            <include method="getEiListByIpqamId"/>
+            <include method="getIpQamTypeInfoList"/>
+            <include method="deleteEiAndEiMapping"/>
+            <include method="synServiceFrequency"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.erm.ipqam.beans.QamChannel"/>
+        <convert converter="bean" match="com.avit.mmsp.erm.ipqam.beans.Ipqam"/>
+        <convert converter="bean" match="com.avit.mmsp.erm.ipqam.beans.ErmEi">
+            <param name="include" value="id,ip,bandwidth"/>
+        </convert>
+        <convert converter="bean" match="com.avit.mmsp.erm.ipqam.beans.IpQamTypeInfo"/>
+
+        <!-- ErmServer管理 add by liaotiansheng 20110808-->
+        <create creator="spring" javascript="ErmServer" scope="application">
+            <param name="beanName" value="ermServerAction"/>
+            <include method="getErmServerById"/>
+            <include method="updateERMServer"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.erm.ermserver.beans.ErmServer"/>
+        
+        <!-- IpQam类型管理 add by liaotiansheng 20110810-->
+        <create creator="spring" javascript="IpQamType" scope="application">
+            <param name="beanName" value="ipQamTypeManagerAction"/>
+            <include method="getIpQamTypeInfoById"/>
+            <include method="updateIpQamTypeInfo"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.erm.ipqam.beans.IpQamTypeInfo"/>
+
+        <!-- ipqam 管理 add by hemeijin 20110811-->
+        <create creator="spring" javascript="QamChannel" scope="application">
+            <param name="beanName" value="ipQamManagerAtion"/>
+            <include method="getChannelById"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.erm.ipqam.beans.QamChannel"/>
+
+        
+         <!-- Eig管理 add by liaotiansheng 20110811-->
+        <create creator="spring" javascript="ErmEig" scope="application">
+            <param name="beanName" value="ermEigManagerAction"/>
+            <include method="getEigInfoById"/>
+            <include method="updateEigInfo"/>
+        </create>
+        <convert converter="bean" match="com.avit.mmsp.erm.ipqam.beans.ErmEig"/>
+        
+        <!-- 自发现管理 add by liaotiansheng 20111019 -->
+        <create creator="spring" javascript="AutoDiscoverServerErm" scope="application">
+            <param name="beanName" value="autoDiscoverManagerAction"/>
+            <include method="getAutoDiscoverServerById"/>
+            <include method="updateAutoDiscoverServer"/>
+        </create>
+        
+        <!-- 区域管理  -->
+		<create creator="spring" javascript="Area" scope="application">
+		<param name="beanName" value="areaManagerAction"/>
+            <include method="reLoadTree"/>
+            <include method="checkAreaName"/>
+            <include method="checkAreaCode"/>
+            <include method="allowDelArea"/>
+        </create>
+        
+        <!-- OTT域管理  -->
+		<create creator="spring" javascript="OttConfig" scope="application">
+		<param name="beanName" value="ottConfigAction"/>
+            <include method="checkOttConfigName"/>
+        </create>
+        
+         <!-- IP池管理  -->
+		<create creator="spring" javascript="IpPool" scope="application">
+		<param name="beanName" value="ipPoolAction"/>
+            <include method="checkPoolCode"/>
+        </create>
+        
+        <convert converter="bean" match="com.avit.mmsp.erm.autodiscover.beans.AutoDiscoverServer"/>      
+	</allow>
+		
+ 
+</dwr>

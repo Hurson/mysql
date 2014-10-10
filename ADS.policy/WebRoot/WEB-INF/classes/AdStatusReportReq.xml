@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AdStatusReportReqXmlBean>
+	<tvnId></tvnId>
+	<token></token>
+	<AdReportList>
+		<AdStatus>
+			<seq></seq>
+			<status></status>
+		</AdStatus>
+		<AdStatus>
+			<seq></seq>
+			<status></status>
+		</AdStatus>
+		<AdStatus>
+			<seq></seq>
+			<status></status>
+		</AdStatus>
+		<AdStatus>
+			<seq></seq>
+			<status></status>
+		</AdStatus>
+	</AdReportList>
+</AdStatusReportReqXmlBean>

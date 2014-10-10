@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="adsdecision"
+  id="myeclipse.1358731898047"
+  context-root="/ads"
+  j2ee-spec="5.0"
+  archive="adsdecision.war">
+  <attributes>
+    <attribute name="webrootdir" value="/WebRoot" />
+  </attributes>
+</project-module>
+

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AdStatusReportReq>
+	<tvnId></tvnId>
+	<token></token>
+	<AdReportList>
+		<AdStatus>
+			<seq></seq>
+			<status></status>
+		</AdStatus>
+		<AdStatus>
+			<seq></seq>
+			<status></status>
+		</AdStatus>
+		<AdStatus>
+			<seq></seq>
+			<status></status>
+		</AdStatus>
+	</AdReportList>
+	<subTitleStaus></subTitleStaus>
+	<rightTopPicStatus></rightTopPicStatus>
+	<pausePic></pausePic>
+</AdStatusReportReq>

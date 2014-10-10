@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" rev="stylesheet" href="../../css/main.css" type="text/css" media="all"/>
+    <TITLE>Calendar</TITLE>
+    
+    <script type="text/javascript" src="../../js/avit.js"></script>
+
+    <script type="text/javascript">
+        <!--// Hide JS Code
+
+        // AUTHOR:       HeMeiJin
+        // COMPANY:      AVIT
+
+        var htmlfile = "Calendar.htm"
+        var defaultFormat = "yyyy/mm/dd";
+        var dateField = "";
+        // text element of the date field
+        var dateFormat = defaultFormat;
+        var days = new Array('日', '一', '二', '三', '四', '五', '六');
+        var months = new Array("1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月");
+        var numDays = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+        var today = new Date();
+        var currMonth;
+        var selectYear;
+        var textid;
+        init();
+        var str = location.href;
+        if (str.indexOf("<script>") != -1) {
+            window.location.href = htmlfile;
+        }
+
+        function init() {
+            dateField = queryString("field");
+            dateFormat = unescape(queryString("format"));
+            // unescape to support FORM submitting.
+            if (dateFormat == null) dateFormat = defaultFormat;
+
+            var m = queryString("m");
+            if (m == null) m = today.getMonth() + 1;
+
+            var y = queryString("y");
+            if (y == null) y = today.getFullYear();
+            selectYear = y;
+
+            this.textid = queryString("textid");
+            currMonth = new Month(y, m);
+        }
+
+        function queryString(key) {
+            var href = window.location.search;
+            var lhref = href.toLowerCase();
+            var pos = lhref.indexOf(key + "=");
+            if (pos == -1) return null;
+
+            var next = lhref.indexOf("&", pos);
+
+            var value = href.substring(pos + key.length + 1, (next == -1) ? 999 : next);
+            return value;
+        }
+
+        function showCalendar(id, dateFormat, isLeft) {
+            this.textid = id;
+            this.dateFormat = dateFormat;
+            window.parent.showCalendar(id, dateFormat, isLeft);
+        }
+        function returnDate(y, m, d) {
+            parent.document.getElementById(textid).value = format(dateFormat, y, m, d);
+
+            var calendarFrame = parent.document.getElementById('calendarFrame');
+            calendarFrame.style.visibility = 'hidden';
+            if (textid == "investorsbirthdays") {
+                window.parent.getAdult();
+            }
+        }
+
+        function close() {
+            var calendarFrame = parent.document.getElementById('calendarFrame');
+            calendarFrame.style.visibility = 'hidden';
+        }
+
+        function format(f, y, m, d) {
+            var ds = replace(f, "yyyy", y);
+            ds = replace(ds, "yy", y.toString().substr(2));
+            ds = replace(ds, "y", y);
+            ds = replace(ds, "mmm", months[m - 1]);
+            ds = replace(ds, "mm", (100 + m).toString().substr(1));
+            ds = replace(ds, "m", m);
+            ds = replace(ds, "dd", (100 + d).toString().substr(1));
+            ds = replace(ds, "d", d);
+            return ds;
+        }
+
+        function Month(y, m) {
+            // properties
+            this.year = y - 0;
+            // minus 0 to convert it to number
+            this.month = m - 0;
+            this.name = months[m - 1];
+            this.length = numDays[m - 1];
+            if ((m == 2) && ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0)) this.length = 29;
+
+            var d = new Date(this.year, this.month - 1, 1);
+            this.firstDay = d.getDay();
+        }
+
+        function getRelativeMonth(mth, n) { // n must be -12 to +12
+            var m = mth.month + n;
+            var y = mth.year;
+
+            if (m <= 0) {
+                m += 12;
+                y--;
+            } else if (m > 12) {
+                m -= 12;
+                y++;
+            }
+
+            return new Month(y, m);
+        }
+
+        function replace(str, o, n) {
+            var pos = str.indexOf(o);
+            if (pos == -1) return str;
+            return str.substr(0, pos) + n + str.substr(pos + o.length);
+        }
+
+        function changeYear() {
+            var url = htmlfile + "?field=" + dateField + "&textid=" + textid + "&m=" + (currMonth.month) + "&y=" + document.getElementById('year').value + "&format=" + dateFormat;
+            window.location.href = url;
+        }
+        function changeMonth() {
+            var url = htmlfile + "?field=" + dateField + "&textid=" + textid + "&m=" + document.getElementById('month').value + "&y=" + (currMonth.year) + "&format=" + dateFormat;
+            window.location.href = url;
+        }
+        function onPrev() {
+            var url = htmlfile + "?field=" + dateField + "&textid=" + textid + "&m=" + (prevMonth.month) + "&y=" + (prevMonth.year) + "&format=" + dateFormat;
+            window.location.href = url;
+        }
+        function onNext() {
+            var url = htmlfile + "?field=" + dateField + "&textid=" + textid + "&m=" + (nextMonth.month) + "&y=" + (nextMonth.year) + "&format=" + dateFormat;
+            window.location.href = url;
+        }
+        function write(value) {
+            if (value.match(/^[0-9\W\w]*$/)) {
+                document.writeln(value);
+            }
+        }
+
+        //-->
+    </SCRIPT>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" style="margin-left:0px;margin-top:0px;" class="cal">
+<FORM name=calForm>
+    <TABLE cellspacing=0 width=245 align="center">
+        <TD class="calTD">
+            <TABLE border=0 cellspacing=1 width=245>
+                <TR class=TABLEHEAD align=center>
+                    <SCRIPT language=javascript>
+                        var prevMonth = getRelativeMonth(currMonth, -1);
+                        var nextMonth = getRelativeMonth(currMonth, 1);
+                        write("<TD colspan=1 class=TABLEHEAD><A class='TABLEHEAD' href='javascript:onPrev()'>上月</A></TD>")
+                        write("<TD colspan=5 class=TABLEHEAD>");
+                        //  + currMonth.name + ", " + currMonth.year + "</TD>")
+                        write("<INPUT type=hidden name=textid value=" + textid + ">");
+                        write("<INPUT type=hidden name=field value=" + dateField + ">");
+                        write("<INPUT type=hidden name=format value=" + dateFormat + ">");
+
+                        write("<SELECT id='year' NAME=y onChange='javascript:changeYear()'>");
+                        var begin = selectYear - 10;
+                        var end = selectYear - 0 + 11;
+                        write("<OPTION value=" + (begin - 10) + ">" + '更早');
+                        for (var i = begin; i < end; i++) {
+                            write("<OPTION value=" + i + ((i == selectYear) ? " selected" : "") + ">" + i);
+                        }
+                        write("<OPTION value=" + (end + 9) + ">" + '更晚');
+                        write("</SELECT>");
+                        write("<SELECT id='month' NAME=m onChange='javascript:changeMonth()'>");
+                        for (var i = 1; i < 13; i++)
+                            write("<OPTION value=" + i + ((i == currMonth.month) ? " selected" : "") + ">" + months[i - 1]);
+                        write("</SELECT>");
+                        //                        document.writeln("<INPUT id='year' type=text size=4 maxlength=4 name=y onChange='javascript:changeYear()' value=" + currMonth.year + ">");
+                        write("</TD>");
+
+                        write("<TD colspan=1 class=TABLEHEAD><A class='TABLEHEAD'href='javascript:onNext()'>下月</a></td>")
+                        write("</TR>")
+
+                        // writes the days of the week
+                        write("<TR align=center bgcolor=#EEEEEE>")
+                        for (var d = 0; d < 7; d++) {
+                            write("<TD width=14% CLASS=DAYS><B>&nbsp;" + days[d] + "&nbsp;</B></TD>")
+                        }
+                        write("</TR>")
+
+                        var daycounter = 1;
+                        var cls = "";
+                        // allows month to possibly span over 6 weeks
+                        for (var i = 0; i < 6; i++) {
+                            // if we have not exceeded number of days in month
+                            if (daycounter <= currMonth.length) {
+                                write("<TR align=center>")
+
+                                // display each day of the week
+                                for (var j = 0; j < 7; j++) {
+
+                                    // First choose different style for different period.
+
+                                    // Not yet the first day of the month, or
+                                    // it has exceeded the last day in the month.
+                                    if ((i == 0 && j < currMonth.firstDay) || daycounter > currMonth.length) {
+                                        cls = "";
+
+                                        // Current date
+                                    } else if (daycounter == today.getDate() && currMonth.month == today.getMonth() + 1 && currMonth.year == today.getFullYear()) {
+                                        cls = " class=TODAY";
+
+                                        // Future date
+                                    } else if ((daycounter > today.getDate() && currMonth.month == today.getMonth() + 1 && currMonth.year == today.getFullYear()) || (currMonth.month > today.getMonth() + 1 && currMonth.year == today.getFullYear()) || currMonth.year > today.getFullYear()) {
+                                        cls = " class=AFTERTODAY";
+
+                                        // Past date
+                                    } else {
+                                        cls = " class=BEFORETODAY";
+                                    }
+
+                                    document.writeln("<TD" + cls + ">");
+                                    if (cls != "") {
+                                        write("<A" + cls + " href=javascript:returnDate(" + currMonth.year + "," + currMonth.month + "," + daycounter + ")>" + daycounter + "</A>")
+                                        daycounter++;
+                                    }
+                                    document.writeln("</TD>");
+
+                                    // Do not continue if already passed last day
+                                    if (daycounter > currMonth.length) break;
+
+                                }
+                                //for
+
+                                write("</TR>")
+                            }//if
+
+                        }
+                        write("<TR align=center bgcolor=#EEEEEE>");
+                        write("<TD colspan=7 class=TABLEHEAD><div class='calenderBottom'><a href='javascript:void(0)' id='closeCalender' class='closeCalender' onclick='parent.window.calendarFrame.close();'>关闭</a></div></TD>")
+                        write("</TR>");
+                    </SCRIPT>
+            </TABLE>
+        </TD>
+    </TABLE>
+</FORM>
+</BODY>
+</HTML>

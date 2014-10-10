@@ -1,0 +1,7 @@
+src/java                   存放java源代码
+src/properties             存放基本配置文件 
+
+WebRoot/WEB-INF/lib        存放jar包
+WebRoot/WEB-INF/page       存放页面
+
+build.xml                  编译脚本

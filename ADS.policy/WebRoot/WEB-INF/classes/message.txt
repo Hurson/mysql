@@ -1,0 +1,13 @@
+action=控制显示动作，取值为0表示关闭，取值为1表示显示
+content=字幕内容
+durationTime= 字幕持续多长时间后消失，以毫秒为单位，0代表一直显示
+fontColor=red
+fontSize=12
+regionAbove=1
+regionHeight=2
+regionLeft=2
+regionWidth=3
+regionColor=red
+speed=1221
+tvn=123123
+linkurl=http://www.baidu.com

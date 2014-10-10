@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>    
+        <!-- 要调用的工作类 -->
+        <bean id="quartzJob" class="com.avit.ads.requestads.service.CacheJob"></bean>
+        <!-- 定义调用对象和调用对象的方法 -->
+        <!--订单缓存处理  -->
+        <bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/>
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>refreshPlayListCache</value>
+            </property>
+        </bean>
+        <!-- 定义触发时间 -->
+        <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="jobtask"/>
+            </property>
+            <!-- cron表达式 -->
+            <property name="cronExpression">
+                <value>0 0/10 * * * ? </value>
+            </property>
+        </bean>
+        
+         <!--投放次数处理  -->
+         <bean id="orderjobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/>
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>refreshOrder</value>
+            </property>
+        </bean>
+        <!-- 定义触发时间 -->
+        <bean id="orderdoTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="orderjobtask"/>
+            </property>
+            <!-- cron表达式 -->
+            <property name="cronExpression">
+                <value>0 0/5 * * * ? </value>
+            </property>
+        </bean>
+        
+        
+        <!--保存处理记录  -->
+       <bean id="historyjobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/>
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>saveHistory</value>
+            </property>
+        </bean>
+        <!-- 定义触发时间 -->
+        <bean id="historydoTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="historyjobtask"/>
+            </property>
+            <!-- cron表达式 -->
+            <property name="cronExpression">
+                <value>0 0/15 * * * ? </value>
+            </property>
+        </bean> 
+        
+        <!--基础数据刷新  -->
+        <bean id="refreshBaseDatajobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/>
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>refreshBaseData</value>
+            </property>
+        </bean>
+        <!-- 定义触发时间 -->
+        <bean id="refreshBaseDatadoTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="refreshBaseDatajobtask"/>
+            </property>
+            <!-- cron表达式 -->
+            <property name="cronExpression">
+                <value>0 0 3 * * ? </value>
+            </property>
+        </bean>
+        
+        
+        
+        <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
+        <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+            <property name="triggers">
+                <list>
+                    <ref bean="doTime"/>
+                     <ref bean="orderdoTime"/>
+                    <ref bean="historydoTime"/>
+                    
+                    <ref bean="refreshBaseDatadoTime"/>
+                    
+                </list>
+            </property>
+        </bean>
+    
+</beans>

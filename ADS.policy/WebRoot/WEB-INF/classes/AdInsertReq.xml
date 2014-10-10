@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AdInsertRequestXmlBean>
+	<tvnId></tvnId>
+	<token></token>
+	<assetId></assetId>
+	<locationId></locationId>
+	<channelId></channelId>
+	<userType></userType>
+	<productId></productId>
+	<userType2></userType2>
+	<AssetInfo>
+		<assetName></assetName>
+		<assetDuration></assetDuration>
+		<AssetDescription></AssetDescription>
+		<AssetDescription></AssetDescription>
+	</AssetInfo>
+</AdInsertRequestXmlBean>
