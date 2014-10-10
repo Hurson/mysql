@@ -3,7 +3,7 @@
 
 <beans>    
         <!-- 要调用的工作类 -->
-        <bean id="quartzJob" class="cn.com.avit.ads.syndata.SynDataJob"></bean>
+        <bean id="quartzJob" class="cn.com.avit.ads.synepgdata.SynEpgDataJob"></bean>
         <!-- 定义调用对象和调用对象的方法 -->
         <bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
             <!-- 调用的类 -->
@@ -12,7 +12,7 @@
             </property>
             <!-- 调用类中的方法 -->
             <property name="targetMethod">
-                <value>synData</value>
+                <value>synEpgData</value>
             </property>
         </bean>
         <!-- 定义触发时间 -->
@@ -22,7 +22,7 @@
             </property>
             <!-- cron表达式 -->
             <property name="cronExpression">
-                <value>0 0 2 * * ? </value>
+                <value>0 25 19 * * ? </value>
             </property>
         </bean>
         
@@ -83,8 +83,6 @@
             <property name="triggers">
                 <list>
                     <ref bean="doTime"/>
-                    <ref bean="reportJobdoTime"/>
-                     <ref bean="BossJobdoTime"/>
                 </list>
             </property>
         </bean>

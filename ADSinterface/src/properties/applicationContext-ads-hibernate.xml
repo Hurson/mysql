@@ -89,6 +89,7 @@
 				<value>com.avit.ads.syncreport.bean</value>
 				<value>com.avit.ads.pushads.boss.bean</value>
 				<value>com.avit.common.warn</value>
+				<value>cn.com.avit.ads</value>
 			</list>
 		</property>
 	</bean>
