@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="build_ssh2" basedir="." name="ads">
+	 <property file="build.properties"/>
+	
+	<property name="module" value="ads" />
+	<property name="appname" value="ads.war" />
+	<property name="dir.build" value="build" />
+	<property name="dir.src" value="src/java" />
+	<property name="dir.resources" value="src/properties" />
+	<property name="dir.src.web" value="WebRoot" />
+	<property name="dir.build.web" value="${dir.build}/webapp/${module}" />
+	<property name="assemble.war" value="${dir.build}/war"/>
+	<property name="dir.lib" value="${dir.src.web}/WEB-INF/lib" />
+	<property name="dir.build.classes" value="${dir.build.web}/WEB-INF/classes" />
+	<property name="build.debug" value="true">
+	</property>
+
+	<path id="all-libs">
+		<fileset dir="${tomcat.home}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${dir.lib}">
+			<include name="**/*.jar" />
+		</fileset>
+		<dirset dir="src">
+			<include name="**/java" />
+		</dirset>
+	</path>
+
+	<!--创建构建目录-->
+	<target name="creatBuildDir">
+		<echo>You Choose Debug is ${build.debug}</echo>
+		<mkdir dir="${dir.build}" />
+	</target>
+
+	<!--清楚build目录下所有文件-->
+	<target name="cleanapp" depends="creatBuildDir">
+		<delete includeEmptyDirs="true">
+			<fileset dir="${dir.build}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<mkdir dir="${dir.build.classes}" />
+		<mkdir dir="${dir.build.web}" />
+	</target>
+
+	<!-- 编译 -->
+	<target name="compile" depends="cleanapp">
+		<javac target="1.5" encoding="UTF-8" destdir="${dir.build.classes}" srcdir="${dir.src}" debug="${build.debug}">
+			<classpath refid="all-libs" />
+		</javac>
+	</target>
+
+	<!--拷贝webapp目录到build目录下-->
+	<target name="build_ssh2_webapp" depends="compile">
+		<echo>webapp</echo>
+		<copy todir="${dir.build.web}">
+			<fileset dir="${dir.src.web}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<!-- 将src下面的所有资源文件拷贝到web-inf/classes目录下 -->
+		<copy todir="${dir.build.classes}" preservelastmodified="true">
+			<fileset dir="${dir.src}">
+				<exclude name="**/*.java" />
+			</fileset>
+			<fileset dir="${dir.resources}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!--jar the war-->
+	<target name="build_ssh2" depends="build_ssh2_webapp">
+		<echo> jar ${appname}</echo>
+		<mkdir dir="${assemble.war}"/>
+		<jar basedir="${dir.build.web}" jarfile="${assemble.war}/${appname}"/>
+	</target>
+
+</project>

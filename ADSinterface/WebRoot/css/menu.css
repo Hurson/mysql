@@ -1,0 +1,22 @@
+
+body,div,ul,li,p{ margin:0; padding:0; font-size:12px; font-family:Arial, Helvetica, sans-serif,"����"}
+ul,li{ list-style:none; cursor:pointer}
+
+/***********  index.htm ***************/
+body{background: url(../images/index_21.gif) repeat-y #267fb9;}
+
+.left_menu{position:absolute; top:0px; left:0; width:202px; z-index:1}
+.bottm {position:absolute; right:10px; bottom:10px;color:#b1c3cf;}
+
+.sub_menu{ background:url(../images/index_10.gif) repeat-y; width:186px; margin-left:16px; color:#FFF; margin-bottom:5px;}
+.sub_menu .sub_menu_title{ background:url(../images/index_09.gif) no-repeat; padding-top:6px; padding-left:15px; font-size:13px; font-weight:bold; line-height:24px;}
+.sub_menu_title span{ background: url(../images/dot2.gif) no-repeat left center; display:block;padding-left:22px}
+.sub_menu_title span.current{background: url(../images/left_menu_31.gif) no-repeat left center;display:block;padding-left:22px; color:#fff000}
+.sub_menu_title span.currentopen{background: url(../images/left_menu_31.gif) no-repeat left center;display:block;padding-left:22px; color:#fff000}
+.sub_menu_title span.currentclose{ background: url(../images/left_menu_32.gif) no-repeat left center; display:block;padding-left:22px;color:#fff000}
+.sub_menu .sub_menu_list{ margin-left:13px;}
+.sub_menu .sub_menu_list li{ padding-left:24px; background:url(../images/dot.gif) no-repeat left center; line-height:32px}
+.sub_menu .sub_menu_list li.current{ background:url(../images/current.gif) no-repeat right center;}
+.sub_menu .sub_menu_bottom{ background: url(../images/index_12.gif) no-repeat; height:9px; font-size:1px;}
+
+.pointer {cursor:pointer}

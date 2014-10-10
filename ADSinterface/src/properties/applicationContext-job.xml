@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>    
+        <!-- 要调用的工作类 -->
+        <bean id="quartzJob" class="cn.com.avit.ads.syndata.SynDataJob"></bean>
+        <!-- 定义调用对象和调用对象的方法 -->
+        <bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/>
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>synData</value>
+            </property>
+        </bean>
+        <!-- 定义触发时间 -->
+        <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="jobtask"/>
+            </property>
+            <!-- cron表达式 -->
+            <property name="cronExpression">
+                <value>0 0 2 * * ? </value>
+            </property>
+        </bean>
+        
+        
+        
+        <!-- 要调用的工作类 -->
+        <bean id="reportJob" class="com.avit.ads.syncreport.ReportJob"></bean>
+        <!-- 定义调用对象和调用对象的方法 -->
+        <bean id="reportJobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="reportJob"/>
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>generateReportData</value>
+            </property>
+        </bean>
+        <!-- 定义触发时间 -->
+        <bean id="reportJobdoTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="reportJobtask"/>
+            </property>
+            <!-- cron表达式 -->
+            <property name="cronExpression">
+                <value>0 15 2 * * ? </value>
+            </property>
+        </bean>
+        
+        
+          <!-- 要调用的工作类 -->
+        <bean id="BossJob" class="com.avit.ads.pushads.boss.BossJob"></bean>
+        <!-- 定义调用对象和调用对象的方法 -->
+        <bean id="BossJobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="BossJob"/>
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>generateBossData</value>
+            </property>
+        </bean>
+        <!-- 定义触发时间 -->
+        <bean id="BossJobdoTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="BossJobtask"/>
+            </property>
+            <!-- cron表达式 -->
+            <property name="cronExpression">
+                <value>0 35 16 * * ? </value>
+            </property>
+        </bean>
+        
+        
+        <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
+        <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+            <property name="triggers">
+                <list>
+                    <ref bean="doTime"/>
+                    <ref bean="reportJobdoTime"/>
+                     <ref bean="BossJobdoTime"/>
+                </list>
+            </property>
+        </bean>
+    
+</beans>

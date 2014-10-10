@@ -1,0 +1,6 @@
+pic1=/rir/111.jpg
+pic2=/rir/111.jpg
+pic3=/rir/111.jpg
+pic4=/rir/111.jpg
+pic5=/rir/111.jpg
+pic6=/rir/111.jpg
