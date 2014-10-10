@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/channelGroup" extends="default">
+		
+		<action name="queryChannelGroupList" class="channelGroupManagerAction" method="queryChannelGroupList">
+			<result name="success">/page/channelGroup/channelGroupList.jsp</result>
+		</action>
+		
+		<action name="intoAddChannelGroup" class="channelGroupManagerAction" method="intoAddChannelGroup" >
+			<result name="success">/page/channelGroup/addChannelGroup.jsp</result>
+		</action>
+		
+		<action name="saveChannelGroup" class="channelGroupManagerAction" method="saveChannelGroup">	
+			<!-- 
+			<result name="success" type="redirect">
+				/page/channelGroup/queryChannelGroupList.do?method=queryChannelGroupList
+            </result>
+			 -->
+            <result name="success">/page/channelGroup/channelGroupList.jsp</result>
+
+		</action>
+		
+		<action name="initChannelGroup" class="channelGroupManagerAction" method="initChannelGroup">
+			<result name="success">/page/channelGroup/addChannelGroup.jsp</result>
+		</action>
+		
+		<action name="queryChannelGroupRefList" class="channelGroupManagerAction" method="queryChannelGroupRefList">
+			<result name="success">/page/channelGroup/channelGroupRefList.jsp</result>
+		</action>
+		
+		<action name="showChannelGroupRefList" class="channelGroupManagerAction" method="showChannelGroupRefList">
+			<result name="success">/page/channelGroup/showchannelGroupRefList.jsp</result>
+		</action>
+		
+		<action name="selectChannel" class="channelGroupManagerAction" method="selectChannel">
+			<result name="success" >/page/channelGroup/selectChannel.jsp</result>
+		</action>
+		
+		<action name="saveChannelGroupRef" class="channelGroupManagerAction" method="saveChannelGroupRef">	
+            
+		</action>
+		<action name="deleteChannelGroupRef" class="channelGroupManagerAction" method="deleteChannelGroupRef">	
+            <!-- 
+            <result name="success" type="redirect">
+            /page/channelGroup/queryChannelGroupRefList.do?channelGroupId=${channelGroupId}
+            </result>
+             -->
+            <result name="success">/page/channelGroup/channelGroupRefList.jsp</result>
+		</action>
+		<action name="deleteChannelGroup" class="channelGroupManagerAction" method="deleteChannelGroup">	
+            <!-- 
+            <result name="success" type="redirect">
+				/page/channelGroup/queryChannelGroupList.do?method=queryChannelGroupList
+            </result>
+             -->
+            <result name="success">/page/channelGroup/channelGroupList.jsp</result>
+		</action>
+	</package>
+</struts>

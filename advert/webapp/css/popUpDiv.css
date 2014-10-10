@@ -1,0 +1,144 @@
+.bg,.popIframe {
+background-color: #666; display:none;
+width: 100%;
+height: 100%;
+left:0;
+top:0;/*FF IE7*/
+filter:alpha(opacity=50);/*IE*/
+opacity:0.5;/*FF*/
+z-index:1;
+position:fixed!important;/*FF IE7*/
+position:absolute;/*IE6*/
+_top:       expression(eval(document.compatMode &&
+            document.compatMode=='CSS1Compat') ?
+            documentElement.scrollTop + (document.documentElement.clientHeight-this.offsetHeight)/2 :/*IE6*/
+            document.body.scrollTop + (document.body.clientHeight - this.clientHeight)/2);/* www.codefans.net IE5 IE5.5*/
+}
+.popIframe {
+filter:alpha(opacity=0);/*IE*/
+opacity:0;/*FF*/
+}
+.showDiv{
+	/*text-align: center;*/
+	line-height: 20px;
+	height: 330px;
+	z-index:99;
+	overflow: auto;
+	background:#f9f9f9;
+
+}
+.showDiv_2{
+	/*text-align: center;*/
+	line-height: 20px;
+	z-index:99;
+	width: 750px;
+	height: 450px;
+	left:50%;/*FF IE7*/
+	top:50%;/*FF IE7*/
+	margin-left:-388px!important;/*FF IE7 璇ュ�间负鏈韩瀹界殑涓�鍗� */
+	margin-top:-210px!important;/*FF IE7 璇ュ�间负鏈韩楂樼殑涓�鍗�*/
+	margin-top:0px;
+	position:fixed!important;/* www.codefans.net FF IE7*/
+	position:absolute;/*IE6*/
+	_top:       expression(eval(document.compatMode &&
+	            document.compatMode=='CSS1Compat') ?
+	            documentElement.scrollTop + (document.documentElement.clientHeight-this.offsetHeight)/2 :/*IE6*/
+	            document.body.scrollTop + (document.body.clientHeight - this.clientHeight)/2);/*IE5 IE5.5*/
+	overflow: hidden;
+
+}
+.showDiv_2 a{ color:#333;}
+.tableDiv {
+	border: 0px solid #dfdfdf;
+	width:100%;
+	z-index:999;
+	background:999999;
+}
+.e_inputDiv {
+	width: 80px;
+	height: 14px;
+	background: #fff;
+	border: 1px solid #cccccc;
+	font-size: 12px;
+	padding: 4px 0 0 5px;
+}
+.e_inputFocusDiv {
+	width: 80px;
+	height: 14px;
+	background: #f4fae3;
+	border: 2px solid #92ad64;
+	font-size: 12px;
+	padding: 4px 0 0 5px;
+}
+.e_input_addDiv {
+	width: 80px;
+	height: 14px;
+	background:url(../images/add.png) right no-repeat #ffffff;
+	border:1px solid #cccccc;
+	font-size: 12px;
+	padding: 4px 0 0 5px;
+}
+.time_inputDiv{
+	width:82px;
+	height:18px;
+	font-size:12px;
+	color:#000000;
+	border:1px solid #7f9db9;
+	line-height:22px;
+	background:url(../images/time.gif) right no-repeat #efebcc;
+}
+
+.formBottom {
+	height: 25px;
+	text-align: right;
+	vertical-align: top;
+	padding: 5px 20px 0 0;
+	background:url(../images/bottom.jpg) repeat-x;
+}
+.taba_right_list{ border:0px solid #979795;  font-size:12px;}
+.taba_right_list td{ text-align:center; font-size:12px; height:22px; linr-height:22px;}
+.taba_right_list thead{background:url(../images/menu_righthead.png) repeat-x; height:27px; text-align:left;}
+.buttons {
+	width: 500;
+	height: 25px;
+	background: url(../images/buttons_bg.gif) left;
+	margin: 5px 0 0 0;
+	padding: 8px 0 0 0;
+}
+.formTitle {
+	height: 24px;
+	padding: 1px 15px 0 8px;
+	font-size: 12px;
+	color: #000;
+	background:url(../images/menu_righttop.png);
+
+}
+.td_label {
+     width:15%;
+	height: 27px;
+	padding: 3px 5px 0 0;
+	font-size: 12px;
+	text-align: right;
+	background: #e7f2fc;
+}
+.td_input {
+    width:18%;
+	height: 20px;
+	padding: 0 0 0 5px;
+	background: #ffffff;
+}
+.b_search {
+	width: 60px;
+	height: 20px;
+	border: 0;
+	background: url(../images/03_b_search.gif);
+	cursor: pointer;
+}
+.new_input_add {
+	width: 160px;
+	height: 14px;
+	background:url(../images/add.png) right no-repeat #ffffff;
+	border: 1px solid #cccccc;
+	font-size: 12px;
+	padding: 4px 0 0 5px;
+}

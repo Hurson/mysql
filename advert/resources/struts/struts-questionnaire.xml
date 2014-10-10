@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/quesionnaire" extends="default">
+
+		<action name="uploadTemplate" class="templateAction" method="uploadTemplate">
+			
+		</action>
+		<action name="saveTemplate" class="templateAction" method="save">
+			
+		</action>
+		<action name="deleteZip" class="templateAction" method="deleteZip"></action>
+		<action name="deleteTemplate" class="templateAction" method="delete"></action>
+		<action name="listTemplate" class="templateAction" method="list">
+			<result name="success">templateList.jsp</result>
+		</action>
+		<action name="addQuestionnaire" class="questionnaireAction" method="addQuestionnaire">
+			<result name="success">addQuestionnaire.jsp</result>
+		</action>
+		<action name="saveQuestionnaire" class="questionnaireAction" method="saveQuestionnaire"/>	
+		<action name="listQuestionnaire" class="questionnaireAction" method="list">
+			<result name="success">questionnaireList.jsp</result>
+		</action>
+		<action name="deleteQuestionnaire" class="questionnaireAction" method="delete"/>	
+		
+	</package>
+</struts>
+	

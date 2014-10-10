@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/report" extends="default">
+
+		<action name="queryDayReportList" class="reportAction" method="queryDayReportList">
+			<result name="success">/page/report/dayReportList.jsp</result>
+		</action>
+		<action name="queryWeekReportList" class="reportAction" method="queryDayReportList">
+			<result name="success">/page/report/weekReportList.jsp</result>
+		</action>
+		<action name="queryMonthReportList" class="reportAction" method="queryDayReportList">
+			<result name="success">/page/report/monthReportList.jsp</result>
+		</action>
+		<action name="exportReport" class="reportAction" method="exportReport">
+			<result name="success" type="stream">
+                <param name="contentType">text/excel</param>
+                <param name="inputName">inputStreamForBatch</param>
+                <param name="contentDisposition">attachment;filename=${fileNameForBatch}</param>
+                <param name="bufferSize">4096</param>
+            </result>
+		</action>
+		
+		<action name="queryQuestionReportList" class="reportAction" method="queryQuestionReportList">
+			<result name="success">/page/report/questionReportList.jsp</result>
+		</action>
+		<action name="exportQuestionReport" class="reportAction" method="exportQuestionReport">
+			<result name="success" type="stream">
+                <param name="contentType">text/excel</param>
+                <param name="inputName">inputStreamForBatch</param>
+                <param name="contentDisposition">attachment;filename=${fileNameForBatch}</param>
+                <param name="bufferSize">4096</param>
+            </result>
+		</action>
+		
+	</package>
+</struts>
+	

@@ -1,0 +1,76 @@
+body{ padding:0px; margin:0px; font-size:12px;}
+.tab_right{ background:url(../images/menu_righttop.png) repeat-x; height:26px; border:1px solid #979795;border-collapse:collapse;}
+.tab_right td{ text-align:center; background:url(../images/suxian_1.png) no-repeat top right;}
+.taba_right{  height:107px; border:1px solid #979795;border-collapse:collapse; }
+.taba_right  td{ }
+.taba_right thead{background:url(../images/menu_righthead.png) repeat-x; height:27px; text-align:left;}
+.bottom{ border-bottom:1px solid #979795;}
+select{ width:150px;}
+.footer{ height:24px; background:url(../images/footer.jpg) repeat-x; padding-bottom:0px; margin-bottom:0px; width:100%;}
+
+.taba_right_list{border:0px solid #979795; }
+.taba_right_list td{ text-align:center;}
+.taba_right_list thead{background:url(../images/menu_righthead.png) repeat-x; height:27px; text-align:left;}
+.button_add {
+	border: 0px; 
+	background: url(../images/button_add.gif); 
+	width: 29px; 
+	height: 15px;
+	cursor: pointer;
+}
+.button_binding {
+	border: 0px; 
+	background: url(../images/button_lock.gif); 
+	width: 29px; 
+	height: 15px;
+	cursor: pointer;
+}
+.button_delete {
+	border: 0px; 
+	background: url(../images/button_delete.gif); 
+	width: 29px; 
+	height: 15px;
+	cursor: pointer;
+}
+.button_view {
+	border: 0px; 
+	background: url(../images/button_view.gif); 
+	width: 29px; 
+	height: 15px;
+	cursor: pointer;
+}
+.button_edit {
+	border: 0px; 
+	background: url(../images/button_edit.gif); 
+	width: 29px; 
+	height: 15px;
+	cursor: pointer;
+}
+.button_halt {
+	border: 0px; 
+	background: url(../images/button_halt.gif); 
+	width: 29px; 
+	height: 15px;
+	cursor: pointer;
+}
+.button_sync {
+	border: 0px; 
+	background: url(../images/button_sync.gif); 
+	width: 29px; 
+	height: 15px;
+	cursor: pointer;
+}
+.button_start {
+	border: 0px; 
+	background: url(../images/button_start.gif); 
+	width: 29px; 
+	height: 15px;
+	cursor: pointer;
+}
+.button_allocate {
+	border: 0px; 
+	background: url(../images/button_allocate.gif); 
+	width: 29px; 
+	height: 15px;
+	cursor: pointer;
+}

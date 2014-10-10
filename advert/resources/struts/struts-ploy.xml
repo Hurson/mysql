@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/ploy" extends="default">
+		
+		<action name="queryPloyList" class="ployAction" method="queryPloyList">
+			<result name="success">/page/ploy/listPloy.jsp</result>
+		</action>
+		<!-- 返回ployJson数据 -->
+		<action name="queryExistPloyList" class="ployAction" method="queryExistPloyList"/>
+		<action name="queryContractList" class="ployAction" method="queryContractList">
+			<result name="success">/page/ploy/searchselectContract.jsp</result>
+		</action>
+		<action name="queryAdPostionList" class="ployAction" method="queryAdPostionList">
+			<result name="success">/page/ploy/searchselectAdPosition.jsp</result>
+		</action>
+		<action name="queryRuleList" class="ployAction" method="queryRuleList">
+			<result name="success">/page/ploy/searchselectRule.jsp</result>
+		</action>
+		
+		
+		<action name="addqueryContractList" class="ployAction" method="addqueryContractList">
+			<result name="success">/page/ploy/selectContract.jsp</result>
+		</action>
+		<action name="addqueryAdPostionList" class="ployAction" method="addqueryAdPostionList">
+			<result name="success">/page/ploy/selectAdPosition.jsp</result>
+		</action>
+		<action name="addqueryRuleList" class="ployAction" method="addqueryRuleList">
+			<result name="success">/page/ploy/selectRule.jsp</result>
+		</action>
+			<action name="getChannelListByArea" class="ployAction" method="getChannelListByArea">
+			<result name="success">/page/ploy/selectchannel.jsp</result>
+		</action>
+		
+		
+		<action name="getPloyById" class="ployAction" method="getPloyById">
+			<result name="success">/page/ploy/addPloy.jsp</result>
+		</action>
+		<action name="initPloy" class="ployAction" method="initPloy">
+			<result name="success">/page/ploy/addPloy.jsp</result>
+		</action>
+		<action name="getContract" class="ployAction" method="getContractByAduserId"/>
+		<action name="getPostion" class="ployAction" method="getAdSiteByContract"/>
+		<action name="getMarketRule" class="ployAction" method="getMarketRuleByAdSiteId"/>
+		<action name="getArea" class="ployAction" method="getChoiceArea">
+			<result name="success">/page/ploy/selectarea.jsp</result>
+		</action>
+		<action name="getChannels" class="ployAction" method="getChoiceChannels">
+			<result name="success">/page/ploy/bindingChannel.jsp</result>
+		</action>
+		
+		<action name="addPloy" class="ployAction" method="addPloy">
+			<result>/page/ploy/addPloy.jsp</result>
+		</action>
+		
+		<action name="insertPloy" class="ployAction" method="insertPloy">
+			<result>/page/ploy/addPloy.jsp</result>
+		</action>
+		
+		<action name="checkPloy" class="ployAction" method="checkPloy"/>
+		
+		<action name="save" class="ployAction" method="saveUpdatePloy">
+			<result name="success">/page/ploy/listPloy.jsp</result>
+		</action>
+		<action name="listPloy" class="ployAction" method="getAllPloyList">
+			<result name="success">/page/ploy/listploy.jsp</result>
+			<result name="bandingPloy">/page/ploy/bingListPloy.jsp</result>
+		</action>
+		<action name="deletePloy" class="ployAction" method="deletePloy">
+		<result name="success">/page/ploy/listPloy.jsp</result>
+		
+		</action>
+		
+		<action name="queryCheckPloyList" class="ployAction" method="queryCheckPloyList">
+			<result name="success">/page/ploy/listCheckPloy.jsp</result>
+		</action>
+		<action name="checkPloyState" class="ployAction" method="checkPloyState">
+			<result name="success">/page/ploy/listCheckPloy.jsp</result>
+		</action>
+		<action name="getCheckPloyById" class="ployAction" method="getCheckPloyById">
+			<result name="success">/page/ploy/checkPloy.jsp</result>
+		</action>
+		<action name="checkDelPloy" class="ployAction" method="checkDelPloy">
+			
+		</action>
+		
+		
+		
+		
+		
+		
+		<action name="queryNoAdPloyList" class="noAdPloyAction" method="queryNoAdPloyList">
+			<result name="success">/page/ploy/listNoAdPloy.jsp</result>
+		</action>
+		<action name="getNoAdPloyById" class="noAdPloyAction" method="getNoAdPloyById">
+			<result>/page/ploy/addNoAdPloy.jsp</result>
+		</action>
+		<action name="saveUpdateNoAdPloy" class="noAdPloyAction" method="saveUpdateNoAdPloy">
+			<result name="success">/page/ploy/listNoAdPloy.jsp</result>
+		</action>
+			<action name="deleteNoAdPloy" class="noAdPloyAction" method="deleteNoAdPloy">
+		<result name="success">/page/ploy/listNoAdPloy.jsp</result>
+		
+		</action>
+		<action name="checkNoAdPloy" class="noAdPloyAction" method="checkNoAdPloy"/>
+		<!--  
+		<action name="queryArea" class="ployAction" method="queryArea">
+			<result name="area">/page/Ploy/bindingArea.jsp</result>
+		</action>
+		<action name="queryChannel" class="ployAction" method="queryChannel">
+			<result name="channel">/page/Ploy/bindingChannel.jsp</result>
+		</action>
+		
+		<action name="upLinePloy" class="ployAction" method="upLinePloy"/>
+		<action name="downLinePloy" class="ployAction" method="downLinePloy"/>
+		-->
+		<action name="exportcontentTVN" method="exportcontentTVN" class="ployAction">
+			<result name="exportcontentTVN" type="stream">
+                <param name="contentType">text/xml</param>
+                <param name="inputName">inputStreamu</param>
+                <param name="contentDisposition">attachment;filename=${fileName}</param>
+                <param name="bufferSize">4096</param>
+            </result>
+		</action>
+		
+	</package>
+</struts>
+	

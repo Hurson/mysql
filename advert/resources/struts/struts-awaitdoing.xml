@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="tset" extends="default">
+		<action name="getAwaitDoing" class="awaitDoingAction" method="getHomePageAwaitingDoing">
+			<result name="success">/tset/welcome.jsp</result>
+		</action>
+		<action name="showWarn" class="awaitDoingAction" method="showWarn">
+			<result name="success">/tset/warning.jsp</result>
+		</action>
+		<action name="delWarn" class="awaitDoingAction" method="delWarn"/>
+	</package>
+</struts>
+	

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- 定时将执行完毕的订单状态设置成”执行完毕“  -->
+	<bean id="setOrderStateTask" class="com.dvnchina.advertDelivery.task.SetOrderStateTask">
+		 <property name="playList4OrderService" ref="playList4OrderService"/>
+		<property name="orderService" ref="orderService"/>
+	</bean>
+	<bean id="setOrderStateJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="setOrderStateTask" />
+		<property name="targetMethod" value="setOrderState" />
+	</bean>
+	<bean id="setOrderStateTimer" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="setOrderStateJob" />
+		<property name="cronExpression" value="0 0 3 * * ?" />
+	</bean>
+
+
+	<!-- 定时同步vod数据  -->
+	<bean id="vodSyncTask" class="com.dvnchina.advertDelivery.task.VodSyncTask">
+		<property name="vodSyncService" ref="vodSyncService"/>
+	</bean>
+	<bean id="svodSyncTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="vodSyncTask" />
+		<property name="targetMethod" value="vodSync" />
+	</bean>
+	<bean id="vodSyncTaskTimer" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="svodSyncTaskJob" />
+		<property name="cronExpression" value="0 0 0 * * ?" />
+	</bean>
+	
+	<!-- 单双向广告报表数据  -->
+	<bean id="reportTask" class="com.dvnchina.advertDelivery.task.ReportTask">
+		<property name="advertReportService" ref="advertReportService"/>
+	</bean>
+	<bean id="reportTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="reportTask" />
+		<property name="targetMethod" value="exportReport" />
+	</bean>
+	<bean id="reportTaskTimer" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="reportTaskJob" />
+		<property name="cronExpression" value="10 00 03 * * ?" />
+	</bean>
+	
+	<bean id="startQuertz" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="setOrderStateTimer" />
+				<ref bean="generateReportTimer" />
+				<!-- <ref bean="vodSyncTaskTimer" /> -->
+				<ref bean="reportTaskTimer" />
+				<ref bean="areaCacheTimer" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 定时生成问卷报表  -->
+	<bean id="generateReportTask" class="com.dvnchina.advertDelivery.task.GenerateReportTask">
+		 <property name="generateQuestionReportService" ref="generateQuestionReportService"/>
+	</bean>
+	<bean id="generateReportJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="generateReportTask" />
+		<property name="targetMethod" value="generateReport" />
+	</bean>
+	<bean id="generateReportTimer" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="generateReportJob" />
+		<property name="cronExpression" value="0 05 10 * * ?" />
+	</bean>
+	
+	<!-- 定时加载区域缓存(在定时生成问卷报表任务前5到10分钟执行)  -->
+	<bean id="areaCacheTask" class="com.dvnchina.advertDelivery.task.AreaCacheTask">
+		 <property name="refreshCacheService" ref="refreshCacheService"/>
+	</bean>
+	<bean id="areaCacheJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="areaCacheTask" />
+		<property name="targetMethod" value="refreshAreaCache" />
+	</bean>
+	<bean id="areaCacheTimer" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="areaCacheJob" />
+		<property name="cronExpression" value="0 04 10 * * ?" />
+	</bean>
+	
+</beans>

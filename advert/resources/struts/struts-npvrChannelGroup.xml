@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/npvrChannelGroup" extends="default">
+	
+		<action name="queryChannelGroupListNpvr" class="npvrChannelGroupManagerAction" method="queryChannelGroupList">
+			<result name="success">/page/npvrChannelGroup/channelGroupList.jsp</result>
+		</action>
+		
+		<action name="intoAddChannelGroupNpvr" class="npvrChannelGroupManagerAction" method="intoAddChannelGroup" >
+			<result name="success">/page/npvrChannelGroup/addChannelGroup.jsp</result>
+		</action>
+		
+		<action name="saveChannelGroupNpvr" class="npvrChannelGroupManagerAction" method="saveChannelGroup">	
+			<!-- 
+			<result name="success" type="redirect">
+				/page/npvrChannelGroup/queryChannelGroupList.do?method=queryChannelGroupList
+            </result>
+			 -->
+            <result name="success">/page/npvrChannelGroup/channelGroupList.jsp</result>
+
+		</action>
+		
+		<action name="initChannelGroupNpvr" class="npvrChannelGroupManagerAction" method="initChannelGroup">
+			<result name="success">/page/npvrChannelGroup/addChannelGroup.jsp</result>
+		</action>
+		
+		<action name="queryChannelGroupRefListNpvr" class="npvrChannelGroupManagerAction" method="queryChannelGroupRefList">
+			<result name="success">/page/npvrChannelGroup/channelGroupRefList.jsp</result>
+		</action>
+		
+		<action name="showChannelGroupRefListNpvr" class="npvrChannelGroupManagerAction" method="showChannelGroupRefList">
+			<result name="success">/page/npvrChannelGroup/showchannelGroupRefList.jsp</result>
+		</action>
+		
+		<action name="selectChannelNpvr" class="npvrChannelGroupManagerAction" method="selectChannel">
+			<result name="success" >/page/npvrChannelGroup/selectChannel.jsp</result>
+		</action>
+		
+		<action name="saveChannelGroupRefNpvr" class="npvrChannelGroupManagerAction" method="saveChannelGroupRef">
+			<!--  	
+			 <result name="success">/page/npvrChannelGroup/channelGroupRefList.jsp</result>     
+			 
+ 			<result name="success" type="redirect"> 
+            	/page/npvrChannelGroup/queryChannelGroupRefListNpvr.do?channelGroupId=${channelGroupIdTemp}
+            </result> 
+              -->    
+		</action>
+		<action name="deleteChannelGroupRefNpvr" class="npvrChannelGroupManagerAction" method="deleteChannelGroupRef">	
+            <result name="success">/page/npvrChannelGroup/channelGroupRefList.jsp</result>           
+		</action>
+		<action name="deleteChannelGroupNpvr" class="npvrChannelGroupManagerAction" method="deleteChannelGroup">	
+            <!-- 
+            <result name="success" type="redirect">
+				/page/npvrChannelGroup/queryChannelGroupList.do?method=queryChannelGroupList
+            </result>
+             -->
+            <result name="success">/page/npvrChannelGroup/channelGroupList.jsp</result>
+		</action>
+	</package>
+</struts>

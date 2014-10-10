@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<rule>
+			<startTime key="08:00:00" name="08:00:00" />
+			<startTime key="11:00:00" name="11:00:00" />
+			<startTime key="19:30:00" name="19:30:00" />
+			<startTime key="00:00:00" name="00:00:00" />
+			
+			<endTime key="09:00:00" name="09:00:00" />
+			<endTime key="13:00:00" name="13:00:00" />
+			<endTime key="21:00:00" name="21:00:00" />
+			<endTime key="23:59:59" name="23:59:59" />
+	</rule>
+	
+</config>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- global -->
+	<include file="struts-default.xml" />
+	<include file="struts-plugin.xml" />
+	<include file="struts/struts-questionnaire.xml"/>
+	<include file="struts/struts-position.xml"/>
+	<include file="struts/struts-order.xml"/>
+	<include file="struts/struts-channel.xml"/>
+	<include file="struts/struts-location.xml"/>
+	<include file="struts/struts-playCategory.xml"/>
+	<include file="struts/struts-materialSpeci.xml"/>
+	
+	<include file="struts/struts-user.xml"/>
+	
+	<include file="struts/struts-vod.xml"/>
+	<!--
+	<include file="struts/struts-chart.xml"/>
+	-->
+	<include file="struts/struts-role.xml"/>
+	<include file="struts/struts-column.xml"/>
+	<include file="struts/struts-contract.xml"/>
+	<include file="struts/struts-upload.xml"/>
+	<include file="struts/struts-marketingrule.xml"/>
+	<include file="struts/struts-ploy.xml"/>
+	<include file="struts/struts-precise.xml"/>
+	<include file="struts/struts-materialSpeci.xml"/>
+	<include file="struts/struts-meterial.xml"/>
+	<include file="struts/struts-channelGroup.xml"/>
+	<include file="struts/struts-config.xml"/>
+	<include file="struts/struts-sysconfig.xml"/>
+	<include file="struts/struts-accounts.xml"/>
+	<include file="struts/struts-awaitdoing.xml"/>
+	<include file="struts/struts-log.xml"/>
+	<include file="struts/struts-report.xml"/>
+	
+	<include file="struts/struts-npvrChannelGroup.xml"/>
+	
+	<include file="struts/struts-warn.xml"/>
+	
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<!-- 指定Web应用的默认编码集,相当于调用HttpServletRequest的setCharacterEncoding方法 -->
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	
+	<!-- 配置国际化相关信息 -->
+	<constant name="struts.custom.i18n.resources" value="struts.messageResource" />
+
+	<!-- 设置浏览器是否缓存静态内容,默认值为true(生产环境下使用),开发阶段最好关闭 -->
+	<constant name="struts.serve.static.browserCache" value="false" />
+
+	<!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
+	<!--<constant name="struts.devMode" value="true" /> -->
+	    <constant name="struts.devMode" value="false" />
+	
+	<!-- 把action对象交给spring创建 -->
+	<constant name="struts.objectFactory" value="spring" />
+	
+	<constant name="struts.multipart.maxSize" value="1000000000"/>
+	<!-- 如果不是用action作为扩展名，则需要在这个地方配置扩展名，否则映射不上 -->
+	<constant name="struts.action.extension" value="do" />
+	
+	<!-- 上传的文件存放目录 -->
+	<constant name="struts.multipart.saveDir" value="tmp"/>
+	
+    <package name="default" extends="struts-default">
+    
+    	<interceptors>
+			<!-- 登录超时拦截器 -->
+			<interceptor name="loginInterceptor"
+				class="com.dvnchina.advertDelivery.interceptor.LoginInterceptor">
+			</interceptor>
+			<!-- 防止重复提交的拦截器 -->
+			<!--<interceptor name="exTokenInterceptor"
+				class="com.dvnchina.advertDelivery.interceptor.ExTokenInterceptor">
+			</interceptor>-->
+			<!-- 自定义拦截栈 -->
+			<interceptor-stack name="adsInterceptorStack">
+				<interceptor-ref name="defaultStack"/>
+				<interceptor-ref name="loginInterceptor" />
+				<!--<interceptor-ref name="exTokenInterceptor" />-->
+			</interceptor-stack>
+		</interceptors>
+		
+		<!-- 覆盖默认的拦截栈 -->
+		<default-interceptor-ref name="adsInterceptorStack" />
+		<global-results>
+			<result name="login">/tset/timeoutPage.jsp</result>
+			<result name="error">/error.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping exception="java.lang.Exception" result="error"></exception-mapping>
+		</global-exception-mappings>
+		
+		<action name="checkSession" class="baseAction" method="checkSession" />
+		
+		<!--广告内容管理之资产管理-->
+		<action name="adContentMgr_*" method="{1}" class="com.dvnchina.advertDelivery.action.AdContentAction"> 
+		  
+		   <result type="redirectAction">
+				<param name="actionName">adContentMgr_list</param>
+				<param name="adAssetsForm">${adAssetsForm}</param>
+			</result>
+			<result name="list">/page/AdContent/listAssetsMgr2.jsp</result>
+			<result name="delete" type="redirectAction">amsAssessMgr_list</result>		
+			<!-- 进入保存页面 -->
+			<result name="saveImage">/page/AdContent/addImageMetaMgr.jsp </result>	
+			<result name="saveVideo">/page/AdContent/addVideoMetaMgr.jsp </result>	
+			<result name="saveMessage">/page/AdContent/addMessageMetaMgr.jsp </result>	
+			<!-- 问卷 -->
+			<result name="saveQuestion">/page/AdContent/ </result>	
+			<!-- 进入修改页面 -->
+			<result name="updateImage">/page/AdContent/updateImageMetaMgr2.jsp </result>
+			<result name="updateVideo">/page/AdContent/updateVideoMetaMgr2.jsp </result>	
+			<result name="updateMessage">/page/AdContent/updateMessageMetaMgr2.jsp </result>	
+			<result name="updateQuestion">/page/AdContent/updateQuestionMetaMgr.jsp </result>	
+			
+			<!-- 跳转到添加页面 -->
+			<result name="goMetasRedirect">/page/material/uploadMaterial.jsp </result>
+			
+			<!-- 跳转到审核素材管理页面 -->
+			<result name="goAuditRedirect">/page/AdContent/goAuditMetas.jsp </result>
+			<result name="listAuditMetas">/page/AdContent/goAuditMetas.jsp</result>
+			<result name="listAuditMetasG" type="redirectAction">adContentMgr_listAuditMetas</result>
+			<!-- 运行商对审核后的信息进行相关操作 -->
+			<result name="listReal">/page/AdContent/listAssetsMgrReal.jsp</result>
+			<result name="updateImageReal">/page/AdContent/updateImageMetaMgrReal.jsp </result>
+			<result name="updateVideoReal">/page/AdContent/updateVideoMetaMgrReal.jsp </result>	
+			<result name="updateMessageReal">/page/AdContent/updateMessageMetaMgrReal.jsp </result>	
+			<result name="updateQuestionReal">/page/AdContent/updateQuestionMetaMgrReal.jsp </result>
+			<result name="list_U_D">/page/AdContent/listAssets_U_D_Mgr2.jsp</result>
+			<result name="listUpResourceMetas" type="redirectAction">adContentMgr_listUD</result>
+			<result name="error">/page/user/error.jsp</result>
+		</action>
+		
+		<!--客户管理-->
+		<action name="adCustomerMgr_*" method="{1}" class="com.dvnchina.advertDelivery.action.CustomerAction">
+			
+			<param name="uploadDir">uploadFiles/contractScanFiles</param>
+			<param name="uploadBusinessDir">uploadFiles/businessLicence</param>
+			
+		    <result type="redirectAction">adCustomerMgr_list</result> 
+			<result name="list">/page/customer/customerListMgr.jsp</result>
+			<result name="saveCustomer">/page/customer/customerAddMgr.jsp</result>
+			<result name="updateCustomer">/page/customer/customerUpdateMgr.jsp</result>
+			<result name="listAuditMetas">/page/customer/customerAuditList.jsp</result>
+			<result name="AuditCustomer" type="redirectAction">adCustomerMgr_listAudit</result>
+			<result name="customerInfo">/page/customer/getCustomerInfo.jsp</result>
+			<result name="customerAuditInfo">/page/customer/customerAuditMgr.jsp</result>
+			<result name="bindCustomer">/page/customer/new/binding.jsp</result>
+		</action>
+
+		<!-- 同步CPS -->
+		<action name="CPSPotiontionMgr_*" method="{1}" class="com.dvnchina.advertDelivery.action.CPSPositionAction"> 
+			<result name="list">/page/cpsCategory/showCpsCategoryInfo.jsp</result>
+		</action>
+		
+		<!-- 投放区域管理 -->
+		<action name="ReleaseArea_*" method="{1}" class="com.dvnchina.advertDelivery.action.ReleaseAreaAction"> 
+			<result name="list">/page/ReleaseArea/ReleaseAreaMgr.jsp</result>
+		</action>
+		<!-- 频道管理 -->
+		<action name="channelInfo_*" method="{1}" class="com.dvnchina.advertDelivery.action.ChannelInfoAction"> 
+			<result name="list">/page/channelInfo/listChannelInfoMgr.jsp</result>
+		</action>
+		
+		<!-- 用户区域管理 --> 
+		<action name="userArea_*" method="{1}" class="com.dvnchina.advertDelivery.action.UserAreaAction"> 
+			<result name="list">/page/userArea/listUserAreaMgr.jsp</result>
+		</action> 
+		
+		<!-- 用户级别管理 -->
+		<action name="userRank_*" method="{1}" class="com.dvnchina.advertDelivery.action.UserRankAction"> 
+			<result name="list">/page/userRank/listUserRankMgr.jsp</result>
+		</action>
+		
+		<!-- 用户行业类别查询 -->
+		<action name="userIndustryCategory_*" method="{1}" class="com.dvnchina.advertDelivery.action.UserIndustryCategoryAction"> 
+			<result name="list">/page/userIndustryCategory/listUserIndustryCategoryMgr.jsp</result>
+		</action>
+		
+	</package>
+	
+	
+	
+</struts>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/marketingRule" extends="default">
+
+		<action name="addMarketingRule" class="marketingRuleAction" method="addMarketingRule">
+			<result>/page/marketingRule/addMarketingRule2.jsp</result>
+		</action>
+		<action name="saveMarketingRule" class="marketingRuleAction" method="insertMarketingRule"/>
+		<action name="updateMarketingRule" class="marketingRuleAction" method="updateMarketingRule">
+			<result>/page/marketingRule/updateMarketingRule2.jsp</result>
+		</action>
+		<action name="saveUpdateMarketingRule" class="marketingRuleAction" method="saveUpdateMarketingRule"/>
+		<action name="listMarketingRule" class="marketingRuleAction" method="getAllMarketingRuleList">
+			<result name="success">/page/marketingRule/listMarketingRule2.jsp</result>
+			<result name="bandingMarketRule">/page/marketingRule/new/binding.jsp</result>
+		</action>
+		<action name="deleteMarketingRule" class="marketingRuleAction" method="deleteMarketingRule"/>
+		<action name="deleteMarketingRuleBatch" class="marketingRuleAction" method="deleteMarketingRuleBatch"/>
+		<action name="queryArea" class="marketingRuleAction" method="queryArea">
+			<result name="area">/page/marketingRule/bindingArea.jsp</result>
+		</action>
+		<action name="queryChannel" class="marketingRuleAction" method="queryChannel">
+			<result name="channel">/page/marketingRule/bindingChannel.jsp</result>
+		</action>
+		<action name="queryRule" class="marketingRuleAction" method="queryRule">
+			<result name="rule">/page/marketingRule/listPositionRule.jsp</result>
+		</action>
+		<action name="upLine" class="marketingRuleAction" method="upLineMarketingRule"/>
+		<action name="downLine" class="marketingRuleAction" method="downLineMarketingRule"/>
+	</package>
+</struts>
+	

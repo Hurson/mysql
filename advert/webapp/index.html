@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="css/index.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.4.4.js"></script>
+<title>互动电视广告平台</title>
+</head>
+
+<body onload="resizeMe();">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+<tr>
+<td colspan="3" height="63px"><iframe src="head1.html" scrolling="no" frameborder="0" height="100%" width="100%"></iframe></td>
+</tr>
+<tr>
+<td width="214px" valign="top" height="100%"><iframe src="menu_left1.jsp" id="I5" scrolling="no" frameborder="0" height="526" width="100%"></iframe></td>
+<td width="4px" class="suxian"  valign="middle"> <img src="images/main_30.gif" /></td>
+<td valign="top"><iframe src="menu_right.html" name="main_frame" id="frame_content" scrolling="no" frameborder="0" width="100%" height="526"></iframe></td>
+</tr>
+<tr>
+<td colspan="3" class="index_bottom"></td>
+</tr>
+</table>
+<script type="text/javascript">
+$(window).resize(function() {
+	resizeMe();
+});
+function resizeMe(){
+	var iframe = document.getElementById("I5");
+	var iframe2 = document.getElementById("frame_content");
+	try{
+	var dHeight = document.documentElement.clientHeight-70;
+	var height = Math.max(526, dHeight);
+	iframe.height =  height;
+	iframe2.height =  height;
+	}catch (ex){}
+}
+</script>
+</body>
+</html>

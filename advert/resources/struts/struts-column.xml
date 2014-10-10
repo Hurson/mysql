@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/column" extends="default">
+
+		<action name="columnList" class="columnAction" method="getAllColumnList">
+			<result name="list">columnList.jsp</result>
+		</action>
+		<action name="addColumn" class="columnAction" method="addColumn">
+			<result name="list">columnList.jsp</result>
+		</action>
+		<action name="toAddColumn" class="columnAction" method="getParentColumn">
+			<result name="add">addColumn.jsp</result>
+		</action>
+		<action name="deleteColumn" class="columnAction" method="deleteColumn"/>
+		<action name="updateColumn" class="columnAction" method="updateColumn">
+			<result name="update">updateColumn.jsp</result>
+		</action>
+		
+	</package>
+</struts>
+	

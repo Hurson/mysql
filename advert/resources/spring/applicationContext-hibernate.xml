@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName" default-lazy-init="true">
+
+	<!-- 属性文件读入 -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:configuration.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 数据源定义,使用Apache DBCP 连接池
+		<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+		<value>${jdbc.driverClassName}</value>
+		</property>
+		<property name="url"><value>${jdbc.url}</value></property>
+		<property name="username"><value>${jdbc.username}</value></property>
+		<property name="password"><value>${jdbc.password}</value></property>
+		
+		<property name="maxActive">
+		<value>${jdbc.maxPoolSize}</value>
+		</property>
+		<property name="initialSize">
+		<value>${jdbc.initialPoolSize}</value>
+		</property>
+		<property name="maxIdle">
+		<value>${jdbc.maxIdleTime}</value>
+		</property>
+		<property name="minIdle">
+		<value>${jdbc.minIdle}</value>
+		</property>
+		<property name="maxWait">
+		<value>${jdbc.maxWait}</value>
+		</property>
+		
+		</bean> -->
+ 	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true" />
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass">
+			<value>${jdbc.driverClassName}</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>${jdbc.url}</value>
+		</property>
+		<property name="user">
+			<value>${jdbc.username}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc.password}</value>
+		</property>
+		<property name="maxPoolSize">
+			<value>${jdbc.maxPoolSize}</value>
+		</property>
+		<property name="minPoolSize">
+			<value>${jdbc.minPoolSize}</value>
+		</property>
+		<property name="maxStatements">
+			<value>${jdbc.maxStatements}</value>
+		</property>
+		<property name="initialPoolSize">
+			<value>${jdbc.initialPoolSize}</value>
+		</property>
+		<property name="maxIdleTime">
+			<value>${jdbc.maxIdleTime}</value>
+		</property>
+		<property name="acquireIncrement">
+			<value>${jdbc.acquireIncrement}</value>
+		</property>
+		<property name="acquireRetryAttempts">
+			<value>${jdbc.acquireRetryAttempts}</value>
+		</property>
+		<property name="breakAfterAcquireFailure">
+			<value>${jdbc.breakAfterAcquireFailure}</value>
+		</property>
+		<property name="testConnectionOnCheckin">
+			<value>${jdbc.testConnectionOnCheckin}</value>
+		</property>
+		<property name="idleConnectionTestPeriod">
+			<value>${jdbc.idleConnectionTestPeriod}</value>
+		</property>
+	</bean>
+
+	<!--Hibernate SessionFatory-->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="mappingResources">
+			<list>
+				<!-- -->
+				<value>dbmap/UserIndustryCategory.hbm.xml</value>
+				 <value>dbmap/UserRank.hbm.xml</value>
+				 <value>dbmap/UserArea.hbm.xml</value>
+				 <value>dbmap/ChannelInfo.hbm.xml</value> 
+				 
+				<value>dbmap/ReleaseArea.hbm.xml</value>
+				
+				<value>dbmap/ContractBackup.hbm.xml</value>
+				<value>dbmap/User.hbm.xml</value>
+				<value>dbmap/Role.hbm.xml</value>
+				<value>dbmap/UserRole.hbm.xml</value>
+				<value>dbmap/Column.hbm.xml</value>
+				<value>dbmap/RoleColumn.hbm.xml</value>
+				<value>dbmap/Location.hbm.xml</value>
+				
+				<value>dbmap/UserLocation.hbm.xml</value>
+				
+				<value>dbmap/UserCustomer.hbm.xml</value>
+
+			 <value>dbmap/Contract.hbm.xml</value> 
+			 <value>dbmap/ContractAD.hbm.xml</value> 
+			 <value>dbmap/ContractADBackup.hbm.xml</value>
+<!--			 -->
+				<value>dbmap/Customer.hbm.xml</value>
+				<value>dbmap/CustomerBackUp.hbm.xml</value>  
+				<value>dbmap/Resource.hbm.xml</value>
+				<value>dbmap/ResourceReal.hbm.xml</value>
+				<value>dbmap/MaterialCategory.hbm.xml</value>
+				<value>dbmap/ImageMeta.hbm.xml</value>
+				<value>dbmap/ImageReal.hbm.xml</value>
+				<value>dbmap/MessageMeta.hbm.xml</value>
+				<value>dbmap/MessageReal.hbm.xml</value>
+				<value>dbmap/VideoMeta.hbm.xml</value>
+				<value>dbmap/VideoReal.hbm.xml</value>
+				<value>dbmap/QuestionnaireTemplate.hbm.xml</value>
+				<value>dbmap/Questionnaire.hbm.xml</value>
+				<value>dbmap/QuestionnaireReal.hbm.xml</value>
+				<value>dbmap/Question.hbm.xml</value>
+				<value>dbmap/QuestionReal.hbm.xml</value>
+				
+				<value>dbmap/Order.hbm.xml</value>
+				<value>dbmap/OrderMaterialRelation.hbm.xml</value>
+				<value>dbmap/Ploy.hbm.xml</value>
+				<value>dbmap/TPreciseMatch.hbm.xml</value>
+				<value>dbmap/PloyBackup.hbm.xml</value>
+				<value>dbmap/TPreciseMatchBk.hbm.xml</value>
+				<value>dbmap/TNoAdPloy.hbm.xml</value>
+				
+				<value>dbmap/TCategoryinfo.hbm.xml</value>
+				<value>dbmap/TChannelinfoNpvr.hbm.xml</value>
+				<value>dbmap/TLoopbackCategory.hbm.xml</value>
+				
+				<value>dbmap/TProductinfo.hbm.xml</value>
+				<value>dbmap/TAssetinfo.hbm.xml</value>
+				
+				
+				<value>dbmap/TNpvrChannelGroup.hbm.xml</value>
+				<value>dbmap/NpvrChannelInfo.hbm.xml</value>
+				<value>dbmap/NpvrChannelGroupRef.hbm.xml</value>
+				
+				
+				
+			    <value>dbmap/MarketingRule.hbm.xml</value> 
+
+				<value>dbmap/PlayListReqPrecise.hbm.xml</value>
+				<!-- 
+				<value>dbmap/TPositionType.hbm.xml</value>
+				<value>dbmap/TAdvertposition.hbm.xml</value>
+				-->
+				<value>dbmap/BaseConfig.hbm.xml</value>
+				 
+
+				<value>dbmap/PositionPackageForContract.hbm.xml</value>
+
+				<value>dbmap/PositionPackage.hbm.xml</value>
+				<value>dbmap/AdvertPosition.hbm.xml</value>
+				<value>dbmap/DefaulResourceAD.hbm.xml</value>
+				<value>dbmap/ImageSpecification.hbm.xml</value>
+				<value>dbmap/QuestionnaireSpecification.hbm.xml</value>
+				<value>dbmap/TextSpecification.hbm.xml</value>
+				<value>dbmap/VideoSpecification.hbm.xml</value>
+				<value>dbmap/ContractAccounts.hbm.xml</value>
+				<value>dbmap/OperateLog.hbm.xml</value>
+				<value>dbmap/AuditLog.hbm.xml</value>
+				<value>dbmap/TChannelGroup.hbm.xml</value>	
+				<value>dbmap/ChannelGroupRef.hbm.xml</value>		
+				<value>dbmap/UserPackagePosition.hbm.xml</value>	
+				<value>dbmap/Locationcode.hbm.xml</value>	
+				
+				
+								
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					${hibernate.dialect}
+				</prop>
+				<prop key="hibernate.show_sql">
+					${hibernate.show_sql}
+				</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+		scope="prototype">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="openSessionInViewInterceptor"
+		class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">
+					PROPAGATION_REQUIRED,-Exception
+				</prop>
+				<prop key="add*">
+					PROPAGATION_REQUIRED,-Exception
+				</prop>
+				<prop key="delete*">
+					PROPAGATION_REQUIRED,-Exception
+				</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="update*">
+					PROPAGATION_REQUIRED,-Exception
+				</prop>
+				<prop key="*">
+					PROPAGATION_REQUIRED,-Exception
+				</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="autoproxy"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<!-- 可以是Service或DAO层（最好是针对业务层*Service） -->
+		<property name="beanNames">
+			<list>
+				<value>*Service</value>
+				<value>*service</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+</beans>

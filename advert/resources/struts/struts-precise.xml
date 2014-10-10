@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/precise" extends="default">
+
+		<action name="queryPreciseList" class="preciseAction" method="queryPreciseList">
+			<result name="success">/page/ploy/precise/listPrecise.jsp</result>
+		</action>
+		
+		<action name="getPreciseMatch" class="preciseAction" method="getPreciseMatch">
+			<result name="success">/page/ploy/precise/addPrecise.jsp</result>
+		</action>
+		
+		<action name="getPreciseMatchinfo" class="preciseAction" method="getPreciseMatchinfo">
+			<result name="success">/page/ploy/precise/Preciseinfo.jsp</result>
+		</action>
+		<action name="saveOrUpdate" class="preciseAction" method="saveOrUpdate">
+			<result name="success">/page/ploy/precise/listPrecise.jsp</result>
+		</action>
+		
+		<action name="checkName" class="preciseAction" method="checkName">
+			
+		</action>
+		<action name="deletePrecise" class="preciseAction" method="deletePrecise">
+			<result>/page/ploy/precise/listPrecise.jsp</result>
+		</action>
+		
+		<action name="queryDTVChannel" class="preciseAction" method="queryDTVChannel">
+			<result name="success">/page/ploy/precise/bindingDTVChannel.jsp</result>
+		</action>
+		<action name="queryNpvrChannel" class="preciseAction" method="queryNpvrChannel">
+			<result name="success">/page/ploy/precise/bindingNpvrChannel.jsp</result>
+		</action>
+		<action name="queryLookBackColumn" class="preciseAction" method="queryLookBackColumn">
+			<result name="success">/page/ploy/precise/bindingLookBackColumn.jsp</result>
+		</action>
+		<action name="queryAssetCategory" class="preciseAction" method="queryAssetCategory">
+			<result name="success">/page/ploy/precise/bindingAssetCategory.jsp</result>
+		</action>
+		<action name="queryAsset" class="preciseAction" method="queryAsset">
+			<result name="success">/page/ploy/precise/bindingAsset.jsp</result>
+		</action>
+		<action name="queryProduct" class="preciseAction" method="queryProduct">
+			<result name="success">/page/ploy/precise/bindingProduct.jsp</result>
+		</action>	
+		
+		
+		<action name="queryReleaseArea" class="preciseAction" method="queryReleaseArea">
+			<result name="success">/page/ploy/precise/bindingReleaseArea.jsp</result>
+		</action>	
+		<action name="queryUserIndustry" class="preciseAction" method="queryUserIndustry">
+			<result name="success">/page/ploy/precise/bindingUserIndustry.jsp</result>
+		</action>	
+		<action name="queryUserRank" class="preciseAction" method="queryUserRank">
+			<result name="success">/page/ploy/precise/bindingUserRank.jsp</result>
+		</action>	
+			<action name="queryChannelGroup" class="preciseAction" method="queryChannelGroup">
+			<result name="success">/page/ploy/precise/bindingChannelGroup.jsp</result>
+		</action>	
+		
+		
+		<action name="queryChannelGroup" class="preciseAction" method="queryChannelGroup">
+			<result name="success">/page/ploy/precise/bindingChannelGroup.jsp</result>
+		</action>	
+		
+			
+		<action name="queryNpvrChannelGroup" class="preciseAction" method="queryNpvrChannelGroup">
+			<result name="success">/page/ploy/precise/bindingNpvrChannelGroup.jsp</result>
+		</action>
+		
+		
+		<action name="queryBChannelGroup" class="preciseAction" method="queryBChannelGroup">
+			<result name="success">/page/ploy/precise/bindingBChannelGroup.jsp</result>
+		</action>	
+	</package>
+</struts>
+	

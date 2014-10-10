@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.dvnchina.advertDelivery.position.bean.TextSpecification" table="T_TEXT_SPECIFICATION">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" length="10" />
+        </id>
+        <property name="textDesc" type="java.lang.String">
+            <column name="TEXT_DESC" />
+        </property>
+        <property name="textLength" type="java.lang.String">
+            <column name="TEXT_LENGTH" />
+        </property>
+        <property name="isLink" type="java.lang.Integer">
+            <column name="IS_LINK" />
+        </property>
+    </class>
+</hibernate-mapping>

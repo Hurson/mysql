@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.dvnchina.advertDelivery.position.bean.ImageSpecification" table="T_IMAGE_SPECIFICATION">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" length="10" />
+        </id>
+        <property name="imageDesc" type="java.lang.String">
+            <column name="IMAGE_DESC" />
+        </property>
+        <property name="imageHeight" type="java.lang.String">
+            <column name="IMAGE_HEIGHT" />
+        </property>
+        <property name="imageWidth" type="java.lang.String">
+            <column name="IMAGE_WIDTH" />
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" />
+        </property>
+        <property name="fileSize" type="java.lang.String">
+            <column name="FILE_SIZE" />
+        </property>
+        <property name="isLink" type="java.lang.Integer">
+            <column name="IS_LINK" />
+        </property>
+    </class>
+</hibernate-mapping>

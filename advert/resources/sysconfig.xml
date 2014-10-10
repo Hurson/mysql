@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<config> 
+  <!-- 广告位类型系统初始化和广告位默认素材配置；  -->  
+  <advert> 
+    <!--
+		
+		//广告投放形式
+		typedef Type_Forms
+		{//	     投放形式	      	     特征值	  形式名称
+			DeliveryForms_Open,		00,	"开机广告"；	//OCG开机画面，视频+图片
+			DeliveryForms_Topic,		10,	"专题广告";	//DTV频道，视频，区域分类
+			DeliveryForms_Menu,		20,	"界面广告";	
+			{
+				Menu_Column,		21,	"栏目界面广告";	//OCG操作界面，图片，栏目分类
+				Menu_Channel,		22,	"频道界面广告";	//OCG操作界面，图片，频道分类
+			}
+			DeliveryForms_Asset,		30,	"随片广告"；
+			{
+				Asset_Menu,		31,	"随片页面广告";	
+				
+				//Portal页面，图片，内容分类
+				Asset_Insert,		32,	"随片插播广告";	//视频内容，视频，内容分类
+				Asset_Survey,		33,	"随片问卷广告";	//视频内容，问卷，内容分类
+				Asset_Pause,		34,	"随片暂停广告";	//视频内容，图片，内容分类
+				Asset_Logo,		35,	"随片挂角广告";	//视频内容，图片，内容分类
+				Asset_Message,		36,	"随片消息广告";	//视频内容，文字，内容分类
+			}
+			DeliveryForms_Message,		40,	"通知广告";	//UNT通知消息，文字，频道分类
+		}
+
+		//广告投放渠道
+		typedef Type_Platform
+		{//         投放渠道		                    特征值	    渠道名称
+			Delivery
+			Platform_UNT;		00,	"通知应用系统";
+			DeliveryPlatform_OCG;		01,	"广播应用系统";
+			DeliveryPlatform_Portal;    02,	"门户应用系统";
+			DeliveryPlatform_VOD;		03,	"点播应用系统";
+			DeliveryPlatform_DTV;		04,	"导视应用系统";
+		}
+
+		   
+		-->  
+    <!-- 
+			  state="1"  			是否启用
+			  code="0100"  			状态码   修改为 8位
+			  des="开机画面广告"   	描述
+			  ishd="false"          是否高清
+			  ispoll="false" 		是否轮询
+			  isover="false" 		是否覆盖
+			  
+			  -->  
+    <advtype state="1" code="00_01_0100" des="开机画面广告" ishd="false" ispoll="false" isover="false"> 
+      <!-- filetype="2"1：视频2： 图片 ；   type 高清和标清  filepath文件路径  -->  
+      <material id="1" filetype="1" filepath=".../start.ps"/>  
+      <material id="2" filetype="2" filepath=".../tu_1.jpg"/>  
+      <material id="3" filetype="2" filepath=".../tu_2.jpg"/>  
+      <material id="4" filetype="2" filepath=".../tu_3.png"/> 
+    </advtype>  
+    <advtype state="1" code="21_01_0201" name="菜单图片广告" pname=""> 
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/>  
+      <material id="1" filepath=".../hd_1.png"/> 
+    </advtype>  
+    <!-- 以下几个广告位同上。依据需求做初始化配置 -->  
+    <advtype state="1" code="2101 0210" des="导航条广告"/>  
+    <advtype state="1" code="0203" des="快捷切换列表广告"/>  
+    <advtype state="1" code="0204" des="音量条广告"/>  
+    <advtype state="1" code="0205" des="预告提示广告"/>  
+    <advtype state="1" code="0206" des="广播收听背景广告"/>  
+    <advtype state="1" code="0207" des="回看回放菜单广告"/>  
+    <advtype state="1" code="0208" des="回看回放插播广告"/>  
+    <advtype state="1" code="0209" des="回看回放暂停广告"/>  
+    <advtype state="1" code="0210" des="菜单视频外框广告"/>  
+    <advtype state="1" code="0211" des="点播菜单广告"/>  
+    <advtype state="1" code="0212" des="点播随片图片广告"/>  
+    <advtype state="1" code="0213" des="点播问卷广告"/>  
+    <advtype state="1" code="0214" des="点播片头插播广告"/>  
+    <advtype state="1" code="0215" des="点播暂停广告"/>  
+    <advtype state="1" code="0216" des="点播挂角广告"/>  
+    <advtype state="1" code="0217" des="点播游动字幕广告"/>  
+    <advtype state="1" code="0300" des="《DTV导视》节目视频广告"/> 
+  </advert>  
+  <!-- 允许插播次数配置；-->  
+  <playcount name="true"> 
+    <child id="1362031032875" value="3"/> 
+  </playcount>  
+  <!-- 文本显示坐标配置 ;单位像素（px）-->  
+  <showposition> 
+    <position name="left_up"/>  
+    <position name="width_high"/>  
+    <position name="区域-左  * 区域-上"> 
+      <child id="1362023233468" value="88*44"/>  
+      <url id="1362024304062" value="88*44447"/> 
+    </position>  
+    <position name="区域-宽  * 区域-高"> 
+      <child id="1362023286906" value="88*44000"/> 
+    </position> 
+  </showposition>  
+  <!-- 广告投放的URl配置 -->  
+  <playaddress> 
+    <platform name="UNT"> 
+      <child value="http://unt_1"/>  
+      <child value="http://unt_1"/>  
+      <child value="http://unt_1"/>  
+      <child id="1361935461093" value="http://unt_2"/> 
+    </platform>  
+    <platform name="OCG"> 
+      <child value="www"/>  
+      <child id="1361937992406" value="http://ocg_do.action"/>  
+      <child id="1361947111281" value="http://ocg_do.action"/> 
+    </platform>  
+    <platform name="22"/>  
+    <platform name="owt"> 
+      <child id="1361953409921" value="123456"/> 
+    </platform>  
+    <platform name="请求"> 
+      <child id="1361953738921" value="手术"/> 
+    </platform>  
+    <platform name="avit"> 
+      <child id="1361953889187" value="www.ggooog"/> 
+    </platform>  
+    <platform name="qing"> 
+      <child id="1361953912515" value="ccc"/> 
+    </platform>  
+    <platform name="ceshi"/>  
+    <platform name="www"> 
+      <child id="1361954722484" value="www.ggooogw"/> 
+    </platform>  
+    <platform name="rest111"> 
+      <child id="1361954744937" value="2222"/> 
+    </platform>  
+    <platform name="OGG"> 
+      <child id="1361954871468" value="sss"/>  
+      <child id="1361954890234" value="sssss22"/> 
+    </platform> 
+  </playaddress>  
+  <!-- 数据同步接口 -->  
+  <datasyninterface> 
+    <interface name="CMA"> 
+      <child id="1" value=""/>  
+      <child id="2" value=""/>  
+      <child id="3" value=""/> 
+    </interface>  
+    <interface/>  
+    <interface/>  
+    <interface name="VOD">
+      <child id="1364894676245" value="http://192.168.12.211:10888/test/exportportal.xml"/>
+    </interface>
+  </datasyninterface> 
+</config>

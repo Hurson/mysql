@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:aop="http://www.springframework.org/schema/aop"
+             xmlns:tx="http://www.springframework.org/schema/tx"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                     http://www.springframework.org/schema/context
+                     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                     http://www.springframework.org/schema/aop
+                     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                     http://www.springframework.org/schema/tx
+                     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd" default-autowire="byName">
+
+	<bean name="baseAction" class="com.dvnchina.advertDelivery.common.BaseAction"/> 
+    <bean name="templateAction" class="com.dvnchina.advertDelivery.action.TemplateAction"/> 
+ 	<bean name="questionnaireAction" class="com.dvnchina.advertDelivery.action.QuestionnaireAction">
+ 		<property name="templateService" ref="templateService"/>
+   		<property name="questionnaireService" ref="questionnaireService"/>
+ 	</bean>
+ 	<bean name="orderAction" class="com.dvnchina.advertDelivery.order.action.OrderAction" scope="prototype"/>
+ 	 	 	
+ 	 <bean name="uploadMaterialAction" class="com.dvnchina.advertDelivery.action.UploadMaterialAction"/>
+ 	
+ 	<bean name="marketingRuleAction" class="com.dvnchina.advertDelivery.action.MarketingRuleAction">
+   		<property name="getPosition" ref="uploadMaterialService"/>
+ 	</bean> 
+ 	
+ 	
+ 	 
+ 	<!-- 广告资源管理 -->
+ 	<bean id="adContentAction" class="com.dvnchina.advertDelivery.action.AdContentAction" >
+ 		<property name="adAssetsService" ref="adAssetsService"/>
+ 		<property name="customerService" ref="customerService"/>
+ 		<property name="contractBackupService" ref="contractBackupService"/> 
+ 		<property name="advertPositionService" ref="advertPositionService"/> 
+ 		<property name="contractRunService" ref="contractRunService"/>
+ 	</bean>
+ 	<!-- 客户管理 -->
+   <bean id="CustomerAction" class="com.dvnchina.advertDelivery.action.CustomerAction" >
+ 		<property name="customerService" ref="customerService"/>
+ 		<property name="contractRunService" ref="contractRunService"/>
+ 		<property name="contractBackupService" ref="contractBackupService"/>
+ 	</bean>
+ 	
+ 	<!-- 同步CPS广告信息 --> 
+    <bean id="CPSPositionAction" class="com.dvnchina.advertDelivery.action.CPSPositionAction" >
+ 		<property name="cpsPositionService" ref="cpsPositionService"/> 
+ 		<property name="advertPositionService" ref="advertPositionService"/> 
+ 	</bean>
+ 	<!-- 投放信息管理 -->
+ 	<bean id="releaseAreaAction" class="com.dvnchina.advertDelivery.action.ReleaseAreaAction">
+ 		<property name="releaseAreaService" ref="releaseAreaService"/>
+ 	</bean>
+ 	<!-- 频道管理 -->
+ 	<bean id="channelInfoAction" class="com.dvnchina.advertDelivery.action.ChannelInfoAction" />
+ 	<!-- 用户区域管理 -->  
+ 	<bean id="userAreaAction" class="com.dvnchina.advertDelivery.action.UserAreaAction">
+ 		<property name="userAreaService" ref="userAreaService"/>
+ 		<property name="releaseAreaService" ref="releaseAreaService"/>
+ 	</bean>
+ 	<!--用户级别管理-->
+ 	<bean id="userRankAction" class="com.dvnchina.advertDelivery.sysconfig.action.UserRankAction" scope="prototype">
+ 		<property name="userRankService" ref="userRankService"/>
+ 	</bean>
+ 	<bean name="channelAction" class="com.dvnchina.advertDelivery.sysconfig.action.ChannelAction" scope="prototype"/> 
+ 	<!-- 地区信息 -->
+ 	<bean name="locationAction" class="com.dvnchina.advertDelivery.action.LocationInfoAction"/> 
+ 	<bean name="playCategoryAction" class="com.dvnchina.advertDelivery.action.PlayCategoryAction">
+ 		<property name="playCategoryService" ref="playCategoryService"/>
+ 	</bean>
+ 	
+ 	<bean name="loginAction" class="com.dvnchina.advertDelivery.action.LoginAction"/> 
+ 	<!-- <bean name="userAction" class="com.dvnchina.advertDelivery.action.UserAction"/>  -->
+ 	<bean name="userAction" class="com.dvnchina.advertDelivery.sysconfig.action.UserAction" scope="prototype"/>
+ 	<!-- <bean name="roleAction" class="com.dvnchina.advertDelivery.action.RoleAction"/>  -->
+ 	<bean name="roleAction" class="com.dvnchina.advertDelivery.sysconfig.action.RoleAction" scope="prototype"/>
+ 	<bean name="columnAction" class="com.dvnchina.advertDelivery.action.ColumnAction"/> 
+ 	<bean name="purviewAction" class="com.dvnchina.advertDelivery.action.PurviewAction"/> 
+ 	<bean name="configAction" class="com.dvnchina.advertDelivery.action.ConfigAction"/> 
+ 	<bean name="updateUIAction" class="com.dvnchina.advertDelivery.sysconfig.action.UpdateUIAction" scope="prototype">
+ 		<property name="ployService" ref="ployService"/>
+ 	</bean>
+ 	
+ 	
+ 	<bean name="positionAction" class="com.dvnchina.advertDelivery.position.action.PositionAction" scope="prototype"/>
+ 	<bean name="defaulResourceAction" class="com.dvnchina.advertDelivery.position.action.DefaulResourceAction" scope="prototype"/>
+ 	<bean name="advertPositionAction" class="com.dvnchina.advertDelivery.action.AdvertPositionAction"/>
+ 	<bean name="imageSpecificationAction" class="com.dvnchina.advertDelivery.action.ImageSpecificationAction"/>
+ 	<bean name="videoSpecificationAction" class="com.dvnchina.advertDelivery.action.VideoSpecificationAction"/>
+ 	<bean name="advertPositionTypeAction" class="com.dvnchina.advertDelivery.action.AdvertPositionTypeAction"/>
+ 	<bean name="contractAction" class="com.dvnchina.advertDelivery.action.ContractAction"/>
+ 	<bean name="textSpecificationAction" class="com.dvnchina.advertDelivery.action.TextSpecificationAction"/>
+ 	<bean name="questionnaireSpecificationAction" class="com.dvnchina.advertDelivery.action.QuestionnaireSpecificationAction"/>
+
+	<bean name="vodSyncAction" class="com.dvnchina.advertDelivery.action.VodSyncAction"/>
+    <!--策略管理 -->
+    <bean name="ployAction" class="com.dvnchina.advertDelivery.ploy.action.PloyAction" scope="prototype"> 
+    	<property name="ployService" ref="ployService"/>
+    </bean>
+      <!--精准管理 -->
+    <bean name="preciseAction" class="com.dvnchina.advertDelivery.ploy.action.PreciseMatchAction"  scope="prototype">
+ 	    <property name="preciseservice" ref="preciseservice"/>
+ 	</bean>
+ 	<bean name="noAdPloyAction" class="com.dvnchina.advertDelivery.ploy.action.NoAdPloyAction"  scope="prototype">
+ 	    <property name="noAdPloyService" ref="noAdPloyService"/>
+ 	</bean>
+ 	<!--频道组管理 -->
+    <bean name="channelGroupManagerAction" class="com.dvnchina.advertDelivery.channelGroup.action.ChannelGroupManagerAction" scope="prototype">
+        <property name="channelGroupManagerService" ref="channelGroupManagerService"/>
+        <property name="operateLogService" ref="operateLogService"/>
+    </bean>
+
+    <!--回看频道组管理 -->
+    <bean name="npvrChannelGroupManagerAction" class="com.dvnchina.advertDelivery.npvrChannelGroup.action.NpvrChannelGroupManagerAction" scope="prototype">
+        <property name="channelGroupManagerService" ref="npvrChannelGroupManagerService"/>
+        <property name="operateLogService" ref="operateLogService"/>
+    </bean>
+ 	
+    <!--合同管理 -->
+    <bean name="contractManagerAction" class="com.dvnchina.advertDelivery.contract.action.ContractManagerAction" scope="prototype">
+        <property name="contractManagerService" ref="contractManagerService"/>
+        <property name="operateLogService" ref="operateLogService"/>
+    </bean>
+    <bean name="contractAccountsAction" class="com.dvnchina.advertDelivery.accounts.action.ContractAccountsAction" scope="prototype">
+        <property name="contractAccountsService" ref="contractAccountsService"/>
+    </bean>
+ 
+   <!--  系统配置部分  -->
+   <bean name="baseConfigAction" class = "com.dvnchina.advertDelivery.sysconfig.action.BaseConfigAction" scope="prototype">
+   		<property name="baseConfigService" ref="baseConfigService"/>
+   </bean>
+   <bean name="userTradeAction" class = "com.dvnchina.advertDelivery.sysconfig.action.UserTradeAction" scope="prototype">
+   		<property name="userTradeService" ref="userTradeService"/>
+   </bean>
+   
+    <!--素材管理 -->
+    <bean name="meterialManagerAction" class="com.dvnchina.advertDelivery.meterial.action.MeterialManagerAction" scope="prototype">
+        <property name="meterialManagerService" ref="meterialManagerService"/>
+        <property name="operateLogService" ref="operateLogService"/>
+    </bean>
+ 	<bean name="meterialOperatorAction" class="com.dvnchina.advertDelivery.meterial.action.MeterialOperatorAction" scope="prototype">
+        <property name="meterialOperatorService" ref="meterialOperatorService"/>
+    </bean>
+   <bean name="defaultMeterManageAction" class="com.dvnchina.advertDelivery.meterial.action.DefaultMaterialManageAction" scope="prototype">
+        <property name="defaultMeterialManageService" ref="defaultMeterialManageService"/>
+    </bean>
+   <bean name="operateLogAction" class="com.dvnchina.advertDelivery.log.action.OperateLogAction" scope="prototype"/>
+	
+	<bean name="UiManagerAction" class="com.dvnchina.advertDelivery.uiresource.action.UiManagerAction" scope="prototype">
+        
+    </bean>
+	
+	<bean name="reportAction" class="com.dvnchina.advertDelivery.report.action.ReportAction" scope="prototype">
+ 	    <property name="reportService" ref="reportService"/>
+    </bean>
+	
+	
+   <!--   首页待办事项     -->
+   <bean name="awaitDoingAction" class="com.dvnchina.advertDelivery.awaitDoing.action.AwaitDoing" scope="prototype"/>
+   
+   <bean name="warnAction" class="com.dvnchina.advertDelivery.warn.action.WarnAction" scope="prototype"/>
+   
+   
+</beans>

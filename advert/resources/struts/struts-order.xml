@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/order" extends="default">
+
+		<action name="queryOrderList" class="orderAction" method="queryOrderList">
+			<result name="success">/page/order/orderList.jsp</result>
+		</action>
+		<action name="initSave" class="orderAction" method="initSave">
+			<result name="success">/page/order/addOrderArea.jsp</result>
+		</action>
+		
+		<action name="showContractList" class="orderAction" method="queryContractList">
+			<result name="success">/page/order/selectContract.jsp</result>
+		</action>
+		
+		<action name="showPositionList" class="orderAction" method="queryPositionList">
+			<result name="success">/page/order/selectPosition.jsp</result>
+		</action>
+		
+		<action name="showPloyList" class="orderAction" method="queryPloyList">
+			<result name="start">/page/order/selectStartPloy.jsp</result>
+			<result name="success">/page/order/selectPloy.jsp</result>
+			<result name="radio">/page/order/selectRadioPloy.jsp</result>
+			<result name="twoVod">/page/order/selectTwoVodPloy.jsp</result>
+			<result name="lookBack">/page/order/selectLookBackPloy.jsp</result>
+			<result name="PLAYBACK">/page/order/selectPlayBackPloy.jsp</result>
+		</action>
+		
+		<action name="getPloy4Json" class="orderAction" method="getPloy4Json"/>
+		
+		<action name="getSubPloyJson" class="orderAction" method="getSubPloyJson"/>
+		
+		<action name="showPrecises4Json" class="orderAction" method="queryPrecises4Json"/>
+		
+		<action name="showResourceList" class="orderAction" method="queryResourceList">
+			<result name="boot">/page/order/selectBootResource.jsp</result>
+			<result name="audio">/page/order/selectAudioResource.jsp</result>
+			<result name="area">/page/order/selectAudioResource.jsp</result>
+			<result name="success">/page/order/selectResource.jsp</result>
+		</action>
+		
+		<action name="queryAreaResourceList" class="orderAction" method="queryAreaResourceList">
+			<result name="boot">/page/order/selectBootResource.jsp</result>
+			<result name="audio">/page/order/selectAudioResource.jsp</result>
+			<result name="success">/page/order/selectResource.jsp</result>
+		</action>
+		
+		<action name="checkOrderRule2" class="orderAction" method="checkOrderRule2"/>
+		<action name="checkBootResoueces" class="orderAction" method="checkBootResoueces"/>
+		
+		<action name="saveOrder" class="orderAction" method="saveOrder">
+			<result name="success">/page/order/orderList.jsp</result>
+		</action>
+		
+		<action name="getOrderForUpdate2" class="orderAction" method="getOrderForUpdate2">
+			<result name="success">/page/order/updateOrder.jsp</result>
+			<result name="updateEndTime">/page/order/updateEndTime.jsp</result>
+		</action>
+		
+		<!-- queryOrderList.do?message=${message} -->
+		<action name="updateOrder" class="orderAction" method="updateOrder">
+			<result name="success">/page/order/orderList.jsp</result>
+		</action>
+		
+		<action name="delOrder" class="orderAction" method="delOrder">
+			<result name="success">/page/order/orderList.jsp</result>		
+		</action>
+		
+		<action name="queryOrderAuditList" class="orderAction" method="queryOrderAuditList">
+			<result name="success">/page/order/orderAuditList.jsp</result>
+		</action>
+		
+		<action name="getOrderAuditDetail" class="orderAction" method="getOrderAuditDetail">
+			<result name="success">/page/order/orderAuditDetail.jsp</result>		
+		</action>
+		
+		<action name="checkOrder" class="orderAction" method="checkOrder"/>
+		
+		<action name="queryOrderAuditLog" class="orderAction" method="queryOrderAuditLog">
+			<result name="success">/page/order/orderAuditLogList.jsp</result>		
+		</action>
+		
+		<action name="updateOrderEndTime" class="orderAction" method="updateOrderEndTime"/>
+		
+		<action name="getMaterialJsonById" class="orderAction" method="getMaterialJsonById"/>
+		
+		<action name="getQuestionnaireDetail" class="orderAction" method="getQuestionnaireDetail">
+			<result name="success">/page/order/questionnaireDetail.jsp</result>		
+		</action>
+		<action name="saveRealQuestionnaire" class="orderAction" method="saveRealQuestionnaire">
+			<result name="success" type="redirect">
+				/tset/getAwaitDoing.do
+            </result>		
+		</action>
+		
+		<action name="initAreaResource" class="orderAction" method="initAreaResource">
+			<result name="boot">/page/order/selectBootPicResource.jsp</result>	
+			<result name="area">/page/order/selectAreaResource.jsp</result>	
+			<result name="loopMenu">/page/order/selectLoopMenuResource.jsp</result>
+			<result name="timeAreaGroup">/page/order/selectTimeAreaGroupResource.jsp</result>	
+			<result name="look">/page/order/selectLookResource.jsp</result>	
+			<result name="instream">/page/order/selectInstreamResource.jsp</result>	
+			<result name="pause">/page/order/selectPauseResource.jsp</result>	
+			<result name="request">/page/order/selectRequestResource.jsp</result>
+			<result name="timeGroup">/page/order/selectTimeGroupResource.jsp</result>
+			<result name="lookvod">/page/order/selectLookVodResource.jsp</result>
+			<result name="vod">/page/order/selectVodResource.jsp</result>		
+		</action>
+	    <action name="getAreaResource" class="orderAction" method="getSelectMaterialJsonByOrderId">
+		</action>
+		<action name="getAreaResourceDetail" class="orderAction" method="getSelectedResource">
+			<result name="boot">/page/order/selectBootPicResourceDetail.jsp</result>
+			<result name="areaDetail">/page/order/selectAreaResourceDetail.jsp</result>	
+			<result name="loopMenuDetail">/page/order/selectLoopMenuResourceDetail.jsp</result>
+			<result name="timeAreaGroupDetail">/page/order/selectTimeAreaGroupResourceDetail.jsp</result>	
+			<result name="lookDetail">/page/order/selectLookResourceDetail.jsp</result>	
+			<result name="instreamDetail">/page/order/selectInstreamResourceDetail.jsp</result>	
+			<result name="pauseDetail">/page/order/selectPauseResourceDetail.jsp</result>	
+			<result name="requestDetail">/page/order/selectRequestResourceDetail.jsp</result>
+			<result name="timeGroupDetail">/page/order/selectTimeGroupResourceDetail.jsp</result>
+			<result name="lookvodDetail">/page/order/selectLookVodResourceDetail.jsp</result>	
+			<result name="vodDetail">/page/order/selectVodResourceDetail.jsp</result>	
+		</action>
+		 <action name="getAreaResourcePath" class="orderAction" method="getAreaResourcePath">
+		</action>
+		<!-- 选择策略，保存订单和素材临时关系数据 -->
+		<action name="insertOrderMateRelTmp" class="orderAction" method="insertOrderMateRelTmp"/>
+		<!-- 修改订单时选择策略，保存订单和素材临时关系数据 -->
+		<action name="insertOrderMateRelTmp2" class="orderAction" method="insertOrderMateRelTmp2"/>
+		<!-- 保存订单和素材临时关系数据 -->
+		<action name="saveOrderMateRelTmp" class="orderAction" method="saveOrderMateRelTmp"/>
+		<!-- 开机图片订单   保存订单和素材临时关系数据 -->
+		<action name="saveBootOrderMateRelTmp" class="orderAction" method="saveBootOrderMateRelTmp"/>
+		<!-- 删除订单和素材临时关系数据 -->
+		<action name="delOrderMateRelTmp" class="orderAction" method="delOrderMateRelTmp">
+			<result name="area">/page/order/selectAreaResource.jsp</result>	
+			<result name="loopMenu">/page/order/selectLoopMenuResource.jsp</result>
+			<result name="timeAreaGroup">/page/order/selectTimeAreaGroupResource.jsp</result>	
+			<result name="look">/page/order/selectLookResource.jsp</result>	
+			<result name="timeGroup">/page/order/selectTimeGroupResource.jsp</result>				
+			<result name="instream">/page/order/selectInstreamResource.jsp</result>	
+			<result name="pause">/page/order/selectPauseResource.jsp</result>
+			<result name="vod">/page/order/selectVodResource.jsp</result>
+			<result name="request">/page/order/selectRequestResource.jsp</result>
+			<result name="timeGroup">/page/order/selectTimeGroupResource.jsp</result>
+			<result name="lookvod">/page/order/selectLookVodResource.jsp</result>
+		</action>
+		<action name="delBootOrderMateRelTmp" class="orderAction" method="delBootOrderMateRelTmp">
+			<result name="boot">/page/order/selectBootPicResource.jsp</result>
+		</action>
+		<!-- 预览 -->
+		<action name="preview" class="orderAction" method="preview">
+			<result name="preview">/page/order/preview.jsp</result>
+		</action>
+		<!-- 重新投放 -->
+		<action name="repush" class="orderAction" method="repush"/>
+	</package>
+</struts>
+	

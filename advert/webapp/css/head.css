@@ -1,0 +1,7 @@
+body{ margin:0px; padding:0px; font-size:12px;}
+.tab{ width:100%; height:63px; background:url(../images/head_bg.jpg) repeat-x; }
+.tab_a{ width:1262px; height:46px;}
+.line{ height:5px; background:url(../images/line.jpg) repeat-x;}
+.head_top{ background:url(../images/head_top.png) no-repeat;}
+.head_top ul{ padding-left:210px; margin:0px; padding-top:0px; margin-top:0px; }
+.head_top ul li{ width:90px; height:38px; float:left; list-style:none; text-align:center; line-height:38px; font-weight:bold; color:#5f5a56;}

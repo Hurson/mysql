@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/sysconfig" extends="default">
+		<!--  base config block -->
+		<action name="allConfigList" class="baseConfigAction" method="queryConfigList">
+			<result name="success">/page/sysconfig/baseConfigList.jsp</result>
+		</action>
+		<action name="getConfig" class="baseConfigAction" method="getBaseConfigById">
+			<result name="success">/page/sysconfig/configInfo.jsp</result>
+		</action>
+		<action name="updateConfig" class="baseConfigAction" method="updateBaseConfig">
+			<result name="success">/page/sysconfig/baseConfigList.jsp</result>
+		</action>
+		<action name="deleteConfig" class="baseConfigAction" method="deleteBaseConfig"/>
+		
+		<!--  user trade block -->
+		<action name="queryUserTradeList" class="userTradeAction" method="queryUserTradeList">
+			<result name="success">/page/sysconfig/userTradeList.jsp</result>
+		</action>
+		<action name="getUserTradeById" class="userTradeAction" method="getUserTradeById">
+			<result name="success">/page/sysconfig/userTrade.jsp</result>
+		</action>
+		<action name="updateUserTrade" class="userTradeAction" method="updateUserTrade">
+			<result name="success">/page/sysconfig/userTradeList.jsp</result>
+			<result name="input">/page/sysconfig/userTrade.jsp</result>
+		</action>
+		<action name="deleteUserTrade" class="userTradeAction" method="deleteUserTrade">
+			<result name="success">/page/sysconfig/userTradeList.jsp</result>	
+		</action>
+		<action name="addInitUserTrade" class="userTradeAction" method="addInitUserTrade">
+			<result name="success">/page/sysconfig/userTrade.jsp</result>
+		</action>
+		
+		<action name="queryChannelList" class="channelAction" method="queryChannelList">
+			<result name="success">/page/sysconfig/channelList.jsp</result>
+		</action>
+		
+		<action name="getChannelById" class="channelAction" method="getChannelById">
+			<result name="success">/page/sysconfig/updateChannel.jsp</result>
+		</action>
+		
+		<action name="updateChannel" class="channelAction" method="updateChannel">
+			<result name="success">/page/sysconfig/channelList.jsp</result>
+		</action>
+		
+		<action name="queryUserRankList" class="userRankAction" method="queryUserRankList">
+			<result name="success">/page/sysconfig/userRankList.jsp</result>
+		</action>
+		
+		<action name="getUserRankById" class="userRankAction" method="getUserRankById">
+			<result name="success">/page/sysconfig/editUserRank.jsp</result>
+		</action>
+		
+		<action name="addUserRank" class="userRankAction" method="addUserRank">
+			<result name="success">/page/sysconfig/editUserRank.jsp</result>
+		</action>
+		
+		<action name="saveUserRank" class="userRankAction" method="saveUserRank">
+			<result name="success">/page/sysconfig/userRankList.jsp</result>
+			<result name="input">/page/sysconfig/editUserRank.jsp</result>
+		</action>
+		
+		<action name="delUserRank" class="userRankAction" method="delUserRank">
+			<result name="success">/page/sysconfig/userRankList.jsp</result>		
+		</action>
+		
+		<!-- 用户维护 -->
+		<action name="queryUserList" class="userAction" method="queryUserList">
+			<result name="success">/page/sysconfig/userList.jsp</result>
+		</action>
+		<action name="initUserAdd" class="userAction" method="initAdd">
+			<result name="success">/page/sysconfig/addUser.jsp</result>
+		</action>
+		<action name="getRoleType" class="userAction" method="getRoleType" />
+		<action name="showCustomerList" class="userAction" method="queryCustomerList">
+			<result name="success">/page/sysconfig/selectCustomer.jsp</result>
+		</action>
+		
+		<action name="addUser" class="userAction" method="addUser">
+			<result name="success">/page/sysconfig/userList.jsp</result>
+		</action>
+		<action name="getUserAdvertPackage" class="userAction" method="getUserAdvertPackage">
+			<result name="success" >/page/sysconfig/showAdvertpositionPackage.jsp</result>
+		</action>
+		
+		<action name="checkLoginName" class="userAction" method="checkLoginName"></action>
+		<action name="getUserForUpdate" class="userAction" method="getUserForUpdate">
+			<result name="success">/page/sysconfig/updateUser.jsp</result>
+		</action>
+		
+		<action name="updateUser" class="userAction" method="updateUser">
+			<result name="success">/page/sysconfig/userList.jsp</result>
+		</action>
+		
+		<action name="delUser" class="userAction" method="delUser">
+			<result name="success">/page/sysconfig/userList.jsp</result>
+		</action>
+		
+		<!-- 角色维护 -->
+		<action name="queryRoleList" class="roleAction" method="queryRoleList">
+			<result name="success">/page/sysconfig/roleList.jsp</result>
+		</action>
+		
+		<action name="initRoleAdd" class="roleAction" method="initAdd">
+			<result name="success">/page/sysconfig/addRole.jsp</result>
+		</action>
+		
+		<action name="addRole" class="roleAction" method="addRole">
+			<result name="success">/page/sysconfig/roleList.jsp</result>
+		</action>
+		
+		<action name="checkRoleName" class="roleAction" method="checkRoleName"></action>
+		<action name="getTreeColumn" class="roleAction" method="getTreeColumn" />
+		<action name="getRoleForUpdate" class="roleAction" method="getRoleForUpdate">
+			<result name="success">/page/sysconfig/updateRole.jsp</result>
+		</action>
+		
+		<action name="updateRole" class="roleAction" method="updateRole">
+			<result name="success">/page/sysconfig/roleList.jsp</result>
+		</action>
+		
+		<action name="checkRoleUserBinging" class="roleAction" method="checkRoleUserBinging"></action>
+		
+		<action name="delRole" class="roleAction" method="delRole">
+			<result name="success">/page/sysconfig/roleList.jsp</result>
+		</action>
+		
+		<!-- 进入更新UI描述符页面 -->
+		<action name="intoUpdateUI" class="updateUIAction" method="intoUpdateUI">
+			<result name="success">/page/sysconfig/updateUI.jsp</result>
+		</action>
+		<!-- 更新UI描述符页面 -->
+		<action name="updateUI" class="updateUIAction" method="updateUI">
+			<result name="success">/page/sysconfig/updateUI.jsp</result>
+		</action>
+		
+	</package>
+</struts>
+	

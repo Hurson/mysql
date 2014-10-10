@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/role" extends="default">
+
+		<action name="toRoleList" class="roleAction" method="getAllRoleList">
+			<result name="list">/page/role/roleList.jsp</result>
+		</action>
+		<action name="addrole" class="roleAction" method="addRole" />
+		<action name="deleterole" class="roleAction" method="deleteRole" />
+		<action name="updaterole" class="roleAction" method="updateRole" >
+			<result name="toUpdate">updateRole.jsp</result>
+			<result name="list">roleList.jsp</result>
+		</action>
+		<action name="roledetail" class="roleAction" method="getRoleDetail" >
+			<result name="roledetail">roleDetail.jsp</result>
+		</action>
+		<action name="getAllRole" class="roleAction" method="getAllRole" />
+		<action name="deleteRoleBatchInfo" class="roleAction" method="deleteRoleBatchInfo" />
+		<action name="getColumnListByRoleId" class="purviewAction" method="getColumnListByRoleId" />
+		<action name="getColumnList" class="roleAction" method="getAllColumn" />
+		<action name="getTreeColumn" class="roleAction" method="getTreeColumn" />
+		<action name="getColumnListByRole" class="roleAction" method="getColumnListByRole" />
+		<action name="saveRoleColumn" class="purviewAction" method="saveRoleColumnBanding" />
+	</package>
+</struts>
+	

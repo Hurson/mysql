@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/meterial" extends="default">
+		<!-- ui资源包维护 -->
+		<action name="intoUploadUiMaterial" class="UiManagerAction" method="intoUploadUiMaterial">
+			<result name="success" type="redirect">/page/uiresource/uploadUiresource.jsp</result>
+		</action>
+		<action name="saveUiMaterial" class="UiManagerAction" method="saveUiMaterial">
+		     <param name="uploadDir">images/material</param>
+			<result name="success" type="redirect">/page/uiresource/uploadUiresource.jsp</result>
+		</action>
+		<!-- 素材维护 -->
+		<action name="queryMeterialList" class="meterialManagerAction" method="queryMeterialList">
+			<param name="isAuditTag">0</param>
+			<result name="success">/page/material/new/meterialList.jsp</result>
+		</action>
+		
+		<action name="intoAddMaterial" class="meterialManagerAction" method="intoAddMaterial" >
+			<result name="success">/page/material/new/addMaterial.jsp</result>
+		</action>				
+		
+		<action name="selectAdPosition" class="meterialManagerAction" method="selectAdPosition">
+			<result name="success" >/page/material/new/selectAdPosition.jsp</result>
+		</action>
+		
+		<action name="selectContract" class="meterialManagerAction" method="selectContract">
+			<result name="success" >/page/material/new/selectContract.jsp</result>
+		</action>
+		
+		<action name="saveMaterialBackup" class="meterialManagerAction" method="saveMaterialBackup">	
+			<param name="uploadDir">images/material</param>
+			<!-- 
+			<result name="success" type="redirect">
+				/page/meterial/queryMeterialList.do?method=queryMeterialList
+            </result>
+			 -->
+            <result name="success">/page/material/new/meterialList.jsp</result>
+		</action>		
+		
+		<action name="initMaterial" class="meterialManagerAction" method="initMaterial">
+			<result name="success">/page/material/new/updateMaterial.jsp</result>
+		</action>
+		
+		<action name="deleteMaterial" class="meterialManagerAction" method="deleteMaterial">	
+			<!-- 
+			<result name="success" type="redirect">
+				/page/meterial/queryMeterialList.do?method=queryMeterialList
+            </result>
+			 -->
+            <result name="success">/page/material/new/meterialList.jsp</result>
+		</action>		
+		
+		<!-- 检查素材能否被删除 -->
+		<action name="checkDelMeterial" class="meterialManagerAction" method="checkDelMeterial">
+		</action>
+		<!-- 检查素材名是否重复 -->
+		<action name="checkMaterialExist" class="meterialManagerAction" method="checkMaterialExist">
+		</action>
+		<!-- 检查模板名是否重复 -->
+		<action name="checkQuestionTemplateExist" class="meterialManagerAction" method="checkQuestionTemplateExist">
+		</action>
+		<!-- 根据广告位获取图片规格 -->
+		<action name="getImageMateSpeci" class="meterialManagerAction" method="getImageMateSpeci">
+		</action>
+		<!-- 根据广告位获取视频规格 -->
+		<action name="getVideoMateSpeci" class="meterialManagerAction" method="getVideoMateSpeci">
+		</action>
+		<!-- 根据广告位ID获取广告位信息-->
+		<action name="getAdvertPosition" class="meterialManagerAction" method="getAdvertPosition">
+		       <result name="successForImage" >/page/material/new/imagePreview.jsp</result>
+		       <result name="successForVideo" >/page/material/new/videoPreview.jsp</result>
+		       <result name="successForZip">/page/material/new/zipPreview.jsp</result>
+		</action>
+		
+		<!-- 素材审核 -->
+		<action name="auditMaterialList" class="meterialManagerAction" method="queryMeterialList">
+			<param name="isAuditTag">1</param>
+			<result name="success">/page/material/new/auditMaterialList.jsp</result>
+		</action>
+		
+		<action name="initAuditMaterial" class="meterialManagerAction" method="initMaterial">
+			<result name="success">/page/material/new/auditMaterial.jsp</result>
+		</action>
+		
+		<action name="auditMaterial" class="meterialManagerAction" method="auditMaterial">				
+			<!-- 
+			<result name="success" type="redirect">
+				/page/meterial/auditMaterialList.do?method=queryMeterialList
+            </result>
+			 -->
+            <result name="success">/page/material/new/auditMaterialList.jsp</result>
+		</action>
+		
+		<!-- 问卷模板 -->
+		<action name="queryQuestionTemplateList" class="meterialManagerAction" method="queryQuestionTemplateList">
+			<result name="success">/page/material/new/questionTemplateList.jsp</result>
+		</action>
+		
+		<action name="intoAddQuestionTemplate" class="meterialManagerAction" method="intoAddQuestionTemplate" >
+			<result name="success">/page/material/new/addQuestionTemplate.jsp</result>
+		</action>
+		
+		<action name="saveQuestionTemplate" class="meterialManagerAction" method="saveQuestionTemplate">	
+			<param name="uploadDir">questionTemplate</param>
+			<!-- 
+			<result name="success" type="redirect">
+				/page/meterial/queryQuestionTemplateList.do?method=queryQuestionTemplateList
+            </result>
+			 -->
+            <result name="success">/page/material/new/questionTemplateList.jsp</result>
+		</action>
+		
+		<action name="initQuestionTemplate" class="meterialManagerAction" method="initQuestionTemplate">
+			<result name="success">/page/material/new/addQuestionTemplate.jsp</result>
+		</action>
+		
+		<action name="deleteQuestionTemplate" class="meterialManagerAction" method="deleteQuestionTemplate">	
+			<!-- 
+			<result name="success" type="redirect">
+				/page/meterial/queryQuestionTemplateList.do?method=queryQuestionTemplateList
+            </result>
+			 -->
+            <result name="success">/page/material/new/questionTemplateList.jsp</result>
+		</action>
+		 
+
+		
+		
+		<!-- ******************   素材上下线部分 ****************************  -->
+		<action name="queryUponLineList" class="meterialOperatorAction" method="queryMeterialUponLineList">
+			<result name="success">/page/material/new/meterialUponLineList.jsp</result>
+		</action>
+		 <action name="getUponLine" class="meterialOperatorAction" method="getMeterialUponLineById">
+			<result name="success" >/page/material/new/materialDetail.jsp</result>
+		</action>
+		<action name="reload" class="meterialOperatorAction" method="reloadMeterialOnline">
+			<result name="success" type="redirect">queryUponLineList.do</result>
+		</action>
+		<action name="unload" class="meterialOperatorAction" method="unloadMeterialOnline">
+			<result name="success" type="redirect">queryUponLineList.do</result>
+		</action>
+		<action name="deleteOffline" class="meterialOperatorAction" method="deleteMeterialOffline">
+			<result name="success" type="redirect">queryUponLineList.do</result>
+		</action>
+		
+		<action name="bindedOrder" class="meterialOperatorAction" method="hasBindedOrder"/>
+		
+		<!-- ***************************** 默认素材维护部分  ***************************** -->
+		<action name="queryDefaultMeterialList" class="defaultMeterManageAction" method="queryMeterialList">
+			<result name="success">/page/material/new/defaultMaterialList.jsp</result>
+		</action>
+		
+		<action name="intoAddDefaultMaterial" class="defaultMeterManageAction" method="intoAddMaterial" >
+			<result name="success">/page/material/new/defaultAddMaterial.jsp</result>
+		</action>
+		<action name="initDefaultMaterial" class="defaultMeterManageAction" method="initMaterial" >
+			<result name="success">/page/material/new/defaultAddMaterial.jsp</result>
+		</action>
+		<action name="saveDefaultMaterialBackup" class="defaultMeterManageAction" method="saveMaterial">	
+			<param name="uploadDir">images/material</param>
+			<result name="success" type="redirect">queryDefaultMeterialList.do</result>
+		</action>
+		<action name="nimeide" class="defaultMeterManageAction" method="deleteDefault">
+			<result name="success" type="redirect">queryDefaultMeterialList.do</result>
+		</action>
+		
+	</package>
+	
+</struts>

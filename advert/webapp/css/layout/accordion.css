@@ -1,0 +1,75 @@
+body {
+	margin: 0;
+	padding: 0;
+	background: #f6f6f6;
+}
+.menuArea {
+	width: 214px;
+	height:500px;
+	border: 1px solid #999999;
+	background:url(../../images/menu_bg1.jpg) no-repeat;
+	float:left;
+}
+.menu-item.scrolling {
+	overflow: auto !important;
+}
+p.menu-content {
+	margin-bottom: 10px;
+	border: none;
+	text-decoration: none;
+	font-size: 10px;
+	margin: 0px;
+	padding: 10px;
+}
+a.menu-title {
+	height: 18px;
+	padding-top: 7px;
+	border-bottom: 1px solid #999999;
+	color: #000000;
+	font-size: 12px;
+	text-decoration: none;
+	text-align: center;
+	cursor: pointer;
+	display: block;
+	background:url(../../images/bar.jpg);
+}
+a.menu-title.selected ,
+a.menu-title.active ,
+a.menu-title:hover {
+	color: #1f5820;
+	background:url(../../images/bar.jpg);
+}
+a.menu-title.active {
+	color: #ccc;
+}
+/*----------------------------------------------------------------------------*/
+.menu-item {
+    background:url(../../images/menu_bg1.jpg);
+	padding: 5px 0 0 5px;
+	border-bottom: 1px solid #999999;
+	text-align:center;
+}
+.ui-layout-pane {
+	padding: 1px;
+	background: #FFF;
+	border-top: 0px;
+	border-bottom: 0px;
+	overflow: hidden;
+}
+.menu-item ul {
+	border: 0px solid red;
+	padding: 0px;
+	margin: 0px;
+}
+.menu-item ul li {
+	font-size: 12px;
+	list-style-type: none;
+	border: 0px solid red;
+	left: -20px;
+	padding: 0px;
+	margin: 0px;
+
+}
+.menu{ position:relative;}
+.menu-item ul li ul{ padding:0px; margin:0px;}
+.menu-item ul li ul li{ width:200px; height:28px; float:left; color:#FFFFFF; text-align:center; list-style:none; line-height:28px; background:url(../../images/x_line.png) no-repeat; background-position:bottom;}

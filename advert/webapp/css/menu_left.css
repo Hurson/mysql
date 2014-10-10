@@ -1,0 +1,8 @@
+body{ padding:0xp; margin:0px; font-size:12px;}
+.menu_left{ width:214px; height:100%;}
+.menu_title{ background:url(../images/bar_top.jpg);}
+.menu_title_a{ background:url(../images/bar.jpg); height:28px; line-height:28px; text-align:center; font-weight:bold;}
+.menu_content{ background:url(../images/menu_bg1.jpg) no-repeat; height:519px;}
+.menu_content ul{ padding:0px; margin:0px;}
+.menu_content ul li{ width:214px; height:28px; float:left; color:#FFFFFF; text-align:center; list-style:none; line-height:28px; background:url(../images/x_line.png) no-repeat; background-position:bottom;}
+.menu_bottom{ background:url(../images/menu_bottom.jpg) repeat-y;}

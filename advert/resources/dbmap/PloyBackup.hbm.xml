@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.dvnchina.advertDelivery.ploy.bean">
+	<class name="PloyBackup" table="T_PLOY_BACKUP" dynamic-insert="true" dynamic-update="true">
+
+		<id name="id" type="java.lang.Integer" column="id">
+			<generator class="native">
+				<!--<param name="sequence">T_PLOY_SEQ</param>-->
+			</generator>
+		</id>
+
+		<property name="ployId" column="PLOY_ID" type="java.lang.Integer" />
+
+		<property name="ployName" column="PLOY_NAME" type="java.lang.String" />
+
+		<property name="customerId" column="CUSTOMER_ID" type="java.lang.Integer" />
+		<property name="contractId" column="CONTRACT_ID" type="java.lang.Integer" />
+
+		<property name="positionId" column="POSITION_ID" type="java.lang.Integer" />
+		
+		<property name="ruleId" column="RULE_ID" type="java.lang.Integer" />
+
+		<property name="startTime" column="START_TIME" type="java.lang.String" />
+
+		<property name="endTime" column="END_TIME" type="java.lang.String" />
+		
+		<property name="priority" column="PRIORITY" type="java.lang.Integer" />
+		<property name="areaId" column="AREA_ID" type="java.lang.Long" />
+
+		<property name="channelId" column="CHANNEL_ID" type="java.lang.Integer" />
+		 <property name="groupId" type="java.lang.Integer" >
+     	 <column name="CHANNEL_GROUP_ID">
+                <comment>频道分组ID</comment>
+            </column>
+     	</property>
+     	
+     	<property name="channelGroupType" type="java.lang.Integer">
+            <column name="CHANNEL_GROUP_TYPE" length="1">
+                <comment>删除标识</comment>
+            </column>
+        </property>
+     	
+		<property name="operationId" column="OPERATION_ID" type="java.lang.Integer" />
+		
+		<property name="createTime" column="CREATE_TIME" type="java.util.Date" />
+
+		<property name="modifyTime" column="MODIFY_TIME" type="java.util.Date" />
+	
+		<property name="state" column="STATE" type="java.lang.String" />
+		
+		<property name="description" column="DESCRIPTION" type="java.lang.String" />
+	 
+		<property name="ployNumber" column="PLOY_NUMBER" type="java.lang.Integer" />
+		<property name="defaultstart" column="DEFAULTSTART" type="java.lang.String" />
+	<!--	
+		<property name="action" column="ACTION" type="java.lang.String" />
+		
+		<property name="durationTime" column="DURATION_TIME" type="java.lang.Integer" />
+		
+		<property name="fontSize" column="FONT_SIZE" type="java.lang.Integer" />
+		
+		<property name="fontColor" column="FONT_COLOR" type="java.lang.String" />
+	
+		<property name="backgroundColor" column="BACKGROUND_COLOR" type="java.lang.String" />
+		
+		<property name="rollSpeed" column="ROLL_SPEED" type="java.lang.Integer" />
+	 -->	
+		
+		<property name="operatorId" column="OPERATOR_ID" type="java.lang.Long" />
+		
+		<property name="auditID" column="AUDIT_ID" type="java.lang.Long" />
+		
+		<property name="auditOption" column="AUDIT_OPTION" type="java.lang.String" />
+		
+		<property name="auditDate" column="AUDIT_DATE" type="java.util.Date" />
+		
+		   <property name="delflag" type="java.lang.Integer">
+            <column name="delflag" length="2">
+                <comment>删除标识</comment>
+            </column>
+        </property>
+		
+	</class>
+</hibernate-mapping>

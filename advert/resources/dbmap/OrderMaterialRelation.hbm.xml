@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.dvnchina.advertDelivery.order.bean">
+	<class name="OrderMaterialRelation" table="T_ORDER_MATE_REL">
+
+		<id name="id" type="java.lang.Integer" column="id">
+			<generator class="native">
+				<!--<param name="sequence">T_ORDER_MATE_REL_SEQ</param>-->
+			</generator>
+		</id>
+
+		<property name="orderId" column="ORDER_ID" type="java.lang.Integer" />
+
+		<property name="mateId" column="MATE_ID" type="java.lang.Integer"/>
+
+		
+		<property name="playLocation" column="PLAY_LOCATION" type="java.lang.String" />
+
+		<property name="isHD" column="IS_HD" type="java.lang.Integer" />
+
+		<property name="pollIndex" column="POLL_INDEX" type="java.lang.Integer" />
+
+		<property name="preciseId" column="PRECISE_ID" type="java.lang.Integer" />
+		
+		<property name="type" column="TYPE" type="java.lang.Integer" />
+		
+		<property name="startTime" column="start_time" type="java.lang.String" />
+		
+		<property name="endTime" column="end_time" type="java.lang.String" />
+		
+		<property name="areaCode" column="area_code" type="java.lang.String" />
+		
+		<property name="channelGroupId" column="channel_group_id" type="java.lang.Integer" />
+
+	</class>
+</hibernate-mapping>

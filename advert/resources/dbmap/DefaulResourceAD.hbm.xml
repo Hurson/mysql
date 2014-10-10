@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.dvnchina.advertDelivery.position.bean.DefaulResourceAD" table="T_RESOURCE_AD"  >
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" precision="38" scale="0" />
+             <generator class="native">
+			</generator>
+        </id>
+        <property name="positionPackageId" type="java.lang.Integer">
+            <column name="POSITION_PACKAGE_ID" length="10" />
+        </property>
+        <property name="adId" type="java.lang.Integer">
+            <column name="AD_ID" length="10" />
+        </property>
+        <property name="resourceId" type="java.lang.Integer">
+            <column name="RESOURCE_ID" length="10" />
+        </property>
+        <property name="resourceType" type="java.lang.Integer">
+            <column name="RESOURCE_TYPE" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

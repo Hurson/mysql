@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+	<class name="com.dvnchina.advertDelivery.log.bean.AuditLog" table="T_AUDIT_LOG"  >
+
+		<id name="id" type="java.lang.Integer" column="id">
+			 <generator class="native">
+			</generator>
+		</id>
+		<property name="relationType" type="java.lang.Integer">
+            <column name="RELATION_TYPE" length="2" />
+        </property>
+        <property name="relationId" type="java.lang.Integer">
+            <column name="RELATION_ID" length="10" />
+        </property>
+        <property name="state" type="java.lang.Integer">
+            <column name="STATE" length="1" />
+        </property>
+        <property name="operatorId" type="java.lang.Integer">
+            <column name="OPERATOR_ID" length="10" />
+        </property>
+        <property name="auditOpinion" type="java.lang.String">
+            <column name="AUDIT_OPINION" length="120" />
+        </property>
+    </class>
+</hibernate-mapping>

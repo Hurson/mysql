@@ -1,0 +1,9 @@
+body{ margin:0px; padding:0px; font-size:12px;}
+.tab{ width:100%; height:63px; background:url(../images/head_bg.jpg) repeat-x; }
+.tab_a{ width:98%; height:46px;}
+.line{ height:5px; background:url(../images/line.jpg) repeat-x;}
+.head_top{ }
+.td_bg{ background:url(../images/head_topbg.png) repeat-x;}
+.td_bg ul{margin:0px; padding-top:0px; margin-top:0px; }
+.td_bg ul li{ width:90px; height:46px; float:left; list-style:none; text-align:center; line-height:46px; font-weight:bold; color:#5f5a56; background:url(../images/suxian_2.png) no-repeat top right;}
+.td_right{ background:url(../images/head_top_right.png) no-repeat left top;}

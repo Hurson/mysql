@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/material/" extends="default">
+		<action name="uploadMaterial" class="uploadMaterialAction" method="uploadMaterial">	
+			<param name="uploadDir">images/material</param>
+		</action>
+		<action name="uploadMaterialVideo" class="uploadMaterialAction" method="uploadMaterialVideo">	
+			<param name="uploadDir">images/material</param>
+		</action>
+		<action name="uploadQuestionTemplate" class="uploadMaterialAction" method="uploadQuestionTemplate">	
+			<param name="uploadDir">questionTemplate</param>
+		</action>
+		<!-- upload zip -->
+		<action name="uploadMaterialZip" class="uploadMaterialAction" method="uploadMaterialZip">	
+			<param name="uploadDir">images/material</param>
+		</action>
+		<!-- upload zip -->
+		<action name="getPosition" class="uploadMaterialAction" method="getPositionsByContract"/>
+		
+		<action name="writeResource" class="uploadMaterialAction" method="writeResource" />
+		<action name="writeMaterial" class="uploadMaterialAction" method="writeMaterial" />
+		<action name="toUploaldFile" class="uploadMaterialAction" method="showUploaldMaterial" >
+			<result name="success">/page/material/uploadMaterial.jsp</result>
+		</action>
+		<action name="uploadTvn" class="uploadMaterialAction" method="uploadTvn">	
+			<param name="uploadDir">images/material</param>
+		</action>
+		<action name="uploadUiresource" class="uploadMaterialAction" method="uploadUiresource">	
+			<param name="uploadDir">images/material</param>
+		</action>
+		
+	</package>
+</struts>

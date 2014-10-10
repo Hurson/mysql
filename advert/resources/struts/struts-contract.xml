@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/contract" extends="default">
+		<action name="addContractPage" class="contractAction" method="addPage">
+			<result name="success" type="redirect">/page/contract/new/add.jsp</result>
+		</action>
+		<action name="updateContractPage" class="contractAction" method="updatePage">
+			<result name="success">/page/contract/new/add.jsp</result>
+		</action>
+		<action name="viewContractPage" class="contractAction" method="viewPage">
+			<result name="success">/page/contract/new/add.jsp</result>
+		</action>
+		<action name="queryContractPage" class="contractAction" method="queryPage">
+			<result name="success">/page/contract/new/list.jsp</result>
+		</action>
+		<action name="addContract" class="contractAction" method="save">
+			<result name="success" type="redirect">
+				/page/contract/queryContractPage.do?method=queryPage
+            </result>
+            <result name="error" type="redirect">
+				/page/contract/addContract.do?method=save
+            </result>
+		</action>
+		<action name="removeContract" class="contractAction" method="remove">
+			<result name="success" type="redirect">
+				/page/contract/queryContractPage.do?method=queryPage
+            </result>
+		</action>
+		<action name="updateContract" class="contractAction" method="update">
+			<result name="success" type="redirect">
+				/page/contract/addContractPage.do?method=addPage
+            </result>
+		</action>
+		
+		<action name="approvalListContract" class="contractAction" method="approvalListPage">
+			<result name="success">/page/contract/new/approvalListContract.jsp</result>
+		</action>
+		<action name="approvalContractPage" class="contractAction" method="approvalContractPage">
+			<result name="success">/page/contract/new/approvalContractPage.jsp</result>
+		</action>
+		<action name="approvalContract" class="contractAction" method="approvalContract">
+			<result name="success" type="redirect">
+				/page/contract/approvalContractPage.do?method=approvalListPage
+            </result>
+		</action>
+		
+		
+		<!-- 重写合同模块 -->
+		<!-- 合同维护 -->
+		<action name="queryContractList8" class="contractManagerAction" method="queryContractList">
+			<param name="isAuditTag">0</param>
+			<result name="success">/page/contract/new/contractList.jsp</result>
+		</action>
+		<action name="intoAddContract" class="contractManagerAction" method="intoAddContract">
+			<result name="success">/page/contract/new/addContract.jsp</result>
+		</action>
+		<action name="initContract" class="contractManagerAction" method="initContract">
+			<result name="success">/page/contract/new/addContract.jsp</result>
+		</action>
+		<action name="selectAdPositionPackage" class="contractManagerAction" method="selectAdPositionPackage">
+			<result name="success" >/page/contract/new/selectAdPositionPackage.jsp</result>
+		</action>
+		<action name="selectCustomer" class="contractManagerAction" method="selectCustomer">
+			<result name="success" >/page/contract/new/selectCustomer.jsp</result>
+		</action>
+		<action name="saveConstractBackup" class="contractManagerAction" method="saveConstractBackup">	
+			<!-- 
+			<result name="success" type="redirect">
+				/page/contract/queryContractList8.do?method=queryContractList
+            </result>
+			 -->
+            <result name="success">/page/contract/new/contractList.jsp</result>
+
+		</action>
+		<action name="deleteContract" class="contractManagerAction" method="deleteContract">	
+			<!-- 
+			<result name="success" type="redirect">
+				/page/contract/queryContractList8.do?method=queryContractList
+            </result>
+			 -->
+            <result name="success">/page/contract/new/contractList.jsp</result>
+		</action>
+		<!-- 检查合同能否被删除 -->
+		<action name="checkDelContract" class="contractManagerAction" method="checkDelContract">
+		</action>
+		<!-- 检查合同号是否重复 -->
+		<action name="checkContractExist" class="contractManagerAction" method="checkContractExist">
+		</action>
+		<!-- 合同审核 -->
+		<action name="auditContractList" class="contractManagerAction" method="queryContractList">
+			<param name="isAuditTag">1</param>
+			<result name="success">/page/contract/new/auditContractList.jsp</result>
+		</action>
+		<action name="aduitContractDetail" class="contractManagerAction" method="initContract">
+			<result name="success">/page/contract/new/auditContractDetail.jsp</result>
+		</action>
+		<action name="auditConstract" class="contractManagerAction" method="auditConstract">	
+			<!-- 
+			<result name="success" type="redirect">
+				/page/contract/auditContractList.do?method=queryContractList
+            </result>
+			 -->
+            <result name="success">/page/contract/new/auditContractList.jsp</result>
+
+		</action>
+		
+		<action name="checkPostitionUsed" class="contractManagerAction" method="checkPostitionUsed"/>
+		<!-- 导出合同 -->
+		<action name="exportContract" method="exportContract" class="contractManagerAction">
+			<result name="success" type="stream">
+                <param name="contentType">text/excel</param>
+                <param name="inputName">inputStreamu</param>
+                <param name="contentDisposition">attachment;filename=${fileName}</param>
+                <param name="bufferSize">4096</param>
+            </result>
+		</action>
+		
+		<!-- 批量导出合同 -->
+		<action name="exportContractBatch" method="exportContractBatch" class="contractManagerAction">
+			<result name="success" type="stream">
+                <param name="contentType">text/excel</param>
+                <param name="inputName">inputStreamForBatch</param>
+                <param name="contentDisposition">attachment;filename=${fileNameForBatch}</param>
+                <param name="bufferSize">4096</param>
+            </result>
+		</action>
+		
+	</package>
+</struts>

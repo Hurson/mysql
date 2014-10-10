@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<precise>
+			<type key="1" name="按产品" />
+			<type key="2" name="按影片元数据关键字" />
+			<type key="3" name="按受众" />
+			<type key="4" name="按回看频道" />
+	</precise>
+	
+</config>

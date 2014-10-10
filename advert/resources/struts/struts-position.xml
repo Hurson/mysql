@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/position" extends="default">
+	
+		<action name="queryPositionPackageList" class="positionAction" method="queryPositionPackageList">
+			<result name="success">/page/position/positionPackageList.jsp</result>
+		</action>
+		
+		<action name="getPositionPackage" class="positionAction" method="getPositionPackage">
+			<result name="success">/page/position/positionPackageDetail.jsp</result>
+		</action>
+		<action name="getAdvertPositionById" class="positionAction" method="getAdvertPositionById">
+			<result name="success">/page/position/advertPositionDetail.jsp</result>
+		</action>
+		
+		<action name="querySpecification" class="positionAction" method="querySpecification">
+			<result name="success">/page/position/viewSpecification.jsp</result>
+		</action>
+		
+		<action name="viewPositionOccupy" class="positionAction" method="viewPositionOccupy">
+			<result name="success">/page/position/viewPositionOccupy.jsp</result>
+		</action>
+		
+		<!-- 合同管理查看广告位占用情况 -->
+		<action name="viewPositionOccupyForContractManager" class="positionAction" method="viewPositionOccupyForContractManager">
+			<result name="success">/page/position/viewPositionOccupyForContractManager.jsp</result>
+		</action>
+		
+		<action name="getVideoSpecification" class="positionAction" method="getVideoSpecification">
+			<result name="success">/page/position/editVideoSpecification.jsp</result>
+		</action>
+		
+		<action name="getImageSpecification" class="positionAction" method="getImageSpecification">
+			<result name="success">/page/position/editImageSpecification.jsp</result>
+		</action>
+		
+		<action name="getTextSpecification" class="positionAction" method="getTextSpecification">
+			<result name="success">/page/position/editTextSpecification.jsp</result>
+		</action>
+		
+		<action name="getQuestionnaireSpecification" class="positionAction" method="getQuestionnaireSpecification">
+			<result name="success">/page/position/editQuestionnaireSpecification.jsp</result>
+		</action>
+		
+		<action name="saveVideoSpecification" class="positionAction" method="saveVideoSpecification">
+			<result name="success">/page/position/viewSpecification.jsp</result>
+		</action>
+		
+		<action name="saveImageSpecification" class="positionAction" method="saveImageSpecification">
+			<result name="success">/page/position/viewSpecification.jsp</result>
+		</action>
+		
+		<action name="saveTextSpecification" class="positionAction" method="saveTextSpecification">
+			<result name="success">/page/position/viewSpecification.jsp</result>
+		</action>
+		
+		<action name="saveQuestionnaireSpecification" class="positionAction" method="saveQuestionnaireSpecification">
+			<result name="success">/page/position/viewSpecification.jsp</result>
+		</action>
+		
+		<action name="uploadBackGroundImage" class="positionAction" method="uploadBackGroundImage" >
+			<param name="uploadDir">images/position</param>
+		</action>
+		
+		<action name="updateAdvertPosition" class="positionAction" method="updateAdvertPosition">
+			<result name="success">/page/position/advertPositionDetail.jsp</result>
+		</action>
+		
+		<action name="queryResourceList" class="defaulResourceAction" method="queryResourceList">
+			<result name="success">/page/position/adDefResourceList.jsp</result>
+		</action>
+		
+		<action name="queryADList" class="defaulResourceAction" method="queryADList">
+			<result name="success">/page/position/adDefSetList.jsp</result>
+		</action>
+		
+		<action name="checkResource" class="defaulResourceAction" method="checkResource"/>
+		
+		<action name="queryDefResourceList" class="defaulResourceAction" method="queryDefResourceList">
+			<result name="success">/page/position/defResourceList.jsp</result>
+		</action>
+		
+		<action name="saveDefResource" class="defaulResourceAction" method="saveDefResource">
+			<result name="success">/page/common/successCallback.jsp</result>
+		</action>
+		
+		<action name="getAdvertPositionJson" class="defaulResourceAction" method="getAdvertPositionJson"/>
+		
+	</package>
+</struts>

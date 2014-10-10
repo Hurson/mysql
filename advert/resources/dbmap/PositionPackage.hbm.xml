@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.dvnchina.advertDelivery.position.bean.PositionPackage" table="T_POSITION_PACKAGE"  >
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" length="10" />
+        </id>
+        <property name="positionPackageCode" type="java.lang.String">
+            <column name="POSITION_PACKAGE_CODE" length="20" />
+        </property>
+        <property name="positionPackageName" type="java.lang.String">
+            <column name="POSITION_PACKAGE_NAME" length="100" />
+        </property>
+        <property name="positionPackageType" type="java.lang.Integer">
+            <column name="POSITION_PACKAGE_TYPE" length="1" />
+        </property>
+        <property name="videoType" type="java.lang.Integer">
+            <column name="VIDEO_TYPE" length="1" />
+        </property>
+        <property name="isLoop" type="java.lang.Integer">
+            <column name="IS_LOOP" length="1" />
+        </property>
+        <property name="isAdd" type="java.lang.Integer">
+            <column name="IS_ADD" length="1" />
+        </property>
+        <property name="positionCount" type="java.lang.Integer">
+            <column name="POSITION_COUNT" length="2" />
+        </property>
+        <property name="ployDescription" type="java.lang.String">
+            <column name="PLOY_DESCRIPTION" length="255" />
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="DESCRIPTION" length="255" />
+        </property>
+        <property name="deliveryMode" type="java.lang.Integer">
+            <column name="DELIVERY_MODE" length="1" />
+        </property>
+        <property name="isVideo" type="java.lang.Integer">
+            <column name="IS_VIDEO" length="1" />
+        </property>
+        <property name="isImage" type="java.lang.Integer">
+            <column name="IS_IMAGE" length="1" />
+        </property>
+        <property name="isText" type="java.lang.Integer">
+            <column name="IS_TEXT" length="1" />
+        </property>
+        <property name="isQuestion" type="java.lang.Integer">
+            <column name="IS_QUESTION" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

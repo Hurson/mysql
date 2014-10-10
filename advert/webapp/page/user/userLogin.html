@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script>
+	function go(location){
+		//alert("location:"+location);
+		window.location.href = location;
+	}
+</script>
+</head>
+<body>
+	<table style="width:720px;height:576px;">
+		<tr>
+			<td>
+				<form action="userLogin.do?method=userLogin" method="post">
+					<table>
+						<tr>
+							<td style="width:200px">
+								
+							</td>
+							<td colspan="2" style="text-align:center">
+								用户登录
+							</td>
+							<td>
+								
+							</td>
+						</tr>
+						<tr>
+							<td style="width:200px">
+								
+							</td>
+							<td>
+								用户名：
+							</td>
+							<td>
+								<input type="text" name="username"/>
+							</td>
+							<td id="usernameText">
+								
+							</td>
+						</tr>
+						<tr>
+							<td style="width:200px">
+								
+							</td>
+							<td>
+								密&nbsp;码：
+							</td>
+							<td>
+								<input type="password" name="passwd"/>
+							</td>
+							<td id="passwdText">
+								
+							</td>
+						</tr>
+						<tr>
+							<td style="width:200px">
+								
+							</td>
+							<td>
+								<input type="submit" value="登录"/>
+							</td>
+							<td>
+								<input type="reset" value="重置"/>
+							</td>
+							<td>
+								<input type="button" value="注册" onclick="go('http://localhost:8080/demo/page/user/userRegist.html')"/>
+							</td>
+							<td>
+								
+							</td>
+						</tr>
+					</table>
+				</form>	
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

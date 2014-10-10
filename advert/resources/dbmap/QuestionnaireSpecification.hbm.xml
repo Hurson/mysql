@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.dvnchina.advertDelivery.position.bean.QuestionnaireSpecification" table="T_QUESTIONNAIRE_SPECIFICATION">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" length="10" />
+        </id>		
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" />
+        </property>
+        <property name="fileSize" type="java.lang.String">
+            <column name="FILE_SIZE" />
+        </property>
+        <property name="optionNumber" type="java.lang.Integer">
+            <column name="OPTION_NUMBER" />
+        </property>
+        <property name="maxLength" type="java.lang.Integer">
+            <column name="MAX_LENGTH" />
+        </property>
+        <property name="excludeContent" type="java.lang.String">
+            <column name="EXCLUDE_CONTENT" />
+        </property>
+    </class>
+</hibernate-mapping>

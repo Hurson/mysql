@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping  >
+    <class name="com.dvnchina.advertDelivery.model.RoleColumn" table="T_COLUMNS_ROLE"  >
+        <comment>广告系统 栏目与角色</comment>
+        <id name="id" type="java.lang.Integer">
+            <column name="RELATION_ID" precision="38" scale="0" />
+             <generator class="native">
+				<!--<param name="sequence">T_COLUMNS_ROLE_SEQ</param>-->
+			</generator>
+        </id>
+        <property name="roleId" type="java.lang.Integer">
+            <column name="ROLE_ID" length="10">
+                <comment>角色的ID</comment>
+            </column>
+        </property>
+        <property name="columnId" type="java.lang.Integer">
+            <column name="COLUMN_ID" length="10">
+                <comment>栏目的ID</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

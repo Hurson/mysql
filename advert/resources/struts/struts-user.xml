@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="/" extends="struts-default">
+
+		<action name="userCheck" class="loginAction" method="userCheck">
+			<!--
+			<result name="success">/page/user/userLogin.jsp</result>
+			<result name="success">/page/user/userLogin.jsp</result>
+			-->
+		</action>
+		<action name="login" class="loginAction" method="userLogin">
+		    <!-- <result name="index">/index.jsp</result> -->
+		          <result name="index">/tset/frame.jsp</result>	
+		          <result name="login"  type="redirect">/tset/login.jsp</result>	
+		</action>
+		<action name="logout" class="loginAction" method="userLogout">
+		          <result name="login">/tset/login.jsp</result>	
+		</action>
+		<action name="toadduser" class="userAction" method="addUser">
+			<result name="list2">/page/user/userList2.jsp</result>
+			<!--
+			<result name="list">/page/user/userList.jsp</result>
+			-->
+		</action>
+		
+		<action name="userList" class="userAction" method="getAllUserList">
+			<!--
+			<result name="list">/page/user/userList.jsp</result>
+			-->
+			<result name="list2">/page/user/userList2.jsp</result>
+		</action>
+		<action name="deleteUserInfo" class="userAction" method="deleteUser" />
+		
+		<action name="deleteUserBatchInfo" class="userAction" method="deleteUserBatchInfo" />
+		
+		<action name="updateU" class="userAction" method="updateUser" >
+			<result name="update">/page/user/updateUser.jsp</result>
+			<result name="list">/page/user/userList.jsp</result>
+		</action>
+		<action name="userDetail" class="userAction" method="getUserDetail" >
+			<result name="detail">/page/user/userDetail.jsp</result>
+		</action>
+		<action name="getRoleListByUserId" class="purviewAction" method="getRoleListByUserId" />
+		<action name="saveUserRole" class="purviewAction" method="saveUserRoleBanding" />
+		
+		<action name="getAllLocation" class="locationAction" method="getAllLocation" />
+		<action name="getTreeLocation" class="locationAction" method="getTreeLocation" />
+		<action name="getAllCustomer" class="CustomerAction" method="getAllCustomer" />
+		<action name="checkLoginName" class="userAction" method="checkLoginName" />
+		<action name="queryUser" class="userAction" method="queryUser" >
+			<result name="list2">/page/user/userList2.jsp</result>
+		</action>
+		
+		<action name="changePassword" class="userAction" method="changePassword">
+			<result name="success">/page/sysconfig/changePassword.jsp</result>
+		</action>
+		
+		<action name="changePasswordCheck" class="userAction" method="changePasswordCheck">
+			<result name="success">/page/sysconfig/changePassword.jsp</result>
+		</action>
+	</package>
+</struts>
+	

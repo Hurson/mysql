@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:aop="http://www.springframework.org/schema/aop"
+             xmlns:tx="http://www.springframework.org/schema/tx"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                     http://www.springframework.org/schema/context
+                     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                     http://www.springframework.org/schema/aop
+                     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                     http://www.springframework.org/schema/tx
+                     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd" default-autowire="byName">
+    <context:annotation-config/> 
+    <context:component-scan base-package="com.lixing.shop"/>
+    
+    <!-- 权限-->
+ 	<bean name="userService" class="com.dvnchina.advertDelivery.sysconfig.service.impl.UserServiceImpl" />
+ 	
+ 	<bean name="securityService"  class="com.dvnchina.advertDelivery.service.impl.SecurityServiceImpl">
+	</bean>
+	<!-- <bean name="roleService" class="com.dvnchina.advertDelivery.service.impl.RoleServiceImpl" /> -->
+	<bean name="roleService" class="com.dvnchina.advertDelivery.sysconfig.service.impl.RoleServiceImpl" />
+	<bean name="columnService" class="com.dvnchina.advertDelivery.service.impl.ColumnServiceImpl" />
+	<bean name="purviewService" class="com.dvnchina.advertDelivery.service.impl.PurviewServiceImpl" />
+	 <!--end 权限-->
+	 
+ 	<bean name="templateService" class="com.dvnchina.advertDelivery.service.impl.TemplateServiceImpl">
+ 		<property name="templateDao" ref="templateDao"/>
+ 		<property name="templateFormater" ref="templateFormater"/>
+ 	</bean>
+ 	<bean name="questionnaireService" class="com.dvnchina.advertDelivery.service.impl.QuestionnaireServiceImpl"/>
+ 	<bean name="orderService" class="com.dvnchina.advertDelivery.order.service.impl.OrderServiceImpl"/>
+	<bean name="playList4OrderService" class="com.dvnchina.advertDelivery.order.service.impl.PlayList4OrderServiceImpl"/>
+	<bean name="playListService" class="com.dvnchina.advertDelivery.order.service.impl.PlayListServiceImpl"/>
+	<bean name="playListGisService" class="com.dvnchina.advertDelivery.order.service.impl.PlayListGisServiceImpl"/>
+	<bean name="playListReqService" class="com.dvnchina.advertDelivery.order.service.impl.PlayListReqServiceImpl"/> 
+ 	<bean name="templateFormater" class="com.dvnchina.advertDelivery.service.impl.TemplateFormater"/>
+ 	<bean name="uploadMaterialService" class="com.dvnchina.advertDelivery.service.impl.UploadMaterialServiceImpl"/>
+ 	
+ 	<bean name="marketingRuleService" class="com.dvnchina.advertDelivery.service.impl.MarketingRuleServiceImpl"/>
+ 	
+ 	<bean name="preciseservice" class="com.dvnchina.advertDelivery.ploy.service.impl.PreciseMatchServiceImpl">
+ 		<property name="preciseDao" ref="preciseDao"/>
+ 	</bean>
+ 	
+ 	<!-- 广告资源管理-->
+ 	<bean name="adAssetsService" id="adAssetsService" class="com.dvnchina.advertDelivery.service.impl.AdAssetsServiceImpl">
+ 		<property name="adAssetsDao" ref="adAssetsDao"/>
+ 	</bean> 
+ 	<!-- 客户管理-->
+   <bean name="customerService" id="customerService" class="com.dvnchina.advertDelivery.service.impl.CustomerServiceImpl">
+ 		<property name="customerDao" ref="customerDao"/>
+ 	</bean>
+ 	 <!-- 同步CPS广告位管理 -->	
+    <bean name="cpsPositionService" id="cpsPositionService" class="com.dvnchina.advertDelivery.service.impl.CPSPositionServiceImpl">
+ 		<property name="cpsPositionDao" ref="cpsPositionDao"/>
+ 		<property name="advertPositionDao" ref="advertPositionDao"/>
+ 		<property name="playCategoryDao" ref="playCategoryDao"/>
+ 	</bean> 
+ 	<!--投放信息管理-->
+ 	<bean name="releaseAreaService" id="releaseAreaService" class="com.dvnchina.advertDelivery.service.impl.ReleaseAreaServiceImpl">
+ 		<property name="releaseAreaDao" ref="releaseAreaDao"/>
+ 	</bean>
+ 	 <bean name="channelService" id="channelService" class="com.dvnchina.advertDelivery.sysconfig.service.impl.ChannelServiceImpl">
+ 		<property name="channelDao" ref="channelDao"/>
+ 	</bean>
+ 	<!-- 用户区域管理 -->
+ 	<bean name="userAreaService" id="userAreaService" class="com.dvnchina.advertDelivery.service.impl.UserAreaServiceImpl">
+ 		<property name="userAreaDao" ref="userAreaDao"/>
+ 	</bean>
+ 	<!-- 用户级别 -->
+ 	<bean name="userRankService" id="userRankService" class="com.dvnchina.advertDelivery.sysconfig.service.impl.UserRankServiceImpl">
+ 		<property name="userRankDao" ref="userRankDao"/>
+ 	</bean>
+ 	<!--用户行业类别查询  -->
+ 	<bean name="userIndustryCategoryService" id="userIndustryCategoryService" class="com.dvnchina.advertDelivery.service.impl.UserIndustryCategoryServiceImpl">
+ 		<property name="userIndustryCategorydao" ref="userIndustryCategorydao"/>
+ 	</bean>
+ 	
+ 	
+ 	<bean name="operatorLocalFileService" id="operatorLocalFileService" class="com.dvnchina.advertDelivery.service.common.tools.support.impl.OperatorLocalFileServiceImpl">
+ 	    <property name="meterialManagerDao" ref="meterialManagerDao"/>
+ 	</bean> 
+ 	<bean name="advertPositionService" id="advertPositionService" class="com.dvnchina.advertDelivery.service.impl.AdvertPositionServiceImpl">
+ 		<property name="advertPositionDao" ref="advertPositionDao"/>
+ 	</bean> 
+ 	<bean name="playCategoryService" id="playCategoryService" class="com.dvnchina.advertDelivery.service.impl.PlayCategoryServiceImpl">
+ 	<property name="playCategoryDao" ref="playCategoryDao"/>
+ 	</bean>
+ 	
+ 	<bean name="advertPositionTypeService" id="advertPositionTypeService" class="com.dvnchina.advertDelivery.service.impl.AdvertPositionTypeServiceImpl">
+ 		<property name="advertPositionTypeDao" ref="advertPositionTypeDao"/>
+ 	</bean>
+ 	 	<!-- 地区信息 -->
+ 	<bean name="locationService"  class="com.dvnchina.advertDelivery.service.impl.LocationServiceImpl" />
+ 	
+ 	<bean id="contractBackupService" class="com.dvnchina.advertDelivery.service.impl.ContractBackupServiceImpl">
+	 	<property name="contractBackupDao" ref="contractBackupDao"/>
+	</bean>
+	
+ 	<bean name="contractRunService" id="contractRunService" class="com.dvnchina.advertDelivery.service.impl.ContractRunServiceImpl"/>
+ 	
+ 	<bean name="videoSpecificationService" id="videoMaterialSpeciService" class="com.dvnchina.advertDelivery.service.impl.VideoSpecificationServiceImpl"/>
+ 	
+ 	<bean id="textSpecificationService"  name="textSpecificationService" class="com.dvnchina.advertDelivery.service.impl.TextSpecificationServiceImpl"/>
+ 	
+ 	<bean  name="systemConfigService" id="systemConfigService" class="com.dvnchina.advertDelivery.service.impl.SystemConfigServiceImpl"/>
+ 	
+ 	<bean name="imageSpecificationService" id="pictureMaterialSpeciService" class="com.dvnchina.advertDelivery.service.impl.ImageSpecificationServiceImpl"/>
+ 	
+ 	<bean name="questionnaireSpecificationService" id="questionnaireSpecificationService" class="com.dvnchina.advertDelivery.service.impl.QuestionnaireSpecificationServiceImpl"/>
+	
+	<!-- VOD数据同步 -->
+	<bean name="parseVodService" class="com.dvnchina.advertDelivery.service.impl.ParseVodServiceImpl"/>
+	<bean name="vodSyncService" class="com.dvnchina.advertDelivery.service.impl.VodSyncServiceImpl"/>
+	<bean name="vodIncrSyncService" class="com.dvnchina.advertDelivery.service.impl.VodIncrSyncServiceImpl"/>
+	<bean name="vodInfoService" class="com.dvnchina.advertDelivery.service.impl.VodInfoServiceImpl"/>
+	
+	<!--策略 -->
+	<bean name="ployService" id="ployService" class="com.dvnchina.advertDelivery.ploy.service.impl.PloyServiceImpl">
+ 		<property name="ployDao" ref="ployDao"/>
+ 	</bean>
+ 	<!--禁播策略 -->
+ 	<bean name="noAdPloyService" id="noAdPloyService" class="com.dvnchina.advertDelivery.ploy.service.impl.NoAdPloyServiceImpl">
+ 		<property name="noAdPloyDao" ref="noAdPloyDao"/>
+ 	</bean>
+ 	
+ 	
+	<!--  系统配置部分  -->
+   <bean name="baseConfigService"  id="baseConfigService" class = "com.dvnchina.advertDelivery.sysconfig.service.impl.BaseConfigServiceImpl">
+   		<property name="baseConfigDao" ref="baseConfigDao"/>
+   </bean>
+   <bean name="userTradeService"  id="userTradeService" class = "com.dvnchina.advertDelivery.sysconfig.service.impl.UserTradeServiceImpl">
+   		<property name="userTradeDao" ref="userTradeDao"/>
+   </bean>
+
+ 	<!--频道组管理 -->
+ 	<bean name="channelGroupManagerService" id="channelGroupManagerService" class="com.dvnchina.advertDelivery.channelGroup.service.impl.ChannelGroupManagerServiceImpl">
+ 		<property name="channelGroupManagerDao" ref="channelGroupManagerDao"/>
+ 	</bean>
+ 	
+ 	<!--回看频道组管理 -->
+ 	<bean name="npvrChannelGroupManagerService" id="npvrChannelGroupManagerService" class="com.dvnchina.advertDelivery.npvrChannelGroup.service.impl.NpvrChannelGroupManagerServiceImpl">
+ 		<property name="channelGroupManagerDao" ref="npvrChannelGroupManagerDao"/>
+ 	</bean>
+ 	
+ 	<!--合同管理 -->
+	<bean name="contractManagerService" id="contractManagerService" class="com.dvnchina.advertDelivery.contract.service.impl.ContractManagerServiceImpl">
+ 		<property name="contractManagerDao" ref="contractManagerDao"/>
+ 	</bean>
+	<bean name="contractAccountsService" id="contractAccountsService" class="com.dvnchina.advertDelivery.accounts.service.impl.ContractAccountsServiceImpl">
+ 		<property name="contractAccountsDao" ref="contractAccountsDao"/>
+ 	</bean>
+ 	
+ 	<bean name="positionService" class="com.dvnchina.advertDelivery.position.service.impl.PositionServiceImpl"/>
+ 	<bean name="defaulResourceService" class="com.dvnchina.advertDelivery.position.service.impl.DefaulResourceServiceImpl"/>
+ 	
+ 	<!-- 操作日志 -->
+ 	<bean name="operateLogService" class="com.dvnchina.advertDelivery.log.service.impl.OperateLogServiceImpl"/>
+ 	<!-- 审核日志 -->
+ 	<bean name="auditLogService" class="com.dvnchina.advertDelivery.log.service.impl.AuditLogServiceImpl"/>
+
+
+    <!--素材管理 -->
+	<bean name="meterialManagerService" id="meterialManagerService" class="com.dvnchina.advertDelivery.meterial.service.impl.MeterialManagerServiceImpl">
+ 		<property name="meterialManagerDao" ref="meterialManagerDao"/>
+ 	</bean>
+ 	<bean name="meterialOperatorService" id="meterialOperatorService" class="com.dvnchina.advertDelivery.meterial.service.impl.MeterialOperatorServiceImpl">
+ 		<property name="meterialOperatorDao" ref="meterialOperatorDao"/>
+ 	</bean>
+ 	<bean name="defaultMeterialManageService" id="defaultMeterManageService" class="com.dvnchina.advertDelivery.meterial.service.impl.DefaultMeterManageServiceImpl">
+ 		<property name="defaultMeterManageDao" ref="defaultMeterManageDao"/>
+ 	</bean>
+ 	
+ 	<!-- 报表管理 -->
+	<bean name="reportService" class="com.dvnchina.advertDelivery.report.service.impl.ReportServiceImpl">
+ 		<property name="reportDao" ref="reportDao"/>
+ 	</bean>
+ 	
+ 	<!-- 代办事项 -->
+ 	<bean name="awaitDoingService" class="com.dvnchina.advertDelivery.awaitDoing.service.impl.AwaitDoingServiceImpl">
+ 		<property name="awaitDoingDao" ref="awaitDoingDao"/>
+ 	</bean>
+ 	<!-- 定时生成问卷报表管理-->
+ 	<bean name="generateQuestionReportService"  class="com.dvnchina.advertDelivery.order.service.impl.GenerateQuestionReportServiceImpl"/>
+ 	
+ 	<!-- 定时统计订单广告报表管理-->
+ 	<bean name="advertReportService"  class="com.dvnchina.advertDelivery.report.service.impl.AdvertReportServiceImpl">
+ 		<property name="advertReportDao" ref="advertReportDao"/>
+ 	</bean>
+ 	<!-- 区域缓存加载 -->
+ 	<bean name="refreshCacheService"  class="com.dvnchina.advertDelivery.common.cache.RefreshCacheServiceImpl">
+ 		<property name="cacheDao" ref="cacheDao"/>
+ 	</bean>
+ 	
+ 	<!-- 告警信息 -->
+ 	<bean name="warnService" class="com.dvnchina.advertDelivery.warn.service.impl.WarnServiceImpl"/>
+
+
+</beans>

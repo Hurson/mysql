@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/accounts" extends="default">
+		<!--  base config block -->
+		<action name="queryAccountsList" class="contractAccountsAction" method="queryContractAccountsList">
+			<result name="success">/page/accounts/accountsList.jsp</result>
+		</action>
+		<action name="getAccounts" class="contractAccountsAction" method="getContractAccountsById">
+			<result name="success">/page/accounts/accountsEdit.jsp</result>
+		</action>
+		<action name="getContracts" class="contractAccountsAction" method="queryContractList">
+			<result name="success">/page/accounts/selectContract.jsp</result>
+		</action>
+		<action name="updateAccounts" class="contractAccountsAction" method="updateContractAccounts">
+			<result name="success" type="redirect">queryAccountsList.do</result>
+		</action>
+		<action name="addAccounts" class="contractAccountsAction" method="initAddPage">
+			<result name="success" >/page/accounts/accountsEdit.jsp</result>
+		</action>
+		<action name="getContractsDeadLine" class="contractAccountsAction" method="getContractsDeadLine" />
+			
+		
+		
+	</package>
+</struts>
+	

@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="css/head1.css" rel="stylesheet" type="text/css" />
+<title>head</title>
+<script type="text/javascript" src="js/cookieUtils.js"></script>
+<script type="text/javascript" >
+<!--
+function user_logout(){
+	
+	var flag= window.confirm("你确定要退出吗？");
+	if(flag){
+		
+		top.location = 'login.jsp';
+		
+		var userID = getCookie("COOKIE_USER_ID"); 
+		if(userID != '' || userID != null){
+
+			//删除Cookie内存放的User信息和sessionId
+			DelCookie('COOKIE_USER_ID');
+			DelCookie('COOKIE_USER_NAME');
+			DelCookie('COOKIE_SESSION_ID');
+		}
+		
+	}
+}
+
+
+function close(evt) //author: sunlei
+{
+    var isIE=document.all?true:false;
+    evt = evt ? evt :(window.event ? window.event : null);
+    if(isIE){//IE浏览器
+        var n = evt.screenX - window.screenLeft;
+        var b = n > document.documentElement.scrollWidth-20;
+        if(b && evt.clientY<0 || evt.altKey){
+           // alert("是关闭而非刷新");
+            user_logout();
+        }
+        else{
+           // alert("是刷新而非关闭");
+        }
+    }
+    
+}
+
+//-->  
+</script>
+</head>
+<body onunload="close(event);">
+<table cellpadding="0" cellspacing="0" border="0" class="tab" > 
+<tr>
+<td align="center" valign="top">
+<table cellpadding="0" cellspacing="0" border="0" class="tab_a">
+<tr>
+<td width="208px"><img src="images/logo.png" /></td>
+<td class="td_bg">
+<ul>
+<li>新建客户</li>
+<li>操作记录</li>
+<li>站内消息</li>
+<li>4</li>
+<li>5</li>
+<li>6</li>
+</ul>
+</td>
+<td width="40px" align="center"  class="td_right"><a href="#" onclick="user_logout();" ><img src="images/close.png" /></a>&nbsp;&nbsp;</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td class="line"></td>
+</tr>
+</table>
+</body>
+</html>

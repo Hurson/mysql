@@ -1,0 +1,480 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/menu_right.css" type="text/css" />
+<link rel="stylesheet" href="css/platform.css" type="text/css" />
+<script language="javascript" type="text/javascript" src="js/jquery-1.4.4.js"></script>
+
+<title>无标题文档</title>
+<script>
+$(function(){   
+    $("#bm").find("tr:even").addClass("treven");  //奇数行的样式
+    $("#bm").find("tr:odd").addClass("trodd");  //偶数行的样式
+});
+</script>
+<style>
+.treven{ background:#FFFFFF;}
+.trodd{ background:#f6f6f6;}
+</style>
+</head>
+
+<body>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td>
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="tab_right">
+<tr>
+<td>工作台</td>
+<td>客户</td>
+<td>日程行动</td>
+<td>销售机会</td>
+<td>订单管理</td>
+<td>客服中心</td>
+<td>财务中心</td>
+<td>营销中心</td>
+<td>人力资源中心</td>
+<td>数据统计</td>
+<td>信息门户管理</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=" padding:4px;">
+<table cellpadding="0" cellspacing="1" width="100%" class="tablea" >
+	<tr>
+		<td class="formTitle" colspan="99">
+			<span>·产品详细信息</span>
+			
+		</td>
+	</tr>
+	<tr>
+		<td class="td_label">广告资产类别：</td>
+		<td class="td_input">
+			<input class="e_input" onfocus="this.className='e_inputFocus'" onblur="this.className='e_input'" />
+		</td>
+		<td class="td_label">网点名：</td>
+		<td class="td_input">
+			<input class="e_input" onfocus="this.className='e_inputFocus'" onblur="this.className='e_input'" />
+		</td>
+	</tr>
+	
+	<tr>
+		<td class="td_label">广告资产类别：</td>
+		<td class="td_input">
+			<input class="e_input" onfocus="this.className='e_inputFocus'" onblur="this.className='e_input'" />
+		</td>
+		<td class="td_label">网点名：</td>
+		<td class="td_input">
+			<input class="e_input" onfocus="this.className='e_inputFocus'" onblur="this.className='e_input'" />
+		</td>
+	</tr>
+	
+	<tr>
+		<td class="formBottom" colspan="99">
+			<input name="Submit" 
+			type="submit" 
+			title="查看" 
+			class="b_search" 
+			value="" 
+			onfocus=blur() />
+			<input name="Submit" 
+			type="submit" 
+			title="修改"
+			class="b_edit" 
+			value="" 
+			onfocus=blur() />
+			<input name="Submit" 
+			type="submit" 
+			title="添加"
+			class="b_add" 
+			value="" 
+			onfocus=blur() />
+			<input name="Submit" 
+			type="submit" 
+			title="删除"
+			class="b_delete" 
+			value="" 
+			onfocus=blur() />
+		</td>
+	</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=" padding:4px;">
+<table cellpadding="0" cellspacing="1" width="100%" class="taba_right_list" id="bm">
+
+<tr>
+   <td colspan="12" class="formTitle"  style="padding-left:8px; background:url(images/menu_righttop.png) repeat-x; text-align:left; height:26px;"><span>·广告资源管理列表</span></td>
+</tr>
+
+<tr>
+<td height="26px" align="center">序号</td>
+<td>asset</td>
+<td>description</td>
+<td>广告商</td>
+<td>内容分类</td>
+<td>资产类型</td>
+<td>时长</td>
+<td>有效期</td>
+<td>合同号</td>
+<td>上线时期</td>
+<td>状态</td>
+<td>操作</td>
+</tr>
+<tr>
+<td align="center" height="26"></td>
+<td>1</td>
+<td>23</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td height="26px" align="center">0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td height="26px" align="center">0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td height="26px" align="center">0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td height="26px" align="center">0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td height="26px" align="center">0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td height="26px" align="center">0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td  align="center">0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td  align="center">0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td  align="center">0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td><input name="Submit" 
+			type="submit" 
+			class="button_halt"
+			value=""  
+			title="下线" 
+			onfocus=blur()
+			onClick="" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_start"
+			value=""  
+			title="上线" 
+			onfocus=blur() 
+			onClick="location.href='#'" />
+			<input name="Submit" 
+			type="submit" 
+			class="button_delete"
+			value=""  
+			title="删除" 
+			onfocus=blur()
+			onClick="" /></td>
+</tr>
+<tr>
+<td height="34" colspan="12" style="background:url(images/bottom.jpg) repeat-x; text-align:right;"><a href="#">共计10页</a>&nbsp;&nbsp;<a href="#">当前第1/10页</a>&nbsp;&nbsp;<a href="#">上一页</a>&nbsp;&nbsp;<a href="#">下一页&nbsp;&nbsp;</a></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<div style="position:absolute; width:100%; left:0px; bottom:0px;">
+<table cellpadding="0" cellspacing="0" border="0" class="footer">
+<tr><td>22</td></tr>
+</table>
+</div>
+</body>
+</html>

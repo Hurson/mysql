@@ -1,0 +1,26 @@
+#Wed Apr 03 14:32:05 CST 2013
+eclipse.preferences.version=1
+encoding//resources/configuration.properties=UTF-8
+encoding//resources/log4j.properties=UTF-8
+encoding//src/com/dvnchina/demo/action/DemoAction.java=UTF-8
+encoding//src/com/dvnchina/demo/dao/UserDao.java=UTF-8
+encoding//src/com/dvnchina/demo/dao/impl/UserDaoImpl.java=UTF-8
+encoding//src/com/dvnchina/demo/model/CommonObject.java=UTF-8
+encoding//src/com/dvnchina/demo/model/User.java=UTF-8
+encoding//src/com/dvnchina/demo/service/UserService.java=UTF-8
+encoding//src/com/dvnchina/demo/service/impl/UserServiceImpl.java=UTF-8
+encoding//src/com/dvnchina/demo/utils/ConfigureProperties.java=UTF-8
+encoding//src/com/dvnchina/demo/utils/ConnectionUtils.java=UTF-8
+encoding//src/com/dvnchina/demo/utils/ftp/FtpUtil.java=UTF-8
+encoding//webapp/js/role/role.js=UTF-8
+encoding//webapp/js/util/tools.js=UTF-8
+encoding//webapp/page/index.jsp=UTF-8
+encoding//webapp/page/menu.jsp=UTF-8
+encoding//webapp/page/sysc/sysc-01.html=UTF-8
+encoding//webapp/page/sysc/sysc-01.jsp=UTF-8
+encoding//webapp/page/sysc/sysc-02.jsp=UTF-8
+encoding//webapp/page/user/error.jsp=UTF-8
+encoding//webapp/page/user/success.jsp=UTF-8
+encoding//webapp/page/user/test.jsp=UTF-8
+encoding/<project>=UTF-8
+instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true

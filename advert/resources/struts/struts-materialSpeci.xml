@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/questionnaireSpecification" extends="default">
+		<action name="addQuestion" class="questionnaireSpecificationAction" method="add">
+			<result name="success">
+				/page/questionnaireSpecification/add.jsp
+			</result>
+		</action>
+		<action name="saveQuestion" class="questionnaireSpecificationAction" method="save">
+			<result name="success" type="redirect">
+				/page/questionnaireSpecification/queryQuestionManager.do
+			</result>
+		</action>
+		<action name="removeQuestion" class="questionnaireSpecificationAction" method="remove">
+			<result name="success" type="redirect">
+				/page/questionnaireSpecification/queryQuestionManager.do
+            </result>
+		</action>
+		<action name="queryQuestion" class="questionnaireSpecificationAction" method="query">
+			<result name="success">
+				/page/questionnaireSpecification/new/bindingList.jsp
+			</result>
+		</action>
+		<action name="queryQuestionManager" class="questionnaireSpecificationAction" method="queryManager">
+			<result name="success">
+				/page/questionnaireSpecification/list.jsp
+			</result>
+		</action>
+	</package>
+	
+	<package name="page/imageSpecification" extends="struts-default">
+		
+		<action name="addImage" class="imageSpecificationAction" method="add">
+			<result name="success">/page/imageSpecification/new/add.jsp</result>
+		</action>
+		<action name="saveImage" class="imageSpecificationAction" method="save">
+			<result name="success" type="redirect">/page/imageSpecification/queryImageManager.do</result>
+		</action>
+		<action name="removeImage" class="imageSpecificationAction" method="remove">
+			<result name="success" type="redirect">
+				/page/imageSpecification/queryImageManager.do
+            </result>
+		</action>
+		<action name="queryImage" class="imageSpecificationAction" method="query">
+			<result name="success">/page/imageSpecification/new/bindingList.jsp</result>
+		</action>
+		<action name="queryImageManager" class="imageSpecificationAction" method="queryManager">
+			<result name="success">/page/imageSpecification/new/list.jsp</result>
+		</action>
+	</package>
+	
+	<package name="page/videoSpecification" extends="struts-default">
+		<action name="addVideo" class="videoSpecificationAction" method="add">
+			<result name="success">/page/videoSpecification/new/add.jsp</result>
+		</action>
+		<action name="saveVideo" class="videoSpecificationAction" method="save">
+			<result name="success" type="redirect">
+				/page/videoMaterialSpeci/queryVideoManager.do
+			</result>
+		</action>
+		<action name="removeVideo" class="videoSpecificationAction" method="remove">
+			<result name="success" type="redirect">
+				/page/videoMaterialSpeci/queryVideoManager.do
+            </result>
+		</action>
+		<action name="queryVideo" class="videoSpecificationAction" method="query">
+			<result name="success">
+				/page/videoSpecification/new/bindingList.jsp
+			</result>
+		</action>
+		<action name="queryVideoManager" class="videoSpecificationAction" method="queryManager">
+			<result name="success">
+				/page/videoSpecification/new/list.jsp
+			</result>
+		</action>
+	</package>
+	
+	<package name="page/textSpecification" extends="struts-default">
+		<action name="addText" class="textSpecificationAction" method="add">
+			<result name="success">
+				/page/textSpecification/new/add.jsp
+			</result>
+		</action>
+		<action name="saveText" class="textSpecificationAction" method="save">
+			<result name="success" type="redirect">
+				/page/textSpecification/queryTextManager.do
+            </result>
+		</action>
+		<action name="removeText" class="textSpecificationAction" method="remove">
+			<result name="success" type="redirect">
+				/page/textSpecification/queryTextManager.do
+            </result>
+		</action>
+		<action name="queryText" class="textSpecificationAction" method="query">
+			<result name="success">
+				/page/textSpecification/new/bindingList.jsp
+            </result>
+		</action>
+		<action name="queryTextManager" class="textSpecificationAction" method="queryManager">
+			<result name="success">
+				/page/textSpecification/new/list.jsp
+            </result>
+		</action>
+	</package>
+	
+	<package name="page/positionType" extends="struts-default">
+		<action name="addPtype" class="advertPositionTypeAction" method="add">
+			<result name="success">
+				/page/positionType/add.jsp
+            </result>
+		</action>
+		<action name="savePtype" class="advertPositionTypeAction" method="save">
+			<result name="success" type="redirect">
+				/page/positionType/queryPtype.do
+            </result>
+		</action>
+		<action name="removePtype" class="advertPositionTypeAction" method="remove">
+			<result name="success" type="redirect">
+				/page/positionType/queryPtype.do
+            </result>
+		</action>
+		<action name="queryPtype" class="advertPositionTypeAction" method="query">
+			<result name="success">
+				/page/positionType/list.jsp
+            </result>
+            <result name="binding">
+				/page/positionType/new/bindingPostTypeList.jsp
+            </result>
+		</action>	
+	</package>
+</struts>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.dvnchina.advertDelivery.order.bean">
+	<class name="PlayListReqPrecise" table="AD_PLAYLIST_REQ_PRECISION">
+
+		<id name="id" type="java.lang.Integer" column="id">
+			<generator class="native">
+				<!--<param name="sequence">AD_PLAYLIST_REQ_PRECISION_REQ</param>-->
+			</generator>
+		</id>
+		<property name="precisionId" column="PRECISION_ID" type="java.lang.Integer"/>
+		<property name="playListId" column="PLAYLIST_ID" type="java.lang.Integer" />
+		<property name="type" column="TYPE" type="java.lang.Integer" />
+		<property name="productId" column="PRODUCT_ID" type="java.lang.String" />
+		<property name="dtvServiceId" column="DTV_SERVICE_ID" type="java.lang.String" />
+		<property name="assetSortId" column="ASSET_SORT_ID" type="java.lang.String" />
+		<property name="assetKey" column="ASSET_KEY" type="java.lang.String" />
+		<property name="userArea" column="USER_AREA" type="java.lang.String" />
+		<property name="tvnExpression" column="TVN_EXPRESSION" type="java.lang.String" />
+		<property name="tvnNumber" column="TVN_NUMBER" type="java.lang.String" />
+		<property name="userIndustrys" column="USERINDUSTRYS" type="java.lang.String" />
+		<property name="userLevels" column="USERLEVELS" type="java.lang.String" />
+		<property name="useLevel" column="USE_LEVEL" type="java.lang.Integer" />
+		<property name="assetId" column="ASSET_ID" type="java.lang.String" />
+		<property name="playbackServiceId" column="PLAYBACK_SERVICE_ID" type="java.lang.String" />
+		<property name="lookbackCategoryId" column="LOOKBACK_CATEGORY_ID" type="java.lang.String" />
+
+	</class>
+</hibernate-mapping>

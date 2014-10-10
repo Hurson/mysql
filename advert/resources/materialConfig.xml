@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<material>
+			<kind key="0" name="视频" />
+			<kind key="1" name="图片" />
+			<kind key="2" name="文字" />
+			
+			<type key="0" name="运动" />
+			<type key="1" name="食品" />
+			<type key="2" name="服装" />
+			
+	</material>
+	
+</config>

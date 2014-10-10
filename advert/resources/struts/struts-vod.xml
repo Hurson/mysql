@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="/vod" extends="default">
+
+		<action name="vodIncrSync" class="vodSyncAction" method="vodIncrSync"/>
+		<action name="vodSync" class="vodSyncAction" method="vodSync"/>
+		<action name="listProduct" class="vodSyncAction" method="listProduct">
+			<result>/page/vod/listProduct.jsp</result>
+		</action>
+		<action name="listAsset" class="vodSyncAction" method="listAsset">
+			<result>/page/vod/listAsset.jsp</result>
+		</action>
+	</package>
+</struts>
+	

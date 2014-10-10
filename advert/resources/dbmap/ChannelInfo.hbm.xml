@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.dvnchina.advertDelivery.sysconfig.bean.ChannelInfo" table="T_CHANNELINFO">
+        <comment>广告系统频道管理</comment>
+        <id name="channelId" type="java.lang.Integer">
+            <column name="CHANNEL_ID" precision="38" scale="0" />
+             <generator class="native">
+			</generator>
+        </id>
+        <property name="channelCode" type="java.lang.String">
+            <column name="CHANNEL_CODE" length="20">
+                <comment>频道编码</comment>
+            </column>
+        </property>
+        <property name="channelType" type="java.lang.String">
+            <column name="CHANNEL_TYPE" length="200">
+                <comment>频道类型</comment>
+            </column>
+        </property>
+         <property name="channelName" type="java.lang.String">
+            <column name="CHANNEL_NAME" length="20">
+                <comment>频道名称</comment>
+            </column>
+        </property>
+        <property name="channelLanguage" type="java.lang.String">
+            <column name="CHANNEL_LANGUAGE" length="20">
+                <comment>频道语种</comment>
+            </column>
+        </property>
+        <property name="channelLogo" type="java.lang.String">
+            <column name="CHANNEL_LOGO" length="200">
+                <comment>图标</comment>
+            </column>
+        </property>
+        <property name="keyWord" type="java.lang.String">
+            <column name="KEYWORD" length="254">
+                <comment>关键词</comment>
+            </column>
+        </property>
+        <property name="locationCode" type="java.lang.String">
+            <column name="LOCATION_CODE" length="20">
+                <comment>区域码</comment>
+            </column>
+        </property>
+        <property name="locationName" type="java.lang.String">
+            <column name="LOCATION_NAME" length="20">
+                <comment>区域名</comment>
+            </column>
+        </property>
+        <property name="channelDesc" type="java.lang.String">
+            <column name="CHANNEL_DESC" length="254">
+                <comment>频道描述</comment>
+            </column>
+        </property>
+	      <property name="createTime" type="java.util.Date">
+	            <column name="CREATE_TIME">
+	                <comment>创建时间</comment>
+	            </column>
+	        </property>
+	        <property name="modifyTime" type="java.util.Date">
+	            <column name="MODIFY_TIME" >
+	                <comment>修改时间</comment>
+	            </column>
+	        </property>
+	        <property name="state" type="java.lang.String">
+	            <column name="STATE" length="50">
+	                <comment>状态</comment>
+	            </column>
+	        </property>
+	        <property name="serviceId" type="java.lang.Integer">
+	            <column name="SERVICE_ID" length="10">
+	                <comment>SERVICE_ID</comment>
+	            </column>
+	        </property>
+	        <property name="tsId" type="java.lang.Integer">
+	            <column name="TS_ID" length="10">
+	                <comment>TS_ID</comment>
+	            </column>
+	        </property>
+	       <property name="networkId" type="java.lang.Integer">
+	            <column name="NETWORK_ID" length="10">
+	                <comment>NETWORK_ID</comment>
+	            </column>
+	        </property> 
+	        <property name="isPlayBack" type="java.lang.Integer">
+	            <column name="IS_PLAYBACK" length="1" />
+	        </property>
+	        <property name="summaryShort" type="java.lang.String">
+	            <column name="SUMMARYSHORT" length="100" />
+	        </property>
+
+    </class>
+</hibernate-mapping>
