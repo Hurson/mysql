@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.jws.WebService;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.avit.ads.pushads.cps.service.CpsService;
 import com.avit.ads.pushads.dtv.service.DtvService;
+import com.avit.ads.pushads.ocg.dao.OcgInfoDao;
 import com.avit.ads.pushads.ocg.service.OcgService;
+import com.avit.ads.pushads.task.bean.OcgInfo;
 import com.avit.ads.pushads.ui.service.UiService;
 import com.avit.ads.pushads.video.service.VideoPumpService;
 import com.avit.ads.util.ConstantsAdsCode;
@@ -39,6 +42,10 @@ public class UploadServiceImpl implements UploadService {
 	OcgService ocgService;
 	@Resource(name="UiService") 
 	UiService uiService;
+	
+	@Inject
+	private OcgInfoDao ocgInfoDao;
+	
 //	public String deleteFile(String fileName,String adsTypeCode) {
 //		//投放服务器本地
 //		String ret="";
@@ -313,8 +320,10 @@ public class UploadServiceImpl implements UploadService {
     */
    private List<String> getAllAreaCode(){
 	   List<String> areaList = new ArrayList<String>();
-	   List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-	   for(Ocg ocg : ocgList){
+	   //List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+	 //modify  xml-config  to DATABASE  DAO
+	   List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+	   for(OcgInfo ocg : ocgList){
 		   if(!areaList.contains(ocg.getAreaCode()) && !"0".equals(ocg.getAreaCode())){
 			   areaList.add(ocg.getAreaCode());
 		   }
