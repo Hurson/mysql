@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.avit.ads.pushads.cps.service.CpsService;
+import com.avit.ads.pushads.ocg.dao.OcgInfoDao;
 import com.avit.ads.pushads.ocg.service.OcgService;
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
 import com.avit.ads.pushads.task.bean.AdsElement;
@@ -45,6 +46,7 @@ import com.avit.ads.pushads.task.bean.ComparatorElement;
 import com.avit.ads.pushads.task.bean.ComparatorElementType;
 import com.avit.ads.pushads.task.bean.ComparatorPicMaterial;
 import com.avit.ads.pushads.task.bean.ImageInfo;
+import com.avit.ads.pushads.task.bean.OcgInfo;
 import com.avit.ads.pushads.task.bean.PicMaterial;
 import com.avit.ads.pushads.task.bean.SendAds;
 import com.avit.ads.pushads.task.bean.StartMaterial;
@@ -109,6 +111,10 @@ public class PushAdsServiceImpl implements PushAdsService {
 	UiService uiService;
 	@Inject
 	ADSurveyDAO adsurveyDAO;
+	
+	@Inject
+	private OcgInfoDao ocgInfoDao;
+	
 	@Inject
 	private FtpService ftpService;
 	@Inject
@@ -3735,8 +3741,10 @@ public class PushAdsServiceImpl implements PushAdsService {
 		   List<String> areaList = new ArrayList<String>();
 		   if(StringUtils.isEmpty(areaCode) || "0".equals(areaCode) || "152000000000".equals(areaCode)){
 			   //获取所有区域编码列表
-			   List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-			   for(Ocg ocg : ocgList){
+			   //List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+			   //modify  xml-config  to DATABASE  DAO
+			   List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+			   for(OcgInfo ocg : ocgList){
 				   if(!areaList.contains(ocg.getAreaCode()) && !"0".equals(ocg.getAreaCode())){
 					   areaList.add(ocg.getAreaCode());
 				   }
