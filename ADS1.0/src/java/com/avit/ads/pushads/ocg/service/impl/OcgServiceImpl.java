@@ -12,10 +12,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.avit.ads.pushads.ocg.dao.OcgInfoDao;
 import com.avit.ads.pushads.ocg.service.OcgService;
+import com.avit.ads.pushads.task.bean.OcgInfo;
 import com.avit.ads.util.ConstantsHelper;
 import com.avit.ads.util.InitConfig;
-import com.avit.ads.util.bean.Ocg;
 import com.avit.ads.util.message.AdsConfigJs;
 import com.avit.ads.util.message.AdsImage;
 import com.avit.ads.util.message.Channelrecomendurl;
@@ -41,13 +42,20 @@ public class OcgServiceImpl implements OcgService {
 
 	@Autowired
 	private WarnHelper warnHelper;
+	
+	@Inject
+	private OcgInfoDao ocgInfoDao;
 
 	JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
+	
+	
+	
 
 	public boolean connectFtpServer(String areaCode) {
 
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		for (Ocg ocg : ocgList) {
+		//modify  xml-config  to DATABASE  DAO
+		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+		for (OcgInfo ocg : ocgList) {
 			if (ocg.getAreaCode().equals(areaCode)) {
 				String ip = ocg.getIp();
 				int port = Integer.parseInt(ocg.getPort());
@@ -97,8 +105,10 @@ public class OcgServiceImpl implements OcgService {
 
 		String sendMsg = helper.toXML(sendMsgEntity);
 
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		for (Ocg ocg : ocgList) {
+		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//modify  xml-config  to DATABASE  DAO
+		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+		for (OcgInfo ocg : ocgList) {
 			if (ocg.getAreaCode().equals(areaCode)) {
 				String ip = ocg.getIp();
 				int port = ConstantsHelper.OCG_UDP_PORT;
@@ -136,8 +146,11 @@ public class OcgServiceImpl implements OcgService {
 		
 		String sendMsg = helper.toXML(sendMsgEntity);
 
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		for (Ocg ocg : ocgList) {
+		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//modify  xml-config  to DATABASE  DAO
+		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+		
+		for (OcgInfo ocg : ocgList) {
 			if (ocg.getAreaCode().equals("0")) {
 				String ip = ocg.getIp();
 				int port = ConstantsHelper.OCG_UDP_PORT;
@@ -215,9 +228,11 @@ public class OcgServiceImpl implements OcgService {
 		}
 
 		// 如果区域编码不为空，则只投放对应区域
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//modify  xml-config  to DATABASE  DAO
+		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 		for (int i = 0; i < ocgList.size(); i++) {
-			Ocg ocg = ocgList.get(i);
+			OcgInfo ocg = ocgList.get(i);
 			if (ocg.getAreaCode().equals(areaCode)) {
 				HttpCommon.getInstance().initHttp(ocg.getIp());
 				boolean isuploadSuccess = false;
@@ -257,9 +272,11 @@ public class OcgServiceImpl implements OcgService {
 			String targetPath) {
 
 		// 如果区域编码不为空，则只投放对应区域
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//modify  xml-config  to DATABASE  DAO
+		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 		for (int i = 0; i < ocgList.size(); i++) {
-			Ocg ocg = ocgList.get(i);
+			OcgInfo ocg = ocgList.get(i);
 			// 调用ＯＣＧ接口
 			// uploadDir(targetPath,sourcePath);
 			if (areaCode.equals(ocg.getAreaCode())) {
@@ -319,9 +336,11 @@ public class OcgServiceImpl implements OcgService {
 		}
 
 		// 如果区域编码不为空，则只投放对应区域
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//modify  xml-config  to DATABASE  DAO
+		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 		for (int i = 0; i < ocgList.size(); i++) {
-			Ocg ocg = ocgList.get(i);
+			OcgInfo ocg = ocgList.get(i);
 			if (ocg.getAreaCode().equals(areaCode)) {
 				HttpCommon.getInstance().initHttp(ocg.getIp());
 				boolean isuploadSuccess = false;
@@ -472,8 +491,10 @@ public class OcgServiceImpl implements OcgService {
 	}
 
 	public void downloadDir(String areaCode, String savePath, String serverPath) {
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		for (Ocg ocg : ocgList) {
+		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//modify  xml-config  to DATABASE  DAO
+		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+		for (OcgInfo ocg : ocgList) {
 			if (ocg.getAreaCode().equals(areaCode)) {
 				try {
 					HttpCommon.getInstance().initHttp(ocg.getIp());
@@ -493,8 +514,10 @@ public class OcgServiceImpl implements OcgService {
 	}
 
 	public void downloadFile(String areaCode, String savePath, String serverPath) {
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		for (Ocg ocg : ocgList) {
+		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//modify  xml-config  to DATABASE  DAO
+		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+		for (OcgInfo ocg : ocgList) {
 			if (ocg.getAreaCode().equals(areaCode)) {
 				try {
 					HttpCommon.getInstance().initHttp(ocg.getIp());
@@ -548,8 +571,10 @@ public class OcgServiceImpl implements OcgService {
 
 		String sendMsg = helper.toXML(uNTMessage);
 
-		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		for (Ocg ocg : ocgList) {
+		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
+		//modify  xml-config  to DATABASE  DAO
+		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+		for (OcgInfo ocg : ocgList) {
 			if (ocg.getAreaCode().equals(areaCode)) {
 				String ip = ocg.getIp();
 				int port = ConstantsHelper.OCG_UDP_PORT;
