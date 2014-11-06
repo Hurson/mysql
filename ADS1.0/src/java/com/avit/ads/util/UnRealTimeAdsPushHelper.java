@@ -20,8 +20,10 @@ public class UnRealTimeAdsPushHelper extends BaseDaoImpl{
 	
 	private Log log = LogFactory.getLog(this.getClass());
 
+	//处理过期播出单使用
 	private Map<Long, Integer> delMap = new HashMap<Long, Integer>();
 	
+	//投放播出单使用
 	private Map<Long, Integer> pushMap = new HashMap<Long, Integer>();
 	
 	private static final Integer PUSH_TIMES = 3;

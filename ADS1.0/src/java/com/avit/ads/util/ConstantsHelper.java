@@ -120,12 +120,11 @@ public class ConstantsHelper {
     
     /** UNT更新使用模板*/
     public static final String UNT_UPDATE_TEMPLATE="a";
-    /** UNT更新配置文件路径*/
-    public static final String UNT_UPDATE_ADCONFIG_PATH="adv://ocg/unt/adConfig";
-    /** UNT更新素材文件路径*/
-    public static final String UNT_UPDATE_ADPIC_PATH="adv://ocg/unt/adPic";
+    /** UNT更新配置文件路径前缀*/
+    public static final String UNT_UPDATE_PATH_PREFIX="adv://";
     
     public static final int OCG_UDP_PORT = 30005;
+    public static final int OCG_UDP_PORT_RECEIVE = 30006;
     
     public static final int OCG_UDP_RET_MSG_MAX_LENGTH = 212; 
     
@@ -146,5 +145,31 @@ public class ConstantsHelper {
     public static final String UNT_TYPE = "1";
     public static final String UI_TYPE = "2";
     public static final String RECOMMEND_TYPE = "3";
+    
+    /**
+     * UI更新操作类型
+     */
+    public static final String UI_PLAY = "play";
+    public static final String UI_DEL = "del";
+    public static final String UI_GET = "get";
+    
+    /** UI更新类型 
+	    1：开机图片initPic.iframe更新
+	    2：栏目配置文件，dataDefine.dat更新 
+	    3：非实时广告资源advResource.dat更新
+	    4：HTML文件组htmlData.dat更新 
+	    5：开机视频initVideo.ts更新
+     
+    public static final int UI_UPDATE_TYPE_PIC = 1;
+    public static final int UI_UPDATE_TYPE_ADV = 3;
+    public static final int UI_UPDATE_TYPE_VIDEO = 5;
+    
+    
+    public static final String UI_UPDATE_PATH_PIC = "initPic-c.iframe";
+    public static final String UI_UPDATE_PATH_PIC_SD = "initPic-a.iframe";
+    public static final String UI_UPDATE_PATH_ADV = "advResource-c.dat";
+    public static final String UI_UPDATE_PATH_VIDEO = "initVideo-c.ts";
+    
+    */
     
 }

@@ -40,7 +40,7 @@ public class UploadServiceImpl implements UploadService {
 	CpsService cpsService;
 	@Resource(name="OcgService") 
 	OcgService ocgService;
-	@Resource(name="UiService") 
+	// @Resource(name="UiService") 
 	UiService uiService;
 	
 	@Inject

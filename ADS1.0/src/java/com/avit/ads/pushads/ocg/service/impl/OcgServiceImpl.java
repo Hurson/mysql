@@ -53,7 +53,6 @@ public class OcgServiceImpl implements OcgService {
 
 	public boolean connectFtpServer(String areaCode) {
 
-		//modify  xml-config  to DATABASE  DAO
 		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 		for (OcgInfo ocg : ocgList) {
 			if (ocg.getAreaCode().equals(areaCode)) {
@@ -70,6 +69,13 @@ public class OcgServiceImpl implements OcgService {
 		warnHelper.writeWarnMsgToDb(errMsg);
 		return false;
 	}
+	
+	
+	public boolean connectFtpServer(String ip, int port, String username,String password) {
+		return ftpService.connectServer(ip, port, username, password);
+	}
+
+
 
 	public void deleteFtpDirFiles(String dirPath) {
 		ftpService.deleteDirFile(dirPath);
@@ -95,8 +101,7 @@ public class OcgServiceImpl implements OcgService {
 		ftpService.disConnectFtpServer();
 	}
 
-	public boolean startOcgPlay(String areaCode, String sendPath,
-			String sendType, String adsType) {
+	public boolean startOcgPlay(String areaCode, String sendPath, String sendType, String adsType) {
 
 		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
 		sendMsgEntity.setSendPath(sendPath);
@@ -106,7 +111,7 @@ public class OcgServiceImpl implements OcgService {
 		String sendMsg = helper.toXML(sendMsgEntity);
 
 		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		//modify  xml-config  to DATABASE  DAO
+
 		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 		for (OcgInfo ocg : ocgList) {
 			if (ocg.getAreaCode().equals(areaCode)) {
@@ -136,6 +141,41 @@ public class OcgServiceImpl implements OcgService {
 		}
 		return false;
 	}
+	
+	
+
+	public boolean startOcgPlayByIp(String ip, String sendPath, String sendType, String adsType) {
+		
+		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
+		sendMsgEntity.setSendPath(sendPath);
+		sendMsgEntity.setSendType(sendType);
+		sendMsgEntity.setAdsType(adsType);
+
+		String sendMsg = helper.toXML(sendMsgEntity);
+		
+		int port = ConstantsHelper.OCG_UDP_PORT;
+		byte[] retBuf = sendUdpMsg(ip, port, sendMsg);
+		if (null == retBuf || retBuf.length == 0) {
+			return false;
+		}
+		String retMsg = new String(retBuf).trim();
+		RetMsg retMsgEntity = null;
+		try {
+			retMsgEntity = (RetMsg) helper.fromXML(retMsg);
+			if ("200".equals(retMsgEntity.getCode())) {
+				logger.info("OCG投放广告成功");
+				return true;
+			} else if ("400".equals(retMsgEntity.getCode())) {
+				logger.error("OCG投放广告失败: 请求格式不对 ");
+			} else if ("401".equals(retMsgEntity.getCode())) {
+				logger.error("OCG投放广告失败： 为获取广告文件");
+			}
+		} catch (Exception e) {
+			logger.error("OCG投放广告，返回XML格式消息解析异常", e);
+		}
+		return false;
+	}
+
 
 	public boolean sendUiDesc(String areaCode, String description, String filePath) {
 		UiUpdateMsg sendMsgEntity = new UiUpdateMsg();
@@ -184,15 +224,13 @@ public class OcgServiceImpl implements OcgService {
 		byte[] retBuf = new byte[ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH]; // 接口文档定义的最大长度
 		DatagramSocket ds = null;
 		try {
-			ds = new DatagramSocket(30005);
-			byte[] data = xmlMsg.getBytes(); 
-			DatagramPacket sendPacket = new DatagramPacket(data,
-					0, data.length, InetAddress.getByName(ip), port);
-
+			int receivePort = ConstantsHelper.OCG_UDP_PORT_RECEIVE;
+			ds = new DatagramSocket(receivePort);
+			ds.setSoTimeout(10000);   // 10s超时等待
+			byte[] data = xmlMsg.getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(data, 0, data.length, InetAddress.getByName(ip), port);
 			ds.send(sendPacket);
-
-			DatagramPacket retPacket = new DatagramPacket(retBuf,
-					ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH);
+			DatagramPacket retPacket = new DatagramPacket(retBuf, ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH);
 			ds.receive(retPacket);
 		} catch (Exception e) {
 			logger.error("向OCG发送UDP请求异常", e);
@@ -540,8 +578,7 @@ public class OcgServiceImpl implements OcgService {
 	 * OCG集成UNT信息发送
 	 */
 
-	public boolean sendUNTMessageUpdate(String areaCode, int sendType,
-			Object message) {
+	public boolean sendUNTMessageUpdate(String areaCode, int sendType, Object message) {
 
 		UNTMessage uNTMessage = new UNTMessage();
 		uNTMessage.setSendType(sendType + "");
@@ -572,7 +609,7 @@ public class OcgServiceImpl implements OcgService {
 		String sendMsg = helper.toXML(uNTMessage);
 
 		//List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		//modify  xml-config  to DATABASE  DAO
+
 		List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 		for (OcgInfo ocg : ocgList) {
 			if (ocg.getAreaCode().equals(areaCode)) {
@@ -603,6 +640,62 @@ public class OcgServiceImpl implements OcgService {
 
 		return false;
 	}
+	
+	
+
+	public boolean sendUNTMessageUpdateByIp(String ip, int sendType, Object message) {
+		
+		UNTMessage uNTMessage = new UNTMessage();
+		uNTMessage.setSendType(sendType + "");
+
+		switch (sendType) {
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_WEATHER:
+				uNTMessage.setWeatherforecast((Weatherforecast) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE:
+				uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
+				uNTMessage.setAdsConfigJs((AdsConfigJs) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE:
+				uNTMessage.setAdsImage((AdsImage) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_STB:
+				uNTMessage.setSystemMaintain((SystemMaintain) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE:
+				uNTMessage.setChannelrecomendurl((Channelrecomendurl) message);
+				break;
+			default:
+				break;
+		}
+
+		String sendMsg = helper.toXML(uNTMessage);
+			
+		int port = ConstantsHelper.OCG_UDP_PORT;
+		byte[] retBuf = sendUdpMsg(ip, port, sendMsg);
+		if (null == retBuf || retBuf.length == 0) {
+			return false;
+		}
+		String retMsg = new String(retBuf).trim();
+		RetMsg retMsgEntity = null;
+		try {
+			retMsgEntity = (RetMsg) helper.fromXML(retMsg);
+			if ("200".equals(retMsgEntity.getCode())) {
+				logger.info("UNT更新信息成功");
+				return true;
+			} else if ("400".equals(retMsgEntity.getCode())) {
+				logger.error("UNT更新信息失败：请求参数格式不正确 ");
+			} else if ("401".equals(retMsgEntity.getCode())) {
+				logger.error("UNT更新信息失败");
+			}
+		} catch (Exception e) {
+			logger.error("OCG返回消息解析异常", e);
+		}
+		return false;	
+	}
+
 
 	/**
 	 * 以下全部为调试接口专用
@@ -615,30 +708,72 @@ public class OcgServiceImpl implements OcgService {
 	
 
 	public static void main(String[] args) throws Exception {
-		OcgServiceImpl ocgService = new OcgServiceImpl();
-		String ocgXml = initIntefaceDebug();
-		//String ocgXmlU = new String(ocgXml.getBytes("GBK"), "GB2312");  
 		
-		//String ip = "192.168.100.65";
-		String ip = "192.168.112.65";
-		int port = 30005;
-		System.out.println("Start Send---------------->");
-		byte[] retBuf = ocgService.sendUdpMsg(ip, port,ocgXml);
+		String ip = "192.168.6.115";
+		int port = ConstantsHelper.OCG_UDP_PORT;
+		
+		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
+		sendMsgEntity.setSendPath("/OC/ui/");
+		sendMsgEntity.setSendType("1");
+		sendMsgEntity.setAdsType("2");
+
+		JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
+		
+		String sendMsg = helper.toXML(sendMsgEntity);
+		
+		byte[] retBuf = new OcgServiceImpl().sendUdpMsg(ip, port, sendMsg);
+		
 		if (null == retBuf || retBuf.length == 0) {
-			System.out.println("没有返回数据");
-			return;
+			return ;
 		}
 		String retMsg = new String(retBuf).trim();
-		/*for(byte b :retMsg.getBytes()){
-			System.out.println(b);
-		}*/
-		//String msg = "<?xml version=\"1.0\" encoding=\"utf-8\"?><serverResponse code=\"200\" />";
-		//System.out.println(retMsg.equals(msg));	
-		//for(byte b :msg.getBytes()){
-		//	System.out.println(b);
-		//}
-		//dealIntefaceRs(msg);
-		dealIntefaceRs(retMsg);
+		RetMsg retMsgEntity = null;
+		try {
+			retMsgEntity = (RetMsg) helper.fromXML(retMsg);
+			if ("200".equals(retMsgEntity.getCode())) {
+				System.out.println("OCG投放广告成功");
+				return ;
+			} else if ("400".equals(retMsgEntity.getCode())) {
+				System.out.println("OCG投放广告失败: 请求格式不对 ");
+			} else if ("401".equals(retMsgEntity.getCode())) {
+				System.out.println("OCG投放广告失败： 为获取广告文件");
+			}
+		} catch (Exception e) {
+			System.out.println("OCG投放广告，返回XML格式消息解析异常");
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//		OcgServiceImpl ocgService = new OcgServiceImpl();
+//		String ocgXml = initIntefaceDebug();
+//		//String ocgXmlU = new String(ocgXml.getBytes("GBK"), "GB2312");  
+//		
+//		//String ip = "192.168.100.65";
+//		String ip = "192.168.112.65";
+//		int port = 30005;
+//		System.out.println("Start Send---------------->");
+//		byte[] retBuf = ocgService.sendUdpMsg(ip, port,ocgXml);
+//		if (null == retBuf || retBuf.length == 0) {
+//			System.out.println("没有返回数据");
+//			return;
+//		}
+//		String retMsg = new String(retBuf).trim();
+//		/*for(byte b :retMsg.getBytes()){
+//			System.out.println(b);
+//		}*/
+//		//String msg = "<?xml version=\"1.0\" encoding=\"utf-8\"?><serverResponse code=\"200\" />";
+//		//System.out.println(retMsg.equals(msg));	
+//		//for(byte b :msg.getBytes()){
+//		//	System.out.println(b);
+//		//}
+//		//dealIntefaceRs(msg);
+//		dealIntefaceRs(retMsg);
 		
 
 	}

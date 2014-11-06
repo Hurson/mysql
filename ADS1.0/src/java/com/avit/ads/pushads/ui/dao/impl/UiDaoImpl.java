@@ -12,7 +12,7 @@ import com.avit.ads.pushads.ui.bean.ui.UiOc;
 import com.avit.ads.pushads.ui.bean.ui.UiVersion;
 import com.avit.ads.pushads.ui.dao.UiDao;
 import com.avit.common.page.dao.impl.CommonDaoImpl;
-@Repository
+
 public class UiDaoImpl extends CommonDaoImpl implements UiDao {
 	@Resource(name = "sessionFactoryUi")//可替换为Unt的数据库
     public void setSuperSessionFactory(SessionFactory sessionFactory) {

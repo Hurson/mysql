@@ -6,14 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-
 import com.avit.ads.util.ConstantsHelper;
 import com.avit.ads.util.InitConfig;
 import com.avit.ads.util.warn.WarnHelper;
@@ -92,13 +89,18 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 	 * @throws Exception
 	 */
 	public boolean sendAFileToFtp(String localFilePath, String romteFileDir) throws Exception {
+		logger.info("发送本地文件[" + localFilePath +   "]至FTP [" + romteFileDir + "]目录..");
 		String workingDir = FtpClient.printWorkingDirectory();
 		romteFileDir = this.getPathRegular(romteFileDir);
 		if (!workingDir.equals(romteFileDir)) {
-			if (!romteFileDir.contains("/"))
+			if (!romteFileDir.contains("/")){
 				this.makeDirectory(romteFileDir);
-			else
-				this.changeDirectory(romteFileDir);
+			}
+			else{
+				if(!this.changeDirectory(romteFileDir)){
+					logger.info("切换到目录" + romteFileDir + "失败");
+				}
+			}
 		}
 		File file = new File(localFilePath);
 		InputStream is = new FileInputStream(file);
@@ -107,9 +109,8 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		try {
 			FtpClient.deleteFile(file.getName());
 		} catch (IOException e) {
-			logger.info("删除FTP上的文件【"+file.getName()+"】时发生错误：", e);
+			logger.error("删除FTP上的文件【"+file.getName()+"】时发生错误：", e);
 		}
-
 		boolean flag = FtpClient.storeFile(file.getName(), is);
 		is.close();
 		return flag;
@@ -198,18 +199,20 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 	 */
 	public void deleteDirFile(String dir){
 		
-		try {
-			FTPFile[] f = FtpClient.listFiles(dir);
-			int size  = f.length;
-			for (int i = 0; i < size; i++) {
-				FtpClient.deleteFile(dir+f[i].getName());
+		try{
+			if(FtpClient.changeWorkingDirectory(dir)){
+				FTPFile[] files = FtpClient.listFiles();
+				for(FTPFile f : files){
+					FtpClient.deleteFile(f.getName());
+				}
+			}else{
+				logger.info("切换到目录" + dir + "失败");
 			}
-		} catch (IOException e) {
-			logger.error("***** FtpServiceImpl deleteDirFile occur a exception : {} ***** ", e);
-		} catch (Exception e) {
-			logger.error("***** FtpServiceImpl deleteDirFile occur a exception : {} ***** ", e);
-		} finally {
+		}catch(Exception e){
+			logger.error("删除FTP文件出现异常",e);
 		}
+		
+		
 	}
 	
 	/**
@@ -331,7 +334,7 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 	
 	
 	public boolean downloadFile(String remoteFileName, String localFileName,String remoteDirectory,String localDirectory){
-					
+		OutputStream outputStream = null;		
 		try {
 			//切换FTP目录
 			if(!FtpClient.changeWorkingDirectory(remoteDirectory)){
@@ -347,7 +350,7 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 			}
 			
 			//下载文件
-			OutputStream outputStream = new FileOutputStream(new File(localDirectory + "/" + localFileName));	
+			outputStream = new FileOutputStream(new File(localDirectory + "/" + localFileName));	
 			if(!FtpClient.retrieveFile(remoteFileName, outputStream)){
 				logger.error("从FTP下载文件失败 " + remoteDirectory + "/" + remoteFileName);
 				return false;
@@ -356,7 +359,15 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		} catch (IOException e) {
 			logger.error("从FTP下载文件出现异常：", e);
 			return false;
-		}	
+		}finally{
+			if(null != outputStream){
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					logger.error("FTP下载文件关闭流时出现异常", e);
+				}
+			}
+		}
 		return true;
 	}
 
@@ -366,6 +377,9 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		return download(remoteFileName, localFileName, remoteDirectory, localDirectory);
 	}
 	
-	
+//	public static void main(String[] args) {
+//		String path = "./OC/unt/adPic";
+//		System.out.println(path.substring(1));
+//	}
 
 }

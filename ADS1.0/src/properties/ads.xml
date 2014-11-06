@@ -2,55 +2,56 @@
 <AdsConfig preSecond="11" >
 	<!-- 广告资源接口服务器配置 -->
 	<!-- 由于素材管理存储的是ＦＴＰ完整路径，故此出设空 -->
-	<AdResource ip="192.168.2.224" port="21" user="root" pwd="111111" adsResourcePath="/"/>
+	<AdResource ip="192.168.24.62" port="21" user="root" pwd="123456" adsResourcePath="/"/>
 	
 	<!--单向非实时广告  adsTempPath="/root/adstemp/start"-->	
 	<UnRealTimeAds preSecond="11" 
-		adsTempPath="/root/adstemp/start" 
-		adsIframeHDTempPath="/root/adstemp/start/iframehd" 
-		adsIframeSDTempPath="/root/adstemp/start/iframesd" 
-		adsaudioHDTempPath="/root/adstemp/start/hdaudio" 
-		adsaudioSDTempPath="/root/adstemp/start/sdaudio" 
+		adsTempPath="/home/adstemp/start" 
+		adsIframeHDTempPath="/home/adstemp/start/iframehd" 
+		adsIframeSDTempPath="/home/adstemp/start/iframesd" 
+		adsaudioHDTempPath="/home/adstemp/start/hdaudio" 
+		adsaudioSDTempPath="/home/adstemp/start/sdaudio" 
 		adsTargetPath="/OC/ui/" 
 		recommendTargetPath="/OC/recommend/" >
 		<Ads adsCode="01001" defaultRes="defaultstart.txt" filename="initPic-a.iframe"/>
 		<Ads adsCode="01002" defaultRes="defaultstart.txt" filename="initPic-c.iframe"/>
-		<Ads adsCode="02061" defaultRes="/root/advertres/temp/materialReal/volume_ad_2_HD.png" filename="default.iframe"/>
-		<Ads adsCode="02062" defaultRes="/root/advertres/temp/materialReal/volume_ad_2_HD.png" filename="default.iframe"/>
+		<Ads adsCode="02061" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png" filename="default.iframe"/>
+		<Ads adsCode="02062" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png" filename="default.iframe"/>
 	</UnRealTimeAds>
 	
 	<!--单向实时广告 -->
-	<!--1 导航条广告
+	<!--
+		1 导航条广告
 		2  音量条广告 
-		3  频道列表广告   0203
-		4  菜单图片广告 6张图片
-		5  菜单广告     频道收藏列表广告 0203
-		7  音频广告
-		8  菜单外框
+		5  频道切换列表广告   02031/02032
+											4  菜单图片广告 6张图片
+		3  收藏列表广告 02033/02034
+											7  音频广告
+											8  菜单外框
 		6  预告提示
 	-->
-	<RealTimeAds adsConfigFile="adConfig.js" adsTempConfigPath="/root/adstemp/realtimeconfig" 
-	             adsTargetConfigPath="/OC/unt/adConfig/" adsTempPath="/root/adstemp/realtime"
+	<RealTimeAds adsConfigFile="adConfig.js" adsTempConfigPath="/home/adstemp/realtimeconfig" 
+	             adsTargetConfigPath="/OC/unt/adConfig/" adsTempPath="/home/adstemp/realtime"
 	              adsTargetPath="/OC/unt/adPic/" untUrl="http://192.168.16.100:8899/UNT/">
-		<Ads adsCode="02011" position="4" filename="ad_1.png" defaultRes="/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png" />
-		<Ads adsCode="02012" position="4" filename="ad_1.png"  defaultRes="/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png,/root/advertres/temp/materialReal/show_ad_5.png"/>
-		<Ads adsCode="02021" position="1" filename="pop2.png" defaultRes="/root/advertres/temp/materialReal/miniepg_ad_5_HD.png"/>
-		<Ads adsCode="02022" position="1" filename="pop2.png" defaultRes="/root/advertres/temp/materialReal/miniepg_ad_5_HD.png"/>
-		<Ads adsCode="02031" position="3" filename="list_adv.jpg" defaultRes="/root/advertres/temp/materialReal/list_ad_5_HD.png"/>
-		<Ads adsCode="02032" position="3" filename="list_adv.jpg" defaultRes="/root/advertres/temp/materialReal/list_ad_5_HD.png"/>
-		<Ads adsCode="02033" position="5" filename="lmneu_ad.jpg" defaultRes="/root/advertres/temp/materialReal/lmenu_5.png"/>
-		<Ads adsCode="02034" position="5" filename="lmneu_ad.jpg" defaultRes="/root/advertres/temp/materialReal/lmenu_5.png"/>
-		<Ads adsCode="02041" position="2" filename="volume_ad_bg_1.png" defaultRes="/root/advertres/temp/materialReal/volume_ad_2_HD.png"/>
-		<Ads adsCode="02042" position="2" filename="volume_ad_bg_1.png" defaultRes="/root/advertres/temp/materialReal/volume_ad_2_HD.png"/>
+		<Ads adsCode="02011" position="4" filename="ad_1.png" defaultRes="/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png" />
+		<Ads adsCode="02012" position="4" filename="ad_1.png"  defaultRes="/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png,/home/advertres/temp/materialReal/show_ad_5.png"/>
+		<Ads adsCode="02021" position="1" filename="pop2.png" defaultRes="/home/advertres/temp/materialReal/miniepg_ad_5_HD.png"/>
+		<Ads adsCode="02022" position="1" filename="pop2.png" defaultRes="/home/advertres/temp/materialReal/miniepg_ad_5_HD.png"/>
+		<Ads adsCode="02031" position="5" filename="list_adv.jpg" defaultRes="/home/advertres/temp/materialReal/list_ad_5_HD.png"/>
+		<Ads adsCode="02032" position="5" filename="list_adv.jpg" defaultRes="/home/advertres/temp/materialReal/list_ad_5_HD.png"/>
+		<Ads adsCode="02033" position="3" filename="lmneu_ad.jpg" defaultRes="/home/advertres/temp/materialReal/lmenu_5.png"/>
+		<Ads adsCode="02034" position="3" filename="lmneu_ad.jpg" defaultRes="/home/advertres/temp/materialReal/lmenu_5.png"/>
+		<Ads adsCode="02041" position="2" filename="volume_ad_bg_1.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
+		<Ads adsCode="02042" position="2" filename="volume_ad_bg_1.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
 		
-		<Ads adsCode="02051" position="6" filename="next_event_bg.png" defaultRes="/root/advertres/temp/materialReal/volume_ad_2_HD.png"/>
-		<Ads adsCode="02052" position="6" filename="next_event_bg.png" defaultRes="/root/advertres/temp/materialReal/volume_ad_2_HD.png"/>
-		<Ads adsCode="02101" position="8" filename="tvLogo.jpg"  defaultRes="/root/advertres/temp/materialReal/volume_ad_2_HD.png"/>
-		<Ads adsCode="02102" position="8" filename="tvLogo.jpg" defaultRes="/root/advertres/temp/materialReal/volume_ad_2_HD.png"/>
+		<Ads adsCode="02051" position="6" filename="next_event_bg.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
+		<Ads adsCode="02052" position="6" filename="next_event_bg.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
+		<Ads adsCode="02101" position="8" filename="tvLogo.jpg"  defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
+		<Ads adsCode="02102" position="8" filename="tvLogo.jpg" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
 		
 	</RealTimeAds>
 	<!-- 双向实时广告    回看菜单，点播菜单 点播随片-->
-	<CpsAds preSecond="11" adsConfigFile="cpsadConfigFile.js" adsTempPath="/root/adstemp/cps" adsTargetPath="/js/ad/" adsImageTargetPath="/images/ad/">
+	<CpsAds preSecond="11" adsConfigFile="cpsadConfigFile.js" adsTempPath="/home/adstemp/cps" adsTargetPath="/js/ad/" adsImageTargetPath="/images/ad/">
 		<Ads adsCode="02071" defaultRes="volume_ad_2_HD.png"/>	
 		<Ads adsCode="02072" defaultRes="volume_ad_2_HD.png"/>	
 		<Ads adsCode="02111" defaultRes="volume_ad_2_HD.png"/>
@@ -59,36 +60,38 @@
 		<Ads adsCode="02122" defaultRes="volume_ad_2_HD.png"/>
 	</CpsAds>
 	<!-- 双向实时广告    回放菜单 -->
-	<NpvrAds preSecond="11" adsConfigFile="npvradConfigFile.js" adsTempPath="/root/adstemp/npvr" adsTargetPath="/js/ad/">
+	<NpvrAds preSecond="11" adsConfigFile="npvradConfigFile.js" adsTempPath="/home/adstemp/npvr" adsTargetPath="/js/ad/">
 		<Ads adsCode="02074" defaultRes="volume_ad_2_HD.png"/>		
 	</NpvrAds>
 	
 	<!-- CPS投放FTP地址-->
-	<Cps ip="192.168.2.224" port="21" user="root" pwd="111111" >
+	<Cps ip="192.168.6.85" port="21" user="mmsp" pwd="mmsp" >
 	</Cps>
 	<!-- NPVR投放FTP地址 -->
 	<Npvr ip="192.168.2.224" port="21" user="root" pwd="111111" >
 	</Npvr>
 	<!-- OCG投放FTP地址 -->
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="0" nid="20480" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152010000000" nid="20481" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152020000000" nid="20482" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152030000000" nid="20483" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152040000000" nid="20484" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152050000000" nid="20485" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152060000000" nid="20486" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152070000000" nid="20487" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152080000000" nid="20488" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152090000000" nid="20489" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152100000000" nid="20490" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152110000000" nid="20491" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152120000000" nid="20492" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152130000000" nid="20493" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152140000000" nid="20494" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152150000000" nid="20495" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152160000000" nid="20496" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152170000000" nid="20497" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
-	<Ocg ip="192.168.16.105" port="21" user="root" pwd="111111" areaCode="152180000000" nid="20498" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.6.115" port="21" user="ocg" pwd="111111" areaCode="152010000000" nid="20480" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<!--  
+	<Ocg ip="192.168.6.114" port="21" user="ocg" pwd="111111" areaCode="152010000000" nid="20481" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152020000000" nid="20482" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152030000000" nid="20483" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152040000000" nid="20484" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152050000000" nid="20485" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152060000000" nid="20486" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152070000000" nid="20487" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152080000000" nid="20488" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152090000000" nid="20489" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152100000000" nid="20490" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152110000000" nid="20491" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152120000000" nid="20492" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152130000000" nid="20493" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152140000000" nid="20494" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152150000000" nid="20495" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152160000000" nid="20496" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152170000000" nid="20497" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	<Ocg ip="192.168.2.224" port="21" user="root" pwd="111111" areaCode="152180000000" nid="20498" untUrl="http://192.168.16.100:8899/UNT/"></Ocg>
+	-->
 	<!--UNT  UI  -->
 	<HttpServer ip="192.168.102.104" port="21" user="root" pwd="111111" adsTempPath="/root/adstemp/start" adsTargetPath="httpPath" httpurl="http://www.baidu.com">
 	</HttpServer>

@@ -18,8 +18,8 @@ public class ConstantsAdsCode {
 		
 	public static final boolean WIN= false;
 	//广告资源压缩目录 
-	public static final String ADVRESOURCE_HD_PATH = "advResource-c" + File.separator+"htmldata"+File.separator+"advresource";
-	public static final String ADVRESOURCE_SD_PATH = "advResource-a" + File.separator+"htmldata"+File.separator+"advresource";
+	public static final String ADVRESOURCE_HD_PATH = "advResource-c" + "/" +"htmldata"+"/"+"advresource";
+	public static final String ADVRESOURCE_SD_PATH = "advResource-a" + "/"+"htmldata"+"/"+"advresource";
 	//广告开机画面压缩 
 	public static final String START_RESOURCE_PATH = "startpic";
 	
@@ -52,6 +52,15 @@ public class ConstantsAdsCode {
 	public static final String HOT_RECOMMEND_JS="keyEvent.js";//播发文件js
 	public static final String HOT_RECOMMEND_HTML="index.htm";//播发文件页面
 	
+	//直播下排广告默认素材名称
+	public static final String LIVE_UNDER_HD_FILE1 = "initImgAd0.jpg";
+	public static final String LIVE_UNDER_HD_FILE2 = "initImgAd1.jpg";
+	public static final String LIVE_UNDER_HD_FILE3 = "initImgAd2.jpg";
+	
+	public static final String LIVE_UNDER_HD_FILE_PREFIX = "initImgAd";
+	public static final String LIVE_UNDER_HD_FILE_POSTFIX = ".jpg"; 
+			
+	
 	//单向字幕
 	public static final String PUSH_MESSAGE = "0501";
 	//单向链接
@@ -75,6 +84,10 @@ public class ConstantsAdsCode {
 	//音频背景广告
 	public static final String PUSH_FREQUENCE_SD = "02061";
 	public static final String PUSH_FREQUENCE_HD = "02062";
+	
+	//直播下排广告
+	public static final String PUSH_LIVE_UNDER_HD = "01012";
+	
 	//单向EPG
 	public static final String PUSH_EPG = "0403";
 	//当前后续信息菜单广告

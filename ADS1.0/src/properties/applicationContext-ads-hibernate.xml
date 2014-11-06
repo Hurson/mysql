@@ -91,6 +91,7 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>com.avit.ads.util.bean.WarnInfo</value>
+				<value>com.avit.ads.pushads.uix.domain.UixVersion</value>
 			</list>
 		</property>
 	</bean>

@@ -14,9 +14,11 @@
 	<!-- 数据库配置session-->
 	<import resource="applicationContext-ads-hibernate.xml" />
 	<import resource="classpath*:**/cxf-Context.xml" />
+	<!--  
 	<import resource="applicationContext-ui-hibernate.xml" />
 	<import resource="applicationContext-nit-hibernate.xml" />
-	<import resource="applicationContext-jms.xml"/>
+	-->
+	<import resource="applicationContext-jms.xml"/> 
    <import resource="applicationContext-job.xml"/>
    
 	<!-- 

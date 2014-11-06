@@ -8,6 +8,11 @@ public interface OcgService {
 	public boolean connectFtpServer(String areaCode);
 	
 	/**
+	 * 建立FTP连接
+	 */
+	public boolean connectFtpServer(String ip, int port, String username, String password);
+	
+	/**
 	 * 删除目录下所有文件
 	 */
 	public void deleteFtpDirFiles(String dirPath);
@@ -41,6 +46,7 @@ public interface OcgService {
 	 */
 	public boolean startOcgPlay(String areaCode, String sendPath, String sendType, String adsType);
 	
+	public boolean startOcgPlayByIp(String ip, String sendPath, String sendType, String adsType);
 	
 	public boolean sendUiDesc(String areaCode, String description, String filePath);
 	
@@ -145,6 +151,8 @@ public interface OcgService {
 	 * @return
 	 */
 	public boolean sendUNTMessageUpdate(String areaCode,int sendType,Object message);
+	
+	public boolean sendUNTMessageUpdateByIp(String ip,int sendType,Object message);
 	
 	
 	

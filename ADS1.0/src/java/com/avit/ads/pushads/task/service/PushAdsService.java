@@ -101,6 +101,9 @@ public interface PushAdsService {
 	public void sendSdAudioAds(Date startTime);
 	
 	public void sendHdRecomendAds(Date startTime);
+	
+	//音频背景和直播下排广告捆绑处理
+	public void sendAdResourceAds(Date startTime);
 	/**
 	 * 发送音频广告
 	 * */

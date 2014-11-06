@@ -9,6 +9,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
@@ -18,6 +19,10 @@ import com.avit.common.page.dao.impl.CommonDaoImpl;
 @Repository
 public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 
+	public HibernateTemplate getTemplate(){
+		return this.getHibernateTemplate();
+	}
+	
 	public List<AdPlaylistGis> queryStartAds(String adsTypeCode,String state,Date startTime)
 	{
 		// TODO Auto-generated method stub

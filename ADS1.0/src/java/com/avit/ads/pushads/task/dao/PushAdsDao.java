@@ -3,6 +3,8 @@ package com.avit.ads.pushads.task.dao;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.orm.hibernate3.HibernateTemplate;
+
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
 import com.avit.ads.util.bean.Ads;
 
@@ -12,6 +14,8 @@ import com.avit.ads.util.bean.Ads;
  */
 public interface PushAdsDao {
     
+	public HibernateTemplate getTemplate();
+	
 	/**
 	 * 查询待发送播出单.
 	 *
@@ -57,4 +61,6 @@ public interface PushAdsDao {
 	 * @param flag 状态；0为未投放，1为已投放，2为投放失败，3为取消投放 4投放完成
 	 */
 	void updateAdsFlag(String adsids,String flag);
+	
+	
 }

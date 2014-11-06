@@ -12,7 +12,7 @@ import com.avit.ads.pushads.ui.bean.nit.Nwconitdesc;
 import com.avit.ads.pushads.ui.bean.ui.UiVersion;
 import com.avit.ads.pushads.ui.dao.NitDao;
 import com.avit.common.page.dao.impl.CommonDaoImpl;
-@Repository
+
 public class NitDaoImpl  extends CommonDaoImpl implements NitDao {
 	@Resource(name = "sessionFactoryNit")//
     public void setSuperSessionFactory(SessionFactory sessionFactory) {

@@ -26,7 +26,7 @@ import com.avit.ads.util.ConstantsAdsCode;
 import com.avit.ads.util.InitConfig;
 import com.avit.ads.util.bean.WarnInfo;
 import com.avit.ads.util.warn.WarnHelper;
-@Service("UiService")
+
 public class UiServiceImpl implements UiService {
 	private Log log = LogFactory.getLog(this.getClass());
 	@Inject

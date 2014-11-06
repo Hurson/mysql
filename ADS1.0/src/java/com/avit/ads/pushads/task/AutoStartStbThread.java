@@ -49,16 +49,24 @@ public class AutoStartStbThread extends Thread {
 				pushAdsService.sendStartHdPicAds(loopDate);
 				
 				//投放标清开机图片广告
-				pushAdsService.sendStartSdPicAds(loopDate);
+				//pushAdsService.sendStartSdPicAds(loopDate);
+				
+				// 高清音频背景和直播下排广告绑定投放
+				pushAdsService.sendAdResourceAds(loopDate);
 				
 				//投放高清广播收听背景广告
-				pushAdsService.sendHdAudioAds(loopDate);
+				//pushAdsService.sendHdAudioAds(loopDate);
 				
 				//投放标清广播收听背景广告
-				pushAdsService.sendSdAudioAds(loopDate);
+				//pushAdsService.sendSdAudioAds(loopDate);
+				
+				//高清直播下排广告
+				//pushAdsService.sendHdLiveUnderAds(loopDate);
+				
+				
 				
 				//投放高清首页热点推荐广告
-				pushAdsService.sendHdRecomendAds(loopDate);
+//				pushAdsService.sendHdRecomendAds(loopDate);
 				
 				//投放开机广告
 //				pushAdsService.sendStartStbAds(loopDate,InitConfig.getAdsConfig().getUnRealTimeAds().getAdsList().get(0).getAdsCode());

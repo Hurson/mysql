@@ -34,7 +34,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     
     @Resource(name = "sessionFactory")
     public void setSuperSessionFactory(SessionFactory sessionFactory) {
-        super.setSessionFactory(sessionFactory);
+        super.setSessionFactory(sessionFactory); 
     }
     
 	public Object load(final Class entity, final Serializable id) {
