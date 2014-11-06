@@ -2285,7 +2285,11 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 //            sssspath = viewPath+"/"+videoMeta.getName();
 //        }
 //        
-//        request.setAttribute("viewPath", viewPath);
+//      request.setAttribute("viewPath", viewPath);
+	    
+	    String imagePreviewLocation = request.getParameter("imagePreviewLocation"); 
+	    request.setAttribute("imagePreviewLocation", imagePreviewLocation); //传递下图片的预览位置
+	    
         String imagePreviewName = request.getParameter("imagePreviewName");
         String videoPreviewName = request.getParameter("videoPreviewName");
         String zipImagePreviewName = request.getParameter("zipImagePreviewName");

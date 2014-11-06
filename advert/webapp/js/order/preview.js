@@ -33,6 +33,49 @@ function preview(backgroundPath,coordinate,widthHeight){
 	});
 }
 
+function previewMaterial(previewValue,pollIndex){
+	
+	var coordinateStr = previewValue.split("_")[6];	
+	var coordinates = coordinateStr.replace(/(^\s+)|(\s+$)/g,"").split(",");
+	var coordinate;
+    if(pollIndex <= coordinates.length){
+    	coordinate = coordinates[pollIndex-1].split('*');
+    }else{
+    	coordinate = coordinates[0].split('*');
+    }
+	
+	var backgroundPath = previewValue.split("_")[5];
+	
+	var widthHeight = previewValue.split("_")[7];
+	
+	/**为页面预览区域赋值*/
+	//alert("come");
+	var size = widthHeight.split('*');
+	width = size[0];
+	height = size[1];
+	//var coor = coordinateStr.split('*');
+	$("#pImage").attr("width",426).attr("height",240);
+	$("#pImage").attr("src",getContextPath()+"/"+backgroundPath);
+	$("#mImage").attr("width",width).attr("height",height);
+	$("#mImage,#video").css({
+		width:width+"px",
+		height:height+"px",
+		position:'absolute',
+		left: coordinate[0]+"px", 
+		top: coordinate[1]+"px" 
+	});
+	$("#video").hide();
+	
+	$("#text").css({
+		position:'absolute',
+		width:width+"px",
+		height:height+"px",
+		left:coordinate[0]+"px",
+		top:coordinate[1]+"px",
+		'z-index':1
+	});
+}
+
 /**
  * 显示素材
  * @param id

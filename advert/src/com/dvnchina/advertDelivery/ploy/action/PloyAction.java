@@ -532,6 +532,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 			if (ploy.getPositionId()==13 || ploy.getPositionId()==14   	//广播背景
 					|| ploy.getPositionId()==1 || ploy.getPositionId()==2   //开机图片
 					|| ploy.getPositionId()==45 || ploy.getPositionId()==46   //开机视频
+					|| ploy.getPositionId()==47 || ploy.getPositionId()==48   //直播下排
 					|| ploy.getPositionId() == 44)   //热点推荐
 			{
 				if (areaChannelUiBean!=null && areaChannelUiBean.getUserArea()!=null && !areaChannelUiBean.getUserArea().equals(""))

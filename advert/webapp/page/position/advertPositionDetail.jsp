@@ -71,20 +71,25 @@
 			$$("coordinate").focus();
     		return false;
 		}else{
-			var coordinates = $$("coordinate").value.split("*");
-			if(coordinates.length != 2 || !isNumber(coordinates[0]) || !isNumber(coordinates[1])){
-				alert("广告位坐标格式不正确！");
-				$$("coordinate").focus();
-	    		return false;
-			}
+			var mutilCoordinates = $$("coordinate").value.split(",");
+			var mutilCoordinateSize = mutilCoordinates.length;
+			for(var i = 0; i < mutilCoordinateSize; i++){
+				var coordinates = mutilCoordinates[i].split("*");
+				if(coordinates.length != 2 || !isNumber(parseInt(coordinates[0])) || !isNumber(parseInt(coordinates[1]))){
+					alert("广告位坐标格式不正确！");
+					$$("coordinate").focus();
+		    		return false;
+				}
+			 }
 		}
-
+			
+/*
 		if($$("coordinate").value.length>20){
 			alert("广告位坐标必须小于20个字节！");
 			$$("coordinate").focus();
     		return false;
 		}
-
+ */
 		if(!isEmpty($$("widthHeight").value)){
 			var size = $$("widthHeight").value.split("*");
 			if(size.length != 2 || !isNumber(size[0]) || !isNumber(size[1])){
@@ -231,7 +236,7 @@
 			<td align="right" >广告位坐标：</td>
 			<td>
 				<input id="coordinate" name="advertPosition.coordinate" value="${advertPosition.coordinate}" type="text" />
-				<span class="required">格式：80*80(坐标x*y)</span>
+				<span class="required">格式：x1*y1,x2*y2,...</span>
 			</td>
 			<td align="right" width="12%"> 宽*高：</td>
 			<td>

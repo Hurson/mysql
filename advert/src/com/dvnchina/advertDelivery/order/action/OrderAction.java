@@ -176,7 +176,7 @@ public class OrderAction extends BaseAction{
 			}else if(ploy.getPositionId().intValue()==1 || ploy.getPositionId().intValue()==2||
 					ploy.getPositionId().intValue()==3 || ploy.getPositionId().intValue()==4||
 					ploy.getPositionId().intValue()==45 || ploy.getPositionId().intValue()==46
-					//||ploy.getPositionId().intValue()==13 || ploy.getPositionId().intValue()==14
+					||ploy.getPositionId().intValue()==47 || ploy.getPositionId().intValue()==48
 					){
 				return "start";
 			}else if(ploy.getPositionId().intValue()==23 || ploy.getPositionId().intValue()==24){
@@ -822,10 +822,17 @@ public class OrderAction extends BaseAction{
 				
 			}
 			else{
-				//菜单图片，绑定了素材的地市必须选齐6张素材
-				if("02011".equals(advertPosition.getPositionCode()) || "02012".equals(advertPosition.getPositionCode())){
+				//菜单图片，绑定了素材的地市必须选齐6张素材 （直播下排广告占用 3张图片）
+//				if("02011".equals(advertPosition.getPositionCode()) || "02012".equals(advertPosition.getPositionCode())){
+//					if(!orderService.validateLoopData(orderCode)){
+//						renderText("绑定了素材的地区必须绑定6张素材！");
+//						return;
+//					}
+//					
+//				}
+				if("01011".equals(advertPosition.getPositionCode()) || "01012".equals(advertPosition.getPositionCode())){
 					if(!orderService.validateLoopData(orderCode)){
-						renderText("绑定了素材的地区必须绑定6张素材！");
+						renderText("绑定了素材的地区必须绑定3张素材！");
 						return;
 					}
 					
@@ -2031,7 +2038,7 @@ public class OrderAction extends BaseAction{
 				returnStr = "area";
 				pageReleaseLocation = ployService.queryCityAreaList(null, 1, 100);
 				page = orderService.queryTheAreaResourceList(omRelTmp, order.getPloyId(),page.getPageNo(), page.getPageSize());
-			}else if(positionId == 3 || positionId == 4 ){
+			}else if(positionId == 3 || positionId == 4 || positionId == 47 || positionId == 48){
 				//轮询菜单图片广告位（菜单图片广告位）
 				pageReleaseLocation = ployService.queryCityAreaList(null, 1, 100);
 				returnStr = "loopMenu";
@@ -2120,7 +2127,7 @@ public class OrderAction extends BaseAction{
 //						list.remove(orderMaterialRelationTmp);
 //					}
 				//}
-			}else if(positionId == 3 || positionId == 4 ){
+			}else if(positionId == 3 || positionId == 4 || positionId == 47 || positionId == 48){
 				//轮询菜单图片广告位（菜单图片广告位）
 				pageReleaseLocation = ployService.queryAreaList(null, 1, 100);
 				returnStr = "loopMenuDetail";
@@ -2224,6 +2231,13 @@ public class OrderAction extends BaseAction{
 			advertPosition = positionService.getAdvertPosition(positionId);
 			orderService.loopMenuPosition(orderCode, ployId, advertPosition.getLoopCount());
 		}
+		
+		//多张不同位置图片广告位（菜单下排广告，借用了轮询的属性）
+		else if(positionId==47 || positionId == 48){
+			advertPosition = positionService.getAdvertPosition(positionId);
+			orderService.multiposition(orderCode, ployId, advertPosition.getLoopCount());
+		}
+		
 		//点播随片图片广告
 		else if(positionId == 25 || positionId == 26){
 			orderService.insertFollowOrderMateRelTmp(orderCode, ployId,positionId);
@@ -2331,6 +2345,7 @@ private void insertOrderMateRelTmp2(String orderCode, int ployId, int positionId
 		//System.out.println(resourcevalue);
 		getRequest().setAttribute("previewValue", previewValue);
 		getRequest().setAttribute("resourceValue", resourceValue);
+		getRequest().setAttribute("pollIndex", getRequest().getParameter("pollIndex"));
 		return "preview";		
 	}
 	

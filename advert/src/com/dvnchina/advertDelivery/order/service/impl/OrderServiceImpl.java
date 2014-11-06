@@ -1404,6 +1404,13 @@ public class OrderServiceImpl implements OrderService{
 		orderDao.loopMenuPosition2(orderCode, ployId, loops);
 	}
 	
+	/*
+	 * 一个广告有多张图片，显示在不同位置
+	 */
+	public void multiposition(String orderCode, int ployId, int positionCount) {
+		orderDao.multiposition(orderCode, ployId, positionCount);
+	}
+
 	/**
 	 * 保存订单和素材临时数据
 	 * @param ids
@@ -1471,7 +1478,7 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	/*
-	 *校验菜单图片是否6张轮询素材都已经绑定好了
+	 *校验菜单图片是否6张轮询素材都已经绑定好了,县网无此广告位（3张图片），直播下排广告占用此方法
 	 */
 	@Override
 	public boolean validateLoopData(String orderCode) {
@@ -1479,7 +1486,7 @@ public class OrderServiceImpl implements OrderService{
 		if(null != resultList){
 			for(Object obj : resultList){
 				int num = ((BigInteger)obj).intValue();
-				if(6 != num){
+				if(3 != num){   // 3 可以从广告位属性查出，此为简单实现
 					return false;
 				}
 			}

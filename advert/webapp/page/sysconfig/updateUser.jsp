@@ -221,7 +221,7 @@
 </div> 
 <table cellspacing="1" class="searchList" align="left">
 	<tr class="title">
-		<td colspan="4">修改用户信息</td>
+		<td colspan="4">修改用户信息xxx</td>
 	</tr>
 	<tr>
 		<td align="right"><span class="required">*</span>用户名称：</td>

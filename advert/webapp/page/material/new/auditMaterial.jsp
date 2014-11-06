@@ -83,11 +83,22 @@
 	 */
 	function preview(positionJson){
 		var selPosition = eval(positionJson);
+		
+		document.getElementById("coordinateStr").value = selPosition.coordinate.replace(/(^\s+)|(\s+$)/g,"");
+		
+		if(selPosition.isLoop == 1){
+			var locationCount = parseInt(selPosition.loopCount);
+			for(var i=2; i<=locationCount; i++){
+				document.getElementById("picLocation").options.add(new Option(i+"",i+""));
+			}
+			document.getElementById("picLocation").removeAttribute("disabled");
+		}
+		
 		/**为页面预览区域赋值*/
 		var size = selPosition.widthHeight.split('*');
 		width = size[0];
 		height = size[1];
-		var coordinate = selPosition.coordinate.split('*');
+		var coordinate = selPosition.coordinate.replace(/(^\s+)|(\s+$)/g,"").split(",")[0].split('*');
 		//$("#pImage").attr("width",426).attr("height",240);
 		$("#pImage1").attr("width",426).attr("height",240);
 	    $("#pImage2").attr("width",426).attr("height",240);
@@ -120,6 +131,41 @@
 		top:coordinate[1]+"px",
 		'z-index':1
 	});
+	}
+	
+	function priviewLocationChange(){
+
+		var imagePreviewLocation = document.getElementById('picLocation').value;
+		var location = parseInt(imagePreviewLocation); 
+	    var coordinates = document.getElementById('coordinateStr').value.split(",");
+	    
+	    var coordinate;
+	    if(location <= coordinates.length){
+	    	coordinate = coordinates[location-1].split('*');
+	    }else{
+	    	coordinate = coordinates[0].split('*');
+	    }
+		
+		$("#mImage,#video").css({
+			left: coordinate[0]+"px", 
+			top: coordinate[1]+"px" 
+		});
+		
+		$("#mImage4").css({
+			left: coordinate[0]+"px", 
+			top: coordinate[1]+"px" 
+		});
+		
+		$("#text").css({
+			left:coordinate[0]+"px",
+			top:coordinate[1]+"px",
+			
+		});
+		$("#text2").css({
+			left:coordinate[0]+"px",
+			top:coordinate[1]+"px",
+			
+		});
 	}
 
 	/**
@@ -298,8 +344,8 @@
 						     </td>
 		                  -->
 		                     
-		                     <td width="15%" align="right"><span class="required">*</span>选择广告位：</td>
-		                     <td width="35%" colspan="3">	                
+		                     <td align="right"><span class="required">*</span>选择广告位：</td>
+		                     <td >	                
 		                         <input id="material.advertPositionId" name="material.advertPositionId" value="${material.advertPositionId}" type="hidden"  readonly="readonly"/>			                 	
 				                 ${material.advertPositionName}	      
 				                 
@@ -308,6 +354,13 @@
 		                         <input id="materialType" name="materialType" type="hidden" value="${material.resourceType}"/>
 		                         <input id="material.resourceTypeTemp" name="material.resourceTypeTemp" type="hidden" />	                         
 		                         <input id="material.contractId" name="material.contractId" type="hidden" value="${material.contractId}"/>          
+		                    	 <input id="coordinateStr" type="hidden"/> 
+		                     </td>
+		                     <td align="right">素材位置：</td>
+		                     <td >
+		                     	 <select disabled="disabled" id="picLocation"  name="picLocation" onchange="javascript:priviewLocationChange();">
+								      <option value="1">1</option>
+							    </select>
 		                     </td>
 		                 </tr>		           
 		                 <tr>

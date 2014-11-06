@@ -33,10 +33,6 @@ UPDATE t_advertposition SET IS_ALLTIME = 0 WHERE ID IN(17, 15, 16, 24, 25, 26, 4
 
 UPDATE t_advertposition SET IS_ALLTIME = 1 WHERE ID IN(46);  -- 开机视频是全时段的
 
-
--- 广播背景改非全时段
-UPDATE t_advertposition SET IS_ALLTIME = 0 WHERE ID IN(13, 14);
-
 -- 在订单和素材关系表t_order_mate_rel添加开始时间段、结束时间段、区域ID、频道组ID
 
 alter table t_order_mate_rel add start_time VARCHAR(10) 

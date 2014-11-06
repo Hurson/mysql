@@ -83,7 +83,7 @@
 				<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>
 					onmouseout="this.style.backgroundColor=''" onmouseover="this.style.backgroundColor='#fffed9'">
 					<td align="center">
-						<input type="radio"	name="positionId" value="${position.id}_${position.positionName}_${position.validStart}_${position.validEnd}_${position.deliveryMode}_${position.backgroundPath}_${position.coordinate}_${position.widthHeight}" 
+						<input type="radio"	name="positionId" value="${position.id}_${position.positionName}_${position.validStart}_${position.validEnd}_${position.deliveryMode}_${position.backgroundPath}_${position.coordinate}_${position.widthHeight}"                                                
 						<c:if test="${order.positionId == position.id}">checked</c:if> />
 					</td>
 					<td><c:out value="${position.positionName}" /></td>

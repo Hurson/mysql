@@ -1630,7 +1630,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 	}
 	public List<AreaResource> getSelectMaterialJsonByOrderId(String id){
 		//String sql = "select t.MATE_ID,t.start_time,t.end_time,t.channel_group_id from t_order_mate_rel_tmp t where t.MATE_ID is not null and t.ORDER_CODE=? order by t.MATE_ID ";
-		String sql = "select t.MATE_ID,t.start_time,t.end_time,t.channel_group_id,(select r.RESOURCE_NAME from t_resource r where r.ID=t.mate_id) resourceName  from t_order_mate_rel_tmp t where t.MATE_ID is not null and t.ORDER_CODE=? order by t.MATE_ID ";
+		String sql = "select t.MATE_ID,t.start_time,t.end_time,t.channel_group_id,(select r.RESOURCE_NAME from t_resource r where r.ID=t.mate_id) resourceName, t.POLL_INDEX from t_order_mate_rel_tmp t where t.MATE_ID is not null and t.ORDER_CODE=? order by t.MATE_ID ";
 		List list = this.getDataBySql(sql,new Object[]{id.trim()});
 		List<AreaResource> areaResourceList=new ArrayList<AreaResource>();
 		if(list != null && list.size()>0){
@@ -1646,6 +1646,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 					m.setEndTime((String)obj[2]);
 					m.setChannelGroupId(toInteger(obj[3]));
 					m.setResourceName((String)obj[4]);
+					m.setPollIndex(toInteger(obj[5]));
 					areaResourceList.add(m);
 				}
 				preResourceId = toInteger(obj[0]);
@@ -3639,6 +3640,52 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		}
 	}
 	
+	
+	public void multiposition(String orderCode, int ployId, int positionCount) {
+		//删除订单和素材临时关系数据
+		delOrderMateRelTmp(orderCode);
+		
+		//新增订单和素材临时关系数据
+		StringBuffer insertSql = new StringBuffer();
+		insertSql.append("insert into t_order_mate_rel_tmp(order_code,mate_id,play_location,is_hd,poll_index,precise_id,");
+		insertSql.append("type,start_time,end_time,area_code,channel_group_id)");
+		insertSql.append(" select o.order_code,rel.MATE_ID,rel.PLAY_LOCATION,rel.is_hd,rel.poll_index,");
+		insertSql.append("rel.precise_id,rel.TYPE,rel.start_time,rel.end_time,rel.area_code,rel.channel_group_id ");
+		insertSql.append("from t_order_mate_rel rel, t_order o ");
+		insertSql.append(" where rel.order_id=o.id and o.order_code='").append(orderCode).append("'");
+		this.executeBySQL(insertSql.toString(), null);
+		
+		
+		List<PloyBackup> ployList= ployDao.getPloyListByPloyID(ployId);
+		boolean isQuanSheng=false;
+		if(null != ployList && ployList.size() > 0){
+			if(152000000000L == ployList.get(0).getAreaId() || 0L == ployList.get(0).getAreaId()){
+				isQuanSheng=true;
+			}
+		}
+		
+		//添加区域中的数据到订单和素材临时关系表
+		for(int i=1;i<=positionCount;i++){
+			StringBuffer insertSql2 =  new StringBuffer();
+			insertSql2.append("insert into t_order_mate_rel_tmp(order_code,poll_index,precise_id,type,start_time,end_time,area_code,channel_group_id)");
+			insertSql2.append(" select '").append(orderCode).append("',").append(i).append(",p.id,1,p.START_TIME,p.END_TIME,ra.AREA_CODE,p.CHANNEL_GROUP_ID");
+			insertSql2.append(" from t_ploy p,t_release_area ra ");
+			insertSql2.append(" where p.PLOY_ID= ").append(ployId);
+			//选择了地市，则只插入该地市的，否则默认全省，则插入18个地市，
+			if(!isQuanSheng){
+				insertSql2.append(" and p.AREA_ID=ra.AREA_CODE");
+			}
+			insertSql2.append(" and ra.AREA_CODE <> '152000000000' ");
+			insertSql2.append(" and not exists (select * from t_order_mate_rel rel,t_order o where rel.order_id=o.id");
+			insertSql2.append(" AND (rel.start_time = p.START_TIME 	AND rel.end_time = p.END_TIME " +
+					"  or (rel.start_time = '00:00:00' and rel.end_time = '23:59:59' and p.START_TIME='0' and p.END_TIME='0'))" +
+					"and rel.area_code=ra.AREA_CODE");
+			insertSql2.append(" and rel.channel_group_id=p.CHANNEL_GROUP_ID and rel.precise_id = p.id and rel.poll_index=").append(i);
+			insertSql2.append(" and o.ORDER_CODE='").append(orderCode).append("')");
+			this.executeBySQL(insertSql2.toString(), null);
+		}
+	}
+
 	/**
 	 * 添加回看回放暂停广告订单和素材临时关系数据
 	 * @param orderCode

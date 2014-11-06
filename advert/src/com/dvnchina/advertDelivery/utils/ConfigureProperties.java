@@ -11,15 +11,22 @@ public class ConfigureProperties {
 
 	private ConfigureProperties(){
 		f=new File(this.getClass().getClassLoader().getResource("configuration.properties").getFile());
-		FileInputStream fis;
+		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(f);
 			p=new Properties();
 			p.load(fis);
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				if(null != fis){
+					fis.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -28,7 +35,7 @@ public class ConfigureProperties {
 		return cp;
 	}
 	public void put(Object key,Object value){
-		FileOutputStream outs;
+		FileOutputStream outs = null;
 		try {
 			outs = new FileOutputStream(f);
 			p.put(key, value);
@@ -36,8 +43,15 @@ public class ConfigureProperties {
 			
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				if(null != outs){
+					outs.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

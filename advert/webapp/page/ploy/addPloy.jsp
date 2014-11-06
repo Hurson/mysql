@@ -921,6 +921,14 @@ function addselectContract() {
 						document.getElementById("selectedspan14").style.display="";     //投放区域
 						
 					}
+					
+					//直播下排广告
+					 if (postions[i].positionCode=='01011'|| postions[i].positionCode=='01012')
+					{
+						document.getElementById("selectedspan14").style.display="";     //投放区域
+					}
+					
+					
 					 //推荐广告位
 					 if(postions[i].positionCode=='02083'){
 						document.getElementById("selectedspan14").style.display=""; 

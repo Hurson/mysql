@@ -13,6 +13,7 @@ public class AreaResource {
 	private Integer resourceId;
 	private String resourceName;
 	private String contain;
+	private Integer pollIndex;
 	public final Integer getId() {
 		return id;
 	}
@@ -80,4 +81,11 @@ public class AreaResource {
 	public final void setContain(String contain) {
 		this.contain = contain;
 	}
+	public Integer getPollIndex() {
+		return pollIndex;
+	}
+	public void setPollIndex(Integer pollIndex) {
+		this.pollIndex = pollIndex;
+	}
+	
 }

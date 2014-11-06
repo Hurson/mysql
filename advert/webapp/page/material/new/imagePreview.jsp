@@ -41,15 +41,28 @@ var width = 0;
 /** 高度 */
 var height = 0;
 
-function init(positionJson){
+function init(positionJson,imagePreviewLocation){
+  
+  
    var selPosition = eval(positionJson);
+   
+    var location = parseInt(imagePreviewLocation); 
+    var coordinates = selPosition.coordinate.replace(/(^\s+)|(\s+$)/g,"").split(",");
+    
+    var coordinate;
+    if(location <= coordinates.length){
+    	coordinate = coordinates[location-1].split('*');
+    }else{
+    	coordinate = coordinates[0].split('*');
+    }
+    
 	/**为页面预览区域赋值*/
 	var size = selPosition.widthHeight.split('*');
 	
 	width = size[0];
 	height = size[1];
 	//alert(getContextPath()+"/"+selPosition.backgroundPath);
-	var coordinate = selPosition.coordinate.split('*');
+	//var coordinate = selPosition.coordinate.split('*');
 	$("#pImage").attr("width",426).attr("height",240);	
 	//$("#pImage").attr("src",getContextPath()+"/"+selPosition.backgroundPath);
 	//$("#pImage").attr("src",getContextPath()+"/position.jpg");
@@ -82,10 +95,10 @@ function getContextPath() {
 
 </head>
 
-<body class="mainBody" onload='init(${positionJson});'>
+<body class="mainBody" onload='init(${positionJson},${imagePreviewLocation});'>
 
 						   
-						   <input id="positionJson" name="positionJson" type="hidden" value="${positionJson}"/>
+						   <input id="positionJson" name="positionJson" type="hidden" value="${positionJson}"/> <!-- hidden -->
 						   <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 						     position: relative;">
 								<img id="pImage" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 

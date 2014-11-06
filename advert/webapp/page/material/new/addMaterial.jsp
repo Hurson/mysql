@@ -120,8 +120,11 @@ function imagePreview2(imagePreviewName) {
 	 
 	 //图片批量预览另一种方式
 	function imagePreview(imagePreviewName){
+
 	    var advertPositionId =document.getElementById('material.advertPositionId').value;
-		var url = "getAdvertPosition.do?advertPositionId="+advertPositionId+"&imagePreviewName="+imagePreviewName;
+	    var imagePreviewLocation = document.getElementById("picLocation").value;
+
+		var url = "getAdvertPosition.do?advertPositionId="+advertPositionId+"&imagePreviewName="+imagePreviewName+"&imagePreviewLocation="+imagePreviewLocation;
 		window.showModalDialog(url, window, "dialogHeight=240px;dialogWidth=426px;center=1;resizable=0;status=0;");
 
 	}
@@ -156,7 +159,7 @@ function videoPreview2(videoPreviewName) {
 	 
 //视频批量预览另一种方式
 function videoPreview(videoPreviewName){
-
+	
 	    var advertPositionId =document.getElementById('material.advertPositionId').value;
 		var url = "getAdvertPosition.do?advertPositionId="+advertPositionId+"&videoPreviewName="+videoPreviewName;
 		window.showModalDialog(url, window, "dialogHeight=240px;dialogWidth=426px;center=1;resizable=0;status=0;");
@@ -1827,10 +1830,17 @@ function IsAlpha(cCheck) {
 						     </td>
 		                  -->
 		                     
-		                     <td width="15%" align="right"><span class="required">*</span>选择广告位：</td>
-		                     <td width="35%" colspan="3">	                
+		                     
+		                     <td align="right"><span class="required">*</span>选择广告位：</td>
+		                     <td >	                
 		                         <input id="material.advertPositionId" name="material.advertPositionId" type="hidden" />
 				                 <input id="material.advertPositionName" name="material.advertPositionName" value="" type="text" class="new_input_add" readonly="readonly" onclick="selectAdPosition();"/>
+		                     </td>
+		                     <td align="right">素材位置：</td>
+		                     <td >
+		                     	 <select disabled="disabled" id="picLocation"  name="picLocation">
+								      <option value="1">1</option>
+							    </select>
 		                     </td>
 		                 </tr>		           	                 
 		                 <tr>
@@ -1852,6 +1862,7 @@ function IsAlpha(cCheck) {
 							    </select>		  
 		                     </td>
 		                  </tr>
+		                   
 		                  <tr id="div_materialName">
 		                     <td align="right"><span class="required">*</span>素材名称：</td>
 		                     <td>
@@ -1862,7 +1873,8 @@ function IsAlpha(cCheck) {
 		                         <input id="material.keyWords" name="material.keyWords" type="text" />					       
 		                     </td>		                
 		                 </tr>
-		                  <!-- 
+		                 
+		                  <!--
 		                  <tr>
 		                     <td align="right"><span class="required">*</span>开始时间：</td>
 		                     <td>		               

@@ -29,6 +29,7 @@
 
    
 	function selectPositin(positionId,positionName,widthHeight,coordinate,backgroundPath,positionType){
+	
 	    var selecItem=positionId.split("_");
 		parent.document.getElementById("material.advertPositionId").value=selecItem[0];
     	parent.document.getElementById("material.advertPositionName").value=positionName;
@@ -71,60 +72,57 @@
     	if (selecItem[1]==1)
     	{
     		if(positionType == 4){
-    			 parent.document.getElementById("sel_material_type").options.add(new Option("Zip","4"));
-    	   
-    	   $.ajax({
-                type:"post",
-                async : false,
-                url:"<%=request.getContextPath()%>/page/meterial/getImageMateSpeci.do",
-                data:{"advertPositionId":selecItem[0]},//Ajax传递的参数
-                success:function(mess)
-                {
-                    var json = eval('(' + mess + ')');
-                	if(json!=null){
-                	    parent.document.getElementById("zipFileSize").value=json.imageFileSize;
-                	    //parent.document.getElementById("imageFileHigh").value=json.imageFileHigh;
-                	    //parent.document.getElementById("imageFileWidth").value=json.imageFileWidth;
-                	    if(window.name=="defaultSelectAdPositionFrame"){
-                	    	var mars = parent.document.getElementById("zipmars");
-                	    	mars.innerHTML = "大小："+json.imageFileSize;
-                	    }
-                	}
-                   
-                },
-                error:function(mess)
-                {
-                	alert("根据广告位获取ZIP规格失败");
-                }
-            });
-    			
+    		   parent.document.getElementById("sel_material_type").options.add(new Option("Zip","4"));
+	    	   $.ajax({
+	                type:"post",
+	                async : false,
+	                url:"<%=request.getContextPath()%>/page/meterial/getImageMateSpeci.do",
+	                data:{"advertPositionId":selecItem[0]},//Ajax传递的参数
+	                success:function(mess)
+	                {
+	                    var json = eval('(' + mess + ')');
+	                	if(json!=null){
+	                	    parent.document.getElementById("zipFileSize").value=json.imageFileSize;
+	                	    //parent.document.getElementById("imageFileHigh").value=json.imageFileHigh;
+	                	    //parent.document.getElementById("imageFileWidth").value=json.imageFileWidth;
+	                	    if(window.name=="defaultSelectAdPositionFrame"){
+	                	    	var mars = parent.document.getElementById("zipmars");
+	                	    	mars.innerHTML = "大小："+json.imageFileSize;
+	                	    }
+	                	}
+	                   
+	                },
+	                error:function(mess)
+	                {
+	                	alert("根据广告位获取ZIP规格失败");
+	                }
+	            });
     		}else{
-    			 parent.document.getElementById("sel_material_type").options.add(new Option("图片","0"));
-    	   
-    	   $.ajax({
-                type:"post",
-                async : false,
-                url:"<%=request.getContextPath()%>/page/meterial/getImageMateSpeci.do",
-                data:{"advertPositionId":selecItem[0]},//Ajax传递的参数
-                success:function(mess)
-                {
-                    var json = eval('(' + mess + ')');
-                	if(json!=null){
-                	    parent.document.getElementById("imageFileSize").value=json.imageFileSize;
-                	    parent.document.getElementById("imageFileHigh").value=json.imageFileHigh;
-                	    parent.document.getElementById("imageFileWidth").value=json.imageFileWidth;
-                	    if(window.name=="defaultSelectAdPositionFrame"){
-                	    	var mars = parent.document.getElementById("mars");
-                	    	mars.innerHTML = "大小："+json.imageFileSize+"， 宽度："+json.imageFileWidth+" px，高度："+json.imageFileHigh+" px";
-                	    }
-                	}
-                   
-                },
-                error:function(mess)
-                {
-                	alert("根据广告位获取图片规格失败");
-                }
-            });
+    		   parent.document.getElementById("sel_material_type").options.add(new Option("图片","0"));
+	    	   $.ajax({
+	                type:"post",
+	                async : false,
+	                url:"<%=request.getContextPath()%>/page/meterial/getImageMateSpeci.do",
+	                data:{"advertPositionId":selecItem[0]},//Ajax传递的参数
+	                success:function(mess)
+	                {
+	                    var json = eval('(' + mess + ')');
+	                	if(json!=null){
+	                	    parent.document.getElementById("imageFileSize").value=json.imageFileSize;
+	                	    parent.document.getElementById("imageFileHigh").value=json.imageFileHigh;
+	                	    parent.document.getElementById("imageFileWidth").value=json.imageFileWidth;
+	                	    if(window.name=="defaultSelectAdPositionFrame"){
+	                	    	var mars = parent.document.getElementById("mars");
+	                	    	mars.innerHTML = "大小："+json.imageFileSize+"， 宽度："+json.imageFileWidth+" px，高度："+json.imageFileHigh+" px";
+	                	    }
+	                	}
+	                   
+	                },
+	                error:function(mess)
+	                {
+	                	alert("根据广告位获取图片规格失败");
+	                }
+	            });
     		}
     	  
             
@@ -147,8 +145,25 @@
 			parent.document.getElementById("pImage3").src = p;
 			parent.document.getElementById("pImage4").src = p;
 		}
-		//预览
-    	preview(widthHeight,coordinate,backgroundPath);
+		
+		parent.document.getElementById("picLocation").innerHTML = "";
+		
+		if(selecItem[5]==1){
+			
+			var locationCount = parseInt(selecItem[6]);
+			
+			for(var i=1; i<=locationCount; i++){
+				parent.document.getElementById("picLocation").options.add(new Option(i+"",i+""));
+			}
+			parent.document.getElementById("picLocation").removeAttribute("disabled");
+		}else{
+			parent.document.getElementById("picLocation").options.add(new Option("1","1"));
+			parent.document.getElementById("picLocation").setAttribute("disabled","disabled");
+		}
+				
+		//预览(默认素材维护需要用到此方法)
+        preview(widthHeight,coordinate,backgroundPath);
+		
         parent.easyDialog.close();
     }
 
@@ -160,8 +175,13 @@
 		var size = widthHeight.split('*');
 		var width = size[0];
 		var height = size[1];
-		var coor = coordinate.split('*');
+		var coor = coordinate.replace(/(^\s+)|(\s+$)/g,"").split(",")[0].split('*');
 		
+		//parent.document.getElementById("coordinateStr").value = coordinate.replace(/(^\s+)|(\s+$)/g,"");
+		var coordinateStrElement = parent.document.getElementById("coordinateStr");
+		if(coordinateStrElement){
+			coordinateStrElement.value = coordinate.replace(/(^\s+)|(\s+$)/g,"");
+		}
 		
 		$("#pImage",window.parent.document).attr("width",426).attr("height",240);
 		
@@ -244,7 +264,7 @@
         <td width="20%" align="center">广告位名称</td>
         <td width="10%" align="center">广告位编码</td>
         <td width="10%" align="center">高标清</td>
-        <td width="10%" align="center">是否轮训</td>
+        <td width="10%" align="center">是否轮询</td>
         <td width="10%" align="center">是否叠加 </td>
         <td width="10%" align="center">投放方式</td>
     </tr>
@@ -253,7 +273,7 @@
                     <c:forEach items="${adPositionPage.dataList}" var="adPositionPageInfo" varStatus="pc">
                <tr <c:if test="${pc.index%2==1}">class="sec"</c:if>>
                    <td>
-                       <input type="radio" value="${adPositionPageInfo.id}"  id="adPositionPageInfo.locationId" onclick="selectPositin('${adPositionPageInfo.id}_${adPositionPageInfo.isImage}_${adPositionPageInfo.isVideo}_${adPositionPageInfo.isText}_${adPositionPageInfo.isQuestion}','${adPositionPageInfo.positionName}','${adPositionPageInfo.widthHeight}','${adPositionPageInfo.coordinate}','${adPositionPageInfo.backgroundPath}','${adPositionPageInfo.positionPackageType}')"/>
+                       <input type="radio" value="${adPositionPageInfo.id}"  id="adPositionPageInfo.locationId" onclick="selectPositin('${adPositionPageInfo.id}_${adPositionPageInfo.isImage}_${adPositionPageInfo.isVideo}_${adPositionPageInfo.isText}_${adPositionPageInfo.isQuestion}_${adPositionPageInfo.isLoop}_${adPositionPageInfo.loopCount}','${adPositionPageInfo.positionName}','${adPositionPageInfo.widthHeight}','${adPositionPageInfo.coordinate}','${adPositionPageInfo.backgroundPath}','${adPositionPageInfo.positionPackageType}')"/>
                    </td>
                    <td>
                        <input id="name_${adPositionPageInfo.id}"  type="hidden" value="${adPositionPageInfo.positionName}"/>

@@ -26,13 +26,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript">
 	var previewValue='${previewValue}';
 	var resourceValue='${resourceValue}';
-	//alert(resourceValue);
+	var pollIndex = '${pollIndex}';
+	//alert(pollIndex);
 
 	window.onload = function(){	
-	//alert(previewValue);
- 		preview(previewValue.split("_")[5],previewValue.split("_")[6],previewValue.split("_")[7]);
- 		viewMaterial(resourceValue);
- 		 
+		//preview(previewValue[5],previewValue[6],previewValue[7]);
+		previewMaterial(previewValue,pollIndex);
+ 		viewMaterial(resourceValue);		 
 	} 
 	
 	</script>

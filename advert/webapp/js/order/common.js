@@ -106,10 +106,14 @@ function viewOneAreaPloy(result,orderCode,ployId,positionId){
 		   }
 	   for(var i = 0;i<json.length;i++){
 	        var obj = json[i];
+			var pollIndex = 1;
+			if(obj.pollIndex){
+				pollIndex = obj.pollIndex;
+			}
 	        var resourcevalue=obj.resourceId;
 		    str+="<tr><td>"+"<a style='diplay:block;float:left' href=javascript:showAreaResourceDetail("+orderCode+","+obj.resourceId+","+ployId+","+positionId+")>详情</a>"+"</td>"+
 			 	 "<td>"+obj.resourceName+"</td>"+
-		   		 "<td>"+"<a style='diplay:block;float:left' href=javascript:showSource("+"'resource'"+","+obj.resourceId+")>预览</a>"+"</td></tr>";
+		   		 "<td>"+"<a style='diplay:block;float:left' href=javascript:showSource("+"'resource'"+","+obj.resourceId+","+pollIndex+")>预览</a>"+"</td></tr>";
 		   		 //"<td>"+"<a style='diplay:block;float:left' href=javascript:showSource("+"'resourcevalue'"+","+obj.resourceId+")>预览</a>"+" "+
 		   		 
 	  }
@@ -146,7 +150,8 @@ function showAreaResource(ployId,orderCode,positionId){
 			}
 
 
-function showSource(url,metaId){
+function showSource(url,metaId, pollIndex){
+	
 	$.ajax({   
 	       url:'getAreaResourcePath.do',       
 	       type: 'POST',    
@@ -164,12 +169,11 @@ function showSource(url,metaId){
 	    	   }else{
 	    		   if(!isEmpty(result)){
 	    			   //var ss=eval(result);
-	    			   var resourceValue=metaId;	    			   
-	    			   //alert(previewValue);
+	    			   var resourceValue=metaId;	
 	    			   //alert(ss);	    		    	   
 	    		    	//window.open('preview.do?perviewvalue='+perviewvalue,'','location=no,menubar=no,resizable=no,status=no,scrollbars=no,height=250px,width=430px');
 	    		    	//window.open('preview.do?previewValue='+previewValue+'&resourceValue='+resourceValue,'','location=no,menubar=no,resizable=no,status=no,scrollbars=no,height=270px,width=446px');
-	    		    	window.open('preview.do?previewValue='+previewValue+'&resourceValue='+resourceValue,'','location=no,menubar=no,resizable=no,status=no,scrollbars=no,height=240px,width=426px');
+	    		    	window.open('preview.do?previewValue='+previewValue+'&resourceValue='+resourceValue+'&pollIndex='+pollIndex,'','location=no,menubar=no,resizable=no,status=no,scrollbars=no,height=240px,width=426px');
 	    		    	//window.open(ss,'','location=no,menubar=no,resizable=no,status=no,scrollbars=no,height=400px,width=500px');
 	    			}else{
 	    				alert("素材不存在！");

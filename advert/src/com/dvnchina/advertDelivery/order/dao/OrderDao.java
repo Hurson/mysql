@@ -467,6 +467,11 @@ public interface OrderDao extends BaseDao{
 	public void loopMenuPosition(String orderCode,int ployId,int loops);
 	public void loopMenuPosition2(String orderCode,int ployId,int loops);
 	
+	/*
+	 * 一个广告有多张图片，显示在不同位置
+	 */
+	public void multiposition(String orderCode,int ployId,int positionCount);
+	
 	/**
 	 * 保存订单和素材临时数据
 	 * @param ids

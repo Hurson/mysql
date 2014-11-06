@@ -60,8 +60,8 @@ function init(positionJson){
 		top: coordinate[1]+"px" 
 	});
 	
-	var videoPath=getContextPath()+"/images/material/"+document.getElementById('videoPreviewName').value;;
-	showVideo(videoPath);
+	var videoPath=getContextPath()+"/images/material/"+document.getElementById('videoPreviewName').value;
+	setTimeout(showVideo(videoPath), 1500);
 
 }
 

@@ -49,6 +49,7 @@ var height = 0;
 	}
 	})
 function init(positionJson){
+	
 	var materialType =document.getElementById('materialType').value;
 	var imageMetaName = document.getElementById('imageMetaName').value;
 	var videoMetaName = document.getElementById('videoMetaName').value;
@@ -106,11 +107,22 @@ function init(positionJson){
  */
 function preview(positionJson){
 	var selPosition = eval(positionJson);
+	
+	document.getElementById("coordinateStr").value = selPosition.coordinate.replace(/(^\s+)|(\s+$)/g,"");
+	
+	if(selPosition.isLoop == 1){
+		var locationCount = parseInt(selPosition.loopCount);
+		for(var i=2; i<=locationCount; i++){
+			document.getElementById("picLocation").options.add(new Option(i+"",i+""));
+		}
+		document.getElementById("picLocation").removeAttribute("disabled");
+	}
+
 	/**为页面预览区域赋值*/
 	var size = selPosition.widthHeight.split('*');
 	width = size[0];
 	height = size[1];
-	var coordinate = selPosition.coordinate.split('*');
+	var coordinate = selPosition.coordinate.replace(/(^\s+)|(\s+$)/g,"").split(",")[0].split('*');
 	$("#pImage1").attr("width",426).attr("height",240);
 	$("#pImage2").attr("width",426).attr("height",240);
 	$("#pImage3").attr("width",426).attr("height",240);
@@ -118,6 +130,7 @@ function preview(positionJson){
 	$("#pImage").attr("src",getContextPath()+"/"+selPosition.backgroundPath);
 	$("#mImage").attr("width",width).attr("height",height);
 	$("#mImage4").attr("width",width).attr("height",height);
+	
 	$("#mImage,#video").css({
 		width:width+"px",
 		height:height+"px",
@@ -151,6 +164,42 @@ function preview(positionJson){
 		'z-index':1
 	});
 }
+
+	function priviewLocationChange(){
+
+		var imagePreviewLocation = document.getElementById('picLocation').value;
+		var location = parseInt(imagePreviewLocation); 
+	    var coordinates = document.getElementById('coordinateStr').value.split(",");
+	    
+	    var coordinate;
+	    if(location <= coordinates.length){
+	    	coordinate = coordinates[location-1].split('*');
+	    }else{
+	    	coordinate = coordinates[0].split('*');
+	    }
+		
+		$("#mImage,#video").css({
+			left: coordinate[0]+"px", 
+			top: coordinate[1]+"px" 
+		});
+		
+		$("#mImage4").css({
+			left: coordinate[0]+"px", 
+			top: coordinate[1]+"px" 
+		});
+		
+		$("#text").css({
+			left:coordinate[0]+"px",
+			top:coordinate[1]+"px",
+			
+		});
+		$("#text2").css({
+			left:coordinate[0]+"px",
+			top:coordinate[1]+"px",
+			
+		});
+	}
+
 
 /**
  * 获取上下文路径
@@ -802,7 +851,8 @@ function closeSavePane() {
 	}
 
 	/**预览视频*/
-	function showVideo(path){		
+	function showVideo(path){
+
 		$("#vlc").css({
 			width:width+"px",
 			height:height+"px"
@@ -815,6 +865,8 @@ function closeSavePane() {
 		 // 播放
 		 vlc.playlist.play();
 	}
+	
+	
 
 </script>
 <style>
@@ -842,9 +894,9 @@ function closeSavePane() {
 				     <input id="material.contractName" name="material.contractName" value="${material.contractName}" type="text" disabled="disabled" />	
 			        </td>
                      -->
-                    <td width="15%" align="right"><span class="required">*</span>选择广告位：</td>
+                    <td align="right"><span class="required">*</span>选择广告位：</td>
                                                             
-                    <td width="35%" colspan="3">	                
+                    <td>	                
                         <input id="material.advertPositionId" name="material.advertPositionId" value="${material.advertPositionId}" type="hidden" />
 	                    <input id="material.advertPositionName" name="material.advertPositionName" value="${material.advertPositionName}" type="text" disabled="disabled" />		                
                     
@@ -859,7 +911,14 @@ function closeSavePane() {
                         <input id="positionJson" name="positionJson" type="hidden" value="${positionJson}"/>
                         <input id="material.customerId" name="material.customerId" type="hidden" value="${material.customerId}"/>
                         <input id="material_state" name="material_state" type="hidden" value="${material.stateStr}"/> 
+                        <input id="coordinateStr" type="hidden"/> 
                     </td>
+                     <td align="right">素材位置：</td>
+                     <td >
+                     	 <select disabled="disabled" id="picLocation"  name="picLocation" onchange="javascript:priviewLocationChange();">
+						      <option value="1">1</option>
+					    </select>
+                     </td>
                     
                 </tr>		           
                 <tr>

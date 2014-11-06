@@ -140,6 +140,7 @@
 				ployId = -1;
 				//预览
 				preview(value.split("_")[5],value.split("_")[6],value.split("_")[7]);
+				
 				//问卷广告位，订单添加用户次数、问卷次数、通知门限值、积分兑换人民币比率
 				if(positionId=='27'||positionId=='28'){
 					$("#questionnaire1").show();
