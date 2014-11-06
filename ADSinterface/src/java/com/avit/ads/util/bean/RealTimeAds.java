@@ -30,6 +30,13 @@ public class RealTimeAds {
 	private String adsTargetConfigPath;	
 	@XmlAttribute(name="untUrl")
 	private String untUrl;
+	
+	@XmlAttribute(name="epgChannelInfoPath")
+	private String epgChannelInfoPath;
+	@XmlAttribute(name="epgTempPath")
+	private String epgTempPath;
+	
+	
 	@XmlElement(name="Ads")
 	private List<Ads> adsList;
 	@XmlTransient
@@ -101,5 +108,19 @@ public class RealTimeAds {
 	public void setAdsTargetConfigPath(String adsTargetConfigPath) {
 		this.adsTargetConfigPath = adsTargetConfigPath;
 	}
+	public String getEpgChannelInfoPath() {
+		return epgChannelInfoPath;
+	}
+	public void setEpgChannelInfoPath(String epgChannelInfoPath) {
+		this.epgChannelInfoPath = epgChannelInfoPath;
+	}
+	public String getEpgTempPath() {
+		return epgTempPath;
+	}
+	public void setEpgTempPath(String epgTempPath) {
+		this.epgTempPath = epgTempPath;
+	}
+	
+	
 	
 }

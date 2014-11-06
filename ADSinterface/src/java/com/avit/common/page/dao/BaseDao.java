@@ -41,6 +41,10 @@ public interface BaseDao {
 
 	public void deleteAll(Collection entities);
 	
+	public void deleteBySql(final String deletesql,final Object[] params);
+	
+	public void excuteBySql(final String deletesql,final Object[] params);
+	
 	//-------------------------add weimmy 2011-7-21----------------------------
 	/**
 	 * 通过名称获取SQL语句，并执行

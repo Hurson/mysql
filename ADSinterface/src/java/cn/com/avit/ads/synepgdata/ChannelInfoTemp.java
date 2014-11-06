@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "t_channelinfo")
-public class ChannelInfo {
+@Table(name = "t_channelinfo_temp")
+public class ChannelInfoTemp {
 	/** 主键 */
 	private Long channelId;
 	
@@ -65,12 +65,7 @@ public class ChannelInfo {
 		return channleType;
 	}
 	public void setChannleType(String channleType) {
-		if("2".equals(channleType)){
-			channleType = "音频直播类业务";
-		}else if("1".equals(channleType)){
-			channleType = "视频直播类业务";
-		}
 		this.channleType = channleType;
 	}	
-		
+	
 }

@@ -22,7 +22,7 @@
             </property>
             <!-- cron表达式 -->
             <property name="cronExpression">
-                <value>0 25 19 * * ? </value>
+                <value>0 23 10 * * ? </value>
             </property>
         </bean>
         

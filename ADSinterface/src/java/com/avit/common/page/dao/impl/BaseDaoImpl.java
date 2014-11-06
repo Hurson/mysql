@@ -360,6 +360,16 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 		query.executeUpdate();
 	}
     
+    public void excuteBySql(final String sql,final Object[] params){
+    	Query query = getSession().createSQLQuery(sql);
+    	if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+            	query.setParameter(i, params[i]);
+            }
+        }
+	query.executeUpdate();
+    }
+    
     /**
 	 * BigDecimal to Integer
 	 * @param obj

@@ -28,6 +28,11 @@ public class AdsConfig {
 	//单向非实时广告配置   回看菜单  点播菜单 点播随片
 	@XmlElement(name="CpsAds")
 	private CpsAds cpsAds;
+	
+	//从EPG获取频道信息FTP地址
+	@XmlElement(name="Epgftp")
+	private Epgftp epgftp;
+	
 	//单向非实时广告配置    回放菜单，
 	@XmlElement(name="NpvrAds")
 	private NpvrAds npvrAds;
@@ -123,6 +128,12 @@ public class AdsConfig {
 	public void setVideoPump(List<VideoPump> videoPump) {
 		this.videoPump = videoPump;
 	}
-
+	public Epgftp getEpgftp() {
+		return epgftp;
+	}
+	public void setEpgftp(Epgftp epgftp) {
+		this.epgftp = epgftp;
+	}
+	
 	
 }

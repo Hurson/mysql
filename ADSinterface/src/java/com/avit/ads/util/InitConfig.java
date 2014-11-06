@@ -223,8 +223,7 @@ public class InitConfig {
 	}
 	public void initTempPath()
 	{
-			
-		
+		(new File(adsConfig.getRealTimeAds().getEpgTempPath())).mkdirs();
 		(new File(adsConfig.getCpsAds().getAdsTempPath())).mkdirs();
 		(new File(adsConfig.getNpvrAds().getAdsTempPath())).mkdirs();
 		(new File(adsConfig.getVideoPump().get(0).getTempPath())).mkdirs();

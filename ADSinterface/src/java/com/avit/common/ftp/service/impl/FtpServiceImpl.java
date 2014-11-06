@@ -6,6 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPFile;
@@ -338,5 +345,118 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		}
 		return true;
 	}
+	
+	public String getLatestFileName(String remoteDirectory){
+		String fileName = "";
+		try{
+			//切换FTP目录
+			if(StringUtils.isNotBlank(remoteDirectory) && !FtpClient.changeWorkingDirectory(remoteDirectory)){
+				logger.error("切换目录失败：FTP不存在目录 " + remoteDirectory);
+				return "";
+			}
+						
+			Date fileCreateTime = new Date(0L);
+					
+			FTPFile[] ftpFiles = FtpClient.listFiles();
+			for(int i = 0; i < ftpFiles.length; i++){
+				FTPFile f = ftpFiles[i];
+				Calendar cal =  f.getTimestamp();
+				Date createTime = cal.getTime();
+				if(createTime.after(fileCreateTime)){
+					fileCreateTime = createTime;
+					fileName = f.getName();
+				}				
+			}
+		} catch (IOException e) {
+			logger.error("从FTP下载文件出现异常：", e);
+		}
+		return fileName;
+	}
+	
+	public Collection<String> getLatestFiles(String remoteDirectory){
+		
+		try{
+			//切换FTP目录
+			if(StringUtils.isNotBlank(remoteDirectory) && !FtpClient.changeWorkingDirectory(remoteDirectory)){
+				logger.error("切换目录失败：FTP不存在目录 " + remoteDirectory);
+				return null;
+			}
+
+			Map<String, Date> dateMap = new HashMap<String, Date>();
+			Map<String, String> fileNameMap = new HashMap<String, String>();
+			
+			FTPFile[] ftpFiles = FtpClient.listFiles();
+			for(int i = 0; i < ftpFiles.length; i++){
+				FTPFile f = ftpFiles[i];
+				Calendar cal =  f.getTimestamp();
+				Date createTime = cal.getTime();
+				String areaCode = f.getName().substring(0, 6);
+				//map中不存在该区域，则把时间和文件名放入map;  map中存在该区域，则如果文件创建时间更晚，加入map
+				if( !dateMap.containsKey(areaCode) || createTime.after(dateMap.get(areaCode))){
+					dateMap.put(areaCode, createTime);
+					fileNameMap.put(areaCode, f.getName());
+				}				
+			}
+			
+			return fileNameMap.values();
+			
+		} catch (IOException e) {
+			logger.error("从FTP下载文件出现异常：", e);
+			return null;
+		}
+	}
+	
+	public boolean downloadFile(String remoteFileName, String localFileName, String remoteDirectory, String localDirectory) {
+		OutputStream outputStream = null;
+		try {
+			//切换FTP目录
+			if(!FtpClient.changeWorkingDirectory(remoteDirectory)){
+				logger.error("从FTP下载文件失败：FTP不存在目录 " + remoteDirectory);
+				return false;
+			}
+			
+			//查看要下载的文件是否存在
+			FTPFile[] ftpFiles = FtpClient.listFiles(remoteFileName);
+			if(ftpFiles.length == 0){
+				logger.info("从FTP下载文件失败： FTP不存在文件 " + remoteDirectory + "/" + remoteFileName);
+				return false;
+			}
+			
+			//下载文件
+			outputStream = new FileOutputStream(new File(localDirectory + "/" + localFileName));	
+			if(!FtpClient.retrieveFile(remoteFileName, outputStream)){
+				logger.error("从FTP下载文件失败 " + remoteDirectory + "/" + remoteFileName);
+				return false;
+			}
+			
+		} catch (IOException e) {
+			logger.error("从FTP下载文件出现异常：", e);
+			return false;
+		}finally{
+			if(null != outputStream){
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					logger.error("FTP下载文件关闭流时出现异常", e);
+				}
+			}
+		}
+		return true;
+	}
+
+	public boolean downloadFile(String remoteAbsoluteFilePath, String localFileName, String localDirectory) {
+		String remoteFileName = remoteAbsoluteFilePath.substring(remoteAbsoluteFilePath.lastIndexOf("/")+1);
+		String remoteDirectory = remoteAbsoluteFilePath.substring(0,remoteAbsoluteFilePath.lastIndexOf("/"));
+		return download(remoteFileName, localFileName, remoteDirectory, localDirectory);
+	}
+	
+//	private boolean isYesterday(Date day, Date yesterday, SimpleDateFormat sdf){
+//		String yesterdayStr = sdf.format(yesterday);
+//		String dayStr = sdf.format(day);
+//		if(yesterdayStr.equals(dayStr)){
+//			return true;
+//		}
+//		return false;
+//	}
 	
 }
