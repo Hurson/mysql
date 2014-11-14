@@ -293,7 +293,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 					{
 						//sendflag=true;
 						String areaCode = areaList.get(0);
-						sendFlagHelper.makeSent(areaCode);
+						// sendFlagHelper.makeSent(areaCode);   //待定，可能不需要重新发送
 					}
 					for (int a=0;a<areaList.size();a++)
 					{
@@ -847,6 +847,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 		
 		// 从广告ftp下载素材至本地
 		boolean rePush = pushFalierHelper.rePush(areaCode);
+		
 		if ( rePush || sendFlagHelper.needSent(areaCode) || !oldmd5.equals(FileDigestUtil.getFileNameMD5(InitConfig.getAdsConfig().getRealTimeAds().getAdsTempConfigPath()+"/"+areaCode+"/"+configFile)))
 		{	
 			if(rePush){
@@ -2293,41 +2294,40 @@ public class PushAdsServiceImpl implements PushAdsService {
 				String zipFilePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath()+"/"+areaCode;
 				linuxRun("zip -r",downLoadPath,zipFilePath+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE);
 				
-				
-				
 				List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 
 				boolean ocgExist = false;
 				boolean ocgSuccess = false;
 				
 				for (OcgInfo ocg : ocgList) {
-					
-					ocgExist = true;
-					
-					String ocgIp = ocg.getIp();
-					int ocgPort = Integer.parseInt(ocg.getPort());
-					String ocgUser = ocg.getUser();
-					String ocgPwd = ocg.getPwd();
-					
-					//建立OCG服务器的FTP连接
-					if(!ocgService.connectFtpServer(ocgIp, ocgPort, ocgUser, ocgPwd) ){
-						continue;
-					}
-					
-					//向OCG发送开机素材
-	            	log.info("向OCG发送开机图片素材..");
-	            	String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
-	            	ocgService.sendFileToFtp(zipFilePath+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE, remoteDir);
-	            	
-	            	//断开OCG服务器的FTP连接
-	            	ocgService.disConnectFtpServer();
-	            	
-	            	//通知OCG投放广告
-					if(!ocgService.startOcgPlayByIp(ocgIp, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
-						continue;
-					}
-					
-					ocgSuccess = true;
+
+					if (ocg.getAreaCode().equals(areaCode)) {
+						
+						ocgExist = true;
+						
+						String ocgIp = ocg.getIp();
+						int ocgPort = Integer.parseInt(ocg.getPort());
+						String ocgUser = ocg.getUser();
+						String ocgPwd = ocg.getPwd();
+						
+						//建立OCG服务器的FTP连接
+						if(!ocgService.connectFtpServer(ocgIp, ocgPort, ocgUser, ocgPwd) ){
+							continue;
+						}
+						//向OCG发送开机素材
+		            	log.info("向OCG发送开机图片素材..");
+		            	String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+		            	ocgService.sendFileToFtp(zipFilePath+"/"+ConstantsAdsCode.PUSH_STARTSTB_HD_IFRAME_FILE, remoteDir);
+		            	
+		            	//断开OCG服务器的FTP连接
+		            	ocgService.disConnectFtpServer();
+		            	
+		            	//通知OCG投放广告
+						if(!ocgService.startOcgPlayByIp(ocgIp, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
+							continue;
+						}
+						ocgSuccess = true;
+					}	
 				}
 				
 				if(!ocgExist){

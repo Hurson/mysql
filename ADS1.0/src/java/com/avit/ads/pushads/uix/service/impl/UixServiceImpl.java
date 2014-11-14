@@ -1,13 +1,11 @@
 package com.avit.ads.pushads.uix.service.impl;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.avit.ads.pushads.task.bean.TReleaseArea;
 import com.avit.ads.pushads.uix.dao.AreaDao;
 import com.avit.ads.pushads.uix.dao.UixDao;
@@ -23,6 +21,8 @@ public class UixServiceImpl implements UixService {
 		
 	private Log log = LogFactory.getLog(this.getClass());
 	
+	//private final static String HTTP_PLUS_ESCAPE = "%2B";
+	
 	@Autowired
 	private UixDao uixDao;	
 	@Autowired
@@ -30,6 +30,45 @@ public class UixServiceImpl implements UixService {
 	@Autowired
 	private WarnHelper warnHelper;
 	
+	
+	public boolean sendUiUpdateMsg(String mod, String areaCode, Integer type, String updatePath) {
+		String url = InitConfig.getConfigMap().get("nit.interface.address");
+		HttpClient httpClient = new HttpClient();
+        GetMethod getMethod = new GetMethod(bulidGetUrl(url, mod, areaCode, type, updatePath));
+        getMethod.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=gbk");    
+             
+        int times = 3; //三次发送不成功，则告警
+        
+        while(times > 0){
+        	 try {       	
+             	int responsCode = httpClient.executeMethod(getMethod);
+     			if(200 == responsCode){
+     				String responseBody = new String(getMethod.getResponseBodyAsString().getBytes("GBK"));
+     				
+     				JsonResponse respEntity = (JsonResponse) Json2ObjUtil.getObject4JsonString(responseBody, JsonResponse.class);
+     				if(respEntity.getRet().equals("0")){
+     					uixDao.updateVersion(areaCode, type);
+     					log.info("往区域" + areaCode + "发送UI更新成功！");
+     					return true;
+     				}else{
+     					log.error("往区域" + areaCode + "发送UI更新失败：" + respEntity.getRet_msg());
+     					return false; 
+     				}
+     			}
+				Thread.sleep(3000);//3s后重发请求
+				times--;	
+				
+     		} catch (Exception e) {
+     			times--;
+     			log.error("往区域" + areaCode + "发送UI更新出现异常", e);
+     		} 
+        }
+        //三次连接不上，告警	
+   	 	warnHelper.writeWarnMsgToDb("【连续三次不能访问UI更新服务器】" + "request url: " + url);
+		return false;
+	}
+	
+	/*
 	public boolean sendUiUpdateMsg(String mod, String areaCode, Integer type, String updatePath) {
 		String url = InitConfig.getConfigMap().get("nit.interface.address");
 		HttpClient httpClient = new HttpClient();
@@ -68,6 +107,8 @@ public class UixServiceImpl implements UixService {
    	 	warnHelper.writeWarnMsgToDb("【连续三次不能访问UI更新服务器】" + "request url: " + url);
 		return false;
 	}
+	
+	
 	
 	private NameValuePair[] initPostParams(String mod, String areaCode, Integer updateType, String updatePath){
 		
@@ -108,6 +149,8 @@ public class UixServiceImpl implements UixService {
 		return params;
 	}
 	
+	*/
+	
 	private  String reBuildStr(String str){
 		if(str.endsWith("+")){
 			str = str.substring(0, str.length()-1);
@@ -115,4 +158,33 @@ public class UixServiceImpl implements UixService {
 		//return str.replace("+", HTTP_PLUS_ESCAPE);
 		return str;
 	}
+	
+	private String bulidGetUrl(String url, String mod, String areaCode, Integer updateType, String updatePath){
+		TReleaseArea areaEntity = areaDao.getAreaByAreaCode(areaCode);	
+		String onid = areaEntity.getLocationCode();
+		String ocsid = areaEntity.getOcsId();
+		//String tsid = areaEntity.getTsId();
+		
+		String typeParam = "";
+		String versionParam = "";
+		String pathParam = "";
+		
+		for(UIUpdate entry : UIUpdate.values()){
+			int type = entry.getType();
+			int version = uixDao.getUiVersion(areaCode, type);
+			if(type == updateType){
+				version = (version + 1) % 255;
+			}else if(0 == version){
+				continue;
+			}
+			String path = "/65535.65535." + ocsid + "/" + entry.getFileName();
+			
+			typeParam += type + "+";
+			versionParam += version + "+";
+			pathParam += path + "+";
+		}
+		
+		return url + "?mod=" + mod + "&areacode=" + areaCode + "&onid=" + onid + "&adctrl=1&type=" + reBuildStr(typeParam)
+				+ "&version=" + reBuildStr(versionParam) + "&path=" + reBuildStr(pathParam) + "&tsid=1&ocsid=1";
+	} 
 }
