@@ -698,7 +698,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 		
 		List<TReleaseArea> areaEntityList = areaDao.getAllArea();
 		for(TReleaseArea entity : areaEntityList){
-			if(StringUtils.isNotBlank(entity.getTsId()) && StringUtils.isNotBlank(entity.getOcsId())){
+			if(StringUtils.isNotBlank(entity.getOcsId())){
 				sendAreaAdsReal(list,entity.getAreaCode());		
 			}
 				
@@ -2085,29 +2085,29 @@ public class PushAdsServiceImpl implements PushAdsService {
 				long playListId = adGis.getId().longValue();
 				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
 				
-				//建立OCG服务器的FTP连接
-				if(!ocgService.connectFtpServer(areaCode) ){
-					//还可以重试
-					if(unRealTimeAdsPushHelper.delDecreaseAndTryAgain(playListId)){
-						continue;
-					}else{  //三次都失败
-						unRealTimeAdsPushHelper.cleanDelMap(playListId);
-						pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
-						continue;
+				List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+				for (OcgInfo ocg : ocgList) {
+					
+					if (ocg.getAreaCode().equals(areaCode)) {
+						String ocgIp = ocg.getIp();
+						int ocgPort = Integer.parseInt(ocg.getPort());
+						String ocgUser = ocg.getUser();
+						String ocgPwd = ocg.getPwd();
+						
+						//建立OCG服务器的FTP连接
+						if(ocgService.connectFtpServer(ocgIp, ocgPort, ocgUser, ocgPwd)){ //连不上就不删了，UI类广告订单到期删除OCG素材意义不大
+							//通过FTP删除OCG上的文件			
+							String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+							
+							log.info(adsDesc + "广告播出单到期，删除OCG素材   areaCode: " + areaCode + ", ip: " + ocgIp +  ", file: " + remoteDir+ "/" + remoteFileName);
+							
+							ocgService.deleteFtpFileIfExist(remoteFileName, remoteDir);
+							
+							//断开OCG服务器的FTP连接
+							ocgService.disConnectFtpServer();
+						}
 					}
 				}
-				
-				//通过FTP删除OCG上的文件			
-				//String remoteFileName = ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE;
-				String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
-				
-				log.info(adsDesc + "广告播出单到期，删除OCG素材   areaCode: " + areaCode + ", file: " + remoteDir+ "/" + remoteFileName);
-				
-				ocgService.deleteFtpFileIfExist(remoteFileName, remoteDir);
-				
-				//断开OCG服务器的FTP连接
-				ocgService.disConnectFtpServer();
-				
 				unRealTimeAdsPushHelper.cleanDelMap(playListId);
 				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
 			}
@@ -2158,81 +2158,83 @@ public class PushAdsServiceImpl implements PushAdsService {
 					
 					String downLoadPath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTempPath() + "/" + areaCode;
 					String downLoadFilePath = downLoadPath + "/" + ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE;			
-					String oldMd5 = FileDigestUtil.getFileNameMD5(downLoadFilePath);
+//					String oldMd5 = FileDigestUtil.getFileNameMD5(downLoadFilePath);
 					
 					log.info("下载开机视频素材到本地..");
 					ftpService.downloadFile(startMaterial.getVideo(), ConstantsAdsCode.PUSH_STARTSTB_HD_VIDEO_FILE, downLoadPath);
 					
-					if(oldMd5.equals(FileDigestUtil.getFileNameMD5(downLoadFilePath))){
-						log.info("素材内容未发生变化，不重新投放");
-						continue;
-					}else{
+//					if(oldMd5.equals(FileDigestUtil.getFileNameMD5(downLoadFilePath))){
+//						log.info("素材内容未发生变化，不重新投放");
+//						continue;
+//					}else{
 											
-						List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+					List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 
-						boolean ocgExist = false;
-						boolean ocgSuccess = false;
-						
-						for (OcgInfo ocg : ocgList) {
-							if (ocg.getAreaCode().equals(areaCode)) {
-								
-								ocgExist = true;
-								
-								String ocgIp = ocg.getIp();
-								int ocgPort = Integer.parseInt(ocg.getPort());
-								String ocgUser = ocg.getUser();
-								String ocgPwd = ocg.getPwd();
-								
-								//建立OCG服务器的FTP连接
-								if(!ocgService.connectFtpServer(ocgIp, ocgPort, ocgUser, ocgPwd) ){
-									continue;
-								}
-								//向OCG发送素材					
-								log.info("向OCG发送素材..");
-								String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
-								ocgService.sendFileToFtp(downLoadFilePath, remoteDir);
-								
-								//断开OCG服务器的FTP连接
-								ocgService.disConnectFtpServer();
-								
-								//通知OCG投放广告
-								if(!ocgService.startOcgPlayByIp(ocgIp, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
-									continue;
-								}
-								ocgSuccess = true;
+					boolean ocgExist = false;
+					boolean ocgSuccess = false;
+					
+					for (OcgInfo ocg : ocgList) {
+
+						if (ocg.getAreaCode().equals(areaCode)) {
+							
+							ocgExist = true;
+							
+							String ocgIp = ocg.getIp();
+							int ocgPort = Integer.parseInt(ocg.getPort());
+							String ocgUser = ocg.getUser();
+							String ocgPwd = ocg.getPwd();
+							
+							//建立OCG服务器的FTP连接
+							if(!ocgService.connectFtpServer(ocgIp, ocgPort, ocgUser, ocgPwd) ){
+								continue;
 							}
+							//向OCG发送素材					
+							log.info("向OCG发送素材..");
+							String remoteDir = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsTargetPath();
+							ocgService.sendFileToFtp(downLoadFilePath, remoteDir);
+							
+							//断开OCG服务器的FTP连接
+							ocgService.disConnectFtpServer();
+							
+							//通知OCG投放广告
+							if(!ocgService.startOcgPlayByIp(ocgIp, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
+								continue;
+							}
+							ocgSuccess = true;
 						}
-						
-						if(!ocgExist){
-							String errMsg = "未配置区域【" + areaCode + "】的OCG FTP连接信息";
-							log.error(errMsg);
-							warnHelper.writeWarnMsgToDb(errMsg);
+					}
+					
+					if(!ocgExist){
+						String errMsg = "未配置区域【" + areaCode + "】的OCG FTP连接信息";
+						log.error(errMsg);
+						warnHelper.writeWarnMsgToDb(errMsg);
+						failedToPush(playListId);
+						continue;
+					}
+					
+					if(!ocgSuccess){
+						//还可以重试
+						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
+							continue;
+						}else{  //三次都失败
 							failedToPush(playListId);
 							continue;
 						}
+					}
 						
-						if(!ocgSuccess){
-							//还可以重试
-							if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-								continue;
-							}else{  //三次都失败
-								failedToPush(playListId);
-								continue;
-							}
+						
+					if(!uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.VIDEO.getType(), UIUpdate.VIDEO.getFileName())){
+						//UI更新通知，若不成功
+						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
+							continue;
+						}else{
+							failedToPush(playListId);
+							continue;
 						}
-						
-						
-						if(!uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.VIDEO.getType(), UIUpdate.VIDEO.getFileName())){
-							//UI更新通知，若不成功
-							if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-								continue;
-							}else{
-								failedToPush(playListId);
-								continue;
-							}
-						}						
-						log.info("往区域"+areaCode+"发送高清开机视频广告结束");			
-					}					
+					}		
+					
+					log.info("往区域"+areaCode+"发送高清开机视频广告结束");			
+					//}					
 					//更新播出单状态为已执行
 					unRealTimeAdsPushHelper.cleanPushMap(playListId);
 					pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "1");			
@@ -2792,11 +2794,13 @@ public class PushAdsServiceImpl implements PushAdsService {
 	        		if( ConstantsAdsCode.PUSH_FREQUENCE_HD.equals(playListEntity.getAdSiteCode()) ){  //音频背景广告
 	        			List<String> serviceIdList = getListFromJson(playListEntity.getChannelId());
 	        			if(null != serviceIdList && serviceIdList.size() > 0){
+	        				log.info("广播收听背景广告播出单过期，删除本地素材..");
 	        				for(String serviceId : serviceIdList){
 	        					deleteFile(downLoadPath, serviceId+".iframe");
 							}
 	        			}
 	        		}else if( ConstantsAdsCode.PUSH_LIVE_UNDER_HD.equals(playListEntity.getAdSiteCode()) ){  //直播下排广告
+	        			log.info("直播下排广告播出单过期，删除本地素材..");
 	        			String f1 = ConstantsAdsCode.LIVE_UNDER_HD_FILE1;
 	        			String f2 = ConstantsAdsCode.LIVE_UNDER_HD_FILE2;
 	        			String f3 = ConstantsAdsCode.LIVE_UNDER_HD_FILE3;
@@ -2804,6 +2808,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 	        			deleteFile(downLoadPath, f2);
 	        			deleteFile(downLoadPath, f3);
 	        			//再传默认素材进去
+	        			log.info("添加默认素材至本地..");
 	        			String rootPath = this.getClass().getClassLoader().getResource("").getPath();
 	        			try {
 	        				File downLoadDir = new File(downLoadPath);
@@ -2862,22 +2867,27 @@ public class PushAdsServiceImpl implements PushAdsService {
 						}
 					}					
 				}			
-				//压缩文件
-				log.info("压缩素材文件..");
-				String sourcePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioHDTempPath()+"/"+areaCode+"/" + "advResource-c";				
-				linuxRun("zip -r",sourcePath,zipFilePath+"/"+ConstantsAdsCode.ADVRESOURCE_C);
+				
 			}       
 	        
 			if(changed){
 				
+				//删除 advResource-c.dat
+				deleteFile(zipFilePath, ConstantsAdsCode.ADVRESOURCE_C);
+				
+				//压缩文件
+				log.info("压缩素材文件..");
+				String sourcePath = InitConfig.getAdsConfig().getUnRealTimeAds().getAdsaudioHDTempPath()+"/"+areaCode+"/" + "advResource-c";				
+				linuxRun("zip -r",sourcePath,zipFilePath+"/"+ConstantsAdsCode.ADVRESOURCE_C);
+				
 				List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 
-				boolean ocgExist = false;
+				//boolean ocgExist = false;
 				
 				for (OcgInfo ocg : ocgList) {
 					if (ocg.getAreaCode().equals(areaCode)) {
 						
-						ocgExist = true;
+						//ocgExist = true;
 						
 						String ocgIp = ocg.getIp();
 						int ocgPort = Integer.parseInt(ocg.getPort());
@@ -4007,6 +4017,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 	   private void deleteFile(String delDir, String fileName){
 		   File f = new File(delDir + "/" + fileName);
 		   if(f.exists()){
+			   log.info("删除文件 " + f.getAbsolutePath());
 			   f.delete();
 		   }
 	   }

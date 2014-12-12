@@ -25,8 +25,8 @@ public class TReleaseArea implements java.io.Serializable {
 	private String locationType;
 	@Column(name = "LOCATION_CODE")
 	private String locationCode;
-	@Column(name = "TS_ID")
-	private String tsId;
+//	@Column(name = "TS_ID")
+//	private String tsId;
 	@Column(name = "OCS_ID")
 	private String ocsId;
 	
@@ -79,13 +79,13 @@ public class TReleaseArea implements java.io.Serializable {
 		this.locationCode = locationCode;
 	}
 
-	public String getTsId() {
-		return tsId;
-	}
-
-	public void setTsId(String tsId) {
-		this.tsId = tsId;
-	}
+//	public String getTsId() {
+//		return tsId;
+//	}
+//
+//	public void setTsId(String tsId) {
+//		this.tsId = tsId;
+//	}
 
 	public String getOcsId() {
 		return ocsId;

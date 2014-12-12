@@ -273,7 +273,7 @@ public class FtpBase {
 	 */
 	public void closeFTP() {
 		try {
-			if (FtpClient != null && FtpClient.isConnected()) {
+			if (FtpClient != null) {
 				FtpClient.disconnect();
 				FtpClient = null;
 			}

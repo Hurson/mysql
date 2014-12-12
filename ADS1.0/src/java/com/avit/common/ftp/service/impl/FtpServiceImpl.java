@@ -283,7 +283,7 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		boolean flag = false;
 		File outfile = null;
 		OutputStream outputStream = null;
-		
+		logger.info("download ftp file: " + remoteDirectory + "/" + remoteFileName + "; and save as: " + localDirectory + "/" + localFileName);
 		if (StringUtils.isNotBlank(remoteFileName)&&remoteFileName.contains(".")) {
 			
 			if (StringUtils.isNotBlank(localDirectory)) {
