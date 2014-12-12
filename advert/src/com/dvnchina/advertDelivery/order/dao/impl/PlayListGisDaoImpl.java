@@ -265,10 +265,6 @@ public class PlayListGisDaoImpl extends PlayListDaoImpl implements
 					if("02061".equals(positionCode) || "02062".equals(positionCode)){
 						//广播收听背景广告，只查询音频类频道
 						sql.append(" and c.channel_type='音频直播类业务' ");
-					}else if("02074".equals(positionCode) || "02084".equals(positionCode) || "02094".equals(positionCode)){
-						//do nothing
-					}else{
-						sql.append(" and c.channel_type='视频直播类业务' ");
 					}
 					List<String> list = getJdbcTemplate().query(sql.toString(),new RowMapper<String>() {
 						public String mapRow(ResultSet rs, int num)

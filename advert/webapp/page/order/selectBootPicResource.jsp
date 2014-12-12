@@ -113,7 +113,8 @@
         		var resourceRef = resourceArray[i];
         		materLocation += resourceRef.resourceId;
         		materLocation += ":";
-        		materLocation += resourceRef.inStreamArray.join(",");
+        		//materLocation += resourceRef.inStreamArray.join(",");
+        		materLocation += arrayToStr(resourceRef.inStreamArray);
         		materLocation += "-";
         	}
         	var mllength = materLocation.length;
@@ -142,6 +143,20 @@
 	 		   });
         	$("[name='ids']").removeAttr("checked");//取消全选  
     	}
+	}
+	
+	function arrayToStr(array){
+	    var str = "";
+	    if(array && array.length > 0){       
+	        for(var i = 0; i < array.length; i++){
+	            str += array[i] + ",";
+	        }
+	        var strlen = str.length;
+	        if(strlen > 0 && str.charAt(strlen - 1) == ','){
+	            str = str.substring(0, strlen -1);
+	        }
+	    }
+	    return str;
 	}
     
 </script>

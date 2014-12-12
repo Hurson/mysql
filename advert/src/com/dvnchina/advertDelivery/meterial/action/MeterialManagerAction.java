@@ -1722,21 +1722,32 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
                         String remoteDirectoryReal=config.getValueByKey("materila.ftp.realPath"); 
                         ftp.uploadFileToRemote(".././"+localFileName, remoteDirectoryReal, localFileName);
 
-                        //TODO 调用接口复制视频文件到videoPump
-                        UploadClient client = new UploadClient();
-                        String fileNameToVideoPump = remoteDirectoryReal+"/"+localFileName;
-                        String filePathToVideoPump = materialTemp.getAdvertPositionId()+"/"+materialTemp.getId();
-                        //client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump+"/"+localFileName);
-                        client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump);
-                        videoReal.setVideoPumpPath(filePathToVideoPump);
-                        AdvertPosition advertPosition =meterialManagerService.getAdvertPosition(materialTemp.getAdvertPositionId());
-                        if(advertPosition!=null){
-                        	if(advertPosition.getPositionPackageType()==3){
-                            	//单向非实时广告
-                        		videoReal.setVideoPumpPath(videoReal.getFormalFilePath());
-                            }
-                        }
+//                        //TODO 调用接口复制视频文件到videoPump
+//                        UploadClient client = new UploadClient();
+//                        String fileNameToVideoPump = remoteDirectoryReal+"/"+localFileName;
+//                        String filePathToVideoPump = materialTemp.getAdvertPositionId()+"/"+materialTemp.getId();
+//                        //client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump+"/"+localFileName);
+//                        client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump);
+//                        videoReal.setVideoPumpPath(filePathToVideoPump);
+//                        AdvertPosition advertPosition =meterialManagerService.getAdvertPosition(materialTemp.getAdvertPositionId());
+//                        if(advertPosition!=null){
+//                        	if(advertPosition.getPositionPackageType()==3){
+//                            	//单向非实时广告
+//                        		videoReal.setVideoPumpPath(videoReal.getFormalFilePath());
+//                            }
+//                        }
                         
+                        AdvertPosition advertPosition =meterialManagerService.getAdvertPosition(materialTemp.getAdvertPositionId());
+                        videoReal.setVideoPumpPath(videoReal.getFormalFilePath());
+                        if(advertPosition!=null && advertPosition.getPositionPackageType()!=3){
+                        	 //TODO 调用接口复制视频文件到videoPump
+                            UploadClient client = new UploadClient();
+                            String fileNameToVideoPump = remoteDirectoryReal+"/"+localFileName;
+                            String filePathToVideoPump = materialTemp.getAdvertPositionId()+"/"+materialTemp.getId();
+                            //client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump+"/"+localFileName);
+                            client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump);
+                            videoReal.setVideoPumpPath(filePathToVideoPump);
+                        }                                       
                         meterialManagerService.saveVideoMaterialReal(videoReal);
 
                         //删除本地文件

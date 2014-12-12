@@ -626,6 +626,7 @@ public class PloyServiceImpl implements PloyService {
 			List<PloyBackup> lstPloy =this.getTheAllEntity(ployTimeCGroup, ploy);
 			if (ploy.getPositionId()==13 || ploy.getPositionId()==14 
 					|| ploy.getPositionId()==1 || ploy.getPositionId()==2 
+					|| ploy.getPositionId()==47 || ploy.getPositionId()==48   //直播下排
 					|| ploy.getPositionId()==45 || ploy.getPositionId()==46
 					|| ploy.getPositionId()== 44)
 			{
