@@ -43,7 +43,7 @@ public class UixServiceImpl implements UixService {
         	 try {       	
              	int responsCode = httpClient.executeMethod(getMethod);
      			if(200 == responsCode){
-     				String responseBody = new String(getMethod.getResponseBodyAsString().getBytes("GBK"));
+     				String responseBody = new String(getMethod.getResponseBodyAsString().getBytes("UTF-8"));
      				
      				JsonResponse respEntity = (JsonResponse) Json2ObjUtil.getObject4JsonString(responseBody, JsonResponse.class);
      				if(respEntity.getRet().equals("0")){

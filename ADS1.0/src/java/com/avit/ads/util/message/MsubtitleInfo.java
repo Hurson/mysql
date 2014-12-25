@@ -35,7 +35,7 @@ public class MsubtitleInfo {
 	@XmlAttribute(name="word", required = true)
 	private String word;
 	
-	@XmlAttribute(name="uiID", required = true)
+	@XmlAttribute(name="uiID")
 	private String uiId;
 	
 	

@@ -9,10 +9,8 @@ import com.avit.ads.pushads.task.bean.OcgInfo;
 import com.avit.common.page.dao.impl.CommonDaoImpl;
 
 
-@Repository
+@Repository("OcgInfoDao")
 public class OcgInfoDaoImpl extends CommonDaoImpl implements OcgInfoDao{
-
-	
 	
 	public List<OcgInfo> getOcgInfoList(){
 		

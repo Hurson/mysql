@@ -709,38 +709,38 @@ public class OcgServiceImpl implements OcgService {
 
 	public static void main(String[] args) throws Exception {
 		
-		String ip = "192.168.6.115";
-		int port = ConstantsHelper.OCG_UDP_PORT;
-		
-		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
-		sendMsgEntity.setSendPath("/OC/ui/");
-		sendMsgEntity.setSendType("1");
-		sendMsgEntity.setAdsType("2");
-
-		JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
-		
-		String sendMsg = helper.toXML(sendMsgEntity);
-		
-		byte[] retBuf = new OcgServiceImpl().sendUdpMsg(ip, port, sendMsg);
-		
-		if (null == retBuf || retBuf.length == 0) {
-			return ;
-		}
-		String retMsg = new String(retBuf).trim();
-		RetMsg retMsgEntity = null;
-		try {
-			retMsgEntity = (RetMsg) helper.fromXML(retMsg);
-			if ("200".equals(retMsgEntity.getCode())) {
-				System.out.println("OCG投放广告成功");
-				return ;
-			} else if ("400".equals(retMsgEntity.getCode())) {
-				System.out.println("OCG投放广告失败: 请求格式不对 ");
-			} else if ("401".equals(retMsgEntity.getCode())) {
-				System.out.println("OCG投放广告失败： 为获取广告文件");
-			}
-		} catch (Exception e) {
-			System.out.println("OCG投放广告，返回XML格式消息解析异常");
-		}
+//		String ip = "192.168.6.115";
+//		int port = ConstantsHelper.OCG_UDP_PORT;
+//		
+//		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
+//		sendMsgEntity.setSendPath("/OC/ui/");
+//		sendMsgEntity.setSendType("1");
+//		sendMsgEntity.setAdsType("2");
+//
+//		JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
+//		
+//		String sendMsg = helper.toXML(sendMsgEntity);
+//		
+//		byte[] retBuf = new OcgServiceImpl().sendUdpMsg(ip, port, sendMsg);
+//		
+//		if (null == retBuf || retBuf.length == 0) {
+//			return ;
+//		}
+//		String retMsg = new String(retBuf).trim();
+//		RetMsg retMsgEntity = null;
+//		try {
+//			retMsgEntity = (RetMsg) helper.fromXML(retMsg);
+//			if ("200".equals(retMsgEntity.getCode())) {
+//				System.out.println("OCG投放广告成功");
+//				return ;
+//			} else if ("400".equals(retMsgEntity.getCode())) {
+//				System.out.println("OCG投放广告失败: 请求格式不对 ");
+//			} else if ("401".equals(retMsgEntity.getCode())) {
+//				System.out.println("OCG投放广告失败： 为获取广告文件");
+//			}
+//		} catch (Exception e) {
+//			System.out.println("OCG投放广告，返回XML格式消息解析异常");
+//		}
 		
 		
 		
@@ -775,32 +775,59 @@ public class OcgServiceImpl implements OcgService {
 //		//dealIntefaceRs(msg);
 //		dealIntefaceRs(retMsg);
 		
+		String ip = "192.168.24.61";
+		String sendMsg = initIntefaceDebug();
+		
+		OcgServiceImpl ocgService = new OcgServiceImpl();
+		
+		int port = ConstantsHelper.OCG_UDP_PORT;
+		
+		System.out.println("发送消息：\n" + sendMsg);
+		byte[] retBuf = ocgService.sendUdpMsg(ip, port, sendMsg);
+		if (null == retBuf || retBuf.length == 0) {
+			System.out.println("retBuf为空");;
+		}
+		String retMsg = new String(retBuf).trim();
+		RetMsg retMsgEntity = null;
+		try {
+			retMsgEntity = (RetMsg) JaxbXmlObjectConvertor.getInstance().fromXML(retMsg);
+			if ("200".equals(retMsgEntity.getCode())) {
+				System.out.println("UNT更新信息成功");
+				return ;
+			} else if ("400".equals(retMsgEntity.getCode())) {
+				System.out.println("UNT更新信息失败：请求参数格式不正确 ");
+			} else if ("401".equals(retMsgEntity.getCode())) {
+				System.out.println("UNT更新信息失败");
+			}
+		} catch (Exception e) {
+			System.out.println("OCG返回消息解析异常");
+			e.printStackTrace();
+		}
 
 	}
 	
 	public static String initIntefaceDebug(){
 		
 		// sendFile
-		OcgPlayMsg ocgPalyMsg = new OcgPlayMsg();
-		ocgPalyMsg.setSendPath("ftp://abc:abc@192.168.128.128/ui");
-		ocgPalyMsg.setSendType("1");
+//		OcgPlayMsg ocgPalyMsg = new OcgPlayMsg();
+//		ocgPalyMsg.setSendPath("ftp://abc:abc@192.168.128.128/ui");
+//		ocgPalyMsg.setSendType("1");
 		
 		// sendUIMessage
-		UiUpdateMsg uiMsg = new UiUpdateMsg();
-		uiMsg.setUpdateType("1:initPic-c.iframe,5:0");
-		uiMsg.setNetworkID("6280");
+//		UiUpdateMsg uiMsg = new UiUpdateMsg();
+//		uiMsg.setUpdateType("1:initPic-c.iframe,5:0");
+//		uiMsg.setNetworkID("6280");
 //		uiMsg.setServicesID("0");
 //		uiMsg.setTsID("10086");
 
-		UNTMessage uNTMsg = initUNTMsg(1);
-		//UNTMessage uNTMsg = initUNTMsg(2);
+		//UNTMessage uNTMsg = initUNTMsg(1);
+		UNTMessage uNTMsg = initUNTMsg(2);
 		//UNTMessage uNTMsg = initUNTMsg(3);
 		//UNTMessage uNTMsg = initUNTMsg(4);
 		//UNTMessage uNTMsg = initUNTMsg(5);
 		//UNTMessage uNTMsg = initUNTMsg(6);
 		
-		JaxbXmlObjectConvertor jaxbhelper = JaxbXmlObjectConvertor
-		.getInstance();
+		JaxbXmlObjectConvertor jaxbhelper = JaxbXmlObjectConvertor.getInstance();
         //String ocgXml = jaxbhelper.toXML(ocgPalyMsg);
         //String ocgXml = jaxbhelper.toXML(uiMsg);
         String ocgXml = jaxbhelper.toXML(uNTMsg);
@@ -808,8 +835,7 @@ public class OcgServiceImpl implements OcgService {
 	}
 
 	public static void dealIntefaceRs(String retMsg){
-		JaxbXmlObjectConvertor jaxbhelper = JaxbXmlObjectConvertor
-		.getInstance();
+		JaxbXmlObjectConvertor jaxbhelper = JaxbXmlObjectConvertor.getInstance();
 		RetMsg retMsgEntity = null;
 		try {
 			retMsgEntity = (RetMsg) jaxbhelper.fromXML(retMsg);
@@ -837,8 +863,8 @@ public class OcgServiceImpl implements OcgService {
 		//
 		MsubtitleInfo subtitle = new MsubtitleInfo();
 		subtitle.setActionType("1");
-		subtitle.setServiceID("-1");
-		subtitle.setTimeout("10");
+		subtitle.setServiceID("101");
+		subtitle.setTimeout("0");
 		subtitle.setFontSize("16");
 		subtitle.setFontColor("345");
 		subtitle.setBackgroundX("50");
@@ -847,7 +873,8 @@ public class OcgServiceImpl implements OcgService {
 		subtitle.setBackgroundHeight("80");
 		subtitle.setBackgroundColor("346");
 		subtitle.setShowFrequency("8");
-		subtitle.setWord("滚动字幕");
+		//subtitle.setWord("滚动:测试滚动字幕广告测试滚动字幕广告测试滚动字幕广告测试滚动字幕广告");
+		subtitle.setWord("B hello word hello word hello word hello word");
 		//subtitle.setWord("Move Words");
 		subtitle.setUiId("b");
 		//
