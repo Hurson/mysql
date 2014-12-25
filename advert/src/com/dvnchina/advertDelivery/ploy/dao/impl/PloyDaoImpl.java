@@ -876,7 +876,7 @@ public class PloyDaoImpl extends BaseDaoImpl implements PloyDao {
 	@Override
 	public PageBeanDB queryCityAreaList(PloyBackup ploy, Integer pageSize, Integer pageNumber) {
 		String sql = "from ReleaseArea ra where ra.areaCode != '152000000000'" ;  
-	    return  getPageList(sql,null,1,100);
+	    return  getPageList(sql,null,1,10000);
 	}
 	
 	@Override

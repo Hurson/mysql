@@ -162,5 +162,7 @@
    
    <bean name="warnAction" class="com.dvnchina.advertDelivery.warn.action.WarnAction" scope="prototype"/>
    
+   <!-- 游动字幕广告  -->
+   <bean name="subtitleAction" class="com.dvnchina.advertDelivery.subtitle.action.SubtitleAction" scope="prototype"/>
    
 </beans>

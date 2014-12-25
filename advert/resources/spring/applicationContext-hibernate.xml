@@ -186,7 +186,7 @@
 				<value>dbmap/UserPackagePosition.hbm.xml</value>	
 				<value>dbmap/Locationcode.hbm.xml</value>	
 				
-				
+				<value>dbmap/SubtitelBean.hbm.xml</value>	
 								
 			</list>
 		</property>

@@ -22,6 +22,11 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 	public Integer save(Object obj) {
 		return (Integer) getHibernateTemplate().save(obj);
 	}
+	
+	@Override
+	public void saveOrUpdate(Object obj) {
+		getHibernateTemplate().saveOrUpdate(obj);
+	}
 
 	@Override
 	public void update(Object obj) {
@@ -348,4 +353,6 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
        });
        
    }
+
+
 }

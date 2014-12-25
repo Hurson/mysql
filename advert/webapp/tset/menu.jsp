@@ -49,7 +49,7 @@ function  showColumn(){
 	var menu_first = ['ggzcgl','ggstfgl','bpgl','xtgl','ggwgl','ggsgl','htgl','tfclgl','yxgzgl','ddgl','flsjtbgl','xtcx','rzgl']; 
 	
 
-	var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','ddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','tfclwh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','rbb','zbb','ybb','hkpdzgl'];
+	var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','ddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','tfclwh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','rbb','zbb','ybb','hkpdzgl','zmggdd'];
 
 	
 	var columns = $('#columns').val();//
@@ -259,6 +259,7 @@ function  showColumn(){
 	                    <ul>
 	                    	<li id="ddwh" style="display: none;"><a href="#"  onclick="openPage('/page/order/queryOrderList.do', '91', '订单维护', '订单维护')">&gt;&gt;&nbsp;订单维护</a></li>
 							<li id="ddsh" style="display: none;"><a href="#"  onclick="openPage('/page/order/queryOrderAuditList.do', '92', '订单审核', '订单审核')">&gt;&gt;&nbsp;订单审核</a></li>
+							<li id="zmggdd" style="display: none;"><a href="#"  onclick="openPage('/page/order/findSubtitleList.do', '93', '字幕广告订单', '字幕广告订单')">&gt;&gt;&nbsp;字幕广告订单</a></li>
 	                    </ul>
 	                </li>
 	            </ul>

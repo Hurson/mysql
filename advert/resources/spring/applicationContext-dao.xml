@@ -217,6 +217,11 @@
 	 	<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
+	<!-- 游动字幕广告 -->
+	<bean name="subtitleDao" class="com.dvnchina.advertDelivery.subtitle.dao.impl.SubtitleDaoImpl">
+	 	<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
 </beans>
 
 

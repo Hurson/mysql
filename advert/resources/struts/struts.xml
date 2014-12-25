@@ -41,6 +41,8 @@
 	
 	<include file="struts/struts-warn.xml"/>
 	
+	<include file="struts/struts-subtitle.xml"/>
+	
 	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
 	<!-- 指定Web应用的默认编码集,相当于调用HttpServletRequest的setCharacterEncoding方法 -->
 	<constant name="struts.i18n.encoding" value="UTF-8" />

@@ -18,6 +18,7 @@ public interface BaseDao {
 	 */
 	public Integer save(Object obj);
 
+	public void saveOrUpdate(Object obj);
 	/**
 	 * 修改指定的对象
 	 * 

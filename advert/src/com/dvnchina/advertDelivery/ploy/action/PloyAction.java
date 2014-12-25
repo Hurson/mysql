@@ -170,7 +170,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		postionJson = Obj2JsonUtil.list2json(pageAdPosition.getDataList());
 		pageLocation =preciseservice.queryLocationCodeList(null, 100000, 1);
 		
-		pageReleaseLocation = ployService.queryAreaList(null, 1, 100);
+		pageReleaseLocation = ployService.queryAreaList(null, 1, 100000);
 		
 		// modified by liuwenping 去掉河南这个区域
 //		List<?> areaList = pageReleaseLocation.getDataList();

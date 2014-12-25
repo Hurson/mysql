@@ -2,6 +2,8 @@ package com.avit.ads.webservice;
 
 import javax.jws.WebService;
 
+import com.dvnchina.advertDelivery.subtitle.bean.SubtitleBean;
+
 @WebService
 public interface AdsService {
 	
@@ -13,5 +15,10 @@ public interface AdsService {
 	 * @return
 	 */
 	public String sendUI(String areaCode, String dataDefine, String htmlData);
+	
+	//投放字幕广告
+	public boolean pushSubtitle(SubtitleBean subtitle);
+	
+	public void test(EasyBean easyBean);
 
 }

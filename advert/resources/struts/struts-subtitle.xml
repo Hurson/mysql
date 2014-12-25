@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/subtitle" extends="default">
+		
+		<action name="findSubtitleList" class="subtitleAction" method="findSubtitleList">
+			<result name="success">/page/order/subtitleList.jsp</result>
+		</action>
+		
+		<action name="delSubtitle" class="subtitleAction" method="delSubtitle">
+			<result name="success">/page/order/subtitleList.jsp</result>
+		</action>
+		
+		<action name="addSubtitle" class="subtitleAction" method="addSubtitle">
+			<result name="success">/page/order/addSubtitle.jsp</result>
+		</action>
+		
+		<action name="saveSubtitle" class="subtitleAction" method="saveSubtitle">
+			<result name="success">/page/order/subtitleList.jsp</result>
+		</action>
+		
+		<action name="saveAndPushSubtitle" class="subtitleAction" method="saveAndPushSubtitle">
+			<result name="success">/page/order/subtitleList.jsp</result>
+		</action>
+		
+		<action name="getSubtitleDetail" class="subtitleAction" method="getSubtitleDetail">
+			<result name="success">/page/order/addSubtitle.jsp</result>
+		</action>
+		
+		
+		
+	</package>
+</struts>
+	

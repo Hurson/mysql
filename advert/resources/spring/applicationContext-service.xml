@@ -198,5 +198,8 @@
  	<!-- 告警信息 -->
  	<bean name="warnService" class="com.dvnchina.advertDelivery.warn.service.impl.WarnServiceImpl"/>
 
+	<!-- 游动字幕广告 -->
+ 	<bean name="subtitleService" class="com.dvnchina.advertDelivery.subtitle.service.impl.SubtitleServiceImpl">
+ 	</bean>
 
 </beans>
