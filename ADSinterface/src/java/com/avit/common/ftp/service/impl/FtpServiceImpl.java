@@ -6,9 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -373,7 +376,7 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		return fileName;
 	}
 	
-	public Collection<String> getLatestFiles(String remoteDirectory){
+	public List<String> getLatestFiles(String remoteDirectory){
 		
 		try{
 			//切换FTP目录
@@ -381,30 +384,45 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 				logger.error("切换目录失败：FTP不存在目录 " + remoteDirectory);
 				return null;
 			}
+			
+			String[] fileNames = FtpClient.listNames();
+			List<String> fileNameList = Arrays.asList(fileNames);
+			Collections.sort(fileNameList);
 
-			Map<String, Date> dateMap = new HashMap<String, Date>();
-			Map<String, String> fileNameMap = new HashMap<String, String>();
+			List<String> resultList = new ArrayList<String>();  
 			
-			FTPFile[] ftpFiles = FtpClient.listFiles();
-			for(int i = 0; i < ftpFiles.length; i++){
-				FTPFile f = ftpFiles[i];
-				Calendar cal =  f.getTimestamp();
-				Date createTime = cal.getTime();
-				String areaCode = f.getName().substring(0, 6);
-				//map中不存在该区域，则把时间和文件名放入map;  map中存在该区域，则如果文件创建时间更晚，加入map
-				if( !dateMap.containsKey(areaCode) || createTime.after(dateMap.get(areaCode))){
-					dateMap.put(areaCode, createTime);
-					fileNameMap.put(areaCode, f.getName());
-				}				
+			int fileNum = fileNameList.size();
+			for(int i = 0; i < fileNum; i++){
+				String fileName = fileNameList.get(i);
+				String curAreaCode = fileName.substring(0, 6);
+				if( ( i + 1 == fileNum || !curAreaCode.equals(fileNameList.get(i+1).subSequence(0, 6)) ) && validateDate(fileName) ){ //往后探，没有文件名或者区域不一样
+					resultList.add(fileName);
+				}
 			}
-			
-			return fileNameMap.values();
+			return resultList;
 			
 		} catch (IOException e) {
-			logger.error("从FTP下载文件出现异常：", e);
+			logger.error("获取FTP文件名称时出现异常：", e);
 			return null;
 		}
 	}
+	
+	private boolean validateDate(String fileName){
+		Date today = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		Date yesterday = cal.getTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		
+		String yesterdayStr = sdf.format(yesterday);
+		String dayOfFile = fileName.substring(7, 15);
+		if(dayOfFile.equals(yesterdayStr)){
+			return true;
+		}
+		return false;
+	}
+	
 	
 	public boolean downloadFile(String remoteFileName, String localFileName, String remoteDirectory, String localDirectory) {
 		OutputStream outputStream = null;

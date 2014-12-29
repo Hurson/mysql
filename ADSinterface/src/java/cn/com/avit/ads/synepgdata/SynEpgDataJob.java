@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Collection;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -53,11 +52,11 @@ public class SynEpgDataJob {
 		String localDirectory = InitConfig.getAdsConfig().getRealTimeAds().getEpgTempPath();
 	
 		//取EPG最新生成的文件，每个区域有一个文件
-	    Collection<String> fileNameCol = ftpService.getLatestFiles(remoteDirectory);
+	    List<String> fileNameList = ftpService.getLatestFiles(remoteDirectory);
 	    
-	    if(null != fileNameCol && fileNameCol.size() > 0){
+	    if(null != fileNameList && fileNameList.size() > 0){
 	    	
-	    	for(String remoteFileName : fileNameCol){
+	    	for(String remoteFileName : fileNameList){
 	    		
 	    		if(StringUtils.isBlank(remoteFileName)){
 	    	    	return;
@@ -100,10 +99,10 @@ public class SynEpgDataJob {
 	    			//删除同区域非最新文件
 	    			deleteOtherFiles(localDirectory, localFileName);
 	    			
-	    			//利用临时表删除正式表中多余的serviceid
-	    			daoImpl.excuteBySql(" DELETE FROM t_channelinfo WHERE SERVICE_ID NOT IN (SELECT SERVICE_ID FROM t_channelinfo_temp)", null);
-	    			//清空临时表
-	    			daoImpl.deleteBySql("DELETE FROM t_channelinfo_temp", null);
+//	    			//利用临时表删除正式表中多余的serviceid
+//	    			daoImpl.excuteBySql(" DELETE FROM t_channelinfo WHERE SERVICE_ID NOT IN (SELECT SERVICE_ID FROM t_channelinfo_temp)", null);
+//	    			//清空临时表
+//	    			daoImpl.deleteBySql("DELETE FROM t_channelinfo_temp", null);
 	    		}
 	    	}
 	    	log.info("finish syn epg channelinfo data.");
@@ -134,24 +133,33 @@ public class SynEpgDataJob {
 				return;
 			}
 			
-			//写临时表表，用处：正式表中不存在文件中的serviceid需要删除
-			ChannelInfoTemp tempEntity = new ChannelInfoTemp();			
-			tempEntity.setServiceId(serviceId);
-			daoImpl.save(tempEntity);
+//			//写临时表表，用处：正式表中不存在文件中的serviceid需要删除
+//			ChannelInfoTemp tempEntity = new ChannelInfoTemp();			
+//			tempEntity.setServiceId(serviceId);
+//			daoImpl.save(tempEntity);
 			
-			List resultList = daoImpl.find("from ChannelInfo ci where ci.serviceId=?", serviceId);
+			List<ChannelInfo> resultList = daoImpl.find("from ChannelInfo ci where ci.serviceId=?", serviceId);
 			ChannelInfo entity = null;
 			if(null != resultList && resultList.size() > 0){
-				entity = (ChannelInfo)resultList.get(0);
+				entity = resultList.get(0);
+				//名称变了或者类型变了才更新，ts_id变了不更新
+				if(!channelName.equals(entity.getChannelName()) || !channelType.equals(entity.getChannleType())){
+					entity.setChannelName(channelName);
+					entity.setChannleType(channelType);
+					entity.setTsId(tsId);	
+					
+					daoImpl.save(entity);
+				}
 			}else{
 				entity = new ChannelInfo();
 				entity.setServiceId(serviceId);
+				entity.setChannelName(channelName);
+				entity.setChannleType(channelType);
+				entity.setTsId(tsId);	
+				
+				daoImpl.save(entity);
 			}
-			entity.setChannelName(channelName);
-			entity.setChannleType(channelType);
-			entity.setTsId(tsId);	
-			
-			daoImpl.save(entity);	
+				
 			
 		}	
 	}

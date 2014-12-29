@@ -2,7 +2,7 @@ package com.avit.common.ftp.service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.List;
 
 
 public interface FtpService {
@@ -60,7 +60,7 @@ public interface FtpService {
 	
 	public String getLatestFileName(String remoteDirectory);
 	
-	public Collection<String> getLatestFiles(String remoteDirectory);
+	public List<String> getLatestFiles(String remoteDirectory);
 	
 	public boolean downloadFile(String remoteFileName, String localFileName,String remoteDirectory,String localDirectory);
 	
