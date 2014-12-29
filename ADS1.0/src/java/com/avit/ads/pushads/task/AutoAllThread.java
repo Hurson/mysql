@@ -104,11 +104,33 @@ public class AutoAllThread extends Thread {
 				//汇聚后自动生成adConfigFile.js，cpsadConfigFile.js，npvradConfigFile.js，自动发布
 				pushAdsService.sendAdsData();//(null, null, "", "");
 				
+				/*
+				 * 发送UI广告
+				 * 之前投放unt和ui是两个线程执行，但是都使用pushAdsService，引入的ftpService是有状态的
+				 * 如果同时投放两种类型的广告，会出现同步问题，为了简单修改起见，直接放一个线程执行
+				 */
+				
+				
+				//投放高清开机视频广告
+				pushAdsService.sendStartHdVideoAds(loopDate);
+				
+				//投放高清开机图片广告
+				pushAdsService.sendStartHdPicAds(loopDate);
+				
+				// 高清音频背景和直播下排广告绑定投放
+				pushAdsService.sendAdResourceAds(loopDate);
+								
+				
 				Thread.sleep(60000);
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
 		}
+		
+		
+		
+		
+		
 	}
 	
 	/**

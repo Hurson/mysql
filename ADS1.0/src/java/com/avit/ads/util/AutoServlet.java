@@ -58,9 +58,9 @@ public class AutoServlet extends HttpServlet {
 				Thread.sleep(500);	
 				
 
-				startStbThread =new AutoStartStbThread();
-				startStbThread.start();				
-				Thread.sleep(500);	
+//				startStbThread =new AutoStartStbThread();
+//				startStbThread.start();				
+//				Thread.sleep(500);	
 
 				
 			}catch(Exception ex){
