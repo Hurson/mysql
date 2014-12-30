@@ -48,7 +48,7 @@ public class CpsServiceImpl implements CpsService{
 		try {
 			ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(),Integer.parseInt(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(),InitConfig.getAdsConfig().getAdResource().getPwd());
 		} catch (Exception e) {
-			warnHelper.writeWarnMsgToDb("广告素材ftp服务器连接失败   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+			warnHelper.writeWarnMsgToDb("广告素材ftp服务器连接失败   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
 			log.error("广告素材ftp服务器连接失败", e);
 			return ret;		
 		}
@@ -61,7 +61,7 @@ public class CpsServiceImpl implements CpsService{
 				try {
 					ftpService.setServer(cpsList.get(i).getIp(),Integer.parseInt(cpsList.get(i).getPort()), cpsList.get(i).getUser(),cpsList.get(i).getPwd());
 				} catch (Exception e) {
-					warnHelper.writeWarnMsgToDb("双向资源ftp服务器连接失败   IP:" + cpsList.get(i).getIp() + ", PORT: " + cpsList.get(i).getPort() + " , USER: " + cpsList.get(i).getUser() + ", PWD: " + cpsList.get(i).getPwd());
+					warnHelper.writeWarnMsgToDb("双向资源ftp服务器连接失败   IP:" + cpsList.get(i).getIp());
 					log.error("双向资源ftp服务器连接失败", e);
 					return ret;		
 				}

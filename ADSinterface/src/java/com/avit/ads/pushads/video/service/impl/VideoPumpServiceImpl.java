@@ -43,7 +43,7 @@ public class VideoPumpServiceImpl implements VideoPumpService {
 		try {
 			ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(),Integer.parseInt(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(),InitConfig.getAdsConfig().getAdResource().getPwd());
 		} catch (Exception e) {
-			warnHelper.writeWarnMsgToDb("广告素材ftp服务器连接失败   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+			warnHelper.writeWarnMsgToDb("广告素材ftp服务器连接失败   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
 			log.error("广告素材ftp服务器连接失败", e);
 			return ret;		
 		} 
@@ -55,7 +55,7 @@ public class VideoPumpServiceImpl implements VideoPumpService {
 				try {
 					ftpService.setServer(videoList.get(i).getIp(),Integer.parseInt(videoList.get(i).getPort()), videoList.get(i).getUser(),videoList.get(i).getPwd());
 				} catch (Exception e) {
-					warnHelper.writeWarnMsgToDb("视频ftp服务器连接失败   IP:" + videoList.get(i).getIp() + ", PORT: " + videoList.get(i).getPort() + " , USER: " + videoList.get(i).getUser() + ", PWD: " + videoList.get(i).getPwd());
+					warnHelper.writeWarnMsgToDb("视频ftp服务器连接失败   ip:" + videoList.get(i).getIp());
 					log.error("视频ftp服务器连接失败", e);
 					return ret;		
 				} 

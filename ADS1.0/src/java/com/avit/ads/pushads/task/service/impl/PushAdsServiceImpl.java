@@ -1807,8 +1807,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
 			} catch (Exception e) {
 				log.error("FTP服务器无法连接",e);
-				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() 
-						+ " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
 				return;
 			}
 			for (int i=0;i<adsList.size();i++)
@@ -2975,8 +2974,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
 			} catch (Exception e) {
 				log.error("FTP服务器无法连接",e);
-				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() 
-						+ " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
 				return;
 			} 
 			Map<String,String> areaMap = new HashMap<String,String>();
@@ -3309,7 +3307,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
 			} catch (Exception e) {
 				log.error("FTP服务器无法连接",e);
-				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp() + ", PORT: " + InitConfig.getAdsConfig().getAdResource().getPort() + " , USER: " + InitConfig.getAdsConfig().getAdResource().getUser() + ", PWD: " + InitConfig.getAdsConfig().getAdResource().getPwd());
+				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
 				return;
 			}
 			for (AdPlaylistGis adGis : adsList){

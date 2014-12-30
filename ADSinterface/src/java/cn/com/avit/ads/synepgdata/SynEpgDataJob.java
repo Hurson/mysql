@@ -43,7 +43,7 @@ public class SynEpgDataJob {
 			log.info("connect to epg ftp server..");
 			ftpService.setServer(ip, port, username, password);
 		} catch (IOException e) {
-			warnHelper.writeWarnMsgToDb("EPG系统ftp连接失败   ip:" + ip + ", port: " + port + " , username: " + username + ", pwd: " + password);
+			warnHelper.writeWarnMsgToDb("EPG系统ftp连接失败   ip:" + ip);
 			log.error("EPG系统ftp连接失败", e);
 			return;
 		}
