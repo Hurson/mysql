@@ -2081,7 +2081,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 		List<AdPlaylistGis> deadAdsList = pushAdsDao.queryEndAds(startTime, adsCode);		
 		if (deadAdsList!=null && deadAdsList.size()>0){
 			for(AdPlaylistGis adGis : deadAdsList){
-				long playListId = adGis.getId().longValue();
+				//long playListId = adGis.getId().longValue();
 				String areaCode = adGis.getAreas(); //单向投放广告，播出单只会有具体某个地市的区域码
 				
 				List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
@@ -2107,7 +2107,15 @@ public class PushAdsServiceImpl implements PushAdsService {
 						}
 					}
 				}
-				unRealTimeAdsPushHelper.cleanDelMap(playListId);
+				
+				//删除描述符
+				if(ConstantsAdsCode.PUSH_STARTSTB_HD.equals(adsCode)){
+					uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName());
+				}else if(ConstantsAdsCode.PUSH_STARTSTB_VIDEO_HD.equals(adsCode)){
+					uixService.delUiUpdateMsg(areaCode, UIUpdate.VIDEO.getType(), UIUpdate.VIDEO.getFileName());
+				}
+				
+				//unRealTimeAdsPushHelper.cleanDelMap(playListId);
 				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
 			}
 		}
