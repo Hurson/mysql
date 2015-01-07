@@ -94,8 +94,44 @@ insert into t_location_code  select n.* from t_location_code_temp n  where (n.`L
 commit;
 END;
 
+--同步双向栏目信息
+CREATE DEFINER = CURRENT_USER PROCEDURE `synCategory`()
+    NOT DETERMINISTIC
+    CONTAINS SQL
+    SQL SECURITY DEFINER
+    COMMENT ''
+BEGIN
 
+update `t_categoryinfo` m join t_categoryinfo_temp n on m.`RESOURCE_ID`=n.`RESOURCE_ID`
+ and m.`AREA_CODE`=n.`AREA_CODE` set m.`RESOURCE_NAME`=n.`RESOURCE_NAME`;
+commit;
+delete FROM t_categoryinfo  where (`RESOURCE_ID`,`AREA_CODE`) not in (
+select  RESOURCE_ID,AREA_CODE from  `t_categoryinfo_temp`
+);
+commit;   
+insert into t_categoryinfo  select n.* from t_categoryinfo_temp n  where (n.`RESOURCE_ID`,n.`AREA_CODE`) not IN(select RESOURCE_ID,AREA_CODE from  `t_categoryinfo` );
+commit;
 
+END;
 
+--同步双向节目信息
+CREATE DEFINER = CURRENT_USER PROCEDURE `synProgram`()
+    NOT DETERMINISTIC
+    CONTAINS SQL
+    SQL SECURITY DEFINER
+    COMMENT ''
+BEGIN
+
+update `t_assetinfo` m join t_assetinfo_temp n on m.`PROGRAM_ID`=n.`PROGRAM_ID` and m.`ASSET_ID`=n.`ASSET_ID`
+ and m.`AREA_CODE`=n.`AREA_CODE` set m.`ASSET_NAME`=n.`ASSET_NAME`;
+commit;
+delete FROM `t_assetinfo`  where (`PROGRAM_ID`,`AREA_CODE`) not in (
+select  CHANNEL_ID,networkID from  `t_assetinfo_temp`
+);
+commit;   
+insert into `t_assetinfo`  select n.* from t_assetinfo_temp n  where (n.`PROGRAM_ID`,n.`AREA_CODE`) not IN(select PROGRAM_ID,AREA_CODE from  `t_assetinfo` );
+commit;
+
+END;
 
 

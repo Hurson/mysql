@@ -142,5 +142,74 @@ CREATE TABLE `t_location_code_temp` (
 CHARACTER SET 'utf8' COLLATE 'utf8_general_ci'
 COMMENT='区域信息临时表';
 
+--双向栏目信息表
+ALTER TABLE `t_categoryinfo` change `CATEGORY_ID` `RESOURCE_ID` varchar(254),
+change `CATEGORY_NAME` `RESOURCE_NAME` varchar(254),
+change `HAS_CATEGORY` `RESOURCE_DESC` varchar(254),
+add `AREA_CODE` varchar(20);
 
+--双向栏目信息临时表
+CREATE TABLE `t_categoryinfo_temp` (
+  `ID` bigint(20) NOT NULL COMMENT '自增长主键',
+  `RESOURCE_ID` varchar(254) default NULL COMMENT '栏目ID或节目ID',
+  `RESOURCE_NAME` varchar(254) default NULL COMMENT '资源名称',
+  `POSTER_URL` varchar(254) default NULL,
+  `RESOURCE_DESC` varchar(254) default NULL COMMENT '资源的描述',
+  `RESOURCE_TYPE` char(1) default '1' COMMENT '栏目类型  1 叶节点 0非叶节点',
+  `CREATE_TIME` datetime default NULL,
+  `MODIFY_TIME` datetime default NULL,
+  `STATE` char(1) default NULL,
+  `AREA_CODE` varchar(20) default NULL,
+  `PARENT_ID` decimal(16,0) default NULL,
+  PRIMARY KEY  USING BTREE (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='从AMS获取影片分类信息数据'; 
 
+--双向节目信息表
+ALTER TABLE `t_assetinfo` ADD `FORMAT` char(1) default NULL COMMENT '高标清 0 标清 1高清',
+  ADD `AREA_CODE` varchar(20) default NULL,
+  ADD `CATEGORY_ID`  VARCHAR(254) COMMENT '栏目ID', 
+  ADD `PROGRAM_ID`  VARCHAR(254) COMMENT '节目ID', 
+  ADD `PROGRAM_NUMBER` varchar(20) COMMENT '电视剧子集序列号',
+  ADD `PARENT_ID`       BIGINT(20) COMMENT '电视剧包ID'; 
+
+--双向节目信息临时表
+CREATE TABLE `t_assetinfo_temp` (
+  `ID` BIGINT(20) NOT NULL,
+  `ASSET_ID` VARCHAR(60) COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '资源id',
+  `ASSET_NAME` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '资源名称',
+  `SHORT_NAME` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '资源短名',
+  `TITLE` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '标题',
+  `YEAR` VARCHAR(60) COLLATE utf8_general_ci DEFAULT NULL COMMENT '年份',
+  `KEYWORD` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '关键字',
+  `RATING` VARCHAR(50) COLLATE utf8_general_ci DEFAULT NULL COMMENT '级别',
+  `RUNTIME` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '时长',
+  `IS_PACKAGE` CHAR(1) COLLATE utf8_general_ci DEFAULT NULL COMMENT '是否为资源包（0：资源、1：资源包）',
+  `ASSET_CREATE_TIME` DATETIME DEFAULT NULL COMMENT '影片上映时间',
+  `DISPLAY_RUNTIME` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '资源在页面上显示时间',
+  `ASSET_DESC` VARCHAR(3000) COLLATE utf8_general_ci DEFAULT NULL COMMENT '资源描述',
+  `POSTER_URL` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '资源海报的url',
+  `PREVIEW_ASSET_ID` VARCHAR(60) COLLATE utf8_general_ci DEFAULT NULL COMMENT '资源预览片id',
+  `PREVIEW_ASSET_NAME` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '资源预览片名称',
+  `PREVIEW_RUNTIME` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '资源预览片播放时间',
+  `VIDEO_CODE` VARCHAR(255) COLLATE utf8_general_ci DEFAULT NULL COMMENT '视频编码格式，包括MPEG2，H.264D等',
+  `VIDEO_RESOLUTION` VARCHAR(255) COLLATE utf8_general_ci DEFAULT NULL COMMENT '视频分辨率',
+  `DIRECTOR` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '导演',
+  `ACTOR` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '演员',
+  `PRODUCT_ID` VARCHAR(255) COLLATE utf8_general_ci DEFAULT NULL COMMENT '资源所属产品Id',
+  `CATEGORY` VARCHAR(255) COLLATE utf8_general_ci DEFAULT NULL COMMENT '类型',
+  `SCORE` DECIMAL(19,1) DEFAULT NULL COMMENT '得分',
+  `CREATE_TIME` DATETIME DEFAULT NULL COMMENT '资源创建时间（yyyy-mm-dd hh:mm:ss）',
+  `MODIFY_TIME` DATETIME DEFAULT NULL COMMENT '影片的修改时间（yyyy-mm-dd hh:mm:ss）',
+  `STATE` CHAR(1) COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
+  
+  `FORMAT` char(1) default NULL COMMENT '高标清 0 标清 1高清',
+  `AREA_CODE` varchar(20) default NULL,
+  `CATEGORY_ID`  VARCHAR(254) COMMENT '栏目ID', 
+  `PROGRAM_ID`  VARCHAR(254) COMMENT '节目ID', 
+  `PROGRAM_NUMBER` varchar(20) COMMENT '电视剧子集序列号',
+  `PARENT_ID`       BIGINT(20) COMMENT '电视剧包ID',  
+   PRIMARY KEY (`ID`),
+  KEY `ASSET_ID` (`ASSET_ID`)
+)ENGINE=InnoDB
+CHARACTER SET 'utf8' COLLATE 'utf8_general_ci'
+COMMENT='影片信息表;';
