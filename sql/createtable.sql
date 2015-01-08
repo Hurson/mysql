@@ -1,4 +1,7 @@
 alter table `t_productinfo` add COLUMN networkID varchar(20);
+
+
+--创建产品信息临时表
 CREATE TABLE `t_productinfo_temp` (
   `ID` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `PRODUCT_ID` VARCHAR(254) COLLATE utf8_general_ci DEFAULT NULL COMMENT '产品编码',
@@ -213,3 +216,26 @@ CREATE TABLE `t_assetinfo_temp` (
 )ENGINE=InnoDB
 CHARACTER SET 'utf8' COLLATE 'utf8_general_ci'
 COMMENT='影片信息表;';
+
+
+
+--修改产品信息表字段
+alter table `t_productinfo` change newworkID AREA_CODE VARCHAR(20);
+
+alter table `t_productinfo_temp` change newworkID AREA_CODE VARCHAR(20);
+
+alter table `t_channelinfo_npvr` change `NETWORK_ID` AREA_CODE VARCHAR(20);
+
+alter table `t_channelinfo_npvr_temp` change NETWORK_ID AREA_CODE VARCHAR(20);
+
+alter table `t_location_code` change areacode AREA_CODE VARCHAR(20);
+
+alter table `t_location_code_temp` change areacode AREA_CODE VARCHAR(20);
+
+alter table `t_user_industry_category` change areacode AREA_CODE VARCHAR(20);
+
+alter table `t_user_industry_category_temp` change areacode AREA_CODE VARCHAR(20);
+
+alter table `t_user_rank` change areacode AREA_CODE VARCHAR(20);
+
+alter table `t_user_rank_temp` change areacode AREA_CODE VARCHAR(20);

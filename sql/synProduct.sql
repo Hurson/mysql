@@ -125,11 +125,11 @@ BEGIN
 update `t_assetinfo` m join t_assetinfo_temp n on m.`PROGRAM_ID`=n.`PROGRAM_ID` and m.`ASSET_ID`=n.`ASSET_ID`
  and m.`AREA_CODE`=n.`AREA_CODE` set m.`ASSET_NAME`=n.`ASSET_NAME`;
 commit;
-delete FROM `t_assetinfo`  where (`PROGRAM_ID`,`AREA_CODE`) not in (
-select  CHANNEL_ID,networkID from  `t_assetinfo_temp`
+delete FROM `t_assetinfo`  where (`PROGRAM_ID`,`ASSET_ID`,`AREA_CODE`) not in (
+select  PROGRAM_ID,ASSET_ID,AREA_CODE from  `t_assetinfo_temp`
 );
 commit;   
-insert into `t_assetinfo`  select n.* from t_assetinfo_temp n  where (n.`PROGRAM_ID`,n.`AREA_CODE`) not IN(select PROGRAM_ID,AREA_CODE from  `t_assetinfo` );
+insert into `t_assetinfo`  select n.* from t_assetinfo_temp n  where (n.`PROGRAM_ID`,n.`ASSET_ID`,n.`AREA_CODE`) not IN(select PROGRAM_ID,ASSET_ID,AREA_CODE from  `t_assetinfo` );
 commit;
 
 END;
