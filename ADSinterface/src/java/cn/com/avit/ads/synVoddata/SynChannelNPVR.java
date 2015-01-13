@@ -45,7 +45,7 @@ public class SynChannelNPVR {
 						ChannelInfoNPVR cNPVR = new ChannelInfoNPVR();
 						cNPVR.setChannelId(channelInfo.getChannelId());
 						cNPVR.setChannelName(channelInfo.getChannelName());
-						cNPVR.setNetworkId(new Long(netWorkID).longValue());
+						cNPVR.setAreaCode(netWorkID);
 						channelInfoNPVRService.insertChannelInfoNPVR(cNPVR);
 					}
 				} else {

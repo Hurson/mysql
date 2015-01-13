@@ -40,7 +40,7 @@ public class Productinfo  implements java.io.Serializable {
      private Timestamp createTime;
      private Timestamp modifyTime;
      private String state;
-     private String netWorkID;
+     private String areaCode;
 
 
     // Constructors
@@ -70,14 +70,14 @@ public class Productinfo  implements java.io.Serializable {
         this.state = state;
     }
 
-    @Column(name="NETWORKID", length=20)
-    public String getNetWorkID() {
-		return netWorkID;
+    @Column(name="AREACODE", length=20)
+    public String getAreaCode() {
+		return areaCode;
 	}
 
 
-	public void setNetWorkID(String netWorkID) {
-		this.netWorkID = netWorkID;
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
 	}
 
 

@@ -88,7 +88,7 @@ public class UserRankBean  implements java.io.Serializable {
         this.description = description;
     }
     
-    @Column(name="areacode", length=20)
+    @Column(name="AREACODE", length=20)
 
     public String getAreacode() {
         return this.areacode;

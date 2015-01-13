@@ -38,7 +38,7 @@ public class ChannelInfoNPVR  implements java.io.Serializable {
      private Timestamp modifyTime;
      private String state;
      private Long tsId;
-     private Long networkId;
+     private String areaCode;
      private String channelDesc;
      private Boolean isPlayback;
      private String summaryshort;
@@ -57,7 +57,7 @@ public class ChannelInfoNPVR  implements java.io.Serializable {
     }
     
     /** full constructor */
-    public ChannelInfoNPVR(String channelId, String channelCode, String channelType, String channelName, String serviceId, String channelLanguage, String channelLogo, String keyword, String locationCode, String locationName, Timestamp createTime, Timestamp modifyTime, String state, Long tsId, Long networkId, String channelDesc, Boolean isPlayback, String summaryshort) {
+    public ChannelInfoNPVR(String channelId, String channelCode, String channelType, String channelName, String serviceId, String channelLanguage, String channelLogo, String keyword, String locationCode, String locationName, Timestamp createTime, Timestamp modifyTime, String state, Long tsId, String areaCode, String channelDesc, Boolean isPlayback, String summaryshort) {
         this.channelId = channelId;
         this.channelCode = channelCode;
         this.channelType = channelType;
@@ -72,7 +72,7 @@ public class ChannelInfoNPVR  implements java.io.Serializable {
         this.modifyTime = modifyTime;
         this.state = state;
         this.tsId = tsId;
-        this.networkId = networkId;
+        this.areaCode = areaCode;
         this.channelDesc = channelDesc;
         this.isPlayback = isPlayback;
         this.summaryshort = summaryshort;
@@ -232,14 +232,14 @@ public class ChannelInfoNPVR  implements java.io.Serializable {
         this.tsId = tsId;
     }
     
-    @Column(name="NETWORK_ID", precision=10, scale=0)
+    @Column(name="AREA_CODE", precision=10, scale=0)
 
-    public Long getNetworkId() {
-        return this.networkId;
+    public String getAreaCode() {
+        return this.areaCode;
     }
     
-    public void setNetworkId(Long networkId) {
-        this.networkId = networkId;
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
     
     @Column(name="CHANNEL_DESC", length=254)

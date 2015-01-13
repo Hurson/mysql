@@ -46,7 +46,7 @@ public class LocationCodeBean  implements java.io.Serializable {
         @AttributeOverride(name="locationname", column=@Column(name="LOCATIONNAME", length=200) ), 
         @AttributeOverride(name="parentlocation", column=@Column(name="PARENTLOCATION", precision=12, scale=0) ), 
         @AttributeOverride(name="locationtype", column=@Column(name="LOCATIONTYPE", length=2) ), 
-        @AttributeOverride(name="areacode", column=@Column(name="areacode", length=20) ) } )
+        @AttributeOverride(name="areacode", column=@Column(name="AREACODE", length=20) ) } )
 
     public LocationCodeBeanId getId() {
         return this.id;

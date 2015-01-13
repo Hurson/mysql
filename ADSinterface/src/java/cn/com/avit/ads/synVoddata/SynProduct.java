@@ -45,7 +45,7 @@ public class SynProduct {
 			Productinfo p = new Productinfo();
 			p.setProductId(product.getProductId());
 			p.setProductName(p.getProductName());
-			p.setNetWorkID(netWorkID);
+			p.setAreaCode(netWorkID);
 			productinfoService.insertProductInfo(p);
 		}
 		}else{

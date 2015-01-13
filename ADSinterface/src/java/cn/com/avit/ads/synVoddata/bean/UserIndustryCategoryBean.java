@@ -76,7 +76,7 @@ public class UserIndustryCategoryBean  implements java.io.Serializable {
         this.userIndustryCategoryValue = userIndustryCategoryValue;
     }
     
-    @Column(name="areacode", length=20)
+    @Column(name="AREACODE", length=20)
 
     public String getAreacode() {
         return this.areacode;
