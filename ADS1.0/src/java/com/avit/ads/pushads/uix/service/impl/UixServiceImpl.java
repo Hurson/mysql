@@ -68,6 +68,50 @@ public class UixServiceImpl implements UixService {
 		return false;
 	}
 	
+	
+	public boolean sendUiUpdateMsg(String mod, String areaCode, Integer type, String updatePath, boolean isDefault) {
+		String url = InitConfig.getConfigMap().get("nit.interface.address");
+		HttpClient httpClient = new HttpClient();
+		String updateUrl = bulidGetUrl(url, mod, areaCode, type, updatePath);
+		if(isDefault){
+			updateUrl = updateUrl.replace("adctrl=1", "adctrl=0");
+		}
+        GetMethod getMethod = new GetMethod(updateUrl);
+        getMethod.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=gbk");    
+             
+        int times = 3; //三次发送不成功，则告警
+        
+        while(times > 0){
+        	 try {       	
+             	int responsCode = httpClient.executeMethod(getMethod);
+     			if(200 == responsCode){
+     				String responseBody = new String(getMethod.getResponseBodyAsString().getBytes("UTF-8"));
+     				
+     				JsonResponse respEntity = (JsonResponse) Json2ObjUtil.getObject4JsonString(responseBody, JsonResponse.class);
+     				if(respEntity.getRet().equals("0")){
+     					uixDao.updateVersion(areaCode, type);
+     					log.info("往区域" + areaCode + "发送UI更新成功！");
+     					return true;
+     				}else{
+     					log.error("往区域" + areaCode + "发送UI更新失败：" + respEntity.getRet_msg());
+     					return false; 
+     				}
+     			}
+				Thread.sleep(3000);//3s后重发请求
+				times--;	
+				
+     		} catch (Exception e) {
+     			times--;
+     			log.error("往区域" + areaCode + "发送UI更新出现异常", e);
+     		} 
+        }
+        //三次连接不上，告警	
+   	 	warnHelper.writeWarnMsgToDb("【连续三次不能访问UI更新服务器】" + "request url: " + url);
+		return false;
+	}
+
+
+
 	private  String reBuildStr(String str){
 		if(str.endsWith("+")){
 			str = str.substring(0, str.length()-1);

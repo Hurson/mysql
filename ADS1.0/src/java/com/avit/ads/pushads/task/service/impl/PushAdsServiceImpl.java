@@ -2287,8 +2287,10 @@ public class PushAdsServiceImpl implements PushAdsService {
 				Gson gson = new Gson();				
 				StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);
 				
+				boolean isDefault = false;
+				
 				if (StringUtils.isNotBlank(startMaterial.getPic())){	
-					
+					isDefault = true;
 					ftpService.downloadFile(startMaterial.getPic(), "24.iframe", downLoadPath);
 					
 				}else if (startMaterial.getPics()!=null && startMaterial.getPics().size()>0){	
@@ -2359,7 +2361,16 @@ public class PushAdsServiceImpl implements PushAdsService {
 
 				
 				//往区域发送NIT描述符插入信息
-				if(!uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName())){
+				
+				boolean uiUpdateSuccess;
+				
+				if(isDefault){
+					uiUpdateSuccess = uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),true);
+				}else{
+					uiUpdateSuccess = uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName());
+				}
+				
+				if(!uiUpdateSuccess){
 					//UI更新通知，若不成功
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 						continue;
