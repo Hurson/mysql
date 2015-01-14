@@ -2358,7 +2358,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				}
 
 				
-				//往区域发送NID描述符插入信息
+				//往区域发送NIT描述符插入信息
 				if(!uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName())){
 					//UI更新通知，若不成功
 					if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){

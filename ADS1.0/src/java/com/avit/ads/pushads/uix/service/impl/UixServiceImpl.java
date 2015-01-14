@@ -88,11 +88,15 @@ public class UixServiceImpl implements UixService {
 		
 		for(UIUpdate entry : UIUpdate.values()){
 			int type = entry.getType();
-			int version = uixDao.getUiVersion(areaCode, type);
+			int version;
 			if(type == updateType){
+				version = uixDao.getUiVersion(areaCode, type);
 				version = (version + 1) % 255;
-			}else if(0 == version){
-				continue;
+			}else{
+				version = uixDao.getAvailableVersion(areaCode, type);
+				if(0 == version){
+					continue;
+				}
 			}
 			String path = "/65535.65535." + ocsid + "/" + entry.getFileName();
 			
@@ -106,6 +110,7 @@ public class UixServiceImpl implements UixService {
 	}
 
 	public boolean delUiUpdateMsg(String areaCode, Integer type, String updatePath) {
+		uixDao.abolishVersion(areaCode, type);
 		TReleaseArea areaEntity = areaDao.getAreaByAreaCode(areaCode);	
 		String onid = areaEntity.getLocationCode();
 		String ocsid = areaEntity.getOcsId();
@@ -129,11 +134,10 @@ public class UixServiceImpl implements UixService {
      				
      				JsonResponse respEntity = (JsonResponse) Json2ObjUtil.getObject4JsonString(responseBody, JsonResponse.class);
      				if(respEntity.getRet().equals("0")){
-     					uixDao.updateVersion(areaCode, type);
-     					log.info("往区域" + areaCode + "发送UI更新成功！");
+     					log.info("区域" + areaCode + "描述符删除操作成功！");
      					return true;
      				}else{
-     					log.error("往区域" + areaCode + "发送UI更新失败：" + respEntity.getRet_msg());
+     					log.error("区域" + areaCode + "描述符删除失败：" + respEntity.getRet_msg());
      					return false; 
      				}
      			}

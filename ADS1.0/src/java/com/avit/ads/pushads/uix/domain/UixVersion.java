@@ -22,6 +22,9 @@ public class UixVersion {
 	/** 版本号 */
 	private Integer version;
 	
+	/** 是否可用（1：可用， 0：不可用） */
+	private Integer available;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "version_id", unique = true, nullable = false)
@@ -55,5 +58,14 @@ public class UixVersion {
 	public void setVersion(Integer version) {
 		this.version = version;
 	}
+	@Column(name = "available",nullable = false)
+	public Integer getAvailable() {
+		return available;
+	}
+	public void setAvailable(Integer available) {
+		this.available = available;
+	}
+	
+	
 
 }

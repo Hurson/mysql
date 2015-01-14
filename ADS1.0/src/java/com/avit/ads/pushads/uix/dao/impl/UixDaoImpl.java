@@ -22,6 +22,7 @@ public class UixDaoImpl extends BaseDaoImpl implements UixDao {
 			return 0;
 		}
 	}
+	
 
 	public void updateVersion(String areaCode, Integer type) {
 		List resultList = this.getHibernateTemplate().find("from UixVersion uv where uv.areaCode=? and uv.updateType=?", areaCode, type);
@@ -35,9 +36,28 @@ public class UixDaoImpl extends BaseDaoImpl implements UixDao {
 			entity.setUpdateType(type);
 			entity.setVersion(1);
 		}
+		entity.setAvailable(1);
 		this.save(entity);
 	}
-	
-	
-	
+
+
+	public int getAvailableVersion(String areaCode, Integer type) {
+		List resultList = this.getHibernateTemplate().find("from UixVersion uv where uv.areaCode=? and uv.updateType=? and uv.available=1", areaCode, type);
+		
+		if(null != resultList && resultList.size() > 0){
+			UixVersion entity = (UixVersion)resultList.get(0);
+			return entity.getVersion();
+		}else{
+			return 0;
+		}
+	}
+
+
+
+
+	public void abolishVersion(String areaCode, Integer type) {
+		String updateSql ="update UixVersion uv set uv.available=0 where uv.areaCode=" + areaCode + " and uv.updateType=" + type;
+		executeByHQL(updateSql, null);
+	}
+
 }
