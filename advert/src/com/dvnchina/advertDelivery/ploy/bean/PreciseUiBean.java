@@ -86,6 +86,12 @@ public class PreciseUiBean {
 	private String tvnNumber13;
 	private Short priority13;
 	
+	//单频道滚动字幕业务
+	private String tvnNumber;
+	private String tvnExpression17;
+	private Short priority17;
+	private List tvnNumberList;
+	//end
 	
 	private List productIdList;
 	private List assetNameList;
@@ -549,6 +555,30 @@ public class PreciseUiBean {
 	public void setPriority13(Short priority13) {
 		this.priority13 = priority13;
 	}
+	public String getTvnNumber() {
+		return tvnNumber;
+	}
+	public void setTvnNumber(String tvnNumber) {
+		this.tvnNumber = tvnNumber;
+	}
 	
+	public String getTvnExpression17() {
+		return tvnExpression17;
+	}
+	public void setTvnExpression17(String tvnExpression17) {
+		this.tvnExpression17 = tvnExpression17;
+	}
+	public Short getPriority17() {
+		return priority17;
+	}
+	public void setPriority17(Short priority17) {
+		this.priority17 = priority17;
+	}
+	public List getTvnNumberList() {
+		return tvnNumberList;
+	}
+	public void setTvnNumberList(List tvnNumberList) {
+		this.tvnNumberList = tvnNumberList;
+	}
 	
 }

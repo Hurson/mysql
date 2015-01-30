@@ -36,6 +36,11 @@ public class Ploy {
 	private Integer ployNumber;
 	private String defaultstart;
 	
+	//单频道滚动字幕添加字段
+	private String userIndustrys;
+	private String userLevels;
+	private String tvnNumber;
+	
 	private String action;
 	private Integer durationTime;
 	private Integer fontSize;
@@ -347,6 +352,24 @@ public class Ploy {
 	}
 	public void setDefaultstart(String defaultstart) {
 		this.defaultstart = defaultstart;
+	}
+	public String getUserIndustrys() {
+		return userIndustrys;
+	}
+	public void setUserIndustrys(String userIndustrys) {
+		this.userIndustrys = userIndustrys;
+	}
+	public String getUserLevels() {
+		return userLevels;
+	}
+	public void setUserLevels(String userLevels) {
+		this.userLevels = userLevels;
+	}
+	public String getTvnNumber() {
+		return tvnNumber;
+	}
+	public void setTvnNumber(String tvnNumber) {
+		this.tvnNumber = tvnNumber;
 	}
 
 }

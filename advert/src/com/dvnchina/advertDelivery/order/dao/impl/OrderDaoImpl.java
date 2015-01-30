@@ -3035,7 +3035,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 				break;
 			}
 		}
-		if( positionId == 44|| positionId == 21 || positionId == 22 || positionId == 45 || positionId == 46){
+		if( positionId == 44|| positionId == 21 || positionId == 22 || positionId == 45 || positionId == 46 ||positionId == 49){
 			
 			StringBuffer insertSql2 =  new StringBuffer();
 			insertSql2.append("insert into t_order_mate_rel_tmp(order_code,precise_id,type,start_time,end_time,area_code,channel_group_id)");
@@ -3057,7 +3057,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			this.executeBySQL(insertSql2.toString(), null);
 		}else if(positionId == 5 || positionId == 6 || positionId == 7 || positionId == 8
 				|| positionId == 9 || positionId == 10 || positionId == 11 || positionId == 12 
-				|| positionId == 41 || positionId == 42 ){
+				|| positionId == 41 || positionId == 42 || positionId == 50){
 			//按时间段、区域、频道组选择素材（导航条广告、快捷切换列表广告、音量条广告、预告提示广告、收藏列表广告）
 			//添加策略中的数据到订单和素材临时关系表
 			StringBuffer insertSql2 =  new StringBuffer();
@@ -3065,6 +3065,11 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			insertSql2.append(" select '").append(orderCode).append("',p.id,1,p.START_TIME,p.END_TIME,ra.AREA_CODE,p.CHANNEL_GROUP_ID");
 			insertSql2.append(" from t_ploy p,t_channel_group cg,t_release_area ra ");
 			insertSql2.append(" where p.CHANNEL_GROUP_ID=cg.ID and p.PLOY_ID= ").append(ployId);
+			
+			//选择了地市，则只插入该地市的，否则默认全省，则插入18个地市，
+			if(!isQuanSheng){
+				insertSql2.append(" and p.AREA_ID=ra.AREA_CODE ");
+			}
 			insertSql2.append(" AND ra.AREA_CODE <> '152000000000'");
 			insertSql2.append(" and not exists (select * from t_order_mate_rel rel,t_order o where rel.order_id=o.id");
 			insertSql2.append(" AND (rel.start_time = p.START_TIME 	AND rel.end_time = p.END_TIME " +
@@ -3093,6 +3098,11 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			insertSql3.append(" select '").append(orderCode).append("',p.id,1,p.START_TIME,p.END_TIME,ra.AREA_CODE,p.CHANNEL_GROUP_ID");
 			insertSql3.append(" from t_ploy p,t_release_area ra ");
 			insertSql3.append(" where p.CHANNEL_GROUP_ID=0 and p.PLOY_ID= ").append(ployId);
+			
+			//选择了地市，则只插入该地市的，否则默认全省，则插入18个地市，
+			if(!isQuanSheng){
+				insertSql3.append(" and p.AREA_ID=ra.AREA_CODE ");
+			}
 			insertSql3.append(" AND ra.AREA_CODE <> '152000000000'");
 			insertSql3.append(" and not exists (select * from t_order_mate_rel rel,t_order o where rel.order_id=o.id");
 			insertSql3.append(" AND (rel.start_time = p.START_TIME 	AND rel.end_time = p.END_TIME " +

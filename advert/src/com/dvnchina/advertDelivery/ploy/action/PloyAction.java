@@ -533,6 +533,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 					|| ploy.getPositionId()==1 || ploy.getPositionId()==2   //开机图片
 					|| ploy.getPositionId()==45 || ploy.getPositionId()==46   //开机视频
 					|| ploy.getPositionId()==47 || ploy.getPositionId()==48   //直播下排
+					|| ploy.getPositionId()==49 || ploy.getPositionId()==50 //滚动字幕
 					|| ploy.getPositionId() == 44)   //热点推荐
 			{
 				if (areaChannelUiBean!=null && areaChannelUiBean.getUserArea()!=null && !areaChannelUiBean.getUserArea().equals(""))
@@ -548,7 +549,10 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 					bchannelgroup="0";
 				}
 				bchannelgroup = bchannelgroup.replace(" ","");
-				ployTimeCGroup.setChannelgroups(bchannelgroup);
+				
+				if(StringUtils.isNotBlank(this.channelGroupType)&& channelGroupType.substring(0,1).equals("3")){
+					ployTimeCGroup.setChannelgroups(bchannelgroup);
+				}
 				
 				if (preciseUiBean!=null)
 				{

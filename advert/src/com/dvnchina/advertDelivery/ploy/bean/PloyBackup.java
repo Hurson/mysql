@@ -37,6 +37,10 @@ public class PloyBackup {
 	private String description;
 	private Integer ployNumber;
 	
+	private String userIndustrys;
+	private String userLevels;
+	private String tvnNumber;
+	
 	private String defaultstart;
 	
 	private String action;
@@ -414,6 +418,30 @@ public class PloyBackup {
 
 	public void setChannelGroupType(Integer channelGroupType) {
 		this.channelGroupType = channelGroupType;
+	}
+
+	public String getUserIndustrys() {
+		return userIndustrys;
+	}
+
+	public void setUserIndustrys(String userIndustrys) {
+		this.userIndustrys = userIndustrys;
+	}
+
+	public String getUserLevels() {
+		return userLevels;
+	}
+
+	public void setUserLevels(String userLevels) {
+		this.userLevels = userLevels;
+	}
+
+	public String getTvnNumber() {
+		return tvnNumber;
+	}
+
+	public void setTvnNumber(String tvnNumber) {
+		this.tvnNumber = tvnNumber;
 	}
 
 	/**

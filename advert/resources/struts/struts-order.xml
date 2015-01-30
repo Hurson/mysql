@@ -27,6 +27,7 @@
 			<result name="twoVod">/page/order/selectTwoVodPloy.jsp</result>
 			<result name="lookBack">/page/order/selectLookBackPloy.jsp</result>
 			<result name="PLAYBACK">/page/order/selectPlayBackPloy.jsp</result>
+			<result name="TEXT">/page/order/selectTextPloy.jsp</result>
 		</action>
 		
 		<action name="getPloy4Json" class="orderAction" method="getPloy4Json"/>

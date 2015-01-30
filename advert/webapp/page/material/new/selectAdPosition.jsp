@@ -14,7 +14,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link id="maincss"  rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/new/main.css" media="all"/>
 <title></title>
- <script type='text/javascript' src='<%=request.getContextPath()%>/js/jquery.min.js'></script>
+ <script type='text/javascript' src='<%=request.getContextPath()%>/js/jquery/jquery-1.9.0.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/js/avit.js'></script>
 
 <script type="text/javascript">
@@ -131,6 +131,7 @@
     	if (selecItem[3]==1)
     	{
     	   parent.document.getElementById("sel_material_type").options.add(new Option("文字","2"));
+    	   parent.window.showText();
     	}
     	if (selecItem[4]==1)
     	{

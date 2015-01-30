@@ -1128,10 +1128,10 @@ public class PloyDaoImpl extends BaseDaoImpl implements PloyDao {
 	 		//复制维护期表数据至运行期表
 	 		String deletesql="delete from t_ploy where ploy_id="+ploy.getPloyId();
 	 		String insertsql ="insert into t_ploy(id,ploy_id,ploy_name,contract_id,position_id,rule_id,start_time,end_time,"+
-	 		"area_id,channel_id,create_time,modify_time,state,description,operator_id,audit_id,audit_option,audit_date,CUSTOMER_ID,CHANNEL_GROUP_ID,CHANNEL_GROUP_TYPE,PRIORITY,PLOY_NUMBER,defaultstart)"+
+	 		"area_id,channel_id,create_time,modify_time,state,description,userindustrys, userlevels, tvn_number, operator_id,audit_id,audit_option,audit_date,CUSTOMER_ID,CHANNEL_GROUP_ID,CHANNEL_GROUP_TYPE,PRIORITY,PLOY_NUMBER,defaultstart)"+
 	 		" select "+
 	 		"t.id,t.ploy_id,t.ploy_name,t.contract_id,t.position_id,t.rule_id,t.start_time,t.end_time,t.area_id,t.channel_id"+
-	 		",t.create_time,t.modify_time,t.state,t.description,t.operator_id,t.audit_id,t.audit_option,t.audit_date,t.CUSTOMER_ID,t.CHANNEL_GROUP_ID, t.CHANNEL_GROUP_TYPE,t.PRIORITY,t.PLOY_NUMBER,t.defaultstart"+
+	 		",t.create_time,t.modify_time,t.state,t.description,userindustrys, userlevels, tvn_number, t.operator_id,t.audit_id,t.audit_option,t.audit_date,t.CUSTOMER_ID,t.CHANNEL_GROUP_ID, t.CHANNEL_GROUP_TYPE,t.PRIORITY,t.PLOY_NUMBER,t.defaultstart"+
             " from t_ploy_backup t where t.ploy_id="+ploy.getPloyId();
 	 		query = this.getSession().createSQLQuery(deletesql);
 	 		query.executeUpdate();	 		

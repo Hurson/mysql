@@ -166,6 +166,13 @@ var firstflag=true;
 		document.getElementById("selectedOption15").checked=true;
 	}
 	   
+	//TVN号
+	var radio = document.getElementsByName("preciseUiBean.tvnNumber"); 
+	if (radio!=null && radio.length>0)
+	{
+		document.getElementById("selectedtable17").style.display="";
+		document.getElementById("selectedOption17").checked=true;
+	}   
 	changePosition();
 	
 	}
@@ -827,7 +834,7 @@ function addselectContract() {
 		 
 		 if (firstflag==false)  //什么用意？
 		 {
-		    for (var k=0;k<17;k++)
+		    for (var k=0;k<18;k++)
 		    {
 		    	var ck = document.getElementsByName("selectedcheckbox"+k); 
 				var tab = document.getElementById("contenttable"+k);
@@ -862,7 +869,6 @@ function addselectContract() {
 		    }
 		 }
 		 
- 
 		 if( postions!=null &&  postions.length > 0)
 		 {
 			 for (var i=0;i<postions.length;i++)
@@ -886,6 +892,7 @@ function addselectContract() {
 					 document.getElementById("selectedspan14").style.display="none";
 					 document.getElementById("selectedspan15").style.display="none";
 					 document.getElementById("selectedspan16").style.display="none";
+					 document.getElementById("selectedspan17").style.display="none";
 					 
 					 document.getElementById("assetployNumber").style.display="none";
 					 document.getElementById("ploy.ployNumber").style.display="none";					 
@@ -928,6 +935,20 @@ function addselectContract() {
 						document.getElementById("selectedspan14").style.display="";     //投放区域
 					}
 					
+					//主菜单字幕广告
+					if (postions[i].positionCode=='02301')
+					{
+						document.getElementById("selectedspan14").style.display="";     //投放区域
+					}
+					
+					//分频道字幕广告
+					if (postions[i].positionCode=='02302')
+					{
+						document.getElementById("selectedspan12").style.display="";
+						document.getElementById("selectedspan13").style.display="";
+						document.getElementById("selectedspan14").style.display="";     //投放区域
+						document.getElementById("selectedspan17").style.display="";
+					}
 					
 					 //推荐广告位
 					 if(postions[i].positionCode=='02083'){
@@ -1359,7 +1380,22 @@ function addAssetKey()
     row.appendChild(td2);
     tab.appendChild(row);  
 }
-
+function addTvnNumber()
+{
+	var tab = document.getElementById("contenttable17");//$(tblN); 	
+	var row = document.createElement("tr"); 
+	var td1 = document.createElement("td");
+	td1.setAttribute("class","dot");
+	td1.innerHTML = '<input type="checkbox" name="selectedcheckbox17" />';	
+	var td2 = document.createElement("td")
+	//td2.innerHTML = '<input name="channelgroup" type="text" />';
+	
+	td2.innerHTML = '<input type="text" id="preciseUiBean.tvnNumber" name="preciseUiBean.tvnNumber"  value=""/>';
+	row.setAttribute("id", "contentrow"+(rowcount++));
+    row.appendChild(td1);
+    row.appendChild(td2);
+    tab.appendChild(row);  
+}
 function add_Npvr(npvrid,npvrname)
 {
 	
@@ -2060,7 +2096,7 @@ function exporttvn(objname)
 </script>
 <body class="mainBody">
 <form action="<%=path %>/page/ploy/save.do" method="post" id="saveForm">
-<div class="path">首页 >> 投放策略管理 >> 策略维护</div>
+<div class="path">h首页 &gt;&gt; 投放策略管理 &gt;&gt; 策略维护</div>
 <div class="searchContent">
   <table cellspacing="1" class="searchList">
     <tr class="title">
@@ -2131,6 +2167,7 @@ function exporttvn(objname)
         <span style="display: none;" id="selectedspan13"><input type="checkbox" name="selectedOption13"  id="selectedOption13" value="13" onclick="selecttable(this,'13');"/>级别</span>
         <span style="display: none;" id="selectedspan14"><input type="checkbox" name="selectedOption14"  id="selectedOption14" value="14" onclick="selecttable(this,'14');"/>投放区域</span>
         <span style="display: none;" id="selectedspan15"><input type="checkbox" name="selectedOption15"  id="selectedOption15" value="15" onclick="selecttable(this,'15');"/>广播频道组</span>
+        <span style="display: none;" id="selectedspan17"><input type="checkbox" name="selectedOption17"  id="selectedOption17" value="17" onclick="selecttable(this,'17');"/>TVN号</span>
          <input id="saveBtn" type="button" class="btn" value="保 存" onclick="submitForm();"/>&nbsp;&nbsp;&nbsp;&nbsp;
          <input type="button" class="btn" value="取 消" onclick="history.back(-1);"/>
        </td>
@@ -3072,6 +3109,74 @@ function exporttvn(objname)
       <tr>
         <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="selectBChannelGroup()"/>
             <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl2('contenttable15','selectedcheckbox15')" />
+        </td>
+      </tr>
+    </table>
+    
+    <table cellspacing="1" class="searchList"  style="display: none;" id="selectedtable17">
+      <tr class="title">
+        <td height="28" class="dot"><input type="checkbox" name="checkbox3" value="checkbox" onclick="selectAll(this, 'selectedcheckbox17');"/></td>
+        <td><b>TVN号</b>
+            <div id="assetdiv"><p><span>优先级别：</span>
+                <select id="preciseUiBean.priority17" name="preciseUiBean.priority17" style="width:40px">
+              					<option value="1" <c:if test="${1==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>1</option>
+              						<option value="2" <c:if test="${2==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>2</option>
+              						<option value="3" <c:if test="${3==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>3</option>
+              						<option value="4" <c:if test="${4==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>4</option>
+              						<option value="5" <c:if test="${5==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>5</option>
+              						<option value="6" <c:if test="${6==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>6</option>
+              						<option value="7" <c:if test="${7==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>7</option>
+              						<option value="8" <c:if test="${8==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>8</option>
+              						<option value="9" <c:if test="${9==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>9</option>
+                				</select>
+                <span>预制条件</span>
+                <select name="preciseUiBean.tvnExpression17">
+                  <option value="0" <c:if test="${0==preciseUiBean.tvnExpression17}">
+               	 selected
+               	</c:if>>不等于</option>
+               	 <option value="1" <c:if test="${1==preciseUiBean.tvnExpression17}">
+               	 selected
+               	</c:if>>等于</option>
+                 
+                </select>
+          </p>
+          </div></td>
+      </tr>
+      <tr>
+        <td colspan="2" class="conditionList"><div>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable17">
+              <c:forEach items="${preciseUiBean.tvnNumberList}" var="tvnNumber" >
+              <tr id="contentrow">
+                 <td class="dot"><input type="checkbox" name="selectedcheckbox17" value="checkbox"/></td>
+                 <td >
+                 <input type="text" id="preciseUiBean.tvnNumber" name="preciseUiBean.tvnNumber"  value="${tvnNumber.datavalue}"/>
+                </td>
+              </tr>
+             </c:forEach>
+            </table>
+        </div></td>
+      </tr>
+      <tr>
+        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="addTvnNumber()"/>
+            <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable17','selectedcheckbox17')" />
         </td>
       </tr>
     </table>

@@ -147,6 +147,14 @@ window.onload = function() {
 		document.getElementById("selectedOption15").checked=true;
 	}
 	
+	//TVN号
+	var radio = document.getElementsByName("preciseUiBean.tvnNumber"); 
+	if (radio!=null && radio.length>0)
+	{
+		document.getElementById("selectedtable17").style.display="";
+		document.getElementById("selectedOption17").checked=true;
+	}  
+	 
 	changePosition();
 	$("#system-dialog").hide();
 	
@@ -706,7 +714,7 @@ function addselectContract() {
 		 
 		 if (firstflag==false)
 		 {
-		    for (var k=0;k<17;k++)
+		    for (var k=0;k<18;k++)
 		    {
 		    	var ck = document.getElementsByName("selectedcheckbox"+k); 
 				var tab = document.getElementById("contenttable"+k);
@@ -765,6 +773,7 @@ function addselectContract() {
 					 document.getElementById("selectedspan13").style.display="none";
 					 document.getElementById("selectedspan14").style.display="none";
 					 document.getElementById("selectedspan15").style.display="none";
+					 document.getElementById("selectedspan17").style.display="none";
 					
 					 
 					 document.getElementById("assetployNumber").style.display="none";
@@ -865,6 +874,13 @@ function addselectContract() {
 					     document.getElementById("assetployNumber").style.display="";
 					     document.getElementById("ploy.ployNumber").style.display="";
 						 
+					 }
+					 if(postions[i].positionCode=='02302'){
+					     
+						 document.getElementById("selectedspan12").style.display="";
+						 document.getElementById("selectedspan13").style.display="";
+						 document.getElementById("selectedspan14").style.display="";
+						 document.getElementById("selectedspan17").style.display="";
 					 }
 					 /*
 					 //音频广播
@@ -1126,7 +1142,7 @@ function showChannelGroupRef(channelGroupId) {
       	
       	<span id="selectedspan14"><input type="checkbox" disabled name="selectedOption14"  id="selectedOption14" value="14" />投放区域</span>
         <span id="selectedspan15"><input type="checkbox" disabled name="selectedOption15"  id="selectedOption15" value="15" />广播频道组</span>
-      
+        <span id="selectedspan17"><input type="checkbox" disabled name="selectedOption17"  id="selectedOption17" value="17" />TVN号</span>
        </td>
         </tr>
   </table>
@@ -1769,7 +1785,7 @@ function showChannelGroupRef(channelGroupId) {
     </table>
      <table cellspacing="1" class="searchList"  style="display: none;" id="selectedtable12">
       <tr class="title">
-        <td height="28" class="dot"><input disabled type="checkbox" name="checkbox3" value="checkbox" onclick="selectAll(this, 'selectedcheckbox12');"/></td>
+        <td height="28" class="dot"><input disabled type="checkbox" disabled="disabled" name="checkbox3" value="checkbox" onclick="selectAll(this, 'selectedcheckbox12');"/></td>
         <td><b>行业</b>
             <p><span>优先级别：</span>
                 <select disabled id="preciseUiBean.priority12" name="preciseUiBean.priority12" style="width:40px">
@@ -1821,7 +1837,7 @@ function showChannelGroupRef(channelGroupId) {
             <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable12">
               <c:forEach items="${preciseUiBean.userindustrysList}" var="industryVar" >
               <tr id="contentrow">
-                 <td class="dot"><input type="checkbox" name="selectedcheckbox12" value="checkbox"/></td>
+                 <td class="dot"><input type="checkbox" disabled="disabled" name="selectedcheckbox12" value="checkbox"/></td>
                  <td >
                  <input type="hidden" id="preciseUiBean.userindustrys" name="preciseUiBean.userindustrys"  value="${industryVar.datavalue}"/>
                  <input type="hidden" id="preciseUiBean.userindustrysName" name="preciseUiBean.userindustrysName"  value="${industryVar.dataname}"/>
@@ -1888,7 +1904,7 @@ function showChannelGroupRef(channelGroupId) {
             <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable13">
               <c:forEach items="${preciseUiBean.userlevelsList}" var="levelVar" >
               <tr id="contentrow">
-                 <td class="dot"><input type="checkbox" name="selectedcheckbox13" value="checkbox"/></td>
+                 <td class="dot"><input type="checkbox" disabled="disabled" name="selectedcheckbox13" value="checkbox"/></td>
                  <td >
                  <input type="hidden" id="preciseUiBean.userlevels" name="preciseUiBean.userlevels"  value="${levelVar.datavalue}"/>
                  <input type="hidden" id="preciseUiBean.userlevelName" name="preciseUiBean.userlevelName"  value="${levelVar.dataname}"/>
@@ -2003,7 +2019,69 @@ function showChannelGroupRef(channelGroupId) {
       </tr>
     </table>
     
-    
+    <table cellspacing="1" class="searchList"  style="display: none;" id="selectedtable17">
+      <tr class="title">
+        <td height="28" class="dot"><input type="checkbox" disabled="disabled" name="checkbox3" value="checkbox" onclick="selectAll(this, 'selectedcheckbox17');"/></td>
+        <td><b>TVN号</b>
+            <div id="assetdiv"><p><span>优先级别：</span>
+                <select id="preciseUiBean.priority17" disabled="disabled" name="preciseUiBean.priority17" style="width:40px">
+              					<option value="1" <c:if test="${1==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>1</option>
+              						<option value="2" <c:if test="${2==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>2</option>
+              						<option value="3" <c:if test="${3==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>3</option>
+              						<option value="4" <c:if test="${4==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>4</option>
+              						<option value="5" <c:if test="${5==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>5</option>
+              						<option value="6" <c:if test="${6==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>6</option>
+              						<option value="7" <c:if test="${7==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>7</option>
+              						<option value="8" <c:if test="${8==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>8</option>
+              						<option value="9" <c:if test="${9==preciseUiBean.priority17}">
+                            	 selected
+                            	</c:if>>9</option>
+                				</select>
+                <span>预制条件</span>
+                <select name="preciseUiBean.tvnExpression17" disabled="disabled">
+                  <option value="0" <c:if test="${0==preciseUiBean.tvnExpression17}">
+               	 selected
+               	</c:if>>不等于</option>
+               	 <option value="1" <c:if test="${1==preciseUiBean.tvnExpression17}">
+               	 selected
+               	</c:if>>等于</option>
+                 
+                </select>
+          </p>
+          </div></td>
+      </tr>
+      <tr>
+        <td colspan="2" class="conditionList"><div>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable17">
+              <c:forEach items="${preciseUiBean.tvnNumberList}" var="tvnNumber" >
+              <tr id="contentrow">
+                 <td class="dot"><input type="checkbox"  disabled="disabled" name="selectedcheckbox17" value="checkbox"/></td>
+                 <td >
+                 <input type="text" id="preciseUiBean.tvnNumber" disabled="disabled" name="preciseUiBean.tvnNumber"  value="${tvnNumber.datavalue}"/>
+                </td>
+              </tr>
+             </c:forEach>
+            </table>
+        </div></td>
+      </tr>
+     
+    </table>
     
     
   </div>

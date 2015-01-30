@@ -177,8 +177,11 @@ public class OrderAction extends BaseAction{
 					ploy.getPositionId().intValue()==3 || ploy.getPositionId().intValue()==4||
 					ploy.getPositionId().intValue()==45 || ploy.getPositionId().intValue()==46
 					||ploy.getPositionId().intValue()==47 || ploy.getPositionId().intValue()==48
+					||ploy.getPositionId().intValue()==49
 					){
 				return "start";
+			}else if(ploy.getPositionId().intValue()==50){
+				return "TEXT";
 			}else if(ploy.getPositionId().intValue()==23 || ploy.getPositionId().intValue()==24){
 				return "twoVod";
 			}
@@ -2045,8 +2048,8 @@ public class OrderAction extends BaseAction{
 				page = orderService.queryAreaResourceList(omRelTmp,page.getPageNo(), page.getPageSize());
 			}else if(positionId == 5 || positionId == 6 || positionId == 7 || positionId == 8
 					|| positionId == 9 || positionId == 10 || positionId == 11 || positionId == 12 
-					 || positionId == 41 || positionId == 42 ){
-				//按时间段、区域、频道组选择素材（导航条广告、快捷切换列表广告、音量条广告、预告提示广告、广播收听背景广告）
+					 || positionId == 41 || positionId == 42 || positionId == 49 || positionId == 50){
+				//按时间段、区域、频道组选择素材（导航条广告、快捷切换列表广告、音量条广告、预告提示广告、广播收听背景广告、滚动字幕）
 				pageReleaseLocation = ployService.queryCityAreaList(null, 1, 100);
 				channelGroupList = orderService.getChannelGroupListByPloyId(order.getPloyId());
 				returnStr = "timeAreaGroup";
@@ -2134,7 +2137,8 @@ public class OrderAction extends BaseAction{
 				page = orderService.queryAreaResourceList(omRelTmp,page.getPageNo(), page.getPageSize());
 			}else if(positionId == 5 || positionId == 6 || positionId == 7 || positionId == 8
 					|| positionId == 9 || positionId == 10 || positionId == 11 || positionId == 12 
-					|| positionId == 13 || positionId == 14 || positionId == 41 || positionId == 42 ){
+					|| positionId == 13 || positionId == 14 || positionId == 41 || positionId == 42
+					|| positionId == 49 || positionId == 50){
 				//按时间段、区域、频道组选择素材（导航条广告、快捷切换列表广告、音量条广告、预告提示广告、广播收听背景广告）
 				pageReleaseLocation = ployService.queryAreaList(null, 1, 100);
 				channelGroupList = orderService.getChannelGroupListByPloyId(order.getPloyId());
@@ -2238,28 +2242,28 @@ public class OrderAction extends BaseAction{
 			orderService.multiposition(orderCode, ployId, advertPosition.getLoopCount());
 		}
 		
-		//点播随片图片广告
+		//点播随片图片广告（双向）
 		else if(positionId == 25 || positionId == 26){
 			orderService.insertFollowOrderMateRelTmp(orderCode, ployId,positionId);
 		}
 		else if(positionId == 15 || positionId == 16 ||positionId == 23 ||positionId == 24){
-			//点播菜单广告
+			//点播/回看 菜单广告（双向）
 			orderService.insertLookBackOrderMateRelTmp(orderCode, ployId,positionId);
 		}else if( positionId == 17){
-			//回放菜单广告
+			//回放菜单广告（双向）
 			orderService.insertLookRepalyOrderMateRelTmp(orderCode, ployId,positionId);
 		}else if(positionId == 29 || positionId == 40 || positionId == 43){
-			//回看回放插播广告
+			//回看回放插播广告（在本系统暂时没有使用）
 			String instreamNumber = baseConfigService.getBaseConfigByCode("instreamNumber");
 			orderService.insertInstreamOrderMateRelTmp(orderCode, ployId,Integer.parseInt(instreamNumber));
 		}else if(positionId == 19 || positionId == 20 || positionId == 39){
-			//回看回放暂停广告
+			//回看回放暂停广告（在本系统暂时没有使用）
 			orderService.insertPauseOrderMateRelTmp(orderCode, ployId);
 		}else if(positionId == 31 || positionId == 32 
 				|| positionId == 33 || positionId == 34
 				|| positionId == 35 || positionId == 36
 				||positionId == 27||positionId == 28){
-			//点播暂停广告、点播挂角广告、点播游动字幕广告
+			//点播暂停广告、点播挂角广告、点播游动字幕广告（在本系统暂时没有使用）
 			orderService.insertReqOrderMateRelTmp(orderCode, ployId);
 		}else{
 			orderService.insertOrderMateRelTmp(orderCode, ployId,positionId);

@@ -55,6 +55,12 @@
 	 
 		<property name="ployNumber" column="PLOY_NUMBER" type="java.lang.Integer" />
 		<property name="defaultstart" column="DEFAULTSTART" type="java.lang.String" />
+		
+		<!-- 单频道滚动字幕添加字段 -->
+		
+		<property name="userIndustrys" column="USERINDUSTRYS" type="java.lang.String" />
+		<property name="userLevels" column="USERLEVELS" type="java.lang.String" />
+		<property name="tvnNumber" column="TVN_NUMBER" type="java.lang.String" />
 	<!--	
 		<property name="action" column="ACTION" type="java.lang.String" />
 		

@@ -32,6 +32,7 @@
 <script type="text/javascript" src="<%=path %>/js/jquery/upload/js/swfobject.js"></script>
 <link rel="stylesheet" href="<%=path %>/css/easydialog/easydialog.css" type="text/css" />
 <script type='text/javascript' src='<%=path %>/js/new/avit.js'></script>
+<script type='text/javascript' src='<%=path %>/js/util/jscolor/jscolor.js'></script>
   
 <title>广告系统</title>
 
@@ -71,6 +72,7 @@ function init(positionJson){
 			document.getElementById('div_video').style.display = "none";      
 			document.getElementById('div_image').style.display = "";
 			document.getElementById("sel_material_type").options.add(new Option("图片","0"));
+			$("#mImage").attr("src",'${viewPath}/${imageMeta.name}'); 
 		}
 		else if (materialType == 2 ){//文字
 			document.getElementById('div_text').style.display = "";      
@@ -98,6 +100,7 @@ function init(positionJson){
 			document.getElementById('div_image').style.display = "none";
 			document.getElementById('div_zip').style.display = "";
 			document.getElementById("sel_material_type").options.add(new Option("ZIP","4"));
+			$("#mImage4").attr("src",'${viewPath}/${zipMeta.fileHeigth}');
 		}
 	}
 }
@@ -610,11 +613,9 @@ function closeSavePane() {
 		}
 
         var pat = new RegExp("^[A-Fa-f0-9]+$"); 
-		var str = $$("textMeta.fontColor").value.substring(1);
+		var str = $$("textMeta.fontColor").value;
 
-		if($$("textMeta.fontColor").value.substring(0,1)=='#'
-		&& $$("textMeta.fontColor").value.substring(1).length==6
-		&& pat.test(str)){
+		if(str.length==6&& pat.test(str)){
 			
 		}else{
 		     alert("文字颜色格式不正确！");
@@ -630,10 +631,8 @@ function closeSavePane() {
     		return true;
 		}
 		   //效验背景色
-		   str = $$("textMeta.bkgColor").value.substring(1);
-		   if($$("textMeta.bkgColor").value.substring(0,1)=='#'
-		&& $$("textMeta.bkgColor").value.substring(1).length==6
-		&& pat.test(str)){
+		   str = $$("textMeta.bkgColor").value;
+		   if(str.length==6&& pat.test(str)){
 			
 		}else{
 		     alert("文字显示背景色格式不正确！");
@@ -755,7 +754,8 @@ function closeSavePane() {
 		//滚动
 		   $("#textContent").css({
 			   'color':$$("textMeta.fontColor").value,
-			   'font-size':$$("textMeta.fontSize").value+"px"
+			   'font-size':$$("textMeta.fontSize").value+"px",
+			   'background':$$("textMeta.bkgColor").value
 		   });
 		   if($$("textMeta.rollSpeed").value!=''){
 			$("#textContent").attr("scrollamount",$$("textMeta.rollSpeed").value);
@@ -774,8 +774,8 @@ function closeSavePane() {
 					}
 					else
 					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
+					   var left = coordinates[0]+"px";
+					   var bottom = coordinates[1]+"px";					 				  
 					   $('#text').css('left',left);
 					   $('#text').css('top',bottom);
 					}				
@@ -787,10 +787,11 @@ function closeSavePane() {
 					}
 			    else
 			    {
-			    	 var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
-					   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
+			    
+			    	 var left = coordinates[0]+"px";
+					   var bottom = coordinates[1]+"px";					 				  
+					   var width = size[0]+"px";
+					   var height = size[1]+"px";
 					   $('#text').css('width',width);
 					   $('#text').css('height',height);
 					}
@@ -822,8 +823,8 @@ function closeSavePane() {
 					}
 					else
 					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
+					   var left = coordinates[0]+"px";
+					   var bottom = coordinates[1]+"px";					 				  
 					   $('#text2').css('left',left);
 					   $('#text2').css('top',bottom);
 					}				
@@ -835,8 +836,8 @@ function closeSavePane() {
 					}
 			    else
 			    {
-			    	   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
+			    	   var width = size[0]+"px";
+					   var height = size[1]+"px";
 					   $('#text2').css('width',width);
 					   $('#text2').css('height',height);
 					}
@@ -1022,24 +1023,24 @@ function closeSavePane() {
                       <tr>
                           <td  align="right"><span class="required"></span>文字大小：</td>
                           <td>
-	            		      <input id="textMeta.fontSize" name="textMeta.fontSize" value="${textMeta.fontSize}"/><span class="required">px</span>
+	            		      <input id="textMeta.fontSize" name="textMeta.fontSize" onchange="showText();" value="${textMeta.fontSize}"/><span class="required">px</span>
                           </td>
                           <td  align="right"><span class="required"></span>文字颜色：</td>
                           <td>
-	            		      <input id="textMeta.fontColor" name="textMeta.fontColor" value="${textMeta.fontColor}"/><span class="required">格式：#235612</span>
+	            		      <input id="textMeta.fontColor" class="color" name="textMeta.fontColor" value="${textMeta.fontColor}"/><span class="required">格式：#235612</span>
                          </td>
                       </tr>
                       <tr>
                           <td  align="right"><span class="required"></span>文本显示背景色：</td>
                           <td>
-	            		      <input id="textMeta.bkgColor" name="textMeta.bkgColor" value="${textMeta.bkgColor}"/><span class="required">格式：#235612</span>
+	            		      <input id="textMeta.bkgColor" class="color" name="textMeta.bkgColor" value="${textMeta.bkgColor}"/><span class="required">格式：#235612</span>
                           </td>
                           <td  align="right"><span class="required"></span>文本显示滚动速度：</td>
                           <td>
 	            <!-- 	      <input id="textMeta.rollSpeed" name="textMeta.rollSpeed" value="${textMeta.rollSpeed}"/>
 	            		  -->	     
 	            		      
-	            		        <select  id="textMeta.rollSpeed"  name="textMeta.rollSpeed" >
+	            		        <select  id="textMeta.rollSpeed"  name="textMeta.rollSpeed" onchange="showText();">
 								                 <option  value="2" <c:if test="${textMeta.rollSpeed==2}">selected="selected"</c:if> >
 										                        低速
 										        </option>
@@ -1055,11 +1056,11 @@ function closeSavePane() {
                       <tr>
                           <td  align="right"><span class="required"></span>文本显示坐标：</td>
                           <td>
-	            		      <input id="textMeta.positionVertexCoordinates" name="textMeta.positionVertexCoordinates" value="${textMeta.positionVertexCoordinates}"/><span class="required">格式：80*80(坐标x*y)</span>
+	            		      <input id="textMeta.positionVertexCoordinates" name="textMeta.positionVertexCoordinates" onchange="showText();" value="${textMeta.positionVertexCoordinates}"/><span class="required">格式：80*80(坐标x*y)</span>
                           </td>
                           <td  align="right"><span class="required"></span>文本显示区域：</td>
                           <td>
-	            		      <input id="textMeta.positionWidthHeight" name="textMeta.positionWidthHeight" value="${textMeta.positionWidthHeight}"/><span class="required">格式：80*80(宽高w*h)</span>
+	            		      <input id="textMeta.positionWidthHeight" name="textMeta.positionWidthHeight" onchange="showText();" value="${textMeta.positionWidthHeight}"/><span class="required">格式：80*80(宽高w*h)</span>
                          </td>
                       </tr>
                       <tr>
@@ -1193,7 +1194,7 @@ function closeSavePane() {
 						    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 						     position: relative;">
 								<img id="pImage3" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
-								<img id="mImage" src="${viewPath}/${imageMeta.name}" />
+								<!-- <img id="mImage" src="${viewPath}/${imageMeta.name}" /> -->
 							</div>
 					     </td>						
 			         </tr>
@@ -1234,7 +1235,7 @@ function closeSavePane() {
 		                              </span>
 		                	          <!-- 
 		                	          <input maxlength="20" id="imageSpecReal" type="text" disabled="disabled" value="大小:${imageMeta.fileSize} 宽度:${imageMeta.fileWidth} 高度:${imageMeta.fileHeigth}" />
-		                	           -->
+		                	          <!-- 
 		                	          
 		                          </td>
 		              </tr>
@@ -1248,7 +1249,7 @@ function closeSavePane() {
 						    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 						     position: relative;">
 								<img id="pImage4" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
-								<img id="mImage4" src="${viewPath}/${zipMeta.fileHeigth}" />
+								<!-- <img id="mImage4" src="${viewPath}/${zipMeta.fileHeigth}" />-->
 							</div>
 					     </td>						
 			         </tr>

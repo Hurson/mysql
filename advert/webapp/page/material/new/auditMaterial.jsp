@@ -19,7 +19,7 @@
 
 <script type="text/javascript" src="<%=path %>/js/jquery/jquery-1.9.0.js"></script>
 <script type="text/javascript" src="<%=path %>/js/jquery/upload/js/jquery.uploadify.v2.1.4.js"></script>
-<script type="text/javascript" src="<%=path%>/js/material/uploadMaterial.js"></script>
+
 <script type="text/javascript" src="<%=path%>/js/new/My97DatePicker/WdatePicker.js"></script>
 <script type="text/javascript" src="<%=path %>/js/easydialog/easydialog.min.js"></script>
 
@@ -37,12 +37,12 @@
 
 <script type="text/javascript">
 
-	function init(positionJson){
-		var materialType =document.getElementById('materialType').value;
-	
+	function init(){
+		var materialType ="${material.resourceType}";
+	    
 		if(materialType!=null && materialType!=""){
 			//预览素材
-			preview(positionJson);
+			preview(${positionJson});
 			if (materialType == 1 ){//视频
 				document.getElementById("sel_material_type").options.add(new Option("视频","1"));
 				setTimeout("showVideo($$('videoPath').value)", 1000);
@@ -51,6 +51,8 @@
 				document.getElementById('div_video').style.display = "none";      
 				document.getElementById('div_image').style.display = "";
 				document.getElementById("sel_material_type").options.add(new Option("图片","0"));
+				
+				$("#mImage").attr("src",'${viewPath}/${imageMeta.name}'); 
 			}
 			else if (materialType == 2 ){//文字
 				document.getElementById('div_text').style.display = "";      
@@ -74,6 +76,7 @@
 				document.getElementById('div_image').style.display = "none";
 				document.getElementById('div_zip').style.display = "";
 				document.getElementById("sel_material_type").options.add(new Option("ZIP","4"));
+				$("#mImage4").attr("src",'${viewPath}/${zipMeta.fileHeigth}');
 			}
 		}
 	}
@@ -201,7 +204,8 @@
 		//滚动
 		   $("#textContent").css({
 			   'color':$$("textMeta.fontColor").value,
-			   'font-size':$$("textMeta.fontSize").value+"px"
+			   'font-size':$$("textMeta.fontSize").value+"px",
+			   'background':$$("textMeta.bkgColor").value
 		   });
 		   if($$("textMeta.rollSpeed").value!=''){
 			$("#textContent").attr("scrollamount",$$("textMeta.rollSpeed").value);
@@ -220,8 +224,8 @@
 					}
 					else
 					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
+					   var left = coordinates[0]+"px";
+					   var bottom = coordinates[1]+"px";					 				  
 					   $('#text').css('left',left);
 					   $('#text').css('top',bottom);
 					}				
@@ -233,8 +237,8 @@
 					}
 			    else
 			    {
-			    	   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
+			    	   var width = size[0]+"px";
+					   var height = size[1]+"px";
 					   $('#text').css('width',width);
 					   $('#text').css('height',height);
 					}
@@ -264,8 +268,8 @@
 					}
 					else
 					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
+					   var left = coordinates[0]+"px";
+					   var bottom = coordinates[1]+"px";					 				  
 					   $('#text2').css('left',left);
 					   $('#text2').css('top',bottom);
 					}				
@@ -277,8 +281,8 @@
 					}
 			    else
 			    {
-			    	   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
+			    	   var width = size[0]+"px";
+					   var height = size[1]+"px";
 					   $('#text2').css('width',width);
 					   $('#text2').css('height',height);
 					}
@@ -325,7 +329,7 @@
     }
 </script>
 </head>
-<body class="mainBody" onload='init(${positionJson});'>
+<body class="mainBody" onload="init()">
 <form action="<%=path %>/page/meterial/saveMaterialBackup.do" method="post" id="saveForm">	
 <div class="path">首页 >> 素材管理 >> 审核素材</div>
 <div class="searchContent" >
@@ -469,7 +473,7 @@
 		                      </tr>
 		                      <tr>
 		                          <td  align="right"><span class="required"></span>文本显示背景色：</td>
-		                          <td>
+		                          <td><input id="textMeta.bkgColor" type="hidden" value="${textMeta.bkgColor}"/>
 			            		      ${textMeta.bkgColor}
 		                          </td>
 		                          <td  align="right"><span class="required"></span>文本显示滚动速度：</td>
@@ -513,7 +517,7 @@
 							      <td colspan="3">
 									  <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 									     position: relative;">
-											<img id="pImage1" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
+											<img id="pImage1" lowsrc="" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
 											<div id="text"><marquee scrollamount="10" id="textContent"></marquee></div>
 											<div id="text2"><span id="textContent2"></span></div>
 										</div>
@@ -521,7 +525,7 @@
 					          </tr>   
 		                </table>
 					
-					    <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px;" id ="div_video">
+					    <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px;display: none" id ="div_video">
 		                      <tr class="title" >
 		                          <td colspan="4">视频素材</td>
 		                      </tr>
@@ -538,7 +542,7 @@
 							      	<input id="videoPath" type="hidden" value="${sssspath}"/>
 								    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 								     position: relative;">
-										<img id="pImage2" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" />
+										<img id="pImage2" lowsrc="" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" />
 										<div id="video">
 											<object type='application/x-vlc-plugin' id='vlc'  classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width="150" height="150">
 										           <param name='mrl'  value=''/>
@@ -560,8 +564,8 @@
 							     <td colspan="3">
 								    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 								     position: relative;">
-										<img id="pImage3" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
-										<img id="mImage" src="${viewPath}/${imageMeta.name}" />
+										<img id="pImage3" lowsrc="" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
+										<img id="mImage" alt="正在加载..." />
 									</div>
 							     </td>						
 					         </tr>
@@ -575,8 +579,8 @@
 							     <td colspan="3">
 								    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 								     position: relative;">
-										<img id="pImage4" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
-										<img id="mImage4" src="${viewPath}/${zipMeta.fileHeigth}" />
+										<img id="pImage4" lowsrc="" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
+										<img id="mImage4" /> 
 									</div>
 							     </td>						
 					         </tr>
