@@ -229,6 +229,7 @@ function showText(material){
 	$('#text').css('height',height);
 	 $('#text').css('left',left);
 	$('#text').css('top',bottom);
+	$('#text').css('background',material.text.bkgColor);
 	
 	$("#text").show();
 	$("#textContent").html(material.text.content);
