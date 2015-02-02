@@ -1,3 +1,4 @@
+
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld" %>
 <%
@@ -11,15 +12,32 @@
 <link rel="stylesheet" type="text/css" href="<%=path %>/css/new/main.css"/>
 <script type='text/javascript' src='<%=path %>/js/new/avit.js'></script>
 <script type="text/javascript" src="<%=path %>/js/jquery/jquery-1.9.0.js"></script>
-<title>广告位运营商指定</title>
+<title>选择区域信息</title>
 <script type="text/javascript">
+
+    
+   	function init(){
+		var areaCodes = window.dialogArguments.document.getElementById("user_area_codes").value;
+		
+		var selecteds = areaCodes.split(",");
+		var obj = document.getElementsByName("area_code");
+		for(var i =0; i < obj.length; i ++){
+			var val= obj[i].value.split("_")[0];
+			for(var j =0; j < selecteds.length; j ++){
+				if(val == selecteds[j]){
+					obj[i].checked="checked";
+					break;
+				}
+			}
+		}
+    }
    function save() {
-		if (getCheckCount('packageid') <= 0) {
-			alert("请给运营商指定广告位！");
+		if (getCheckCount('area_code') <= 0) {
+			alert("请给运营商指定区域！");
 			return;
     	} else {
-			var positionValue = getCheckValue('packageid');
-			window.returnValue=positionValue;
+			var areaValue = getCheckValue('area_code');
+			window.returnValue=areaValue;
 			window.close();
 		}
 		
@@ -32,11 +50,11 @@
 </script>
 </head>
 
-<body class="mainBody">
+<body class="mainBody" onload="init()">
 <div class="search">
-<div class="path">首页 >>用户管理 >> 广告位运营商指定</div>
+<div class="path">首页 >>用户管理 >> 区域运营商选择</div>
 <div class="searchContent" >
-<form action="getUserAdvertPackage.do" method="post" id="queryForm">
+<form action="getUserAreas.do" method="post" id="queryForm">
 
 <input type="hidden" id="pageNo" name="page.pageNo" value="${page.pageNo}"/>
 <input type="hidden" id="pageSize" name="page.pageSize" value="${page.pageSize}"/>
@@ -46,35 +64,21 @@
     <tr class="title">
     	<td height="28" class="dot">
 			<c:if test="${roleType==2}">
-				<input type="checkbox" name="chkAll" onclick="selectAll(this, 'customer');" id="chkAll"/>
+				<input type="checkbox" name="chkAll" onclick="selectAll(this, 'area_code');" id="chkAll"/>
 			</c:if>
 		</td>
-        <td >广告位编码</td>
-	    <td >广告位名称</td>
-	    <td >广告位类型</td>
-	    <td >子广告位个数</td>
-	    <td >投放策略</td>
+        <td >区域编码</td>
+	    <td >区域名称</td>
+	    <td >区域类型</td>
+	   
     </tr>
-    <c:forEach items="${page.dataList}" var="package" varStatus="pl">
+    <c:forEach items="${page.dataList}" var="area" varStatus="pl">
 		<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
-			<td><input type="checkbox"  id="packageid" name="packageid" value="${package.id}_${package.positionPackageName}"
-			<c:forEach items="${positionsIdList}" var="pid">
-						<c:if test="${pid == package.id}">checked="checked" </c:if>
-					</c:forEach>
-    			 /></td>
-			</td>
-			<td><c:out value="${package.positionPackageCode}" /></td>
-			<td><c:out value="${package.positionPackageName}" /></td>
-			<td>
-				<c:choose>
-					<c:when test="${package.positionPackageType==0}">双向实时广告</c:when>
-					<c:when test="${package.positionPackageType==1}">双向实时请求广告</c:when>
-					<c:when test="${package.positionPackageType==2}">单向实时广告</c:when>
-					<c:when test="${package.positionPackageType==3}">单向非实时广告</c:when>
-				</c:choose>
-			</td>
-			<td><c:out value="${package.positionCount}" /></td>
-			<td><c:out value="${package.ployDescription}" /></td>
+			<td><input type="checkbox"  id="area_code" name="area_code" value="${area.areaCode}_${area.areaName}"/></td>
+			<td><c:out value="${area.areaCode}" /></td>
+			<td><c:out value="${area.areaName}" /></td>
+			<td><c:out value="${area.locationType}"/></td>
+			
 			
 		</tr>
 	</c:forEach>

@@ -8,6 +8,8 @@ import java.util.Date;
  *
  */
 public class ContractQueryBean {
+	
+	private Integer customerId;
 	private String customerName;
 	private String positionName;
 	private Date effectiveStartDate;
@@ -19,6 +21,14 @@ public class ContractQueryBean {
 	private Integer status;
 	private String contractName;
 	private String customerids;
+
+	public Integer getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Integer customerId) {
+		this.customerId = customerId;
+	}
 
 	public String getPositionTypeName() {
 		return positionTypeName;

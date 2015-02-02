@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.constant.PurviewConstant;
 import com.dvnchina.advertDelivery.dao.RoleColumnDao;
 import com.dvnchina.advertDelivery.dao.UserCustomerDao;
@@ -73,6 +74,11 @@ public class PurviewServiceImpl implements PurviewService{
 		this.userCustomerDao = userCustomerDao;
 	}
 	
+	@Override
+	public PageBeanDB queryAreasList(int pageNo, int pageSize){
+		return this.userLocationDao.queryAllLocations(pageNo, pageSize);
+		
+	}
 	@Override
 	public int addRoleColumnBinding(Integer roleId, Integer columnId) {
 		try {
@@ -291,6 +297,8 @@ public class PurviewServiceImpl implements PurviewService{
 		
 		List<Integer> advertpositionPackages = StringUtil.getIntegerList(user.getPositionIds(), PurviewConstant.SIGN_COMMA);
 		this.addUserAdvertPositionPackageBinding(user.getUserId(), advertpositionPackages);
+		String[] areaCodes = user.getAreaCodes().split(PurviewConstant.SIGN_COMMA);
+		this.addUserLocationBatchBinding(user.getUserId(),areaCodes);
 	}
 
 	/**

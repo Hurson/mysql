@@ -20,22 +20,16 @@ import com.dvnchina.advertDelivery.accounts.bean.ContractAccounts;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.bean.contract.ContractQueryBean;
 import com.dvnchina.advertDelivery.contract.bean.AdvertPositionPackage;
+import com.dvnchina.advertDelivery.contract.bean.ContractBackUpArea;
 import com.dvnchina.advertDelivery.contract.bean.PositionAD;
 import com.dvnchina.advertDelivery.contract.dao.ContractManagerDao;
-import com.dvnchina.advertDelivery.model.AdvertPosition;
-import com.dvnchina.advertDelivery.model.AdvertPositionType;
-import com.dvnchina.advertDelivery.model.ChannelInfo;
 import com.dvnchina.advertDelivery.model.Contract;
 import com.dvnchina.advertDelivery.model.ContractAD;
 import com.dvnchina.advertDelivery.model.ContractADBackup;
 import com.dvnchina.advertDelivery.model.ContractBackup;
 import com.dvnchina.advertDelivery.model.Customer;
+import com.dvnchina.advertDelivery.model.Location;
 import com.dvnchina.advertDelivery.model.MarketingRule;
-import com.dvnchina.advertDelivery.model.Ploy;
-import com.dvnchina.advertDelivery.model.ReleaseArea;
-import com.dvnchina.advertDelivery.ploy.bean.PloyAreaChannel;
-import com.dvnchina.advertDelivery.ploy.bean.PloyChannel;
-import com.dvnchina.advertDelivery.ploy.dao.PloyDao;
 import com.dvnchina.advertDelivery.utils.HibernateSQLTemplete;
 
 public class ContractManagerDaoImpl extends HibernateSQLTemplete implements ContractManagerDao {
@@ -173,6 +167,7 @@ public class ContractManagerDaoImpl extends HibernateSQLTemplete implements Cont
  		"t.contractNumber," +
  		"t.contractCode," +
  		"t.customerId," +
+ 		"c.advertisersName," +
  		"t.submitUnits," +
  		"t.financialInformation," +
  		"t.approvalCode," +
@@ -198,6 +193,10 @@ public class ContractManagerDaoImpl extends HibernateSQLTemplete implements Cont
 	     if (contract!=null && contract.getCustomerids()!=null && !"".equals(contract.getCustomerids()))
          {
                     sql=sql+" and c.id in ("+contract.getCustomerids()+")";
+         }
+	     if (contract!=null && contract.getCustomerId()!=null && !"".equals(contract.getCustomerId()))
+         {
+                    sql=sql+" and c.id = "+contract.getCustomerId();
          }
 	     if (contract!=null && contract.getStatus()!=null )
          {
@@ -240,6 +239,12 @@ public class ContractManagerDaoImpl extends HibernateSQLTemplete implements Cont
          return this.getPageList(sql, params, pageNumber, pageSize); 
    }
    
+	public PageBeanDB queryAreaList(Integer pageNumber, Integer pageSize){
+		
+        String sql= "from Location order by id desc";
+        
+        return this.getPageList(sql, null, pageNumber, pageSize); 
+	}
 	
 	/**
 	 * 
@@ -342,7 +347,25 @@ public class ContractManagerDaoImpl extends HibernateSQLTemplete implements Cont
 		
 	}
 
+	public void addContractAreaBinging(List<String> areaCodeList, Integer contractId){
+		for(String areaCode : areaCodeList){
+			ContractBackUpArea ca =new ContractBackUpArea();
+			ca.setContractId(contractId);
+			ca.setAreaCode(areaCode);
+			this.getHibernateTemplate().save(ca);
+		}
+	}
 	
+	public void deleteContractAreaBinging(final Integer contractId){
+		final String sql = "delete from ContractBackUpArea ca where ca.contractId= ?";
+		this.getHibernateTemplate().execute(new HibernateCallback(){
+			public Object doInHibernate(Session session){
+				Query query = session.createQuery(sql);
+				query.setParameter(0, contractId);
+			   return  query.executeUpdate();
+				}
+		});
+	}
 	/**
 	 * 
 	 * @description: 保存合同临时表
@@ -539,10 +562,25 @@ public class ContractManagerDaoImpl extends HibernateSQLTemplete implements Cont
         {
             contractBackup = (ContractBackup)(list.get(0));
         }
+        
+        getContractBackupArea(contractBackup);
 
         return contractBackup;
     }
 	
+	private void getContractBackupArea(ContractBackup contract){
+		String hql ="select la from Location la,ContractBackUpArea ca where la.areaCode = ca.areaCode and ca.contractId = ?";
+		
+		List<Location> laList = this.getHibernateTemplate().find(hql,contract.getId());
+		String areaCodes = "";
+		String areaNames = "";
+		for(Location la : laList){
+			areaCodes += ","+la.getAreaCode();
+			areaNames += ","+ la.getAreaName();
+		}
+		contract.setAreaCodes(areaCodes.equals("")?areaCodes:areaCodes.substring(1));
+		contract.setAreaNames(areaNames.equals("")?areaNames:areaNames.substring(1));
+	}
 	/**
 	 * 
 	 * @description: 根据编码查询合同信息

@@ -177,6 +177,12 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao{
 		
 		String sql3 = "select p.id, p.position_package_name  from t_position_package p,  t_user_advertposition_package a where a.advertposition_package_id = p.id and a.user_id = ?";
 		List list = this.getDataBySql(sql3, new Object[]{userId});
+		
+		//设置用户区域信息
+		String sql4 = "select a.area_code, a.area_name from t_release_area a, t_user_area ua where a.area_code = ua.release_areacode and ua.user_id = ?";
+		List areaList = this.getDataBySql(sql4, new Object[]{userId});
+		setAreaCodes(areaList, user);
+		
 		String packageIds = "";
 		String packageNames = "";
 		for (int i = 0; i < list.size(); i++) {
@@ -195,6 +201,22 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao{
 
 	}
 	
+	private void setAreaCodes(List list, User user){
+		String areaCodes = "";
+		String areaNames = "";
+		for (int i = 0; i < list.size(); i++) {
+			Object[] obj = (Object[])list.get(i);
+			if(i== list.size()-1){
+				areaCodes += (String)obj[0];
+				areaNames += (String)obj[1];
+			}else{
+				areaCodes += (String)obj[0]+",";
+				areaNames += (String)obj[1]+",";
+			}
+		}
+		user.setAreaCodes(areaCodes);
+		user.setAreaNames(areaNames);
+	}
 	private User getUserDetail(List<?> resultList) {
 		for (int i=0; i<resultList.size(); i++) {
 			Object[] obj = (Object[]) resultList.get(i);

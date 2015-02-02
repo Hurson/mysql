@@ -29,7 +29,7 @@ public class UserAction extends BaseAction{
 	private CustomerService customerService;
 	private PurviewService purviewService;
 	private OperateLogService operateLogService = null;
-	private PageBeanDB page = null;
+	private PageBeanDB page = new PageBeanDB();
 	private User user = null;
 	private Customer cust = null;
 	private List<Role> roleList;
@@ -188,6 +188,7 @@ public class UserAction extends BaseAction{
 			purviewService.deleteUserRoleAllBinding(user.getUserId());
 			purviewService.deleteUserCustomerBatchBinding(user.getUserId());
 			purviewService.deleteUserAdvertPackageBinding(user.getUserId());
+			purviewService.deleteUserLocationBanding(user.getUserId());
 			//插入和用户相关的数据
 			purviewService.insertUserBandingData(user);
 			message = "common.update.success";//修改成功
@@ -243,8 +244,15 @@ public class UserAction extends BaseAction{
 	public String getUserAdvertPackage(){
 		String user_positions_ids = getRequest().getParameter("user_positions");
 		List<Integer> positionsIdList= StringUtil.getIntegerList(user_positions_ids, PurviewConstant.SIGN_COMMA);
-		page = positionService.queryPositionPackageList(0, 50);
+		page = positionService.queryPositionPackageList(page.getPageNo(), page.getPageSize());
 		getRequest().setAttribute("positionsIdList", positionsIdList);
+		return SUCCESS;
+	}
+	
+	public String getUserAreas(){
+		
+		page = purviewService.queryAreasList(page.getPageNo(), page.getPageSize());
+		
 		return SUCCESS;
 	}
 	

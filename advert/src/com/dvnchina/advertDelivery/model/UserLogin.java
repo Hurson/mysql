@@ -13,6 +13,10 @@ public class UserLogin {
 	private List<Integer> positionIds;
 	/** 用户名称  */
 	private String userName;
+	/**指定用户区域*/
+	private String areaCodes;
+	/**登陆用户具有访问权限的用户id*/
+	private List<Integer> accessUserIds;
 	
 	public Integer getUserId() {
 		return userId;
@@ -44,6 +48,17 @@ public class UserLogin {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
+	public String getAreaCodes() {
+		return areaCodes;
+	}
+	public void setAreaCodes(String areaCodes) {
+		this.areaCodes = areaCodes;
+	}
+	public List<Integer> getAccessUserIds() {
+		return accessUserIds;
+	}
+	public void setAccessUserIds(List<Integer> accessUserIds) {
+		this.accessUserIds = accessUserIds;
+	}
 	
 }

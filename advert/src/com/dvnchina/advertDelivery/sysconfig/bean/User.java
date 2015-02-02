@@ -68,6 +68,10 @@ public class User implements Serializable{
 	private String positionIds;
 	/** 指定广告位名*/
 	private String positionNames;
+	/**选择区域areaCode*/
+	private String areaCodes;
+	/**选择区域名称areaName*/
+	private String areaNames;
 	
 
 	public String getPositionIds() {
@@ -84,6 +88,22 @@ public class User implements Serializable{
 
 	public void setPositionNames(String positionNames) {
 		this.positionNames = positionNames;
+	}
+
+	public String getAreaCodes() {
+		return areaCodes;
+	}
+
+	public void setAreaCodes(String areaCodes) {
+		this.areaCodes = areaCodes;
+	}
+
+	public String getAreaNames() {
+		return areaNames;
+	}
+
+	public void setAreaNames(String areaNames) {
+		this.areaNames = areaNames;
 	}
 
 	public Integer getUserId() {

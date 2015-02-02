@@ -72,6 +72,20 @@ public interface ContractManagerService {
      * @date: 2013-4-28 上午11:03:16
      */
     public PageBeanDB queryAdPositionPackageList(AdvertPositionPackage advertPositionPackageQuery, Integer pageSize, Integer pageNumber);
+   
+    /**
+     * 
+     * @description: 查询区域列表
+     * @param 
+     * @param pageSize
+     * @param pageNumber
+     * @return 
+     * PageBeanDB
+     *
+     * @author: wangfei@avit.com.cn
+     * @date: 2013-4-28 上午11:03:16
+     */
+    public PageBeanDB queryAreaList(Integer pageNumber, Integer pageSize);
     
     /**
      * 
@@ -186,7 +200,19 @@ public interface ContractManagerService {
 //    public int getMaxIdForContractAD();
 //    
 //    public int getMaxIdForContractADForReal();
+    /**
+     * 添加区域绑定
+     * @param areaCodeList
+     * @param contractId
+     */
+    public void addContractAreaBinging(List<String> areaCodeList, Integer contractId);
     
+    /**
+     * 更新区域绑定
+     * @param areaCodeList
+     * @param contractId
+     */
+    public void updateContractAreaBinging(List<String> areaCodeList, Integer contractId);
     /**
      * 
      * @description: 获取合同信息

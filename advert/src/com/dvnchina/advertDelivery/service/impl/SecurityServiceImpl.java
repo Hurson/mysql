@@ -124,6 +124,35 @@ public class SecurityServiceImpl implements SecurityService{
 	}
 
 	@Override
+	public String getUserOwnLocationCodes(Integer userId){
+		
+		StringBuffer sb = new StringBuffer();
+		List<String> locationCodeList = userLocationDao.getUserOwnLocationCodes(userId);
+		
+		for(String locationCode : locationCodeList){
+			sb.append("," + locationCode);
+		}
+		if(sb.length() > 0){
+			return sb.toString().substring(1);
+		}
+		return "";
+		
+	}
+	
+	@Override
+	public List<Integer> getAccessUserIdList(Integer userId){
+		User user = userDao.getUserDetailById(userId);
+		if(user !=null && user.getRoleType()==2){
+			return userLocationDao.getAccessUserIdList(userId);
+		}else {
+			List<Integer> userIdList = new ArrayList<Integer>();
+			userIdList.add(userId);
+			return userIdList;
+		}
+		
+	}
+
+	@Override
 	public List<Role> getUserOwnRoleList(Integer userId) {
 		return userRoleDao.getRoleListByUserId(userId);
 	}

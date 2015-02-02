@@ -202,6 +202,7 @@ window.onload = function() {
 			document.getElementById("contract.effectiveEndDate").disabled="";
 			document.getElementById("contract.approvalStartDate").disabled="";
 			document.getElementById("adPositionPacksbutton").disabled="";
+			document.getElementById("contract_area_names").disabled="";
 			
 			if(checkContract()){
     		return ;
@@ -428,12 +429,12 @@ window.onload = function() {
 
 
 	 
-	 $(document).ready(function(){
+	/* $(document).ready(function(){
 	 
  		$("#selectAreas").click(function(){
 	  	selectArea();
  		});
-});
+});*/
 	  
 	 function selectAdPositionPacks() {
 		 var structInfo ="";
@@ -444,6 +445,21 @@ window.onload = function() {
 			easyDialog.open({
 			container : {
 				header : "添加广告位",
+				content : structInfo
+			},
+			overlay : true
+			
+		});
+	}
+	function selectAreas() {
+		 var structInfo ="";
+			structInfo+="<div style='margin:0px;padding:0px;width:600px'>";
+			structInfo+="<iframe id='selectAreasFrame' name='selectAreasFrame'  frameBorder='0' width='1000px' height='420px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/page/contract/selectAreas.do'> ";
+			structInfo+="</iframe>";
+			structInfo+="</div>";
+			easyDialog.open({
+			container : {
+				header : "添加区域",
 				content : structInfo
 			},
 			overlay : true
@@ -834,6 +850,13 @@ function  exportContract(id){
                 <span id="approvalEndDate_error" ></span>
             </td>
         </tr>
+        <tr >
+			<td align="right"><span class="required">*</span>选择区域信息：</td>
+			<td colspan="3">
+				<input id="contract_area_codes" name="contract.areaCodes" type="hidden" value="${contract.areaCodes}" />
+				<textarea rows="3" cols="70" id="contract_area_names" readonly="readonly" onclick="selectAreas();">${contract.areaNames}</textarea>
+			</td>
+		</tr>
         <tr>
                 <td width="12%" align="right">描 述：</td>
                 <td width="38%" >

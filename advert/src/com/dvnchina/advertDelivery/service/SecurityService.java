@@ -65,6 +65,16 @@ public interface SecurityService {
 	public List<Location> getUserOwnLocation(Integer userId);
 	
 	/**
+	 * 获取区域码 用户拥有操作权限的区域
+	 * @param userId
+	 * @return
+	 */
+	
+	public String getUserOwnLocationCodes(Integer userId);
+	
+	
+	public List<Integer> getAccessUserIdList(Integer userId);
+	/**
 	 * 获取地区    用户所在的地区
 	 * @param userId
 	 * @return

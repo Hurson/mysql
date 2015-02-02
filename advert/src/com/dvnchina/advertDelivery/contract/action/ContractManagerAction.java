@@ -12,12 +12,15 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
 import jxl.HeaderFooter;
 import jxl.Workbook;
 import jxl.write.Label;
@@ -25,12 +28,14 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
+
 import com.alibaba.fastjson.JSON;
 import com.dvnchina.advertDelivery.accounts.bean.ContractAccounts;
 import com.dvnchina.advertDelivery.accounts.service.ContractAccountsService;
@@ -70,6 +75,8 @@ public class ContractManagerAction extends BaseActionSupport<Object> implements 
 	private PageBeanDB pageCustomer=  new PageBeanDB() ;//广告商列表,用于新增合同
 	
 	private PageBeanDB adPositionPackPage=  new PageBeanDB() ;//广告位包列表
+	
+	private PageBeanDB areaPage=  new PageBeanDB() ;//区域列表
 	
 	private Customer customerQuery;
 	
@@ -270,11 +277,6 @@ public class ContractManagerAction extends BaseActionSupport<Object> implements 
         this.dataIds = dataIds;
     }
 
-    
-
-	
-
-	
 	public Integer getSaveTag() {
         return saveTag;
     }
@@ -569,6 +571,31 @@ public class ContractManagerAction extends BaseActionSupport<Object> implements 
         
         return SUCCESS;
     }
+/**
+	 * 
+	 * @description: 查询区域信息列表 
+	 * @return 
+	 * String
+	 *
+	 * @author: wangfei@avit.com.cn
+	 * @date: 2013-4-28 上午10:55:28
+	 */
+	public String selectAreas(){		
+		
+        if (areaPage==null)
+        {
+        	areaPage  =  new PageBeanDB();
+        }
+        try {
+        	areaPage = contractManagerService.queryAreaList(areaPage.getPageNo(), areaPage.getPageSize());
+
+        } catch (Exception e) {
+        	e.printStackTrace();
+            logger.error("获取广告位列表时出现异常",e);
+        }
+        
+        return SUCCESS;
+    }
 	
 	/**
 	 * 
@@ -696,6 +723,14 @@ public class ContractManagerAction extends BaseActionSupport<Object> implements 
                     contractManagerService.saveConstractADBackupList(contractADList);
                 }
             }
+            //保存区域信息
+            List<String> areaCodeList = Arrays.asList(contract.getAreaCodes().split(","));
+            if(contractTemp!=null){
+            	contractManagerService.updateContractAreaBinging(areaCodeList, contract.getId());
+            }else{
+            	contractManagerService.addContractAreaBinging(areaCodeList, contract.getId());
+            }
+            
             isAuditTag="0";
             contractQuery=null;
             queryContractList();
@@ -1201,6 +1236,14 @@ public class ContractManagerAction extends BaseActionSupport<Object> implements 
 		this.accountsAmount = accountsAmount;
 	}
 
+	public PageBeanDB getAreaPage() {
+		return areaPage;
+	}
+
+	public void setAreaPage(PageBeanDB areaPage) {
+		this.areaPage = areaPage;
+	}
+
 	//	public String getOperType() {
 //		return operType;
 //	}
@@ -1357,7 +1400,8 @@ public class ContractManagerAction extends BaseActionSupport<Object> implements 
 	    ContractBackup temp = contractManagerService.getContractByID(contractId);
 	    List<PositionAD> positionADList = contractManagerService.getPositionADByContractID(contractId);
 	    List<ContractAccounts> contractAccountsList = contractManagerService.getContractAccountsList(contractId);
-	    int rowNum=9+positionADList.size()+3+contractAccountsList.size();
+	    
+	    int rowNum=9+positionADList.size()+4+contractAccountsList.size();
 	    WritableWorkbook wwb = null;    
         try {    
             //首先要使用Workbook类的工厂方法创建一个可写入的工作薄(Workbook)对象    
@@ -1484,6 +1528,19 @@ public class ContractManagerAction extends BaseActionSupport<Object> implements 
                         }
                     }
                     if(i==6){
+                        switch(j){ 
+                        case 0:
+                            labelC = new Label(j, i, "合同绑定区域:");
+                            break;                                                      
+                        case 1:
+                            labelC = new Label(j, i, temp.getAreaNames());
+                            break;
+                       
+                        default:
+                            break;
+                        }
+                    }
+                    if(i==7){
                         switch(j){ 
                         case 0:
                             labelC = new Label(j, i, "送审单位:");

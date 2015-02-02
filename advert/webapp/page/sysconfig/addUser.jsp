@@ -42,13 +42,22 @@
 		    	   		roleType = '2';
 						$('#customer_div_id').show();
 						$('#customer_div_id_single').hide();
+						//清空广告位和区域码
+						$('#user_position_ids').val("");
+						$('#user_area_codes').val("");
+						
 					}else if(result=='1'){
 						roleType = '1';
 						$('#customer_div_id').hide();
 						$('#customer_div_id_single').show();
+						//清空广告商
+						$('#user_customer_ids').val("");
 					}else{
 						$('#customer_div_id').hide();
 						$('#customer_div_id_single').hide();
+						//清空广告位和区域码
+						$('#user_position_ids').val("");
+						$('#user_area_codes').val("");
 					}
 			   }  
 		   }); 
@@ -137,6 +146,18 @@
 				 return false;
 			 }
 		}
+		
+		if($("#roleId").val() == 2 && $("#user_positions").val() == '' ){
+			alert("请选择广告位！");
+			$("#user_positions").focus();
+			return false;
+		}
+		
+		if($("#roleId").val() == 2 && $("#user_area_names").val() == '' ){
+			alert("请选择区域！");
+			$("#user_area_names").focus();
+			return false;
+		}
 		return true;
 	}
 
@@ -192,6 +213,29 @@
 			$("#user_positions").val(postionNames);
 		}
 	}
+	function showAreas(){
+		var user_area_codes = $('#user_area_codes').val();
+		var url = "<%=path %>/page/sysconfig/getUserAreas.do?user_area_codes="+user_area_codes;
+		var areaValue = window.showModalDialog(url, window, "dialogHeight=480px;dialogWidth=820px;resizable=no;status=no;scroll=no;center=yes;");
+		
+		if(areaValue){
+			var areas = areaValue.split(",");
+			var areaCodes = "";
+			var areaNames = "";
+			for ( var i = 0; i < areas.length; i++) {
+				var tt = areas[i].split("_");
+				if(i == areas.length -1){
+					areaCodes += tt[0];
+					areaNames += tt[1];
+				}else{
+					areaCodes += tt[0]+",";
+					areaNames += tt[1]+",";
+				}
+			}
+			$("#user_area_codes").val(areaCodes);
+			$("#user_area_names").val(areaNames);
+		}
+	}
 </script>
 </head>
 <body class="mainBody">
@@ -239,18 +283,26 @@
 	</tr>
 	<input id="user_customer_ids" name="user.customerIds" type="hidden" value="${user.customerIds}" /> 
 	<input id="user_position_ids" name="user.positionIds" type="hidden" value="${user.positionIds}" /> 
-	<tr id="customer_div_id" style="display:none;" class="sec">
-		
+	<input id="user_area_codes" name="user.areaCodes" type="hidden" value="${user.areaCodes}" />
+	
+	<tr id="customer_div_id_single" style="display:none;" class="sec">
+			<td align="right" ><span class="required">*</span>绑定广告商：</td>
+			<td colspan="3">
+				<input id="user_customer_names1" class="e_input_add" readonly="readonly" onclick="showCustomer();"/>
+			</td>
+	</tr>
+	<tr id="customer_div_id" style=display:none;" class="sec">
 		<td align="right"><span class="required">*</span>指定广告位：</td>
-		<td colspan="3">
+		<td>
 			<textarea rows="14" cols="24" id="user_positions" readonly="readonly" onclick="showPostions();"></textarea>
 		</td>
-	</tr>
-	<tr id="customer_div_id_single" style="display:none;" class="sec">
-		<td align="right" ><span class="required">*</span>绑定广告商：</td>
-		<td colspan="3">
-			<input id="user_customer_names1" class="e_input_add" readonly="readonly" onclick="showCustomer();"/>
+		<td align="right"><span class="required">*</span>选择区域信息：</td>
+		<td>
+			<textarea rows="14" cols="24" id="user_area_names" readonly="readonly" onclick="showAreas();">${user.areaNames}</textarea>
 		</td>
+	</tr>
+	<tr >
+		
 	</tr>	
 </table>
 <div style="margin-left:50px;">

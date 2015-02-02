@@ -2,6 +2,7 @@ package com.dvnchina.advertDelivery.service;
 
 import java.util.List;
 
+import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.model.Column;
 import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.Location;
@@ -215,4 +216,5 @@ public interface PurviewService {
 	public void insertUserBandingData(User user);
 
 	public void deleteUserAdvertPackageBinding(Integer userId);
+	public PageBeanDB queryAreasList(int pageNo, int pageSize);
 }

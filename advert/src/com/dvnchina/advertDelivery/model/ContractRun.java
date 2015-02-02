@@ -99,6 +99,10 @@ public class ContractRun implements Serializable{
 	 * 已绑定广告位【合同信息维护时使用】
 	 */
 	private List<AdvertPosition> bindingPosition;
+	/**与合同关联的区域码*/
+	private String areaCodes;
+	
+	private String areaNames;
 	
 	private String effectiveStartDateShow;
 	
@@ -362,6 +366,22 @@ public class ContractRun implements Serializable{
 
 	public Integer getRegisterFinancing() {
 		return registerFinancing;
+	}
+
+	public String getAreaCodes() {
+		return areaCodes;
+	}
+
+	public void setAreaCodes(String areaCodes) {
+		this.areaCodes = areaCodes;
+	}
+
+	public String getAreaNames() {
+		return areaNames;
+	}
+
+	public void setAreaNames(String areaNames) {
+		this.areaNames = areaNames;
 	}
 
 	public void setRegisterFinancing(Integer registerFinancing) {

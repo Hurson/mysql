@@ -60,6 +60,9 @@
 		<action name="initContract" class="contractManagerAction" method="initContract">
 			<result name="success">/page/contract/new/addContract.jsp</result>
 		</action>
+		<action name="selectAreas" class="contractManagerAction" method="selectAreas">
+			<result name="success" >/page/contract/new/selectAreas.jsp</result>
+		</action>
 		<action name="selectAdPositionPackage" class="contractManagerAction" method="selectAdPositionPackage">
 			<result name="success" >/page/contract/new/selectAdPositionPackage.jsp</result>
 		</action>

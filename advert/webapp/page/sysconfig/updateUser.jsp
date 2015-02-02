@@ -40,12 +40,20 @@
 		    	   if(result=='2'){
 						$('#customer_div_id').show();
 						$('#customer_div_id_single').hide();
+						//清空广告位和区域码
+						$('#user_position_ids').val("");
+						$('#user_area_codes').val("");
 					}else if(result=='1'){
 						$('#customer_div_id').hide();
 						$('#customer_div_id_single').show();
+						//清空广告商
+						$('#user_customer_ids').val("");
 					}else{
 						$('#customer_div_id').hide();
 						$('#customer_div_id_single').hide();
+						//清空广告位和区域码
+						$('#user_position_ids').val("");
+						$('#user_area_codes').val("");
 					}
 			   }  
 		   }); 
@@ -77,6 +85,29 @@
         }
 	}
 
+	function showAreas(){
+		
+		var url = "<%=path %>/page/sysconfig/getUserAreas.do";
+		var areaValue = window.showModalDialog(url, window, "dialogHeight=480px;dialogWidth=820px;resizable=no;status=no;scroll=no;center=yes;");
+		
+		if(areaValue){
+			var areas = areaValue.split(",");
+			var areaCodes = "";
+			var areaNames = "";
+			for ( var i = 0; i < areas.length; i++) {
+				var tt = areas[i].split("_");
+				if(i == areas.length -1){
+					areaCodes += tt[0];
+					areaNames += tt[1];
+				}else{
+					areaCodes += tt[0]+",";
+					areaNames += tt[1]+",";
+				}
+			}
+			$("#user_area_codes").val(areaCodes);
+			$("#user_area_names").val(areaNames);
+		}
+	}
 	function updateUser() {
 		if(checkFrom()){
 			checkLoginName();
@@ -120,7 +151,17 @@
 			//alert("请选择广告商！");
 			//return false;
 		}
+		if($("#roleId").val() == 1 && $("#user_positions").val() == '' ){
+			alert("请选择广告位！");
+			$("#user_positions").focus();
+			return false;
+		}
 		
+		if($("#roleId").val() == 1 && $("#user_area_names").val() == '' ){
+			alert("请选择区域！");
+			$("#user_area_names").focus();
+			return false;
+		}
 		if('' != $.trim($("#email").val())){
 			 var mail_reg = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/;
 			 if(!mail_reg.test($("#email").val())){
@@ -221,7 +262,7 @@
 </div> 
 <table cellspacing="1" class="searchList" align="left">
 	<tr class="title">
-		<td colspan="4">修改用户信息xxx</td>
+		<td colspan="4">修改用户信息</td>
 	</tr>
 	<tr>
 		<td align="right"><span class="required">*</span>用户名称：</td>
@@ -263,11 +304,17 @@
 	</tr>
 	<input id="user_customer_ids" name="user.customerIds" type="hidden" value="${user.customerIds}" /> 
 	<input id="user_position_ids" name="user.positionIds" type="hidden" value="${user.positionIds}" />
+	<input id="user_area_codes" name="user.areaCodes" type="hidden" value="${user.areaCodes}" />
+	
 	<tr id="customer_div_id" style="display:none;" class="sec">
 		
 		<td align="right"><span class="required">*</span>指定广告位：</td>
-		<td colspan="3">
-			<textarea rows="14" cols="24" id="user_positions" readonly="readonly" onclick="showPostions();"></textarea>
+		<td>
+			<textarea rows="14" cols="24" id="user_positions" readonly="readonly" onclick="showPostions();">${user.positionNames}</textarea>
+		</td>
+		<td align="right"><span class="required">*</span>选择区域信息：</td>
+		<td>
+			<textarea rows="14" cols="24" id="user_area_names" readonly="readonly" onclick="showAreas();">${user.areaNames}</textarea>
 		</td>
 	</tr>
 	<tr id="customer_div_id_single" style="display:none;" class="sec">

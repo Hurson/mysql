@@ -16,6 +16,7 @@ import com.dvnchina.advertDelivery.model.ContractAD;
 import com.dvnchina.advertDelivery.model.ContractADBackup;
 import com.dvnchina.advertDelivery.model.ContractBackup;
 import com.dvnchina.advertDelivery.model.Customer;
+import com.dvnchina.advertDelivery.model.Location;
 import com.dvnchina.advertDelivery.model.MarketingRule;
 import com.dvnchina.advertDelivery.model.Ploy;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
@@ -66,6 +67,9 @@ public interface ContractManagerDao {
 	 */
 	public PageBeanDB queryCustomerList(Integer pageSize, Integer pageNumber);
 	
+	public void addContractAreaBinging(List<String> areaCodeList, Integer contractId);
+	
+	public void deleteContractAreaBinging(Integer contractId);
 	/**
 	 * Query ad position package list.
 	 *
@@ -107,6 +111,14 @@ public interface ContractManagerDao {
      * @date: 2013-5-6 下午02:52:19
      */
     public AdvertPositionPackage getAdPositionPackageByID(int id);
+    
+    /**
+     * 查询区域信息列表
+     * @param pageSize
+     * @param pageNumber
+     * @return
+     */
+    public PageBeanDB queryAreaList(Integer pageSize, Integer pageNumber);
     
     /**
      * Gets the marketing rule by position id.

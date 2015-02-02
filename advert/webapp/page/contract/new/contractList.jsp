@@ -68,11 +68,11 @@ function query() {
           }
         }
         
-        if(validateSpecialCharacterAfter($("#customerName").val())){
+       /* if(validateSpecialCharacterAfter($("#customerName").val())){
 			alert("广告商名称不能包括特殊字符！");
 			$("#customerName").focus();
 			return ;
-		}
+		}*/
 		if(validateSpecialCharacterAfter($("#contractName").val())){
 			alert("合同名称不能包括特殊字符！");
 			$("#contractName").focus();
@@ -219,7 +219,14 @@ function query() {
   <tr>
     <td class="searchCriteria">
       <span>广告商名称：</span>
-                  <input type="text" name="contractQuery.customerName" id="customerName" value="${contractQuery.customerName}"/>
+                  <!--<input type="text" name="contractQuery.customerName" id="customerName" value="${contractQuery.customerName}"/>
+                    -->
+                  <select name="contractQuery.customerId" value="${contractQuery.customerId}">
+                  	<option value="">----请选择----</option>
+                  	<c:forEach items="${customerPage.dataList}" var="cp" >
+                       <option value="${cp.id }" <c:if test="${contractQuery.customerId==cp.id }">selected</c:if>>${cp.advertisersName}</option>
+                    </c:forEach>
+                  </select>
                   <span>合同名称：</span>
                   <input type="text" name="contractQuery.contractName" id="contractName" value="${contractQuery.contractName}"/>
                   <span>开始日期：</span>
@@ -263,11 +270,9 @@ function query() {
                                 ${contractInfo.contractCode}
                             </td>
                             <td>
-                             <c:forEach items="${customerPage.dataList}" var="cp" >
-                            	<c:if test="${cp.id==contractInfo.customerId}">
-                            	${cp.advertisersName}
-                            	</c:if>
-                            </c:forEach>
+                            
+                            	${contractInfo.customerName}
+                            	
                             </td>
                             <td>
                                 ${contractInfo.submitUnits}

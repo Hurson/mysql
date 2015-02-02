@@ -63,7 +63,7 @@ public class ContractBackup extends ContractRun {
 	public ContractBackup(Integer id,String contractName,
             String contractNumber
             ,String contractCode,
-            Integer customerId,String submitUnits,
+            Integer customerId,String customerName, String submitUnits,
             String financialInformation,String approvalCode,
             Date effectiveStartDate,Date effectiveEndDate,Integer status,String examinationOpinions)
     {   
@@ -73,6 +73,7 @@ public class ContractBackup extends ContractRun {
         this.setContractNumber(contractNumber);
         this.setContractCode(contractCode);
         this.setCustomerId(customerId);
+        this.setCustomerName(customerName);
         this.setSubmitUnits(submitUnits);
         this.setFinancialInformation(financialInformation);
         this.setApprovalCode(approvalCode);

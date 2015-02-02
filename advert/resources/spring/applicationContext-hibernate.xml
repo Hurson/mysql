@@ -119,6 +119,7 @@
 			 <value>dbmap/Contract.hbm.xml</value> 
 			 <value>dbmap/ContractAD.hbm.xml</value> 
 			 <value>dbmap/ContractADBackup.hbm.xml</value>
+			 <value>dbmap/ContractBackUpArea.hbm.xml</value>
 <!--			 -->
 				<value>dbmap/Customer.hbm.xml</value>
 				<value>dbmap/CustomerBackUp.hbm.xml</value>  

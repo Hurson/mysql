@@ -82,6 +82,9 @@
 		<action name="addUser" class="userAction" method="addUser">
 			<result name="success">/page/sysconfig/userList.jsp</result>
 		</action>
+		<action name="getUserAreas" class="userAction" method="getUserAreas">
+			<result name="success" >/page/sysconfig/showAreas.jsp</result>
+		</action>
 		<action name="getUserAdvertPackage" class="userAction" method="getUserAdvertPackage">
 			<result name="success" >/page/sysconfig/showAdvertpositionPackage.jsp</result>
 		</action>

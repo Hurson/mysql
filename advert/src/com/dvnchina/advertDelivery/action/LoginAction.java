@@ -154,6 +154,10 @@ public class LoginAction extends BaseActionSupport<Object>  {
 			}
 			List<Column> userOwnCoulumn = securityService.getColumnByUserId(userId);
 			Integer id = Integer.valueOf(userId);
+			//绑定的区域码列表
+			String locationCodes = securityService.getUserOwnLocationCodes(id);
+			//登陆用户具有访问权限的用户id
+			List<Integer> accessUserId = securityService.getAccessUserIdList(id);
 			
 			List<Integer> lstPositionPackageIds = securityService.getPositionPackageIds(id);
 			int roleType = securityService.getRoleTypeByUserId(id);
@@ -165,6 +169,8 @@ public class LoginAction extends BaseActionSupport<Object>  {
 			if(userLogin != null){
 				userLogin.setCustomerId(customerId);
 				userLogin.setPositionIds(lstPositionPackageIds);
+				userLogin.setAreaCodes(locationCodes);
+				userLogin.setAccessUserIds(accessUserId);
 				userLogin.setRoleType(roleType);
 			}
 			

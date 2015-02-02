@@ -89,7 +89,19 @@ public class ContractManagerServiceImpl implements ContractManagerService{
 	public PageBeanDB queryCustomerList(Integer pageSize, Integer pageNumber){
 		return contractManagerDao.queryCustomerList(pageSize, pageNumber);
 	}
-	
+	/**
+	 * 添加绑定
+	 */
+	public void addContractAreaBinging(List<String> areaCodeList, Integer contractId){
+		contractManagerDao.addContractAreaBinging(areaCodeList, contractId);
+	}
+	/**
+	 * 更新
+	 */
+	public void updateContractAreaBinging(List<String> areaCodeList, Integer contractId){
+		contractManagerDao.deleteContractAreaBinging(contractId);
+		contractManagerDao.addContractAreaBinging(areaCodeList, contractId);
+	}
 	/**
 	 * 
 	 * @description: 查询广告位包列表
@@ -104,6 +116,10 @@ public class ContractManagerServiceImpl implements ContractManagerService{
 	 */
     public PageBeanDB queryAdPositionPackageList(AdvertPositionPackage advertPositionPackageQuery, Integer pageSize, Integer pageNumber){
         return contractManagerDao.queryAdPositionPackageList(advertPositionPackageQuery,pageSize, pageNumber);
+    }
+   
+    public PageBeanDB queryAreaList(Integer pageNumber, Integer pageSize){
+    	return contractManagerDao.queryAreaList(pageNumber, pageSize);
     }
     
     /**
