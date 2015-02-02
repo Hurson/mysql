@@ -1,5 +1,6 @@
 package com.dvnchina.advertDelivery.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -47,10 +48,24 @@ public class UserCustomerDaoImpl  extends BaseDaoImpl implements UserCustomerDao
 
 	@Override
 	public List<Integer> getPositionPackageIds(Integer userId){
-		String sql = "select c.advertposition_package_id from t_user_advertposition_package c where c.user_id ="+userId;
-		Query query = this.getSession().createSQLQuery(sql).addScalar("advertposition_package_id",Hibernate.INTEGER);
-		List<Integer> list =query.list();
+		
+		int roleType = getRoleTypeByUserId(userId);
+		
+		String sql ="";
+		Query query =null;
+		List<Integer> list = new ArrayList<Integer>();
+		
+		if(roleType == 1){
+			sql= "select t1.ad_id from t_contract_ad t1,t_contract t2, t_user_adcustomer t3 where t1.contract_id = t2.id and t2.custom_id = t3.cutomer_id and t1.contract_endtime > current_date and t3.user_id =" + userId;
+			query = this.getSession().createSQLQuery(sql).addScalar("ad_id",Hibernate.INTEGER);
+		}else if(roleType == 2){
+			sql = "select c.advertposition_package_id from t_user_advertposition_package c where c.user_id ="+userId;
+			query = this.getSession().createSQLQuery(sql).addScalar("advertposition_package_id",Hibernate.INTEGER);
+		}
+		
+		list =query.list();
 		return list;
+		
 	}
 	
 	@Override
