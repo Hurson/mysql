@@ -189,12 +189,12 @@ window.onload = function() {
 
 
 	 
-	 $(document).ready(function(){
+	/* $(document).ready(function(){
 	 
  		$("#selectAreas").click(function(){
 	  	selectArea();
  		});
-});
+});*/
 	  
 	 function selectAdPositionPacks() {
 	 	 //var contractId= document.getElementById("ploy.contractId").value;
@@ -406,6 +406,13 @@ function selectCustomer() {
                 <fmt:formatDate value="${contract.approvalEndDate}" dateStyle="medium"/>
                 <span id="approvalEndDate_error" ></span>
             </td>
+        </tr>
+        <tr>
+        	<td align="right"><span class="required">*</span>选择区域信息：</td>
+			<td colspan="3">
+				<input id="contract_area_codes" name="contract.areaCodes" type="hidden" value="${contract.areaCodes}" />
+				<textarea rows="3" cols="70" id="contract_area_names" readonly="readonly" disabled>${contract.areaNames}</textarea>
+			</td>
         </tr>
         <tr>
                 <td width="12%" align="right">描 述：</td>

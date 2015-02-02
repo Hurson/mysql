@@ -92,6 +92,7 @@ window.onload = function() {
 			document.getElementById("contract.effectiveEndDate").disabled="true";
 			document.getElementById("contract.approvalStartDate").disabled="true";
 			document.getElementById("adPositionPacksbutton").disabled="true";
+			document.getElementById("contract_area_names").disabled="true";
 
 		}
 		document.getElementById("contract.approvalStartDate").disabled="true";
