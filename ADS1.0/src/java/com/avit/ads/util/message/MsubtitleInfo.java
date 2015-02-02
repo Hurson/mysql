@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="subtitleInfo")
 public class MsubtitleInfo {
 
-	@XmlAttribute(name="serviceID", required = true)
+	@XmlAttribute(name="serviceID")
 	private String serviceID;
 	@XmlAttribute(name="actionType", required = true)
 	private String actionType;

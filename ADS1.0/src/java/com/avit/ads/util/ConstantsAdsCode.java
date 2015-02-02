@@ -85,6 +85,12 @@ public class ConstantsAdsCode {
 	public static final String PUSH_FREQUENCE_SD = "02061";
 	public static final String PUSH_FREQUENCE_HD = "02062";
 	
+	//频道字幕广告
+	public static final String PUSH_CHANNEL_SUBTITLE = "02302";
+	
+	//菜单字幕广告
+	public static final String PUSH__SUBTITLE = "02301";
+	
 	//直播下排广告
 	public static final String PUSH_LIVE_UNDER_HD = "01012";
 	

@@ -104,6 +104,11 @@ public interface PushAdsService {
 	
 	//音频背景和直播下排广告捆绑处理
 	public void sendAdResourceAds(Date startTime);
+	
+	public void sendChannelSubtitleAds();
+	
+	public void sendSubtitleAds();
+	
 	/**
 	 * 发送音频广告
 	 * */

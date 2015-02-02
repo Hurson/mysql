@@ -119,7 +119,13 @@ public class AutoAllThread extends Thread {
 				
 				// 高清音频背景和直播下排广告绑定投放
 				pushAdsService.sendAdResourceAds(loopDate);
-								
+				
+				//投放菜单字幕广告
+				pushAdsService.sendSubtitleAds();
+							
+				//投放频道字幕广告
+				pushAdsService.sendChannelSubtitleAds();
+				
 				
 				Thread.sleep(60000);
 			}catch(Exception ex){

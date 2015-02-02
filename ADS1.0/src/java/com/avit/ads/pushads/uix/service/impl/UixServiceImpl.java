@@ -153,7 +153,7 @@ public class UixServiceImpl implements UixService {
 				+ "&version=" + reBuildStr(versionParam) + "&path=" + reBuildStr(pathParam) + "&tsid=1&ocsid=1";
 	}
 
-	public boolean delUiUpdateMsg(String areaCode, Integer type, String updatePath) {
+	public boolean delUiUpdateMsg(String areaCode, Integer type, String updatePath, boolean isDefault) {
 		uixDao.abolishVersion(areaCode, type);
 		TReleaseArea areaEntity = areaDao.getAreaByAreaCode(areaCode);	
 		String onid = areaEntity.getLocationCode();
@@ -163,6 +163,10 @@ public class UixServiceImpl implements UixService {
 		
 		String url = InitConfig.getConfigMap().get("nit.interface.address");
 		url += "?mod=del&areacode=" + areaCode + "&onid=" + onid + "&adctrl=1&type=" + type + "&version=" + version + "&path=" + path + "&tsid=1&ocsid=1";
+		
+		if(isDefault){
+			url = url.replace("adctrl=1", "adctrl=0");
+		}
 		
 		HttpClient httpClient = new HttpClient();
         GetMethod getMethod = new GetMethod(url);

@@ -29,6 +29,7 @@ public class AdPlaylistGis implements java.io.Serializable {
 	private String areas;
 	private String userindustrys;
 	private String userlevels;
+	private String tvn;
 	private Long state;
 	private BigDecimal contractId;
 	private BigDecimal orderId;
@@ -177,6 +178,14 @@ public class AdPlaylistGis implements java.io.Serializable {
 
 	public void setUserlevels(String userlevels) {
 		this.userlevels = userlevels;
+	}
+	
+	@Column(name = "TVN")
+	public String getTvn() {
+		return tvn;
+	}
+	public void setTvn(String tvn) {
+		this.tvn = tvn;
 	}
 
 	@Column(name = "STATE",  precision = 1, scale = 0)

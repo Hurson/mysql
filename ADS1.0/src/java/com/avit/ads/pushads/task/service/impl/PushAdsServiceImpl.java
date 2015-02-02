@@ -47,13 +47,13 @@ import com.avit.ads.pushads.task.bean.ComparatorElement;
 import com.avit.ads.pushads.task.bean.ComparatorElementType;
 import com.avit.ads.pushads.task.bean.ComparatorPicMaterial;
 import com.avit.ads.pushads.task.bean.ImageInfo;
-import com.avit.ads.pushads.task.bean.LoopMaterial;
 import com.avit.ads.pushads.task.bean.LoopMaterialEntry;
 import com.avit.ads.pushads.task.bean.OcgInfo;
 import com.avit.ads.pushads.task.bean.PicMaterial;
 import com.avit.ads.pushads.task.bean.SendAds;
 import com.avit.ads.pushads.task.bean.StartMaterial;
 import com.avit.ads.pushads.task.bean.TReleaseArea;
+import com.avit.ads.pushads.task.bean.TextMate;
 import com.avit.ads.pushads.task.cache.AdvertPositionMap;
 import com.avit.ads.pushads.task.cache.SendAdsElementMap;
 import com.avit.ads.pushads.task.cache.SendAdsMap;
@@ -78,6 +78,10 @@ import com.avit.ads.util.bean.Ads;
 import com.avit.ads.util.json.Json2ObjUtil;
 import com.avit.ads.util.message.AdsConfigJs;
 import com.avit.ads.util.message.AdsImage;
+import com.avit.ads.util.message.ChannelSubtitle;
+import com.avit.ads.util.message.ChannelSubtitleElement;
+import com.avit.ads.util.message.MsubtitleInfo;
+import com.avit.ads.util.message.TvnTarget;
 import com.avit.ads.util.type.UIUpdate;
 import com.avit.ads.util.warn.WarnHelper;
 import com.avit.common.ftp.service.FtpService;
@@ -2110,9 +2114,14 @@ public class PushAdsServiceImpl implements PushAdsService {
 				
 				//删除描述符
 				if(ConstantsAdsCode.PUSH_STARTSTB_HD.equals(adsCode)){
-					uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName());
+					Gson gson = new Gson();		
+					StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);
+					if(StringUtils.isNotBlank(startMaterial.getPic())){ //默认开机图片
+						uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),true);
+					}
+					uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),false);
 				}else if(ConstantsAdsCode.PUSH_STARTSTB_VIDEO_HD.equals(adsCode)){
-					uixService.delUiUpdateMsg(areaCode, UIUpdate.VIDEO.getType(), UIUpdate.VIDEO.getFileName());
+					uixService.delUiUpdateMsg(areaCode, UIUpdate.VIDEO.getType(), UIUpdate.VIDEO.getFileName(),false);
 				}
 				
 				//unRealTimeAdsPushHelper.cleanDelMap(playListId);
@@ -2938,6 +2947,159 @@ public class PushAdsServiceImpl implements PushAdsService {
             		}         		
             	}
                 log.info("往区域"+areaCode+"发送广告结束");			
+			}
+		}
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	public void sendChannelSubtitleAds() {
+					
+		//查询过期列表（播出单结束时间 < 当前时间），发送不显示字幕，更新播出单状态为4	 
+		String overdueHql =  "from AdPlaylistGis ads where ads.state=1 and ads.endTime <=? and ads.adSiteCode =? ";			            
+		List<AdPlaylistGis> overdueList = pushAdsDao.getTemplate().find(overdueHql, new Date(), ConstantsAdsCode.PUSH_CHANNEL_SUBTITLE);
+		sendChannelSubtitle(overdueList, "0", "4");
+		
+		//查询新增列表（播出单结束时间 > 当前时间，且状态为0），发送显示字幕，更新播出单状态为1
+		String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.endTime >=? and ads.adSiteCode =? ";       
+		List<AdPlaylistGis> newList = pushAdsDao.getTemplate().find(newHql, new Date(), ConstantsAdsCode.PUSH_CHANNEL_SUBTITLE);
+		sendChannelSubtitle(newList, "1", "1");
+		
+	}
+	
+	private void sendChannelSubtitle(List<AdPlaylistGis> playLists, String actionType, String state){
+		if(null != playLists && playLists.size() > 0){
+			for(AdPlaylistGis adGis : playLists){
+				String areaCode = adGis.getAreas(); 
+				//拼装字幕UNT消息
+				String tvn = adGis.getTvn();
+				String userIndustrys = adGis.getUserindustrys();
+				String userLevels = adGis.getUserlevels();
+				
+				TvnTarget tvnTargetModel = new TvnTarget();
+				tvnTargetModel.setTvnType("2"); 
+				tvnTargetModel.setTvn(tvn);
+				tvnTargetModel.setCaIndustryType(userIndustrys);
+				tvnTargetModel.setCaUserLevel(userLevels);
+				
+				Gson gson = new Gson();
+				TextMate text = gson.fromJson(adGis.getContentPath(), TextMate.class);
+				
+				MsubtitleInfo subtitleModel = new MsubtitleInfo();
+				subtitleModel.setUiId("a");
+				subtitleModel.setActionType(actionType);
+				subtitleModel.setTimeout(text.getDurationTime() + "");
+				subtitleModel.setFontColor(text.getFontColor());
+				subtitleModel.setFontSize(text.getFontSize() + "");
+				String[] coordinate = text.getPositionVertexCoordinates().split("\\*");
+				subtitleModel.setBackgroundX(coordinate[0]);
+				subtitleModel.setBackgroundY(coordinate[1]);
+				String[] widthHeight = text.getPositionWidthHeight().split("\\*");
+				subtitleModel.setBackgroundWidth(widthHeight[0]);
+				subtitleModel.setBackgroundHeight(widthHeight[1]);
+				subtitleModel.setBackgroundColor(text.getBkgColor());
+				subtitleModel.setShowFrequency(text.getRollSpeed() + "");
+				subtitleModel.setWord(text.getContent());
+				
+				List<ChannelSubtitleElement> list = new ArrayList<ChannelSubtitleElement>();
+				
+				List<String> serviceIdList = getListFromJson(adGis.getChannelId());
+				for(String serviceId : serviceIdList){
+					TvnTarget tvnTarget = new TvnTarget();
+					BeanUtils.copyProperties(tvnTargetModel, tvnTarget);
+					tvnTarget.setServiceID(serviceId);
+					
+					MsubtitleInfo subtitle = new MsubtitleInfo();
+					BeanUtils.copyProperties(subtitleModel, subtitle);
+					
+					ChannelSubtitleElement elem = new ChannelSubtitleElement();
+					elem.setTvnTarget(tvnTarget);
+					elem.setSubtitleInfo(subtitle);
+					
+					list.add(elem);
+				}
+				
+				ChannelSubtitle channelSubtitle = new ChannelSubtitle();
+				channelSubtitle.setChannelSubtitleElemList(list);
+				
+				
+				List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+				boolean ocgExist = false;
+				for (OcgInfo ocg : ocgList) {
+					if (ocg.getAreaCode().equals(areaCode)) {
+						ocgExist = true;
+						String ocgIp = ocg.getIp();
+						//向OCG发送UNT消息
+						ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle);																		
+					}
+				}
+				
+				if(!ocgExist){
+					String errMsg = "未配置区域【" + areaCode + "】的IP地址";
+					log.error(errMsg);
+					warnHelper.writeWarnMsgToDb(errMsg);
+				}
+				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
+			}
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public void sendSubtitleAds() {
+		
+		//查询过期列表（播出单结束时间 < 当前时间），发送不显示字幕，更新播出单状态为4	 
+		String overdueHql =  "from AdPlaylistGis ads where ads.state=1 and ads.endTime <=? and ads.adSiteCode =? ";			            
+		List<AdPlaylistGis> overdueList = pushAdsDao.getTemplate().find(overdueHql, new Date(), ConstantsAdsCode.PUSH__SUBTITLE);
+		sendSubtitle(overdueList, "0", "4");
+		
+		//查询新增列表（播出单结束时间 > 当前时间，且状态为0），发送显示字幕，更新播出单状态为1
+		String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.endTime >=? and ads.adSiteCode =? ";       
+		List<AdPlaylistGis> newList = pushAdsDao.getTemplate().find(newHql, new Date(), ConstantsAdsCode.PUSH__SUBTITLE);
+		sendSubtitle(newList, "1", "1");
+	}
+	
+	private void sendSubtitle(List<AdPlaylistGis> playLists, String actionType, String state){
+		if(null != playLists && playLists.size() > 0){
+			for(AdPlaylistGis adGis : playLists){
+				String areaCode = adGis.getAreas(); 
+				
+				Gson gson = new Gson();
+				TextMate text = gson.fromJson(adGis.getContentPath(), TextMate.class);
+				
+				MsubtitleInfo subtitle = new MsubtitleInfo();
+				subtitle.setUiId("a");
+				subtitle.setActionType(actionType);
+				subtitle.setTimeout(text.getDurationTime() + "");
+				subtitle.setFontColor(text.getFontColor());
+				subtitle.setFontSize(text.getFontSize() + "");
+				String[] coordinate = text.getPositionVertexCoordinates().split("\\*");
+				subtitle.setBackgroundX(coordinate[0]);
+				subtitle.setBackgroundY(coordinate[1]);
+				String[] widthHeight = text.getPositionWidthHeight().split("\\*");
+				subtitle.setBackgroundWidth(widthHeight[0]);
+				subtitle.setBackgroundHeight(widthHeight[1]);
+				subtitle.setBackgroundColor(text.getBkgColor());
+				subtitle.setShowFrequency(text.getRollSpeed() + "");
+				subtitle.setWord(text.getContent());
+			
+				List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+				boolean ocgExist = false;
+				for (OcgInfo ocg : ocgList) {
+					if (ocg.getAreaCode().equals(areaCode)) {
+						ocgExist = true;				
+						String ocgIp = ocg.getIp();
+						//向OCG发送UNT消息
+						ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE, subtitle);																		
+					}
+				}
+				
+				if(!ocgExist){
+					String errMsg = "未配置区域【" + areaCode + "】的IP地址";
+					log.error(errMsg);
+					warnHelper.writeWarnMsgToDb(errMsg);
+				}
+				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
 			}
 		}
 	}

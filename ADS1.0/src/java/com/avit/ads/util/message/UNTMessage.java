@@ -26,7 +26,8 @@ public class UNTMessage {
 	private AdsConfigJs adsConfig;
 	@XmlElement(name="adsImage")
 	private AdsImage adsImage;
-	
+	@XmlElement(name="channelSubtitle")
+	private ChannelSubtitle channelSubtitle;
 	
 	public String getSendType() {
 		return sendType;
@@ -69,6 +70,12 @@ public class UNTMessage {
 	}
 	public void setAdsImage(AdsImage adsImage) {
 		this.adsImage = adsImage;
+	}
+	public ChannelSubtitle getChannelSubtitle() {
+		return channelSubtitle;
+	}
+	public void setChannelSubtitle(ChannelSubtitle channelSubtitle) {
+		this.channelSubtitle = channelSubtitle;
 	}
 	
 	

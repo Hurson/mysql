@@ -134,7 +134,8 @@ public class ConstantsHelper {
     public static final int REALTIME_UNT_MESSAGE_ADCONFIG= 3; 
     public static final int REALTIME_UNT_MESSAGE_ADIMAGE= 4; 
     public static final int REALTIME_UNT_MESSAGE_STB= 5; 
-    public static final int REALTIME_UNT_MESSAGE_CHANNE= 6; 
+    public static final int REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE= 6; 
+    public static final int REALTIME_UNT_MESSAGE_CHANNE= 7; 
     
     /** 主频点，对应原UI路径*/
     public static final String MAIN_CHANNEL = "1";
