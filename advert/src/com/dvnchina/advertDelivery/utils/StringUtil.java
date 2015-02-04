@@ -130,4 +130,17 @@ public class StringUtil {
 		}
     	return str;
     }
+	public static String objListToString(List<?> list, String separator, String blankFillStr){
+		if(null == list || list.size() == 0){
+			return blankFillStr;
+		}
+		if(list.size() == 1){
+			return "" + list.get(0);
+		}
+		String str = "";
+		for(Object obj : list){
+			str += separator + obj;
+		}
+		return str.substring(1);
+	}
 }

@@ -20,7 +20,11 @@ import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
  * The Interface PloySerivce.
  */
 public interface PloyService {
+	
+	public PageBeanDB getAdPloyList(PloyBackup ploy,AdvertPosition adPosition,Integer pageSize, Integer pageNumber, String userIds);
     
+	public PageBeanDB getAdPositionByPackageIds(String packageIds, Integer pageSize, Integer pageNumber);
+	
 	/**
 	 * 查询策略列表
 	 * 策略名称
@@ -160,6 +164,8 @@ public interface PloyService {
  	 * @return the page bean
  	 */
 	PageBeanDB queryAreaList(PloyBackup ploy,Integer pageSize, Integer pageNumber);
+	
+	PageBeanDB queryAreaListByCodes(String areaCodes,Integer pageSize, Integer pageNumber);
 	 
 	PageBeanDB queryCityAreaList(PloyBackup ploy,Integer pageSize, Integer pageNumber);
 	

@@ -40,6 +40,7 @@ import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.sysconfig.bean.ChannelInfo;
 import com.dvnchina.advertDelivery.utils.ConfigureProperties;
 import com.dvnchina.advertDelivery.utils.DateUtil;
+import com.dvnchina.advertDelivery.utils.StringUtil;
 
 public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 	
@@ -67,25 +68,30 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		sql.append(" from t_order o left join t_contract c on o.contract_id = c.id, t_advertposition ad, t_ploy p");
 		sql.append(" where  o.position_id = ad.id and o.ploy_id = p.ploy_id");
 
+//		HttpSession session = ServletActionContext.getRequest().getSession();
+//		UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+//		List<Integer> positionIdList = null;
+//		if(user.getRoleType() == 1){
+//			//广告商，只能查询自己的创建的订单
+//			sql.append(" and exists (select uc.id from t_user_adcustomer uc  ");
+//			sql.append(" where uc.cutomer_id=c.custom_id and uc.cutomer_id=").append(user.getCustomerId()).append(" )");
+////			positionIdList = this.getADPackageIdByCust(user.getCustomerId());
+//		}else if(user.getRoleType() == 2){
+//			//运营商，只能查询自己有广告位权限的订单
+//			positionIdList = user.getPositionIds();
+//			String positionPackageIds = "-1,";
+//			for(Integer packageId : positionIdList){
+//				positionPackageIds += packageId+",";
+//			}
+//			positionPackageIds = positionPackageIds.substring(0,positionPackageIds.length()-1); 
+//			sql.append(" and ad.position_package_id in (").append(positionPackageIds).append(")");
+//		}
+		
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
-		List<Integer> positionIdList = null;
-		if(user.getRoleType() == 1){
-			//广告商，只能查询自己的创建的订单
-			sql.append(" and exists (select uc.id from t_user_adcustomer uc  ");
-			sql.append(" where uc.cutomer_id=c.custom_id and uc.cutomer_id=").append(user.getCustomerId()).append(" )");
-//			positionIdList = this.getADPackageIdByCust(user.getCustomerId());
-		}else if(user.getRoleType() == 2){
-			//运营商，只能查询自己有广告位权限的订单
-			positionIdList = user.getPositionIds();
-			String positionPackageIds = "-1,";
-			for(Integer packageId : positionIdList){
-				positionPackageIds += packageId+",";
-			}
-			positionPackageIds = positionPackageIds.substring(0,positionPackageIds.length()-1); 
-			sql.append(" and ad.position_package_id in (").append(positionPackageIds).append(")");
-		}
-		
+	    String accessUserIds = StringUtil.objListToString(user.getAccessUserIds(), ",", "-1");	
+	    sql.append(" and o.operator_id in (").append(accessUserIds).append(")");
+	    
 		if(order != null){
 			if (StringUtils.isNotBlank(order.getContractName())) {
 				sql.append(" and c.contract_name like '%" + order.getContractName().trim() + "%' ");
@@ -115,7 +121,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			sql.append(" and o.state <> 7 " );
 		}
 		
-		sql.append(" order by o.state,o.CREATE_TIME desc ");
+		sql.append(" order by o.state,o.create_time desc ");
 		
 		int rowcount = this.getTotalCountSQL(sql.toString(), null);
 		PageBeanDB page = new PageBeanDB();
@@ -515,6 +521,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		String accessUserIds = StringUtil.objListToString(user.getAccessUserIds(), ",", "-1");
 		
 		//查询单向广告位
 		boolean isOneWay = Constant.POSITION_TYPE_ONE_NOT_REAL_TIME == adPackageType.intValue() 
@@ -546,7 +553,9 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		}
 		
 		
-		sql.append(" where A.customer_id in ( ").append(user.getCustomerId()+",0").append(" ) ");
+		//sql.append(" where A.customer_id in ( ").append(user.getCustomerId()+",0").append(" ) ");
+		sql.append(" where A.operator_id in (" + accessUserIds + ")");
+		
 		if(ploy != null){
 			if (ploy.getPositionId() != null && ploy.getPositionId() != 0) {
 				sql.append(" and A.position_id = " + ploy.getPositionId());
@@ -990,14 +999,8 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		StringBuffer hql = new StringBuffer("from ResourceReal where (isDefault = 0 or isDefault is null) ");
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
-		if(user.getRoleType() == 1){
-			//广告商
-			hql.append(" and customerId=").append(user.getCustomerId());
-		}else if(user.getRoleType() == 2){
-			//运营商
-			hql.append(" and customerId=0");
-		}
-		
+		String accessUserIds = StringUtil.objListToString(user.getAccessUserIds(), ",", "-1");
+		hql.append("and operationId in(" + accessUserIds + ")");
 		if(resource != null){
 			if(resource.getAdvertPositionId() != null && resource.getAdvertPositionId() != 0){
 				hql.append(" and advertPositionId = ").append(resource.getAdvertPositionId());
@@ -1863,6 +1866,18 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		return list;
 	}
 	
+	
+	
+	@Override
+	public PageBeanDB getAreaPageByPloyId(Integer ployId, int pageNo, int pageSize) {
+		String hql = "select distinct new com.dvnchina.advertDelivery.model.ReleaseArea("
+				+"r.id, r.areaCode, r.parentCode, r.areaName) from ReleaseArea r, PloyBackup p where p.areaId = r.areaCode and p.ployId = " + ployId;
+		List<ReleaseArea> list = getListForAll(hql, null);
+		PageBeanDB page = new PageBeanDB();
+		page.setDataList(list);
+		return page;
+	}
+
 	/**
 	 * 查询订单可选素材列表信息
 	 * @param areaResource
@@ -3000,6 +3015,10 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 	 * @param ployId
 	 */
 	public void insertOrderMateRelTmp(String orderCode,int ployId,int positionId){
+		
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		
 		//删除订单和素材临时关系数据
 		delOrderMateRelTmp(orderCode);
 		
@@ -3070,7 +3089,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			if(!isQuanSheng){
 				insertSql2.append(" and p.AREA_ID=ra.AREA_CODE ");
 			}
-			insertSql2.append(" AND ra.AREA_CODE <> '152000000000'");
+			insertSql2.append(" AND ra.AREA_CODE in (" + user.getAreaCodes() + ")");
 			insertSql2.append(" and not exists (select * from t_order_mate_rel rel,t_order o where rel.order_id=o.id");
 			insertSql2.append(" AND (rel.start_time = p.START_TIME 	AND rel.end_time = p.END_TIME " +
 					"  or (rel.start_time = '00:00:00' and rel.end_time = '23:59:59' and p.START_TIME='0' and p.END_TIME='0'))" +
@@ -3103,7 +3122,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			if(!isQuanSheng){
 				insertSql3.append(" and p.AREA_ID=ra.AREA_CODE ");
 			}
-			insertSql3.append(" AND ra.AREA_CODE <> '152000000000'");
+			insertSql3.append(" AND ra.AREA_CODE in (" + user.getAreaCodes() + ")");
 			insertSql3.append(" and not exists (select * from t_order_mate_rel rel,t_order o where rel.order_id=o.id");
 			insertSql3.append(" AND (rel.start_time = p.START_TIME 	AND rel.end_time = p.END_TIME " +
 					"  or (rel.start_time = '00:00:00' and rel.end_time = '23:59:59' and p.START_TIME='0' and p.END_TIME='0'))" +

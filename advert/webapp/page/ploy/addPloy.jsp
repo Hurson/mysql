@@ -2113,6 +2113,7 @@ function exporttvn(objname)
                 <input id="ploy.ployId" name="ploy.ployId" type="hidden" value="${ploy.ployId}"/>
                 <input id="ploy.customerId" name="ploy.customerId" type="hidden" value="${ploy.customerId}"/>
                 <input id='areaids' name='areaids' type='hidden' value='0'/>
+                <input id="ploy.operatorId" name="ploy.operatorId" type="hidden" value="${ploy.operatorId}"/>
                 <input id="ploy.operationId" name="ploy.operationId" type="hidden" value="${ploy.operationId}"/>
                 <input id="ploy.createTime" name="ploy.createTime" type="hidden" value="${ploy.createTime}"/>
                 <input id="ploy.modifyTime" name="ploy.modifyTime" type="hidden" value="${ploy.modifyTime}"/>               
@@ -2120,7 +2121,8 @@ function exporttvn(objname)
                 <input  onkeypress="return validateSpecialCharacter();" maxlength="30" id="ploy.ployName" name="ploy.ployName" type="text" value="${ploy.ployName}"/>
    				<input type="hidden" id="ploy_state" name="ploy_state" type="text" value="${ploy.state}"/>        
                <span>&nbsp;&nbsp;&nbsp;&nbsp;广告位名称：</span> 
-               <select  id="ploy.positionId" name="ploy.positionId" onchange="changePosition();">
+               
+               <select  id="ploy.positionId" name="ploy.positionId" onchange="changePosition();"  <c:if test="${ploy.ployId > 0}"> disabled="disabled" </c:if> >
 	               <c:forEach items="${pageAdPosition.dataList}" var="positionVar" >
 	                     <option value="${positionVar.id}" <c:if test="${positionVar.id==ploy.positionId}"> selected </c:if>  >
 	                            ${positionVar.positionName}

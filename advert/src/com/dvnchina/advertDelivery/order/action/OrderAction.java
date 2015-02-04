@@ -2051,6 +2051,7 @@ public class OrderAction extends BaseAction{
 					 || positionId == 41 || positionId == 42 || positionId == 49 || positionId == 50){
 				//按时间段、区域、频道组选择素材（导航条广告、快捷切换列表广告、音量条广告、预告提示广告、广播收听背景广告、滚动字幕）
 				pageReleaseLocation = ployService.queryCityAreaList(null, 1, 100);
+				//pageReleaseLocation = orderService.getAreaPageByPloyId(order.getPloyId(),1,100);
 				channelGroupList = orderService.getChannelGroupListByPloyId(order.getPloyId());
 				returnStr = "timeAreaGroup";
 				page = orderService.queryAreaResourceList(omRelTmp,page.getPageNo(), page.getPageSize());

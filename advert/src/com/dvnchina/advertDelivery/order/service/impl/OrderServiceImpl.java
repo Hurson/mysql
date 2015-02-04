@@ -1167,6 +1167,12 @@ public class OrderServiceImpl implements OrderService{
 		return orderDao.getChannelGroupListByPloyId(ployId);
 	}
 	
+	
+	@Override
+	public PageBeanDB getAreaPageByPloyId(Integer ployId, int pageNo, int pageSize) {
+		return orderDao.getAreaPageByPloyId(ployId, pageNo, pageSize);
+	}
+
 	/**
 	 * 查询订单可选素材列表信息
 	 * @param areaResource

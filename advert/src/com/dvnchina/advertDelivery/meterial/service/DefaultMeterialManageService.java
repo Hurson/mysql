@@ -7,7 +7,7 @@ import com.dvnchina.advertDelivery.model.Resource;
 public interface DefaultMeterialManageService {
 
 	PageBeanDB queryMeterialList(Resource meterialQuery, int pageSize, int pageNo);
-
+	
 	Resource getMaterialByID(int materialId);
 
 	boolean deleteMaterialByIds(String ids);

@@ -42,6 +42,7 @@ import com.dvnchina.advertDelivery.ploy.bean.TPreciseMatchBk;
 import com.dvnchina.advertDelivery.ploy.service.PloyService;
 import com.dvnchina.advertDelivery.ploy.service.PreciseMatchService;
 import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
+import com.dvnchina.advertDelivery.utils.StringUtil;
 import com.dvnchina.advertDelivery.utils.json.Obj2JsonUtil;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -353,6 +354,19 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 	 */
 	public String insertPloy(){
 		pageAdPosition.setPageSize(1000);
+		String positionPackageIds = StringUtil.objListToString(getLoginUser().getPositionIds(), ",", "-1");
+		pageAdPosition = ployService.getAdPositionByPackageIds(positionPackageIds, pageAdPosition.getPageSize(),pageAdPosition.getPageNo());
+		postionJson = Obj2JsonUtil.list2json(pageAdPosition.getDataList());
+		pageLocation =preciseservice.queryLocationCodeList(null, 1000, 1);
+		String areaCodes = getLoginUser().getAreaCodes();
+		pageReleaseLocation = ployService.queryAreaListByCodes(areaCodes, 1, 100);
+				
+		return SUCCESS;
+	}
+	
+	/*
+	 	public String insertPloy(){
+		pageAdPosition.setPageSize(1000);
 		List<Integer> customerList;
 		List<Integer> positionPackageList;
 		String customerids  = null;
@@ -407,6 +421,8 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		
 		return SUCCESS;
 	}
+	  
+	  */
 	
 	
 	/**
@@ -542,7 +558,8 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 				}
 				else
 				{
-					ployTimeCGroup.setAreas("152000000000");  
+					//ployTimeCGroup.setAreas("152000000000");
+					ployTimeCGroup.setAreas(getLoginUser().getAreaCodes());
 				}
 				if (null==bchannelgroup || bchannelgroup=="")
 				{
@@ -581,10 +598,10 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 				}				
 				flag = ployService.savePloy(ployTimeCGroup, preciseUiBean, ploy);
 			} else if(ploy != null && ploy.getPloyId() > 0) {
-				ploy.setOperatorId(this.getUserId().longValue());
-				ploy.setOperationId(this.getUserId());
 				operType = "operate.update";
 				flag = ployService.updatePloy(ployTimeCGroup, preciseUiBean,ploy);
+				ploy.setOperatorId(this.getUserId().longValue()); // 修改只在日志管理记录就行了
+				ploy.setOperationId(this.getUserId());
 			} else {
 				return ERROR;
 			}
@@ -621,18 +638,16 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		return NONE;
 	}
 	*/
-	
+	/*
 	public String queryPloyList(){
 		String returnPath = "";
 		initData();
-		//PageBeanDB page = null;
+	
 		if (pagePloy==null)
 		{
 			pagePloy  =  new PageBeanDB();
 		}
 		try {
-		//	int count = ployService.getployCount(conditionMap);
-			List<Integer> customerList;
 			List<Integer> positionPackageList;
 			String customerids  = null;
 			String postionPackageids  = null;
@@ -648,6 +663,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 				}
 				userLogin.setPositionIds(tempList);
 			}
+			
 			if (userLogin.getRoleType()==1)
 			{
 				customerids = userLogin.getCustomerId().toString();
@@ -669,24 +685,44 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 				}
 			}
 			pagePloy = ployService.queryPloyList(ploy,customerids, postionPackageids,adPosition,pagePloy.getPageSize(), pagePloy.getPageNo());
-			//	
-			//pagePloy = ployService.queryPloyList(ploy,contract,adPosition, customerids, pagePloy.getPageSize(), pagePloy.getPageNo());
-		//	List<Ploy> lstPloy = ployService.getAllPloyList(conditionMap,page.getBegin(), page.getEnd());
-		//	request.setAttribute("page", page);
-		//	request.setAttribute("list", lstPloy);
+			returnPath=SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			returnPath=NONE;
 		}
 		
-		return SUCCESS;
+		return returnPath;
+	}
+	*/
+	
+	public String queryPloyList(){
+		initData();
+		String returnPath = "";
+		if (pagePloy==null){
+			pagePloy  =  new PageBeanDB();
+		}
+		try {
+			String userIds = StringUtil.objListToString(getLoginUser().getAccessUserIds(), ",", "-1");
+			pagePloy = ployService.getAdPloyList(ploy,adPosition,pagePloy.getPageSize(), pagePloy.getPageNo(), userIds);
+			returnPath=SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			returnPath=NONE;
+		}
+		return returnPath;
 	}
 	
 	
-	
-	
-	
 	public String queryCheckPloyList(){
+		if(null == ploy){
+			ploy = new PloyBackup();
+		}
+		ploy.setAuditFlag(true);
+		return queryPloyList();
+	}
+	
+	/*
+	 	public String queryCheckPloyList(){
 		String returnPath = "";
 		initData();
 		//PageBeanDB page = null;
@@ -710,6 +746,8 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		
 		return SUCCESS;
 	}
+	 */
+	
 	public String checkPloyState()
 	{
 		try

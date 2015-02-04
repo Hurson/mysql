@@ -54,6 +54,7 @@ public class PloyBackup {
 	private String auditOption;
 	private Date   auditDate;
 	private Integer delflag;
+	private boolean auditFlag;
 	public PloyBackup(Integer ployId,String ployName,Integer contractId,Integer positionId,Integer ruleId,String startTime,String endTime,Integer operationId,Date createTime,Date modifyTime,String state,String description,Integer ployNumber,String action,Integer durationTime,Integer fontSize,String fontColor,String backgroundColor,Integer rollSpeed)
 	{
 		this.ployId=ployId;
@@ -110,6 +111,20 @@ public class PloyBackup {
 		this.defaultstart=defaultstart;
 	}
 	
+	public PloyBackup(Integer ployId,String ployName,Integer customerId,Integer positionId,Integer ruleId,Integer operationId,Date createTime,Date modifyTime,String state,String description)
+	{
+		this.ployId=ployId;
+		this.ployName=ployName;
+		this.customerId=customerId;
+		this.positionId=positionId;
+		this.ruleId=ruleId;
+		this.operationId=operationId;
+		this.createTime=createTime;
+		this.modifyTime=modifyTime;
+		this.state=state;
+		this.description=description;
+	}
+	
 	public PloyBackup(Integer ployId,Integer channelGroupType,String ployName,Integer customerId,Integer positionId,Integer ruleId,Integer operationId,Date createTime,Date modifyTime,String state,String description,Integer ployNumber,String defaultstart)
 	{
 		this.ployId=ployId;
@@ -119,6 +134,24 @@ public class PloyBackup {
 		this.positionId=positionId;
 		this.ruleId=ruleId;
 		this.operationId=operationId;
+		this.createTime=createTime;
+		this.modifyTime=modifyTime;
+		this.state=state;
+		this.description=description;
+		
+		this.ployNumber=ployNumber;
+		this.defaultstart=defaultstart;
+	}
+	
+	public PloyBackup(Integer ployId,String ployName,Integer customerId,Integer positionId,Integer ruleId,Integer operationId,Long operatorId, Date createTime,Date modifyTime,String state,String description,Integer ployNumber,String defaultstart)
+	{
+		this.ployId=ployId;
+		this.ployName=ployName;
+		this.customerId=customerId;
+		this.positionId=positionId;
+		this.ruleId=ruleId;
+		this.operationId=operationId;
+		this.operatorId = operatorId;
 		this.createTime=createTime;
 		this.modifyTime=modifyTime;
 		this.state=state;
@@ -442,6 +475,15 @@ public class PloyBackup {
 
 	public void setTvnNumber(String tvnNumber) {
 		this.tvnNumber = tvnNumber;
+	}
+	
+
+	public boolean isAuditFlag() {
+		return auditFlag;
+	}
+
+	public void setAuditFlag(boolean auditFlag) {
+		this.auditFlag = auditFlag;
 	}
 
 	/**

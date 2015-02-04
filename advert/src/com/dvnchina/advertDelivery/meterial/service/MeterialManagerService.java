@@ -45,6 +45,8 @@ public interface MeterialManagerService {
      * @date: 2013-5-9 上午09:29:13
      */
     public PageBeanDB queryMeterialList(Resource meterialQuery,Integer pageSize,Integer pageNumber);
+    
+    public PageBeanDB queryMeterialList(Resource resource, String accessUserIds, Integer pageSize,Integer pageNumber);
 
     /**
      * 

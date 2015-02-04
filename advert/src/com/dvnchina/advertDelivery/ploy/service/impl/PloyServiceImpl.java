@@ -36,6 +36,18 @@ public class PloyServiceImpl implements PloyService {
 	public void setPloyDao(PloyDao ployDao) {
 		this.ployDao = ployDao;
 	}
+	
+
+	@Override
+	public PageBeanDB getAdPloyList(PloyBackup ploy,AdvertPosition adPosition, Integer pageSize,Integer pageNumber, String userIds) {
+		return ployDao.getAdPloyList(ploy, adPosition, pageSize, pageNumber, userIds);
+	}
+	
+
+	@Override
+	public PageBeanDB getAdPositionByPackageIds(String packageIds, Integer pageSize, Integer pageNumber) {
+		return  ployDao.getAdPositionByPackageIds(packageIds, pageSize, pageNumber);
+	}
 
 	@Override
 	public PageBeanDB queryPloyList(PloyBackup ploy,Contract contract,AdvertPosition adPosition,String customerIds, Integer pageSize,
@@ -316,8 +328,14 @@ public class PloyServiceImpl implements PloyService {
 		// TODO Auto-generated method stub
 		return ployDao.queryAreaList(ploy, pageSize, pageNumber);
 	}
-
 	
+
+	@Override
+	public PageBeanDB queryAreaListByCodes(String areaCodes, Integer pageSize, Integer pageNumber) {
+		
+		return ployDao.queryAreaListByCodes(areaCodes, pageSize, pageNumber);
+	}
+
 	@Override
 	public PageBeanDB queryCityAreaList(PloyBackup ploy, Integer pageSize,
 			Integer pageNumber) {

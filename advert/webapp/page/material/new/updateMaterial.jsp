@@ -911,6 +911,7 @@ function closeSavePane() {
                         <input id="material.contractId" name="material.contractId" type="hidden" value="${material.contractId}"/>	
                         <input id="positionJson" name="positionJson" type="hidden" value="${positionJson}"/>
                         <input id="material.customerId" name="material.customerId" type="hidden" value="${material.customerId}"/>
+                        <input id="material.operationId" name="material.operationId" type="hidden" value="${material.operationId}"/>
                         <input id="material_state" name="material_state" type="hidden" value="${material.stateStr}"/> 
                         <input id="coordinateStr" type="hidden"/> 
                     </td>

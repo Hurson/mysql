@@ -21,6 +21,7 @@ public class DefaultMeterManageServiceImpl implements DefaultMeterialManageServi
 		PageBeanDB page = defaultMeterManageDao.queryMeterialList(meterialQuery, pageSize, pageNo);
 		return page;
 	}
+	
 	@Override
 	public Resource getMaterialByID(int materialId) {
 		Resource r = defaultMeterManageDao.getMaterialByID(materialId);

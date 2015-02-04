@@ -331,6 +331,7 @@ public interface OrderDao extends BaseDao{
 	 */
 	public List<TChannelGroup> getChannelGroupListByPloyId(Integer ployId);
 	
+	public PageBeanDB getAreaPageByPloyId(Integer ployId, int pageNo, int pageSize);
 	
 	/**
 	 * 查询订单可选素材列表信息

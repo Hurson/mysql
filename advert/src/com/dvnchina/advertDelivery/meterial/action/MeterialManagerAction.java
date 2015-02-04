@@ -31,9 +31,9 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import com.avit.ads.webservice.UploadClient;
-import com.dvnchina.advertDelivery.action.BaseActionSupport;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.bean.contract.ContractQueryBean;
+import com.dvnchina.advertDelivery.common.BaseAction;
 import com.dvnchina.advertDelivery.constant.Constant;
 import com.dvnchina.advertDelivery.log.bean.OperateLog;
 import com.dvnchina.advertDelivery.log.service.OperateLogService;
@@ -63,6 +63,7 @@ import com.dvnchina.advertDelivery.position.bean.ImageSpecification;
 import com.dvnchina.advertDelivery.position.bean.VideoSpecification;
 import com.dvnchina.advertDelivery.position.service.PositionService;
 import com.dvnchina.advertDelivery.utils.ConfigureProperties;
+import com.dvnchina.advertDelivery.utils.StringUtil;
 import com.dvnchina.advertDelivery.utils.ftp.FtpUtils;
 import com.dvnchina.advertDelivery.utils.json.Obj2JsonUtil;
 
@@ -71,7 +72,7 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 
 
-public class MeterialManagerAction extends BaseActionSupport<Object> implements ServletRequestAware{	
+public class MeterialManagerAction extends BaseAction implements ServletRequestAware{	
 	private static final long serialVersionUID = -3666982468062423696L;
 	private Logger logger = Logger.getLogger(MeterialManagerAction.class);
 	private HttpServletRequest request;
@@ -224,7 +225,36 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 	 * @author: wangfei@avit.com.cn
 	 * @date: 2013-5-9 上午09:26:36
 	 */
+	
 	public String queryMeterialList(){
+		
+		materialCategoryList=meterialManagerService.getMaterialCategoryList();
+		
+	    if (page==null){
+	        page  =  new PageBeanDB();
+        }
+        try {         
+            if(meterialQuery==null){
+                meterialQuery=new Resource();
+            }
+            String accessUserIds = StringUtil.objListToString(getLoginUser().getAccessUserIds(), ",", "-1");
+            if(isAuditTag!=null&&isAuditTag.equals("1")){ //审核查询列表      
+            	if(getLoginUser().getRoleType() == 1){ //广告商（不具有素材审核的权限）
+            		return SUCCESS;
+            	}
+                meterialQuery.setState("0".charAt(0));
+            }
+            page = meterialManagerService.queryMeterialList(meterialQuery, accessUserIds, page.getPageSize(), page.getPageNo());
+        } catch (Exception e) {
+        	e.printStackTrace();
+            logger.error("获取素材列表时出现异常",e);
+        }
+        
+        return SUCCESS;
+	}
+	
+	/*
+	 	public String queryMeterialList(){
 	    if (page==null)
         {
 	        page  =  new PageBeanDB();
@@ -322,8 +352,9 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
         }
         
         return SUCCESS;
-	}
-	
+	} 
+	*/
+	 
 	
 	/**
 	 * 
@@ -356,6 +387,29 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 	 * @return
 	 */
 	public String intoAddMaterial(){
+	  
+	    positionPackIds = StringUtil.objListToString(getLoginUser().getPositionIds(), ",", "-1") ;
+
+	    materialCategoryList=meterialManagerService.getMaterialCategoryList();
+	    
+	    if(questionTypeList==null){
+            questionTypeList = new ArrayList<QuestionType>();
+        }
+        QuestionType questionType0= new QuestionType();
+        QuestionType questionType1= new QuestionType();
+        questionType0.setId("0".charAt(0));
+        questionType0.setTypeName(" 调查");
+        questionType1.setId("1".charAt(0));
+        questionType1.setTypeName("抽奖");
+        questionTypeList.add(questionType0);
+        questionTypeList.add(questionType1);
+        
+	    templateList = meterialManagerService.getQuestionTemplateList();
+        return SUCCESS;
+    }
+	
+	/*
+	 	public String intoAddMaterial(){
 	    UserLogin userLogin = (UserLogin) this.getRequest().getSession().getAttribute("USER_LOGIN_INFO");
 	    if(userLogin.getRoleType()==1){
 	        //登陆用户为广告商操作员
@@ -406,6 +460,7 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 	    templateList = meterialManagerService.getQuestionTemplateList();
         return SUCCESS;
     }
+	 */
 	
 	public String intoAddQuestionTemplate(){
         
@@ -878,7 +933,7 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 //                    }
 	                material.setState("0".charAt(0));       
 	                material.setResourceId(videoMeta.getId());
-	                material.setOperationId(userLogin.getUserId());
+	                //material.setOperationId(userLogin.getUserId());
 	                meterialManagerService.saveResource(material);
 	                //操作日志
 	                operInfo = material.toString();
@@ -1065,7 +1120,7 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 //                        }
 	                    material.setState("0".charAt(0));                      
 	                    material.setResourceId(imageMeta.getId());
-	                    material.setOperationId(userLogin.getUserId());
+	                    //material.setOperationId(userLogin.getUserId());
 	                    meterialManagerService.saveResource(material);
 	               
 	                    //操作日志
@@ -1103,6 +1158,7 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 	            	operType = "operate.add";
 	                //新增
 	                material.setCreateTime(new Date());
+	                material.setOperationId(userLogin.getUserId());
 	                if(userLogin.getRoleType()==2){
 	                    //登陆用户为运营商操作员
 	                    material.setCustomerId(0);
@@ -1116,7 +1172,6 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 	            }           
 	            material.setResourceId(textMeta.getId());
 	            
-	            material.setOperationId(userLogin.getUserId());
 	            meterialManagerService.saveResource(material);
 	            //操作日志
 		        operInfo = material.toString();
@@ -1141,6 +1196,7 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 	            	operType = "operate.add";
 	                //新增
 	                material.setCreateTime(new Date());
+	                material.setOperationId(userLogin.getUserId());
 	                if(userLogin.getRoleType()==2){
 	                    //登陆用户为运营商操作员
 	                    material.setCustomerId(0);
@@ -1154,7 +1210,6 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 	            }
 	            material.setResourceId(questionSubject.getId());
 	            
-                material.setOperationId(userLogin.getUserId());
 	            meterialManagerService.saveResource(material);
 	            //操作日志
 		        operInfo = material.toString();
@@ -1367,7 +1422,7 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 
 	                    material.setState("0".charAt(0));
 	                    material.setResourceId(zipMeta.getId());
-	                    material.setOperationId(userLogin.getUserId());
+	                    //material.setOperationId(userLogin.getUserId());
 	                    meterialManagerService.saveResource(material);
 	               
 	                    //操作日志
@@ -1375,7 +1430,6 @@ public class MeterialManagerAction extends BaseActionSupport<Object> implements 
 	                    operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
 	                    operateLogService.saveOperateLog(operLog);
 	                }
-	                
 	                
 	        }
 		    //-------------------zip end

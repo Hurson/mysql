@@ -90,6 +90,15 @@ public class MeterialManagerServiceImpl implements MeterialManagerService{
 		return meterialManagerDao.queryMeterialList(meterialQuery,pageSize, pageNumber);
 	}
 	
+	
+	
+	@Override
+	public PageBeanDB queryMeterialList(Resource resource, String accessUserIds, Integer pageSize, Integer pageNumber) {
+		
+		return meterialManagerDao.queryMeterialList(resource, accessUserIds, pageSize, pageNumber);
+	}
+
+
 	/**
      * 
      * @description: 查询问卷模板列表

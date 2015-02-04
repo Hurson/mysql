@@ -30,6 +30,10 @@ public interface PloyDao {
 	 * @return the page bean
 	 */	
 	
+	public PageBeanDB getAdPloyList(PloyBackup ploy,AdvertPosition adPosition, Integer pageSize,Integer pageNumber, String userIds);
+	
+	public PageBeanDB getAdPositionByPackageIds(String packageIds, Integer pageSize, Integer pageNumber);
+	
     PageBeanDB queryPloyList(PloyBackup ploy,Contract contract,AdvertPosition adPosition,String customerIds,Integer pageSize, Integer pageNumber);
     PageBeanDB queryPloyList(PloyBackup ploy,String customerIds,String positionPackageIds,AdvertPosition adPosition,Integer pageSize, Integer pageNumber);
     
@@ -128,6 +132,8 @@ public interface PloyDao {
  	 * @return the page bean
  	 */
 	PageBeanDB queryAreaList(PloyBackup ploy,Integer pageSize, Integer pageNumber);
+	
+	public PageBeanDB queryAreaListByCodes(String areaCodes, Integer pageSize, Integer pageNumber);
 	 
 	PageBeanDB queryCityAreaList(PloyBackup ploy,Integer pageSize, Integer pageNumber);
 

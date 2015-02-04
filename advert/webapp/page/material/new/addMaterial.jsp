@@ -51,7 +51,6 @@ function selectAdPosition() {
 		 //} 
 		 var positionPackIds = document.getElementById("positionPackIds").value;
 		 var structInfo ="<div style='margin:0px;padding:0px;width:600px'>";
-			//structInfo+="<iframe id='selectAdPositionFrame' name='selectAdPositionFrame'  frameBorder='0' width='1000px' height='500px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/page/meterial/selectAdPosition.do?adPositionQuery.contractId="+contractId+"'> ";
 			structInfo+="<iframe id='selectAdPositionFrame' name='selectAdPositionFrame'  frameBorder='0' width='1000px' height='500px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/page/meterial/selectAdPosition.do?positionPackIds="+positionPackIds+"'> ";
 			structInfo+="</iframe>";
 			structInfo+="</div>";

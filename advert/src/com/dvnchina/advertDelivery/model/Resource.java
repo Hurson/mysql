@@ -255,6 +255,51 @@ public class Resource extends CommonObject{
 	        String resourceName, 
 	        Integer resourceType,
 	        Integer categoryId,
+	        Date startTime,
+	        Date endTime,
+	        Character state, 
+	        Date createTime,
+	        String resourceDesc,
+	        String keyWords,
+	        String examinationOpintions,
+	        //Integer contractId,
+	        //String contractName,
+	        Integer advertPositionId,
+	        String advertPositionName,
+	        Integer isDefault,
+	        Integer customerId,
+	        Integer operationId,
+	        Date modifyTime,
+	        String customerName) {
+	    this.setId(id);
+	    this.resourceId=resourceId;
+        this.resourceName = resourceName;
+        this.resourceType = resourceType;
+        this.categoryId = categoryId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.state = state;
+        this.createTime = createTime;
+        this.resourceDesc=resourceDesc;
+        this.keyWords=keyWords;
+        this.examinationOpintions=examinationOpintions;
+        //this.contractId=contractId;
+        //this.contractName = contractName;      
+        this.advertPositionId=advertPositionId;
+        this.advertPositionName = advertPositionName;
+        this.isDefault=isDefault;
+        this.customerId=customerId;
+        this.operationId = operationId;
+        this.modifyTime=modifyTime;
+        this.customerName=customerName;
+    }
+	
+	public Resource(
+	        Integer id,
+	        Integer resourceId,
+	        String resourceName, 
+	        Integer resourceType,
+	        Integer categoryId,
 	        Date createTime,
 	        String resourceDesc,
 	        String keyWords,

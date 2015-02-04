@@ -46,7 +46,8 @@ public class LoginInterceptor implements Interceptor {
         }
         catch (Exception e)
         {
-        	logger.error(e.toString());
+        	e.printStackTrace();
+        	logger.error(e);
         	throw e;
         }
     }

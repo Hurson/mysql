@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -231,6 +232,50 @@ public class MeterialManagerDaoImpl extends HibernateSQLTemplete implements Mete
 	     return pageResultList; 
 	}
 	
+	
+	
+	@Override
+	public PageBeanDB queryMeterialList(Resource resource, String accessUserIds, Integer pageSize, Integer pageNumber) {
+		 String sql="select distinct new com.dvnchina.advertDelivery.model.Resource(" +
+				 "r.id,r.resourceId,r.resourceName,r.resourceType,r.categoryId,r.startTime,r.endTime,r.state,r.createTime,r.resourceDesc,r.keyWords,r.examinationOpintions," +
+				 "a.id,a.positionName,r.isDefault,r.customerId,r.modifyTime,b.advertisersName)" +		
+				 " from Resource r,AdvertPosition a,Customer b "+
+				 "where r.advertPositionId=a.id and r.customerId=b.id";
+		 
+		 if(null != resource){
+			 if(null != resource.getState() && !"".equals(resource.getState())){
+				 sql += " and r.state = '" + resource.getState() + "'";
+			 }
+			 if(StringUtils.isNotBlank(resource.getResourceName())){
+				 sql += " and r.resourceName like '%" + resource.getResourceName().trim() + "%'";
+			 }
+			 if(StringUtils.isNotBlank(resource.getAdvertPositionName())){
+				 sql += " and a.positionName like '%" + resource.getAdvertPositionName().trim() + "%'";
+			 }
+			 if(StringUtils.isNotBlank(resource.getCustomerName())){
+				 sql += " and b.advertisersName like '%" + resource.getCustomerName().trim() + "%'";
+			 }
+		 }
+
+	     sql += " and r.operationId in (" + accessUserIds + ") order by r.id desc";    
+	   
+	      //分页查询 
+	     PageBeanDB pageResultList = this.getPageList(sql, null, pageNumber, pageSize);
+	     //给已使用的素材一个特征值
+	     for(Object obj : pageResultList.getDataList()){
+	    	 Resource entity = (Resource)obj;
+	    	 int id=entity.getId();
+	    	 String sql1="SELECT COUNT(1) FROM t_order_mate_rel rel, t_order o WHERE rel.MATE_ID ="+id+"  AND rel.ORDER_ID = o.ID AND o.STATE <> '7'";
+	    	 Query query = getSession().createSQLQuery(sql1);
+	    	 List a=query.list();	    	 
+	    	 if(a.get(0).toString()!="0"){
+	    	 	entity.setStateStr("7");
+	    	 }
+	     }
+	     return pageResultList; 
+	}
+
+
 	/**
 	 * 
 	 * @description: 查询问卷模板列表
@@ -745,7 +790,7 @@ public class MeterialManagerDaoImpl extends HibernateSQLTemplete implements Mete
 
         String hql = "select distinct new com.dvnchina.advertDelivery.model.Resource(" +
         "r.id,r.resourceId,r.resourceName,r.resourceType,r.categoryId,r.startTime,r.endTime,r.state,r.createTime,r.resourceDesc,r.keyWords,r.examinationOpintions," +
-        "a.id,a.positionName,r.isDefault,r.customerId,r.modifyTime,b.advertisersName)" +      
+        "a.id,a.positionName,r.isDefault,r.customerId,r.operationId,r.modifyTime,b.advertisersName)" +      
         " from Resource r,AdvertPosition a,Customer b "+
         "where r.advertPositionId=a.id and r.customerId=b.id and r.id="+id;
 

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -148,6 +149,74 @@ public class PloyDaoImpl extends BaseDaoImpl implements PloyDao {
 		
 		return pageBean;
 	}
+	
+	
+	
+	@Override
+	public PageBeanDB getAdPloyList(PloyBackup ploy,AdvertPosition adPosition, Integer pageSize, Integer pageNumber, String userIds) {
+		 String sql;
+	     sql="select distinct new com.dvnchina.advertDelivery.ploy.bean.PloyBackup(" +
+	    			"t.ployId," +
+	         		"t.channelGroupType," +
+	         		"t.ployName," +
+	         		"t.customerId," +
+	         		"t.positionId," +
+	         		"t.ruleId," +        		
+	         		"t.operationId," +
+	         		"t.createTime," +
+	         		"t.modifyTime," +
+	         		"t.state," +
+	         		"t.description,t.ployNumber,t.defaultstart) " +
+        		"from PloyBackup t, AdvertPosition p where 1=1 and t.delflag=0 and t.positionId= p.id  " ;
+	     if (ploy!=null && ploy.isAuditFlag())
+	     {
+	        		sql += " and t.state<>'1'";	        		
+	     }
+	     if (ploy!=null && ploy.getPloyName()!=null && !"".equals(ploy.getPloyName()))
+	     {
+	        		sql=sql+" and t.ployName like '%"+ploy.getPloyName()+"%'";
+	     }
+	     if (ploy!=null && ploy.getPloyId()!=null)
+	     {
+	        		sql=sql+" and t.ployId="+ploy.getPloyId();
+	     }	  
+	     if (ploy!=null && ploy.getContractId()!=0)
+	     {
+	        		sql=sql+" and t.contractId="+ploy.getContractId();
+	     }	  
+ 
+	     if (adPosition!=null && adPosition.getPositionName()!=null && !adPosition.getPositionName().equals(""))
+	     {
+	        		sql=sql+" and p.positionName like '%"+adPosition.getPositionName()+"%'";
+	     }	
+	     sql += " and t.operatorId in (" +  userIds + ") order by t.ployId desc"; 
+	   
+	      //分页查询 
+	      List params = null;
+	      return this.getPageList(sql, params, pageNumber, pageSize); 
+	}
+
+	@Override
+	public PageBeanDB getAdPositionByPackageIds(String packageIds, Integer pageSize, Integer pageNumber) {
+		 String  sql ="select distinct new com.dvnchina.advertDelivery.ploy.bean.ContractAdvertPosition("+
+			 "p.id,"+
+			 "p.positionName,"+
+			 "p.positionCode,"+
+			 "p.isAllTime,"+
+			 "p.isArea,"+
+			 "p.isChannel,"+
+			 "p.isFreq,"+
+			 "p.isPlayback,"+
+			 "p.isCharacteristic,"+
+			 "p.isColumn,"+
+			 "p.isLookbackProduct,"+
+			 "p.isAsset,p.isFollowAsset)"+
+			 " from AdvertPosition p where p.positionPackageId in (" + packageIds + ") order by p.id";
+
+		      return this.getPageList(sql, null, pageNumber, pageSize); 
+	}
+	
+	
 	
 	@Override
 	public PageBeanDB queryPloyList(PloyBackup ploy,Contract contract,AdvertPosition adPosition,String customerIds, Integer pageSize,
@@ -467,6 +536,7 @@ public class PloyDaoImpl extends BaseDaoImpl implements PloyDao {
 		"t.positionId," +
 		"t.ruleId," +
 		"t.operationId," +
+		"t.operatorId," +
 		"t.createTime," +
 		"t.modifyTime," +
 		"t.state," +
@@ -870,9 +940,13 @@ public class PloyDaoImpl extends BaseDaoImpl implements PloyDao {
 		 String sql;
 	     sql="from ReleaseArea " ;                    
 	    return  getPageList(sql,null,1,100);
+	}	
+	
+	@Override
+	public PageBeanDB queryAreaListByCodes(String areaCodes, Integer pageSize, Integer pageNumber) {
+		String sql="from ReleaseArea r where r.areaCode in (" + areaCodes + ")" ;                    
+	    return getPageList(sql,null,1,10000);
 	}
-	
-	
 	@Override
 	public PageBeanDB queryCityAreaList(PloyBackup ploy, Integer pageSize, Integer pageNumber) {
 		String sql = "from ReleaseArea ra where ra.areaCode != '152000000000'" ;  

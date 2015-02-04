@@ -42,6 +42,8 @@ public interface MeterialManagerDao {
      */
     public PageBeanDB queryMeterialList(Resource meterialQuery,Integer pageSize,Integer pageNumber);
     
+    public PageBeanDB queryMeterialList(Resource resource, String accessUserIds, Integer pageSize, Integer pageNumber);
+    
     
     /**
      * 
