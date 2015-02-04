@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -231,7 +232,7 @@ public class OcgServiceImpl implements OcgService {
 			int receivePort = ConstantsHelper.OCG_UDP_PORT_RECEIVE;
 			ds = new DatagramSocket(receivePort);
 			ds.setSoTimeout(10000);   // 10s超时等待
-			byte[] data = xmlMsg.getBytes();
+			byte[] data = xmlMsg.getBytes("utf8");
 			DatagramPacket sendPacket = new DatagramPacket(data, 0, data.length, InetAddress.getByName(ip), port);
 			ds.send(sendPacket);
 			DatagramPacket retPacket = new DatagramPacket(retBuf, ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH);
@@ -679,9 +680,6 @@ public class OcgServiceImpl implements OcgService {
 		}
 
 		String sendMsg = helper.toXML(uNTMessage);
-		
-System.out.println("msg: " + sendMsg);
-		ip = "192.168.2.221";
 				
 		int port = ConstantsHelper.OCG_UDP_PORT;
 		byte[] retBuf = sendUdpMsg(ip, port, sendMsg);
@@ -705,6 +703,7 @@ System.out.println("msg: " + sendMsg);
 		}
 		return false;	
 	}
+	
 
 
 	/**
@@ -717,7 +716,7 @@ System.out.println("msg: " + sendMsg);
 	 */
 	
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {	
 		
 //		String ip = "192.168.6.115";
 //		int port = ConstantsHelper.OCG_UDP_PORT;
@@ -818,7 +817,7 @@ System.out.println("msg: " + sendMsg);
 		
 		*/
 		
-		System.out.println(initIntefaceDebug());
+		//System.out.println(initIntefaceDebug());
 
 	}
 	
