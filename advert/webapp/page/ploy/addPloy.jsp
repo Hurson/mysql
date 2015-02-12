@@ -2096,7 +2096,7 @@ function exporttvn(objname)
 </script>
 <body class="mainBody">
 <form action="<%=path %>/page/ploy/save.do" method="post" id="saveForm">
-<div class="path">h首页 &gt;&gt; 投放策略管理 &gt;&gt; 策略维护</div>
+<div class="path">首页 &gt;&gt; 投放策略管理 &gt;&gt; 策略维护</div>
 <div class="searchContent">
   <table cellspacing="1" class="searchList">
     <tr class="title">

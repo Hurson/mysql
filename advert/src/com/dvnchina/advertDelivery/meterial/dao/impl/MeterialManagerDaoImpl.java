@@ -799,18 +799,16 @@ public class MeterialManagerDaoImpl extends HibernateSQLTemplete implements Mete
         if (list!=null && list.size()>0)
         {
             material = (Resource)(list.get(0));
-        }
-       
-	    	 
-	    	 int mid=material.getId();
+            
+            int mid=material.getId();
 	    	 String sql1="SELECT COUNT(1) FROM t_order_mate_rel rel, t_order o WHERE rel.MATE_ID ="+mid+"  AND rel.ORDER_ID = o.ID AND o.STATE <> '7'";
 	    	 Query query = getSession().createSQLQuery(sql1);
 	    	 List a=query.list();	    	 
 	    	 if(a.get(0).toString()!="0"){
 	    		 material.setStateStr("7");
 	    	 }
-	   
-
+        }
+    
         return material;
     }
     

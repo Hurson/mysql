@@ -64,12 +64,13 @@
 <body class="mainBody" onload="init()">
 <div class="search">
 <div class="searchContent" >
+
 <form action="<%=path %>/page/contract/selectAreas.do" method="post" id="queryForm">
 
 	<c:set var="page" value="${areaPage}" scope="request"/>
     <input type="hidden" id="pageNo" name="areaPage.pageNo" value="${page.pageNo}"/>
     <input type="hidden" id="pageSize" name="areaPage.pageSize" value="${page.pageSize}"/>
-    	
+  	
 <div id="messageDiv" style="margin-top: 15px;color: red;font-size: 14px;font-weight: bold;"></div> 
 <table cellspacing="1" class="searchList">
     <tr class="title">

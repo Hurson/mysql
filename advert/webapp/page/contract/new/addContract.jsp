@@ -371,7 +371,11 @@ window.onload = function() {
 			$$("contract.approvalEndDate").focus();
 			return true;
 		}
-		
+		if( isEmpty($$("contract_area_names").value)){
+		    alert("请绑定区域！");
+			$$("contract_area_names").focus();
+			return true;
+		}
 		for (var i=0;i<areaChannels.length;i++){
 		   var sd = "positionStartDate_"+areaChannels[i].positionId;
 		   var ed = "positionEndDate_"+areaChannels[i].positionId;

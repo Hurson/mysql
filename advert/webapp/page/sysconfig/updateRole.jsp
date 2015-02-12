@@ -38,7 +38,7 @@
 <script language="javascript" type="text/javascript" src="<%=path %>/js/role/updateRole.js"></script>
 
 <!-- 树的结构   -->
-<link href="<%=path %>/common/tree/TreePanel.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="<%=path %>/common/tree/TreePanel.css" type="text/css"/>
 <script type="text/javascript" src="<%=path %>/common/tree/common-min.js"></script>
 <script type="text/javascript" src="<%=path %>/common/tree/TreePanel.js"></script>
 <script type="text/javascript" src="<%=path %>/common/tree/china_2.js"></script>

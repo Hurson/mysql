@@ -1236,7 +1236,7 @@ function closeSavePane() {
 		                              </span>
 		                	          <!-- 
 		                	          <input maxlength="20" id="imageSpecReal" type="text" disabled="disabled" value="大小:${imageMeta.fileSize} 宽度:${imageMeta.fileWidth} 高度:${imageMeta.fileHeigth}" />
-		                	          <!-- 
+		                	          --> 
 		                	          
 		                          </td>
 		              </tr>

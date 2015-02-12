@@ -63,9 +63,7 @@
 <table cellspacing="1" class="searchList">
     <tr class="title">
     	<td height="28" class="dot">
-			<c:if test="${roleType==2}">
-				<input type="checkbox" name="chkAll" onclick="selectAll(this, 'area_code');" id="chkAll"/>
-			</c:if>
+			<input type="checkbox" name="chkAll" onclick="selectAll(this, 'area_code');" id="chkAll"/>
 		</td>
         <td >区域编码</td>
 	    <td >区域名称</td>

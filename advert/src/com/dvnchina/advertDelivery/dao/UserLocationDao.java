@@ -30,12 +30,19 @@ public interface UserLocationDao  extends BaseDao{
 	public List<Location> getUserOwnLocation(Integer userId);
 	
 	/**
-	 * 获取用户拥有的地区码
+	 * 运营商获取用户拥有的地区码
 	 * 
 	 * @param userId
 	 * @return
 	 */
 	public List<String> getUserOwnLocationCodes(Integer userId);
+	/**
+	 * 广告商获取用户绑定的区域码
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public List<String> getUserOwnLocationCodes2(Integer userId);
 	
 	/**
 	 * 获取当前用户具有访问权限的用户id

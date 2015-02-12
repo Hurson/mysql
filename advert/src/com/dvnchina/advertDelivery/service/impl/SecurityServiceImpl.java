@@ -127,7 +127,14 @@ public class SecurityServiceImpl implements SecurityService{
 	public String getUserOwnLocationCodes(Integer userId){
 		
 		StringBuffer sb = new StringBuffer();
-		List<String> locationCodeList = userLocationDao.getUserOwnLocationCodes(userId);
+		List<String> locationCodeList = new ArrayList<String>();
+		User user = userDao.getUserDetailById(userId);
+		if(user !=null && user.getRoleType()==2){
+			locationCodeList = userLocationDao.getUserOwnLocationCodes(userId);
+		}else if(user != null && user.getRoleType() == 1){
+			locationCodeList = userLocationDao.getUserOwnLocationCodes2(userId);
+		}
+		 
 		
 		for(String locationCode : locationCodeList){
 			sb.append("," + locationCode);

@@ -39,6 +39,14 @@ public class UserLocationDaoImpl extends BaseDaoImpl implements UserLocationDao{
 		Query query = this.getSession().createSQLQuery(sql).addScalar("area_code",Hibernate.STRING);
 		return query.list();
 	}
+	//广告商获取绑定区域
+	@Override
+	public List<String> getUserOwnLocationCodes2(Integer userId){
+		
+		String sql = "select distinct ca.area_code from t_contract_area ca, t_contract c, t_user_adcustomer tu where  ca.contract_id = c.id and c.custom_id = tu.cutomer_id and c.approval_end_date > current_date and tu.user_id ="+userId;
+		Query query = this.getSession().createSQLQuery(sql).addScalar("area_code",Hibernate.STRING);
+		return query.list();
+	}
 	@Override
 	public List<Integer> getAccessUserIdList(Integer userId){
 		String sql ="select DISTINCT(t.user_id) from t_user_area t where t.user_id not in(" 

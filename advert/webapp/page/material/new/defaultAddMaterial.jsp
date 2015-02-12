@@ -32,6 +32,7 @@
 <script type="text/javascript" src="<%=path %>/js/jquery/upload/js/swfobject.js"></script>
 <link rel="stylesheet" href="<%=path %>/css/easydialog/easydialog.css" type="text/css" />
 <script type='text/javascript' src='<%=path %>/js/new/avit.js'></script>
+<script type='text/javascript' src='<%=path %>/js/util/jscolor/jscolor.js'></script>
 
 <title>广告系统</title>
 
@@ -781,7 +782,7 @@ function submitForm(){
 			$$("textMeta.fontColor").focus();
     		return true;
 		}else{
-			var type = "\#[0-9a-fA-F]{6}" ;
+			var type = "[0-9a-fA-F]{6}" ;
 		    var re = new RegExp(type);
 		    if (($$("textMeta.fontColor").value).match(re) == null) {
 		        alert("文本字体颜色格式不正确！");
@@ -803,7 +804,7 @@ function submitForm(){
 		}
 		if(!isEmpty($$("textMeta.bkgColor").value)){
 		   //效验背景色
-		    var type = "\#[0-9a-fA-F]{6}" ;
+		    var type = "[0-9a-fA-F]{6}" ;
 		    var re = new RegExp(type);
 		    if (($$("textMeta.bkgColor").value).match(re) == null) {
 		        alert("文字显示背景色格式不正确！");
@@ -870,7 +871,8 @@ function submitForm(){
 		//滚动
 		   $("#textContent").css({
 			   'color':$$("textMeta.fontColor").value,
-			   'font-size':$$("textMeta.fontSize").value+"px"
+			   'font-size':$$("textMeta.fontSize").value+"px",
+			   'background':$$("textMeta.bkgColor").value
 		   });
 		   if($$("textMeta.rollSpeed").value!=''){
 			$("#textContent").attr("scrollamount",$$("textMeta.rollSpeed").value);
@@ -889,8 +891,8 @@ function submitForm(){
 					}
 					else
 					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
+					   var left = coordinates[0]+"px";
+					   var bottom = coordinates[1]+"px";					 				  
 					   $('#text').css('left',left);
 					   $('#text').css('top',bottom);
 					}				
@@ -902,8 +904,8 @@ function submitForm(){
 					}
 			    else
 			    {
-			    	   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
+			    	   var width = size[0]+"px";
+					   var height = size[1]+"px";
 					   $('#text').css('width',width);
 					   $('#text').css('height',height);
 					}
@@ -933,8 +935,8 @@ function submitForm(){
 					}
 					else
 					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
+					   var left = coordinates[0]+"px";
+					   var bottom = coordinates[1]+"px";					 				  
 					   $('#text2').css('left',left);
 					   $('#text2').css('top',bottom);
 					}				
@@ -946,8 +948,8 @@ function submitForm(){
 					}
 			    else
 			    {
-			    	   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
+			    	   var width = size[0]+"px";
+					   var height = size[1]+"px";
 					   $('#text2').css('width',width);
 					   $('#text2').css('height',height);
 					}
@@ -1122,23 +1124,23 @@ function submitForm(){
 		                      <tr>
 		                          <td  align="right"><span class="required">*</span>文本字体大小：</td>
 		                          <td>
-			            		      <input id="textMeta.fontSize" maxlength="3" name="textMeta.fontSize"  value="${textMeta.fontSize}"/>
+			            		      <input id="textMeta.fontSize" maxlength="3" name="textMeta.fontSize" onchange="javascript:showText();" value="${textMeta.fontSize}"/>
 		                          </td>
 		                          <td  align="right"><span class="required">*</span>文本字体颜色：</td>
 		                          <td>
-			            		      <input id="textMeta.fontColor" maxlength="7" name="textMeta.fontColor" value="${textMeta.fontColor}" /><span class="required">格式：#235612</span>
+			            		      <input id="textMeta.fontColor" class="color" maxlength="7" name="textMeta.fontColor" value="${textMeta.fontColor}" onchange="javascript:showText();"/>
 		                         </td>
 		                      </tr>
 		                      <tr>
 		                          <td  align="right">文本显示背景色：</td>
 		                          <td>
-			            		      <input id="textMeta.bkgColor" maxlength="7" name="textMeta.bkgColor" value="${textMeta.bkgColor}"/><span class="required">格式：#235612</span>
+			            		      <input id="textMeta.bkgColor" class="color" maxlength="7" name="textMeta.bkgColor" value="${textMeta.bkgColor}" onchange="javascript:showText();"/>
 		                          </td>
 		                          <td  align="right">文本显示滚动速度：</td>
 		                          <td>
 			            		    <!-- <input id="textMeta.rollSpeed" maxlength="2" name="textMeta.rollSpeed" value="${textMeta.rollSpeed}"/>
 		                           -->  
-		                            <select  id="textMeta.rollSpeed"  name="textMeta.rollSpeed" >
+		                            <select  id="textMeta.rollSpeed"  name="textMeta.rollSpeed" onchange="javascript:showText();">
 								                 <option  value="2" <c:if test="${textMeta.rollSpeed==2}">selected="selected"</c:if> >
 										                        低速
 										        </option>
@@ -1154,11 +1156,11 @@ function submitForm(){
 		                      <tr>
 		                          <td  align="right"><span class="required">*</span>文本显示坐标：</td>
 		                          <td>
-			            		      <input id="textMeta.positionVertexCoordinates" maxlength="12" name="textMeta.positionVertexCoordinates" value="${textMeta.positionVertexCoordinates}"/><span class="required">格式：80*80(坐标x*y)</span>
+			            		      <input id="textMeta.positionVertexCoordinates" maxlength="12" name="textMeta.positionVertexCoordinates" onchange="javascript:showText();" value="${textMeta.positionVertexCoordinates}"/><span class="required">格式：80*80(坐标x*y)</span>
 		                          </td>
 		                          <td  align="right">文本显示区域：</td>
 		                          <td>
-			            		      <input id="textMeta.positionWidthHeight" maxlength="12" name="textMeta.positionWidthHeight" value="${textMeta.positionWidthHeight}"/><span class="required">格式：80*80(宽高w*h)</span>
+			            		      <input id="textMeta.positionWidthHeight" maxlength="12" name="textMeta.positionWidthHeight" onchange="javascript:showText();" value="${textMeta.positionWidthHeight}"/><span class="required">格式：80*80(宽高w*h)</span>
 		                         </td>
 		                      </tr>
 		                      <tr>

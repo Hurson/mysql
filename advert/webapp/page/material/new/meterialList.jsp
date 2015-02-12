@@ -245,13 +245,13 @@ function query() {
                                                        
                             <td>
                                 <c:choose>
-											<c:when test="${meterialInfo.state=='0'}">
+											<c:when test="${fn:escapeXml(meterialInfo.state) eq '0'}">
 												待审核
 											</c:when>
-											<c:when test="${meterialInfo.state=='1'}">
+											<c:when test="${fn:escapeXml(meterialInfo.state) eq '1'}">
 												审核不通过
 											</c:when>
-											<c:when test="${meterialInfo.state=='2'&&meterialInfo.stateStr==null}">
+											<c:when test="${fn:escapeXml(meterialInfo.state) eq '2'&&meterialInfo.stateStr==null}">
 												上线
 											</c:when>
 											<c:when test="${meterialInfo.stateStr!=null}">

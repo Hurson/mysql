@@ -525,7 +525,7 @@
 					          </tr>   
 		                </table>
 					
-					    <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px;display: none" id ="div_video">
+					    <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px;" id ="div_video">
 		                      <tr class="title" >
 		                          <td colspan="4">视频素材</td>
 		                      </tr>
