@@ -10,10 +10,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.avit.ads.pushads.ocg.GenerateFileJni;
+import com.avit.ads.pushads.ocg.bean.HeaderInfo;
 import com.avit.ads.pushads.ocg.dao.OcgInfoDao;
 import com.avit.ads.pushads.ocg.service.OcgService;
 import com.avit.ads.pushads.task.bean.OcgInfo;
@@ -224,6 +231,37 @@ public class OcgServiceImpl implements OcgService {
 		return false;
 	}
 
+	private HttpResponse sendHttpMsg(HeaderInfo header,String url, String fileName){
+		
+		HttpClient httpclient = new DefaultHttpClient();
+		try { 
+			HttpPost httpost = new HttpPost(url); 
+			
+			
+			httpost.setHeader("message_type", header.getMessageType());
+			httpost.setHeader("stream_id", header.getStreamId());
+			httpost.setHeader("control_command", header.getControlCommand());
+			httpost.setHeader("bitrate", header.getBitrate());
+			httpost.setHeader("send_address", header.getSendAddress());
+			httpost.setHeader("send_port", header.getSendPort());
+			httpost.setHeader("reserve_time", header.getReserveTime());
+			httpost.setHeader("effect_time", header.getEffectTime());
+			httpost.setHeader("outdate_time", header.getOutdateTime());
+			
+			FileEntity bodyEntity = new FileEntity(new File(fileName),"binary/octet-stream");
+			httpost.setEntity(bodyEntity); 
+			
+			HttpResponse response = httpclient.execute(httpost); 
+			return response;
+		}catch(Exception e){
+			logger.error("向OCG发送HTTP请求异常", e);
+			e.printStackTrace();
+			return null;
+		}finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+
+	}
 	private byte[] sendUdpMsg(String ip, int port, String xmlMsg) {
 
 		byte[] retBuf = new byte[ConstantsHelper.OCG_UDP_RET_MSG_MAX_LENGTH]; // 接口文档定义的最大长度
@@ -579,6 +617,64 @@ public class OcgServiceImpl implements OcgService {
 		}
 	}
 
+	//http发送ts文件
+	public boolean sendUNTMessageToOCG(int version, String url, int sendType, Object message, HeaderInfo headerInfo){
+		InitConfig init = new InitConfig();
+		init.initConfig();
+		String destPath =InitConfig.getConfigMap().get(ConstantsHelper.DEST_FILE_PATH);
+		String logPath = InitConfig.getConfigMap().get(ConstantsHelper.LOG_FILE_PATH);
+		
+		UNTMessage uNTMessage = new UNTMessage();
+		uNTMessage.setSendType(sendType + "");
+
+		switch (sendType) {
+		case ConstantsHelper.REALTIME_UNT_MESSAGE_WEATHER:
+			uNTMessage.setWeatherforecast((Weatherforecast) message);
+			break;
+		case ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE:
+			uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
+			break;
+		case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
+			uNTMessage.setAdsConfigJs((AdsConfigJs) message);
+			break;
+		case ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE:
+			uNTMessage.setAdsImage((AdsImage) message);
+			break;
+		case ConstantsHelper.REALTIME_UNT_MESSAGE_STB:
+			uNTMessage.setSystemMaintain((SystemMaintain) message);
+			break;
+		case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE:
+			uNTMessage.setChannelrecomendurl((Channelrecomendurl) message);
+			break;
+		default:
+			break;
+		}
+
+		String sendMsg = helper.toXML(uNTMessage);
+		
+		try{
+			boolean result = GenerateFileJni.getInstance().geneTSFile(sendMsg, version, version, destPath, logPath);
+			
+			if(result){
+			
+					HttpResponse res = sendHttpMsg(headerInfo,url, destPath+File.separator+sendType+ConstantsHelper.TS_FILE_SUFFIX);
+					int code = res.getStatusLine().getStatusCode();
+					if(code == 200){
+						logger.info("发送OCG成功！");
+						return true;
+					}else if(code == 400){
+						logger.info("参数格式不正确！");
+					}else if(code == 401){
+						logger.info("发送OCG消息失败！");
+					}
+			
+			}
+		}catch(Exception e){
+			logger.error("OCG发送异常:"+e.getMessage());
+		}
+		
+		return false;
+	}
 	/**
 	 * OCG集成UNT信息发送
 	 */
@@ -718,7 +814,7 @@ public class OcgServiceImpl implements OcgService {
 
 	public static void main(String[] args) throws Exception {	
 		
-//		String ip = "192.168.6.115";
+		//		String ip = "192.168.6.115";
 //		int port = ConstantsHelper.OCG_UDP_PORT;
 //		
 //		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
@@ -1045,5 +1141,4 @@ public class OcgServiceImpl implements OcgService {
 		
 	}
 	
-
 }
