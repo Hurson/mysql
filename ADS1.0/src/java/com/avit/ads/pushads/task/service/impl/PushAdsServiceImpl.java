@@ -65,7 +65,6 @@ import com.avit.ads.pushads.uix.dao.AreaDao;
 import com.avit.ads.pushads.uix.service.UixService;
 import com.avit.ads.pushads.unt.bean.AdsLink;
 import com.avit.ads.pushads.unt.bean.AdsSubtitle;
-import com.avit.ads.pushads.unt.service.UntService;
 import com.avit.ads.requestads.dao.ADSurveyDAO;
 import com.avit.ads.util.ConstantsAdsCode;
 import com.avit.ads.util.ConstantsHelper;
@@ -115,8 +114,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 	PushAdsDao pushAdsDao;
 	@Inject
 	OcgService ocgService;
-	@Inject
-	UntService untService;
+
 	// @Inject
 	UiService uiService;
 	@Inject
@@ -148,13 +146,6 @@ public class PushAdsServiceImpl implements PushAdsService {
 	@Autowired
 	private AreaDao areaDao;
 	
-	public UntService getUntService() {
-		return untService;
-	}
-
-	public void setUntService(UntService untService) {
-		this.untService = untService;
-	}
 
 	/**
 	 * Gets the push ads dao.
@@ -203,8 +194,17 @@ public class PushAdsServiceImpl implements PushAdsService {
 					{//开机广告位
 						continue;
 					}
-					if (adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_FREQUENCE_HD) || adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_FREQUENCE_SD)  || adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_RECOMMEND) )
+					else if (adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_FREQUENCE_HD) || adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_FREQUENCE_SD)  || adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_RECOMMEND) )
 					{//音频广告位
+						continue;
+					}
+					else if(adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_LIVE_UNDER_HD)){ //直播下排
+						continue;
+					}
+					else if(adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_CHANNEL_SUBTITLE)){ //频道字幕
+						continue;
+					}
+					else if(adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH__SUBTITLE)){ //菜单字幕
 						continue;
 					}
 					//TODO 如为轮询素材，则需读取配置文件
@@ -1027,14 +1027,14 @@ public class PushAdsServiceImpl implements PushAdsService {
 					imageUpdateMsg.setFilepath(imageUpdatePath);
 					imageUpdateMsg.setUiId(ConstantsHelper.UNT_UPDATE_TEMPLATE);
 					
-					boolean picUpdateSuccess = ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE, imageUpdateMsg);			
+					boolean picUpdateSuccess = ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE, imageUpdateMsg, areaCode);			
 					
 					//发UNT配置文件更新通知
 					AdsConfigJs configUpdateMsg = new AdsConfigJs();
 					String configUpdatePath = ConstantsHelper.UNT_UPDATE_PATH_PREFIX + getDeepestDir(targetConfigDirPath)  + "/" + configFileName;
 					configUpdateMsg.setFilepath(configUpdatePath);
 					configUpdateMsg.setUiId(ConstantsHelper.UNT_UPDATE_TEMPLATE);
-					boolean confUpdateSuccess = ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG, configUpdateMsg);
+					boolean confUpdateSuccess = ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG, configUpdateMsg, areaCode);
 					
 					if(!picUpdateSuccess || !confUpdateSuccess){
 						//sendFlagHelper.decreaseSendTimes(areaCode);
@@ -1699,11 +1699,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 							//SendAdsElementMap.addAdsElement(adGis.getAdSiteCode(), areaList.get(a), channelList.get(a).get(c), adGis.getCharacteristicIdentification(),resourceFiles );
 						}
 					}
-					untService.addSubtitle(adsSubtitleList);
+					//untService.addSubtitle(adsSubtitleList);
 					log.info("write unt message");
 					log.info(adsSubtitleList);
 					pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");
-					untService.sendUpdateFlag(ConstantsHelper.UNT_UPDATE_FLAG_MESSAGE,"");
+					//untService.sendUpdateFlag(ConstantsHelper.UNT_UPDATE_FLAG_MESSAGE,"");
 				}
 				if (ConstantsAdsCode.PUSH_LINK.equals(adGis.getAdSiteCode()))
 				{
@@ -1737,10 +1737,10 @@ public class PushAdsServiceImpl implements PushAdsService {
 							//SendAdsElementMap.addAdsElement(adGis.getAdSiteCode(), areaList.get(a), channelList.get(a).get(c), adGis.getCharacteristicIdentification(),resourceFiles );
 						}
 					}
-					untService.addLink(adsLinkList);
+					//untService.addLink(adsLinkList);
 					log.info("write unt message");
 					log.info(adsLinkList);
-					untService.sendUpdateFlag(ConstantsHelper.UNT_UPDATE_FLAG_LINK,"");
+					//untService.sendUpdateFlag(ConstantsHelper.UNT_UPDATE_FLAG_LINK,"");
 					pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "4");					
 				}
 			}
@@ -2971,6 +2971,13 @@ public class PushAdsServiceImpl implements PushAdsService {
 		if(null != playLists && playLists.size() > 0){
 			for(AdPlaylistGis adGis : playLists){
 				String areaCode = adGis.getAreas(); 
+				
+				if("1".equals(actionType)){
+					log.info("向区域" + areaCode + "投放频道字幕广告...");
+				}else{
+					log.info("区域" + areaCode + "频道字幕广告到期，发停止消息...");
+				}
+				
 				//拼装字幕UNT消息
 				String tvn = adGis.getTvn();
 				String userIndustrys = adGis.getUserindustrys();
@@ -3030,7 +3037,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 						ocgExist = true;
 						String ocgIp = ocg.getIp();
 						//向OCG发送UNT消息
-						ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle);																		
+						ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle,areaCode);																		
 					}
 				}
 				
@@ -3064,6 +3071,12 @@ public class PushAdsServiceImpl implements PushAdsService {
 			for(AdPlaylistGis adGis : playLists){
 				String areaCode = adGis.getAreas(); 
 				
+				if("1".equals(actionType)){
+					log.info("向区域" + areaCode + "投放菜单字幕广告...");
+				}else{
+					log.info("区域" + areaCode + "菜单字幕广告到期，发停止消息...");
+				}
+				
 				Gson gson = new Gson();
 				TextMate text = gson.fromJson(adGis.getContentPath(), TextMate.class);
 				
@@ -3090,7 +3103,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 						ocgExist = true;				
 						String ocgIp = ocg.getIp();
 						//向OCG发送UNT消息
-						ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE, subtitle);																		
+						ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE, subtitle, areaCode);																		
 					}
 				}
 				

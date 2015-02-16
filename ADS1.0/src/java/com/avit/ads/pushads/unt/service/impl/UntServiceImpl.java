@@ -31,7 +31,7 @@ import com.avit.ads.util.bean.WarnInfo;
 import com.avit.ads.util.warn.WarnHelper;
 import com.ipanel.http.util.HttpCommon;
 
-@Service
+//@Service
 public class UntServiceImpl implements UntService{
 	private Log log = LogFactory.getLog(this.getClass());
 	//@Inject
@@ -103,18 +103,18 @@ public class UntServiceImpl implements UntService{
 	 public boolean sendUpdateFlag(String areaCode, String updateType,String filename) {
 		log.info("UNT::sendUpdateFlag() updateType:"+updateType+"filename:"+filename + "areaCode: " + areaCode);
 		List<Ocg> ocgList = InitConfig.getAdsConfig().getOcgList();
-		for(Ocg ocg : ocgList){
-			if(ocg.getAreaCode().equals(areaCode)){
-				try{
-					String untUrl = ocg.getUntUrl();
-					log.info(InitConfig.getAdsConfig().getRealTimeAds().getUntUrl()+filename);
-					return getDoGetURL(untUrl+filename,null);
-				}catch(Exception e){
-					log.error("发送UNT更新通知失败", e);
-					return false;
-				}
-			}
-		}
+//		for(Ocg ocg : ocgList){
+//			if(ocg.getAreaCode().equals(areaCode)){
+//				try{
+//					String untUrl = ocg.getUntUrl();
+//					log.info(InitConfig.getAdsConfig().getRealTimeAds().getUntUrl()+filename);
+//					return getDoGetURL(untUrl+filename,null);
+//				}catch(Exception e){
+//					log.error("发送UNT更新通知失败", e);
+//					return false;
+//				}
+//			}
+//		}
 		return false;
 	}
 

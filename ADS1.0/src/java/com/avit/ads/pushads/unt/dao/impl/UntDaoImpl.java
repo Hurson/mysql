@@ -20,7 +20,7 @@ import com.avit.ads.pushads.unt.bean.UntConfigFile;
 import com.avit.ads.pushads.unt.dao.UntDao;
 
 import com.avit.common.page.dao.impl.CommonDaoImpl;
-@Repository
+//@Repository
 public class UntDaoImpl extends CommonDaoImpl implements UntDao{
 	@Resource(name = "sessionFactory")//可替换为Unt的数据库
     public void setSuperSessionFactory(SessionFactory sessionFactory) {

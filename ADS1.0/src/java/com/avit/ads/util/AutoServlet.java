@@ -4,10 +4,13 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServlet;
 
+import com.avit.ads.pushads.ocg.service.OcgService;
+import com.avit.ads.pushads.ocg.service.impl.OcgServiceImpl;
 import com.avit.ads.pushads.task.AutoAllThread;
 import com.avit.ads.pushads.task.AutoMessageLinkThread;
 import com.avit.ads.pushads.task.AutoStartStbThread;
 import com.avit.ads.pushads.task.cache.SendAdsElementMap;
+import com.avit.ads.util.message.UNTMessage;
 
 
 
@@ -53,6 +56,7 @@ public class AutoServlet extends HttpServlet {
 			
 				//SendFileMap.initSendFileMap();
 				SendAdsElementMap.initSendAdsElementMap();
+				
 				allThread = new AutoAllThread();
 				allThread.start();				
 				Thread.sleep(500);	
@@ -62,6 +66,8 @@ public class AutoServlet extends HttpServlet {
 //				startStbThread.start();				
 //				Thread.sleep(500);	
 
+				
+				//testUnt();  //测试UNT
 				
 			}catch(Exception ex){
 				ex.printStackTrace();
@@ -80,8 +86,16 @@ public class AutoServlet extends HttpServlet {
 	 */
 	private void getConfig() throws IOException{
 		InitConfig config = new InitConfig();	
-		config.initConfig();
-		
+		config.initConfig();	
 	}
+	
+	private void testUnt(){
+		OcgService ocgService= (OcgService)ContextHolder.getApplicationContext().getBean("OcgService");
+		for(int i = 1; i <= 7; i++){
+			Object untMsgObj = OcgServiceImpl.initUNTMsg(i);
+			ocgService.sendUNTMessageUpdateByIp("192.168.2.221", i, untMsgObj, "20517");
+		}
+	}
+	
 
 }

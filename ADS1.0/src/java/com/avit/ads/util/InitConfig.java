@@ -118,7 +118,7 @@ public class InitConfig {
 		initTempPath();
 		
 		//设置区域编码与NID关系MAP
-		setAreaMap(adsConfig.getOcgList());
+		//setAreaMap(adsConfig.getOcgList());
 		
 	}
 	
@@ -197,7 +197,7 @@ public class InitConfig {
 		//根据配置文件广告位编码查询默认素材，并设置默认素材
 		
 		//设置区域编码与NID关系MAP
-		setAreaMap(adsConfig.getOcgList());
+		//setAreaMap(adsConfig.getOcgList());
 		
 	}
 	public static AdsConfig getAdsConfig() {
@@ -212,21 +212,17 @@ public class InitConfig {
 	{
 		return adsConfig.getCps();
 	}
-	public static Ocg getOcgConfig(String areaCode)
+	public static Ocg getOcgConfig(String type)
 	{
-		Ocg defaultOcg=null;
-		for (int i=0;i<adsConfig.getOcgList().size();i++)
-		{
-			if (areaCode.equals(adsConfig.getOcgList().get(i).getAreaCode()))
-			{
-				return adsConfig.getOcgList().get(i);
-			}
-			if ("0".equals(adsConfig.getOcgList().get(i).getAreaCode()))
-			{
-				defaultOcg=adsConfig.getOcgList().get(i);
+		List<Ocg> ocgList = adsConfig.getOcgList();
+		if(null != ocgList && ocgList.size() > 0){
+			for(Ocg ocg : ocgList){
+				if(type.equals(ocg.getStreamId())){
+					return ocg;
+				}
 			}
 		}
-		return defaultOcg;
+		return null;
 	}
 	public static Dtv getDtvConfig(String areaCode)
 	{
@@ -354,19 +350,30 @@ public class InitConfig {
 		{
 			(new File(adsConfig.getDtvList().get(i).getTempPath())).mkdirs();
 		}
+
+		(new File(configMap.get(ConstantsHelper.DEST_FILE_PATH))).mkdirs();
+		(new File(configMap.get(ConstantsHelper.LOG_FILE_PATH))).mkdirs();
+		File untLogFile = new File(configMap.get(ConstantsHelper.LOG_FILE_PATH)+File.separator+ConstantsHelper.LOG_FILE_NAME);
+		if(!untLogFile.exists()){
+			try {
+				untLogFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
 	 * 设置区域编码与NID关系MAP
 	 * @param ocgList
 	 */
-	private void setAreaMap(List<Ocg> ocgList){
-		if(ocgList != null && ocgList.size()>0){
-			areaMap = new HashMap<String,String>();
-			for(Ocg ocg : ocgList){
-				areaMap.put(ocg.getAreaCode(), ocg.getNid());
-			}
-		}
-	}
+//	private void setAreaMap(List<Ocg> ocgList){
+//		if(ocgList != null && ocgList.size()>0){
+//			areaMap = new HashMap<String,String>();
+//			for(Ocg ocg : ocgList){
+//				areaMap.put(ocg.getAreaCode(), ocg.getNid());
+//			}
+//		}
+//	}
 	 
 }

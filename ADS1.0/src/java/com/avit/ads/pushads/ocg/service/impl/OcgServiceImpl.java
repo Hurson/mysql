@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +14,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,18 +22,23 @@ import org.springframework.stereotype.Service;
 import com.avit.ads.pushads.ocg.GenerateFileJni;
 import com.avit.ads.pushads.ocg.bean.HeaderInfo;
 import com.avit.ads.pushads.ocg.dao.OcgInfoDao;
+import com.avit.ads.pushads.ocg.dao.UntDao;
 import com.avit.ads.pushads.ocg.service.OcgService;
 import com.avit.ads.pushads.task.bean.OcgInfo;
 import com.avit.ads.util.ConstantsHelper;
 import com.avit.ads.util.InitConfig;
+import com.avit.ads.util.bean.Ocg;
 import com.avit.ads.util.message.AdsConfigJs;
 import com.avit.ads.util.message.AdsImage;
+import com.avit.ads.util.message.ChannelRecomend;
+import com.avit.ads.util.message.ChannelRecomendElement;
 import com.avit.ads.util.message.ChannelSubtitle;
 import com.avit.ads.util.message.ChannelSubtitleElement;
 import com.avit.ads.util.message.Channelrecomendurl;
 import com.avit.ads.util.message.MsubtitleInfo;
 import com.avit.ads.util.message.OcgPlayMsg;
 import com.avit.ads.util.message.RetMsg;
+import com.avit.ads.util.message.SsuLocation;
 import com.avit.ads.util.message.SystemMaintain;
 import com.avit.ads.util.message.TvnTarget;
 import com.avit.ads.util.message.UNTMessage;
@@ -57,6 +62,9 @@ public class OcgServiceImpl implements OcgService {
 	
 	@Inject
 	private OcgInfoDao ocgInfoDao;
+	
+	@Autowired
+	private UntDao untDao;	
 
 	JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
 	
@@ -233,10 +241,14 @@ public class OcgServiceImpl implements OcgService {
 
 	private HttpResponse sendHttpMsg(HeaderInfo header,String url, String fileName){
 		
+		//System.out.println("fileName: " + fileName);
+		
 		HttpClient httpclient = new DefaultHttpClient();
+		
+		httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 5000); 
+
 		try { 
 			HttpPost httpost = new HttpPost(url); 
-			
 			
 			httpost.setHeader("message_type", header.getMessageType());
 			httpost.setHeader("stream_id", header.getStreamId());
@@ -255,7 +267,6 @@ public class OcgServiceImpl implements OcgService {
 			return response;
 		}catch(Exception e){
 			logger.error("向OCG发送HTTP请求异常", e);
-			e.printStackTrace();
 			return null;
 		}finally {
 			httpclient.getConnectionManager().shutdown();
@@ -619,10 +630,10 @@ public class OcgServiceImpl implements OcgService {
 
 	//http发送ts文件
 	public boolean sendUNTMessageToOCG(int version, String url, int sendType, Object message, HeaderInfo headerInfo){
-		InitConfig init = new InitConfig();
-		init.initConfig();
+//		InitConfig init = new InitConfig();
+//		init.initConfig();
 		String destPath =InitConfig.getConfigMap().get(ConstantsHelper.DEST_FILE_PATH);
-		String logPath = InitConfig.getConfigMap().get(ConstantsHelper.LOG_FILE_PATH);
+		String logPath = InitConfig.getConfigMap().get(ConstantsHelper.LOG_FILE_PATH)+File.separator+ConstantsHelper.LOG_FILE_NAME;
 		
 		UNTMessage uNTMessage = new UNTMessage();
 		uNTMessage.setSendType(sendType + "");
@@ -635,7 +646,7 @@ public class OcgServiceImpl implements OcgService {
 			uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
 			break;
 		case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
-			uNTMessage.setAdsConfigJs((AdsConfigJs) message);
+			uNTMessage.setAdsConfig((AdsConfigJs) message);
 			break;
 		case ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE:
 			uNTMessage.setAdsImage((AdsImage) message);
@@ -643,8 +654,8 @@ public class OcgServiceImpl implements OcgService {
 		case ConstantsHelper.REALTIME_UNT_MESSAGE_STB:
 			uNTMessage.setSystemMaintain((SystemMaintain) message);
 			break;
-		case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE:
-			uNTMessage.setChannelrecomendurl((Channelrecomendurl) message);
+		case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE_RECOMMEND:
+			//uNTMessage.setChannelrecomendurl((Channelrecomendurl) message);
 			break;
 		default:
 			break;
@@ -692,7 +703,7 @@ public class OcgServiceImpl implements OcgService {
 			uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
 			break;
 		case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
-			uNTMessage.setAdsConfigJs((AdsConfigJs) message);
+			uNTMessage.setAdsConfig((AdsConfigJs) message);
 			break;
 		case ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE:
 			uNTMessage.setAdsImage((AdsImage) message);
@@ -700,8 +711,8 @@ public class OcgServiceImpl implements OcgService {
 		case ConstantsHelper.REALTIME_UNT_MESSAGE_STB:
 			uNTMessage.setSystemMaintain((SystemMaintain) message);
 			break;
-		case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE:
-			uNTMessage.setChannelrecomendurl((Channelrecomendurl) message);
+		case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE_RECOMMEND:
+			//uNTMessage.setChannelrecomendurl((Channelrecomendurl) message);
 			break;
 		default:
 			break;
@@ -757,7 +768,7 @@ public class OcgServiceImpl implements OcgService {
 				uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
 				break;
 			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
-				uNTMessage.setAdsConfigJs((AdsConfigJs) message);
+				uNTMessage.setAdsConfig((AdsConfigJs) message);
 				break;
 			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE:
 				uNTMessage.setAdsImage((AdsImage) message);
@@ -768,8 +779,8 @@ public class OcgServiceImpl implements OcgService {
 			case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE:
 				uNTMessage.setChannelSubtitle((ChannelSubtitle)message);
 				break;
-			case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE:
-				uNTMessage.setChannelrecomendurl((Channelrecomendurl) message);
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE_RECOMMEND:
+				//uNTMessage.setChannelrecomendurl((Channelrecomendurl) message);
 				break;
 			default:
 				break;
@@ -801,6 +812,74 @@ public class OcgServiceImpl implements OcgService {
 	}
 	
 
+	public boolean sendUNTMessageUpdateByIp(String ip, int sendType, Object message, String areaCode) {
+		
+		UNTMessage uNTMessage = new UNTMessage();
+		uNTMessage.setSendType(sendType + "");
+
+		switch (sendType) {
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_WEATHER:
+				uNTMessage.setWeatherforecast((Weatherforecast) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE:
+				uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
+				uNTMessage.setAdsConfig((AdsConfigJs) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE:
+				uNTMessage.setAdsImage((AdsImage) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_STB:
+				uNTMessage.setSystemMaintain((SystemMaintain) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE:
+				uNTMessage.setChannelSubtitle((ChannelSubtitle)message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE_RECOMMEND:
+				uNTMessage.setChannelRecomend((ChannelRecomend) message);
+				break;
+			default:
+				break;
+		}
+
+		String sendMsg = helper.toXML(uNTMessage);
+		String destPath =InitConfig.getConfigMap().get(ConstantsHelper.DEST_FILE_PATH);
+		String logPath = InitConfig.getConfigMap().get(ConstantsHelper.LOG_FILE_PATH)+File.separator+ConstantsHelper.LOG_FILE_NAME;
+		int version = untDao.getUntVersion(areaCode, sendType);
+		version = (version + 1) % 32;
+		
+		boolean result = GenerateFileJni.getInstance().geneTSFile(sendMsg, version, version, destPath, logPath);
+						
+		if(result){
+			Ocg ocg = InitConfig.getOcgConfig("" + sendType);
+			if(null == ocg){
+				logger.error("未配置unt类型：" + sendType + " 的OCG播发信息");
+				return false;
+			}
+			
+			HeaderInfo headerInfo = new HeaderInfo(ocg.getStreamId(), ocg.getBitrate(),ocg.getSendAddress(), ocg.getSendPort());
+			String url = "http://" + ip + ":" + ConstantsHelper.OCG_HTTP_PORT;
+			
+			HttpResponse res = sendHttpMsg(headerInfo, url, destPath+File.separator+sendType+ConstantsHelper.TS_FILE_SUFFIX);
+			if(null == res){
+				return false;
+			}
+			int code = res.getStatusLine().getStatusCode();
+			if(code == 200){
+				untDao.updateVersion(areaCode, sendType);
+				logger.info("UNT更新成功！");
+				return true;
+			}else if(code == 400){
+				logger.info("参数格式不正确！");
+			}else if(code == 401){
+				logger.info("发送OCG消息失败！");
+			}
+		}else{
+			logger.error("构造unt表失败.");
+		}
+		return false;	
+	}
 
 	/**
 	 * 以下全部为调试接口专用
@@ -1055,15 +1134,13 @@ public class OcgServiceImpl implements OcgService {
 		}
 	}
 	
-	public static UNTMessage initUNTMsg(int type){
-		//
+	public static Object initUNTMsg(int type){
+		//1.天气预报
 		Weatherforecast weather = new Weatherforecast();
 	    weather.setWord(new String("郑州明日天气：晴。气温：23-27度"));
-		
-		//weather.setWord(new String("ZhenZhou tommorrow weather sun,tem 23-270C"));
 		weather.setNetworkId("100");
 		weather.setUiId("a");
-		//
+		//2.全频道字幕
 		MsubtitleInfo subtitle = new MsubtitleInfo();
 		subtitle.setActionType("1");
 		subtitle.setServiceID("101");
@@ -1076,69 +1153,143 @@ public class OcgServiceImpl implements OcgService {
 		subtitle.setBackgroundHeight("80");
 		subtitle.setBackgroundColor("346");
 		subtitle.setShowFrequency("8");
-		//subtitle.setWord("滚动:测试滚动字幕广告测试滚动字幕广告测试滚动字幕广告测试滚动字幕广告");
-		subtitle.setWord("B hello word hello word hello word hello word");
-		//subtitle.setWord("Move Words");
+		subtitle.setWord("测试滚动字幕广告测试滚动字幕广告测试滚动字幕广告测试滚动字幕广告");
 		subtitle.setUiId("b");
-		//
+		//3.配置文件
 		AdsConfigJs adsConfig = new AdsConfigJs();
 		adsConfig.setFilepath("ads/cofig/asdConfig.js");
 		adsConfig.setUiId("b");
-		//
+		//4.图片文件
 		AdsImage adsImage = new AdsImage();
 		adsImage.setFilepath("ads/cofig/asdConfig.png");
 		adsImage.setUiId("c");
-		//
+		//5.待机
 		SystemMaintain stb = new SystemMaintain();
 		stb.setActionCode("0");
 		stb.setActiveHour("5");
-		//
-		Channelrecomendurl channel = new Channelrecomendurl();
-		channel.setServiceID("-1");
-		channel.settVNType("2");
-		channel.settVN("1380");
-		channel.setcAIndustryType("0");
-		channel.setcAUserLevel("0");
-		channel.setuRL("http://www.avit.com");
+		//6.频道字幕
+		TvnTarget tvnTarget1 = new TvnTarget();
+		tvnTarget1.setServiceID("100");
+		tvnTarget1.setTvnType("2");
+		tvnTarget1.setTvn("1");
+		tvnTarget1.setCaIndustryType("0");
+		tvnTarget1.setCaUserLevel("0");
+		
+		MsubtitleInfo subtitle1 = new MsubtitleInfo();
+		subtitle1.setUiId("a");
+		subtitle1.setActionType("1");
+		subtitle1.setTimeout("5");
+		subtitle1.setFontColor("1");
+		subtitle1.setFontSize("1");
+		subtitle1.setBackgroundX("1");
+		subtitle1.setBackgroundY("1");
+		subtitle1.setBackgroundWidth("1");
+		subtitle1.setBackgroundHeight("1");
+		subtitle1.setBackgroundColor("2");
+		subtitle1.setShowFrequency("2");
+		subtitle1.setWord("hello");
+		
+		ChannelSubtitleElement elem1 = new ChannelSubtitleElement();
+		elem1.setTvnTarget(tvnTarget1);
+		elem1.setSubtitleInfo(subtitle1);
 		
 		
-		// sendUntMessage
-		UNTMessage uNTMsg = new UNTMessage();
+		TvnTarget tvnTarget2 = new TvnTarget();
+		tvnTarget2.setServiceID("101");
+		tvnTarget2.setTvnType("2");
+		tvnTarget2.setTvn("1");
+		tvnTarget2.setCaIndustryType("0");
+		tvnTarget2.setCaUserLevel("0");
+		
+		MsubtitleInfo subtitle2 = new MsubtitleInfo();
+		subtitle2.setUiId("a");
+		subtitle2.setActionType("1");
+		subtitle2.setTimeout("5");
+		subtitle2.setFontColor("1");
+		subtitle2.setFontSize("1");
+		subtitle2.setBackgroundX("1");
+		subtitle2.setBackgroundY("1");
+		subtitle2.setBackgroundWidth("1");
+		subtitle2.setBackgroundHeight("1");
+		subtitle2.setBackgroundColor("2");
+		subtitle2.setShowFrequency("2");
+		subtitle2.setWord("world");
+		
+		ChannelSubtitleElement elem2 = new ChannelSubtitleElement();
+		elem2.setTvnTarget(tvnTarget2);
+		elem2.setSubtitleInfo(subtitle2);
+		
+		TvnTarget tvnTarget3 = new TvnTarget();
+		tvnTarget3.setServiceID("102");
+		tvnTarget3.setTvnType("2");
+		tvnTarget3.setTvn("1");
+		tvnTarget3.setCaIndustryType("0");
+		tvnTarget3.setCaUserLevel("0");
+		
+		MsubtitleInfo subtitle3 = new MsubtitleInfo();
+		subtitle3.setUiId("a");
+		subtitle3.setActionType("1");
+		subtitle3.setTimeout("5");
+		subtitle3.setFontColor("1");
+		subtitle3.setFontSize("1");
+		subtitle3.setBackgroundX("1");
+		subtitle3.setBackgroundY("1");
+		subtitle3.setBackgroundWidth("1");
+		subtitle3.setBackgroundHeight("1");
+		subtitle3.setBackgroundColor("2");
+		subtitle3.setShowFrequency("2");
+		subtitle3.setWord("world");
+		
+		ChannelSubtitleElement elem3 = new ChannelSubtitleElement();
+		elem3.setTvnTarget(tvnTarget3);
+		elem3.setSubtitleInfo(subtitle3);
+		
+		ChannelSubtitle channelSubtitle = new ChannelSubtitle();
+		List<ChannelSubtitleElement> list = new ArrayList<ChannelSubtitleElement>();
+		list.add(elem1);
+		list.add(elem2);
+		list.add(elem3);
+		channelSubtitle.setChannelSubtitleElemList(list);
+		//7.频道推荐链接
+		TvnTarget tvn = new TvnTarget();
+		tvn.setServiceID("101");
+		tvn.setTvn("333");
+		tvn.setTvnType("1");
+		tvn.setCaIndustryType("322,4355");
+		tvn.setCaUserLevel("98,23");
+		
+		SsuLocation location = new SsuLocation();
+		location.setUrl("http:baidu.com");
+		
+		ChannelRecomendElement recomendElem = new ChannelRecomendElement();
+		recomendElem.setTvnTarget(tvn);
+		recomendElem.setSsuLocation(location);
+		
+		List<ChannelRecomendElement> elemList = new ArrayList<ChannelRecomendElement>();
+		elemList.add(recomendElem);
+		
+		ChannelRecomend channelRecomend = new ChannelRecomend();
+		channelRecomend.setChannelRecomendElemList(elemList);
+		
 		switch (type) {
 		case 1:
-			uNTMsg.setSendType("1");
-			uNTMsg.setWeatherforecast(weather);
-			break;
-
+			return weather;
 		case 2:
-			uNTMsg.setSendType("2");
-			uNTMsg.setMsubtitleInfo(subtitle);
-			break;
+			return subtitle;
 		case 3:
-			uNTMsg.setSendType("3");
-			uNTMsg.setAdsConfigJs(adsConfig);
-			break;
-			
+			return adsConfig;
 		case 4:
-			uNTMsg.setSendType("4");
-			uNTMsg.setAdsImage(adsImage);
-			break;
+			return adsImage;
 		case 5:
-			uNTMsg.setSendType("5");
-			uNTMsg.setSystemMaintain(stb);
-			break;
+			return stb;
 		case 6:
-			uNTMsg.setSendType("6");
-			uNTMsg.setChannelrecomendurl(channel);
-			uNTMsg.setMsubtitleInfo(subtitle);
-			break;
+			return channelSubtitle;
+		case 7:
+			return channelRecomend;
 		default:
-			break;
+			return null;
 		}
-		return uNTMsg;
-		
-
-		
 	}
+	
 	
 }

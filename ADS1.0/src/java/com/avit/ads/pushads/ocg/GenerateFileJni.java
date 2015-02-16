@@ -5,7 +5,7 @@ public class GenerateFileJni {
 
 	private static GenerateFileJni instance;
 	static{
-		System.loadLibrary("libCreateUNT");
+		System.loadLibrary("CreateUNT");
 	}
 	public native boolean geneTSFile(String xmlData, int tableVersion, int descVersion, String destPath, String logPath);
 	
@@ -16,7 +16,7 @@ public class GenerateFileJni {
 		return instance;
 	}
 	
-	public static void main(String[] args){
+	/*	public static void main(String[] args){
 		
 		System.out.println("begin generateTs.....");
 		String xml="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
@@ -34,8 +34,8 @@ public class GenerateFileJni {
 		//System.out.println(System.getProperty("java.library.path"));
 		GenerateFileJni.getInstance().geneTSFile(xml, 1, 1, "/tmp", "/tmp/1.log");
 	}
-	
-/*public static String initIntefaceDebug(){
+	*/
+		/*public static String initIntefaceDebug(){
 		
 		// sendFile
 //		OcgPlayMsg ocgPalyMsg = new OcgPlayMsg();

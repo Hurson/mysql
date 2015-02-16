@@ -126,6 +126,8 @@ public class ConstantsHelper {
     public static final int OCG_UDP_PORT = 30005;
     public static final int OCG_UDP_PORT_RECEIVE = 30006;
     
+    public static final int OCG_HTTP_PORT = 808;
+    
     public static final int OCG_UDP_RET_MSG_MAX_LENGTH = 212; 
     
     
@@ -135,7 +137,7 @@ public class ConstantsHelper {
     public static final int REALTIME_UNT_MESSAGE_ADIMAGE= 4; 
     public static final int REALTIME_UNT_MESSAGE_STB= 5; 
     public static final int REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE= 6; 
-    public static final int REALTIME_UNT_MESSAGE_CHANNE= 7; 
+    public static final int REALTIME_UNT_MESSAGE_CHANNE_RECOMMEND= 7; 
     
     /** 主频点，对应原UI路径*/
     public static final String MAIN_CHANNEL = "1";
@@ -155,8 +157,9 @@ public class ConstantsHelper {
     public static final String UI_GET = "get";
     
     public static final String TS_FILE_SUFFIX = ".ts";
-    public static final String DEST_FILE_PATH = "ads_generated_ts_store_path";
-    public static final String LOG_FILE_PATH = "ads_logger_path";
+    public static final String DEST_FILE_PATH = "unt_generated_ts_store_path";
+    public static final String LOG_FILE_PATH = "unt_logger_path";
+    public static final String LOG_FILE_NAME = "datapackage.log";
     
     /** UI更新类型 
 	    1：开机图片initPic.iframe更新

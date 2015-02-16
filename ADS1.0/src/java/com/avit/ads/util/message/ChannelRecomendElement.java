@@ -6,14 +6,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="channelSubtitleElement")
-public class ChannelSubtitleElement {
-	
+@XmlRootElement(name="channelRecomendElement")
+public class ChannelRecomendElement {
 	@XmlElement(name="tvn_target", required = true)
 	private TvnTarget tvnTarget;
 	
-	@XmlElement(name="subtitleInfo", required = true)
-	private MsubtitleInfo subtitleInfo;
+	@XmlElement(name="ssu_location", required = true)
+	private SsuLocation ssuLocation;
 
 	public TvnTarget getTvnTarget() {
 		return tvnTarget;
@@ -23,14 +22,12 @@ public class ChannelSubtitleElement {
 		this.tvnTarget = tvnTarget;
 	}
 
-	public MsubtitleInfo getSubtitleInfo() {
-		return subtitleInfo;
+	public SsuLocation getSsuLocation() {
+		return ssuLocation;
 	}
 
-	public void setSubtitleInfo(MsubtitleInfo subtitleInfo) {
-		this.subtitleInfo = subtitleInfo;
+	public void setSsuLocation(SsuLocation ssuLocation) {
+		this.ssuLocation = ssuLocation;
 	}
-	
-	
 	
 }

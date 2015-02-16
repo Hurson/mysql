@@ -43,6 +43,23 @@ public class HeaderInfo implements Serializable{
 	 */
 	private String outdateTime;
 	
+	public HeaderInfo(){
+		
+	}
+	
+	public HeaderInfo(String streamId, String bitrate, String sendAddress, String sendPort){
+		this.messageType = "1";
+		this.streamId = streamId;
+		this.controlCommand = "1";
+		this.bitrate = bitrate;
+		this.sendAddress = sendAddress;
+		this.sendPort = sendPort;
+		this.reserveTime = "0";
+		this.effectTime = "0";
+		this.outdateTime = "0";
+	}
+	
+	
 	public String getMessageType() {
 		return messageType;
 	}

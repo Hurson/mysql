@@ -14,20 +14,26 @@ public class UNTMessage {
 	@XmlAttribute(name="sendType", required = true)
 	private String sendType;
 	
-	@XmlElement(name="systemMaintain")
-	private SystemMaintain systemMaintain;
 	@XmlElement(name="weatherForecast")
 	private Weatherforecast weatherforecast;
-	@XmlElement(name="channelInfo")
-	private Channelrecomendurl channelrecomendurl;
+	
 	@XmlElement(name="subtitleInfo")
 	private MsubtitleInfo msubtitleInfo;
+	
 	@XmlElement(name="adsConfig")
 	private AdsConfigJs adsConfig;
+	
 	@XmlElement(name="adsImage")
 	private AdsImage adsImage;
+	
+	@XmlElement(name="systemMaintain")
+	private SystemMaintain systemMaintain;
+	
 	@XmlElement(name="channelSubtitle")
 	private ChannelSubtitle channelSubtitle;
+	
+	@XmlElement(name="channelRecomend")
+	private ChannelRecomend channelRecomend;
 	
 	public String getSendType() {
 		return sendType;
@@ -47,12 +53,7 @@ public class UNTMessage {
 	public void setWeatherforecast(Weatherforecast weatherforecast) {
 		this.weatherforecast = weatherforecast;
 	}
-	public Channelrecomendurl getChannelrecomendurl() {
-		return channelrecomendurl;
-	}
-	public void setChannelrecomendurl(Channelrecomendurl channelrecomendurl) {
-		this.channelrecomendurl = channelrecomendurl;
-	}
+
 	public MsubtitleInfo getMsubtitleInfo() {
 		return msubtitleInfo;
 	}
@@ -62,7 +63,8 @@ public class UNTMessage {
 	public AdsConfigJs getAdsConfig() {
 		return adsConfig;
 	}
-	public void setAdsConfigJs(AdsConfigJs adsConfig) {
+
+	public void setAdsConfig(AdsConfigJs adsConfig) {
 		this.adsConfig = adsConfig;
 	}
 	public AdsImage getAdsImage() {
@@ -76,6 +78,12 @@ public class UNTMessage {
 	}
 	public void setChannelSubtitle(ChannelSubtitle channelSubtitle) {
 		this.channelSubtitle = channelSubtitle;
+	}
+	public ChannelRecomend getChannelRecomend() {
+		return channelRecomend;
+	}
+	public void setChannelRecomend(ChannelRecomend channelRecomend) {
+		this.channelRecomend = channelRecomend;
 	}
 	
 	
