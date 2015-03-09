@@ -72,14 +72,20 @@ public class OnlineUpgradeAction extends BaseAction{
 		return ERROR;
 	}
 	public String startUpgrade(){
-		String fileName = FileUtil.getSerlvetContextPath()+"/upgrade/description.properties";
-		logger.info("DescriptionPath:" + fileName);
-		OperatePropertyFile oper = new OperatePropertyFile(fileName);
+		File descFile = new File(FileUtil.getSerlvetContextPath()+"/upgrade/description.properties");
+		logger.info("DescriptionPath:" + descFile.getAbsolutePath());
+		if(descFile.exists()){
+			OperatePropertyFile oper = new OperatePropertyFile(descFile.getAbsolutePath());
+			
+			newVersion = oper.getValue("version");
+			upgradePath = oper.getValue("upgrade_package_file_path");
+		}else{
+			newVersion = "1.0";
+			upgradePath = "/root/advertres/temp/upgrade/ocg";
+		}
 		
-		newVersion = oper.getValue("version");
-		upgradePath = oper.getValue("upgrade_package_file_path");
-		if(areaOCG != null)
-		System.out.println("AreaName : "+areaOCG.getAreaName());
+		/*if(areaOCG != null)
+			System.out.println("AreaName : "+areaOCG.getAreaName());*/
 		page = ocgUpgradeService.queryAreaOCGList(areaOCG, page.getPageNo(), page.getPageSize());
 		return SUCCESS;
 	}
