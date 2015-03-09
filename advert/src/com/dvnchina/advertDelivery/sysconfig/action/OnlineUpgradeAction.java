@@ -28,7 +28,7 @@ public class OnlineUpgradeAction extends BaseAction{
 	
 	
 	private File description;
-	private String descriptionFileName;
+	private final String descriptionFileName="description.properties";
 	private String descriptionPath;
 	
 	private String newVersion;
@@ -72,7 +72,7 @@ public class OnlineUpgradeAction extends BaseAction{
 		return ERROR;
 	}
 	public String startUpgrade(){
-		File descFile = new File(FileUtil.getSerlvetContextPath()+"/upgrade/description.properties");
+		File descFile = new File(setFilePath(descriptionFileName));
 		logger.info("DescriptionPath:" + descFile.getAbsolutePath());
 		if(descFile.exists()){
 			OperatePropertyFile oper = new OperatePropertyFile(descFile.getAbsolutePath());
@@ -235,10 +235,6 @@ public class OnlineUpgradeAction extends BaseAction{
 
 	public String getDescriptionFileName() {
 		return descriptionFileName;
-	}
-
-	public void setDescriptionFileName(String descriptionFileName) {
-		this.descriptionFileName = descriptionFileName;
 	}
 
 	public OCGUpgradeService getOcgUpgradeService() {
