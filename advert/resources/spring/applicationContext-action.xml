@@ -82,7 +82,10 @@
  	<bean name="updateUIAction" class="com.dvnchina.advertDelivery.sysconfig.action.UpdateUIAction" scope="prototype">
  		<property name="ployService" ref="ployService"/>
  	</bean>
- 	
+ 	<!-- OCG在线升级 -->
+ 	<bean name="onlineUpgradeAction" class="com.dvnchina.advertDelivery.sysconfig.action.OnlineUpgradeAction" scope="prototype">
+ 		<property name="ocgUpgradeService" ref="ocgUpgradeService"></property>
+ 	</bean>
  	
  	<bean name="positionAction" class="com.dvnchina.advertDelivery.position.action.PositionAction" scope="prototype"/>
  	<bean name="defaulResourceAction" class="com.dvnchina.advertDelivery.position.action.DefaulResourceAction" scope="prototype"/>

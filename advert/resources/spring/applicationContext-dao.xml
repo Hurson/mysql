@@ -169,7 +169,10 @@
    <bean name="userTradeDao" class = "com.dvnchina.advertDelivery.sysconfig.dao.impl.UserTradeDaoImpl">
    		<property name="sessionFactory" ref="sessionFactory"/>
    </bean>
-   
+   <!-- OCG在线升级 -->
+   <bean name="ocgUpgradeDao" class = "com.dvnchina.advertDelivery.sysconfig.dao.impl.OCGUpgradeDaoImpl">
+   		<property name="sessionFactory" ref="sessionFactory"/>
+   </bean>
    <!-- 素材管理 -->
 	<bean name="meterialManagerDao" class="com.dvnchina.advertDelivery.meterial.dao.impl.MeterialManagerDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"/>

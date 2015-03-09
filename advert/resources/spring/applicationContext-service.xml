@@ -135,7 +135,10 @@
    <bean name="userTradeService"  id="userTradeService" class = "com.dvnchina.advertDelivery.sysconfig.service.impl.UserTradeServiceImpl">
    		<property name="userTradeDao" ref="userTradeDao"/>
    </bean>
-
+   <!-- OCG在线升级 -->
+   <bean name="ocgUpgradeService"  id="ocgUpgradeService" class = "com.dvnchina.advertDelivery.sysconfig.service.impl.OCGUpgradeServiceImpl">
+   		<property name="ocgUpgradeDao" ref="ocgUpgradeDao"/>
+   </bean>
  	<!--频道组管理 -->
  	<bean name="channelGroupManagerService" id="channelGroupManagerService" class="com.dvnchina.advertDelivery.channelGroup.service.impl.ChannelGroupManagerServiceImpl">
  		<property name="channelGroupManagerDao" ref="channelGroupManagerDao"/>

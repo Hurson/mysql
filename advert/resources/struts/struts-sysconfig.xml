@@ -140,6 +140,23 @@
 			<result name="success">/page/sysconfig/updateUI.jsp</result>
 		</action>
 		
+		<!-- OCG在线升级 -->
+		<action name="initPage" class="onlineUpgradeAction" method="initPage">
+			<result name="success">/page/sysconfig/uploadPackage.jsp</result>
+		</action>
+		<!-- 上传升级包 并ftp到资源服务器-->
+		<action name="uploadResource" class="onlineUpgradeAction" method="uploadResource">
+			<result name="success">/page/sysconfig/onlineUpgrade.jsp</result>
+			<result name="error">/page/sysconfig/uploadPackage.jsp</result>
+		</action>
+		
+		<!-- 分区域发送升级请求-->
+		<action name="startUpgrade" class="onlineUpgradeAction" method="startUpgrade">
+			<result name="success">/page/sysconfig/onlineUpgrade.jsp</result>
+		</action>
+		<action name="upgrade" class="onlineUpgradeAction" method="upgrade">
+			<result name="success">/page/sysconfig/onlineUpgrade.jsp</result>
+		</action>
 	</package>
 </struts>
 	

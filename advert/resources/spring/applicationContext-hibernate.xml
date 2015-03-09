@@ -168,7 +168,7 @@
 				<value>dbmap/TAdvertposition.hbm.xml</value>
 				-->
 				<value>dbmap/BaseConfig.hbm.xml</value>
-				 
+				<value>dbmap/AreaOCG.hbm.xml</value> 
 
 				<value>dbmap/PositionPackageForContract.hbm.xml</value>
 

@@ -49,7 +49,7 @@ function  showColumn(){
 	var menu_first = ['ggzcgl','ggstfgl','bpgl','xtgl','ggwgl','ggsgl','htgl','tfclgl','yxgzgl','ddgl','flsjtbgl','xtcx','rzgl']; 
 	
 
-	var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','ddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','tfclwh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','rbb','zbb','ybb','hkpdzgl','zmggdd'];
+	var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','ddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','tfclwh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
 
 	
 	var columns = $('#columns').val();//
@@ -130,6 +130,8 @@ function  showColumn(){
 	                    	<li id="pdzgl" style="display: none;"><a href="#" onclick="openPage('/page/channelGroup/queryChannelGroupList.do', '17', '频道组管理', '频道组管理')">&gt;&gt;&nbsp;频道组管理</a></li>
 	                    	<li id="hkpdzgl" style="display: none;"><a href="#" onclick="openPage('/page/npvrChannelGroup/queryChannelGroupListNpvr.do', '19', '回放频道组管理', '回放频道组管理')">&gt;&gt;&nbsp;回放频道组管理</a></li>
 	                    	<li id="uimsf" style="display: none;"><a href="#" onclick="openPage('/page/sysconfig/intoUpdateUI.do', '18', '更新UI描述符', '更新UI描述符')">&gt;&gt;&nbsp;更新UI描述符</a></li>
+	                    	<li id="scsjb" style="display: none;"><a href="#" onclick="openPage('/page/sysconfig/initPage.do', '20', '上传升级包', '上传升级包')">&gt;&gt;&nbsp;上传升级包</a></li>
+	                    	<li id="zxsj" style="display: none;"><a href="#" onclick="openPage('/page/sysconfig/startUpgrade.do', '21', 'OCG在线升级', 'OCG在线升级')">&gt;&gt;&nbsp;OCG在线升级</a></li>
 	                    </ul>
 	                </li>
 	            </ul>
