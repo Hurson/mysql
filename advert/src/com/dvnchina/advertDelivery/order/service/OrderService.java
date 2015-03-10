@@ -242,6 +242,8 @@ public interface OrderService {
 	 * @return 待审批的订单的总数
 	 */
 	public int getWaitingAuditOrderCount(String ids);
+	
+	public int getWaitingAuditOrderNum(String accessUserIds);
 	/**
 	 * 根据广告位类型获取图片和视频素材文件总大小
 	 * @param positionType 广告位类型

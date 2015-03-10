@@ -444,9 +444,9 @@
 		                         </td>
 		                      </tr>
 		                      <tr>
-		                          <td  align="right"><span class="required"></span>文本显示动作：</td>
+		                          <td  align="right"><span class="required"></span></td>
 		                          <td>
-			            		      <select disabled="disabled"  id="sel_textMeta_action"  name="textMeta.action" onchange="changeTextAction()">
+			            		      <select style="display:none" disabled="disabled"  id="sel_textMeta_action"  name="textMeta.action" onchange="changeTextAction()">
 								                <option id="action_id" value="-1">请选择...</option>
 										        <option  value="0" <c:if test="${textMeta.action==0}">selected="selected"</c:if> >
 										                        静止

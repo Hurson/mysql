@@ -47,9 +47,7 @@ public class UserCustomerDaoImpl  extends BaseDaoImpl implements UserCustomerDao
 	}
 
 	@Override
-	public List<Integer> getPositionPackageIds(Integer userId){
-		
-		int roleType = getRoleTypeByUserId(userId);
+	public List<Integer> getPositionPackageIds(Integer userId, Integer roleType){
 		
 		String sql ="";
 		Query query =null;

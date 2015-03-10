@@ -171,53 +171,12 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		postionJson = Obj2JsonUtil.list2json(pageAdPosition.getDataList());
 		pageLocation =preciseservice.queryLocationCodeList(null, 100000, 1);
 		
-		pageReleaseLocation = ployService.queryAreaList(null, 1, 100000);
-		
-		// modified by liuwenping 去掉河南这个区域
-//		List<?> areaList = pageReleaseLocation.getDataList();
-//		for(int i = areaList.size()-1; i >= 0; i--){
-//			ReleaseArea entity = (ReleaseArea)areaList.get(i);
-//			if("152000000000".equals(entity.getAreaCode())){
-//				areaList.remove(i);
-//				break;
-//			}
-//		}		
+		String areaCodes = getLoginUser().getAreaCodes();
+		pageReleaseLocation = ployService.queryAreaListByCodes(areaCodes, 1, 100);
+
+		return SUCCESS;		
 		
 		
-		/*
-		pageProduct = preciseservice.queryProductList(null, null,1000, 1);
-		//查询所有直播频道
-		pageChannel = preciseservice.queryChannelList(null, null, null, 1000, 1);
-		//查询所有回放频道
-		pageNpvrChannel = preciseservice.queryNpvrChannelList(null, null, null, 1000, 1);
-		//查询所有回看栏目
-		pageLookBackColumn = preciseservice.queryColumnList(null, null,  1000, 1);
-		//查询所有影片类别
-		pageAssetCategory =preciseservice.queryAssetCategoryList(null,null, 1000, 1);
-		//查询所有区域
-		pagereleaseArea =preciseservice.queryreleaseAreaList(null , null,1000, 1);
-		//查询所有行业
-		pageuserIndustry =preciseservice.queryuserIndustryList(null , null,1000, 1);
-		//查询所有用户类型
-		pageuserRank =preciseservice.queryuserRankList(null , null,1000, 1);
-		//查询所有频道分组	
-		pageChannelGroup =preciseservice.queryChannelGroupList(null , null,1000, 1);
-		*/
-		/*lstPloyAreaChannel= ployService.getAreaChannelsByPloyID(ployId);
-		request.setAttribute("ploy", ploy);
-		areasJson = Obj2JsonUtil.list2json(lstPloyAreaChannel);
-		ArrayList<test> array = new ArrayList<test>();
-		test ss = new test();
-		for (int i = 0; i < 3; i++) {
-			ss.setArg1(""+i);
-			ss.setArg2(""+i);
-			ss.setArg3(i);
-			ss.setArg4(i);
-			array.add(ss);
-		}
-		request.setAttribute("select", array);
-		*/
-		return SUCCESS;
 	}
 	
 	public String getCheckPloyById(){

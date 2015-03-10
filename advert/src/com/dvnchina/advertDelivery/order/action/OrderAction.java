@@ -1541,11 +1541,11 @@ public class OrderAction extends BaseAction{
 			getRequest().setAttribute("previewValue", previewValue);
 
 			if(!"03001".equals(advertPosition.getPositionCode())){//非DTV广告位，检查播出单信息
-				String areaPosition = ConfigureProperties.getInstance().getValueByKey("area.position");
-				if(areaPosition.indexOf(advertPosition.getPositionCode()) < 0){//不按区域区分的广告位
+				//String areaPosition = ConfigureProperties.getInstance().getValueByKey("area.position");
+				//if(areaPosition.indexOf(advertPosition.getPositionCode()) < 0){//不按区域区分的广告位
 					//检查待审核订单是否符合规则，不符合规则，则设置默认审核意见
 					checkPlayList(order);
-				}
+				//}
 			}
 			
 		} catch (Exception e) {

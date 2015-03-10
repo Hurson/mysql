@@ -16,6 +16,7 @@
 	}
 </style>
 <script>
+	var roleType = ${user.roleType};
 	//返回
 	function goBack() {
 		window.location.href="queryUserList.do";
@@ -37,6 +38,7 @@
 		    		alert("系统错误，请联系管理员！");
 		       },    
 		       success: function(result){ 
+		       	   roleType = result;
 		    	   if(result=='2'){
 						$('#customer_div_id').show();
 						$('#customer_div_id_single').hide();
@@ -147,17 +149,18 @@
 			$("#roleId").focus();
 			return false;
 		}
-		if($("#user_customer_ids").val()==''){
-			//alert("请选择广告商！");
-			//return false;
+		if(roleType == 1 && $("#user_customer_ids").val()==''){
+			alert("请选择广告商！");
+			$("#user_customer_ids").focus();
+			return false;
 		}
-		if($("#roleId").val() == 1 && $("#user_positions").val() == '' ){
+		if(roleType == 2 && $("#user_positions").val() == '' ){
 			alert("请选择广告位！");
 			$("#user_positions").focus();
 			return false;
 		}
 		
-		if($("#roleId").val() == 1 && $("#user_area_names").val() == '' ){
+		if(roleType == 2 && $("#user_area_names").val() == '' ){
 			alert("请选择区域！");
 			$("#user_area_names").focus();
 			return false;

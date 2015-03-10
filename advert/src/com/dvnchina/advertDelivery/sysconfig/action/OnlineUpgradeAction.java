@@ -37,6 +37,8 @@ public class OnlineUpgradeAction extends BaseAction{
 	private AreaOCG areaOCG;
 	private PageBeanDB page = new PageBeanDB();
 	
+	private static final int PORT = 809;
+	
 	/**
 	 * 初始化页面
 	 * @return
@@ -143,6 +145,7 @@ public class OnlineUpgradeAction extends BaseAction{
 	private int sendUpgradeMessage(String path, String version, String ip){
 		HttpClient httpclient = new HttpClient();
 
+		ip = "http://" + ip + ":" + PORT;
 	   
 		httpclient.getParams().setConnectionManagerTimeout(5000);
 

@@ -2,6 +2,7 @@ package com.dvnchina.advertDelivery.awaitDoing.action;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,9 +18,9 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import com.dvnchina.advertDelivery.accounts.service.ContractAccountsService;
-import com.dvnchina.advertDelivery.action.BaseActionSupport;
 import com.dvnchina.advertDelivery.awaitDoing.service.AwaitDoingService;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.common.BaseAction;
 import com.dvnchina.advertDelivery.constant.ResourceMetasConstant;
 import com.dvnchina.advertDelivery.meterial.service.MeterialManagerService;
 import com.dvnchina.advertDelivery.model.UserLogin;
@@ -29,10 +30,11 @@ import com.dvnchina.advertDelivery.ploy.service.PloyService;
 import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.position.service.PositionService;
 import com.dvnchina.advertDelivery.sysconfig.service.BaseConfigService;
+import com.dvnchina.advertDelivery.utils.StringUtil;
 import com.dvnchina.advertDelivery.warn.bean.WarnInfo;
 import com.dvnchina.advertDelivery.warn.service.WarnService;
 
-public class AwaitDoing extends BaseActionSupport<Object> implements
+public class AwaitDoing extends BaseAction implements
 		ServletRequestAware {
 
 	private static final long serialVersionUID = 1L;
@@ -63,30 +65,45 @@ public class AwaitDoing extends BaseActionSupport<Object> implements
 	 * @return 
 	 */
 	public String getHomePageAwaitingDoing() {
-		UserLogin userLogin = (UserLogin) this.getRequest().getSession().getAttribute("USER_LOGIN_INFO");
+		UserLogin userLogin = (UserLogin) getLoginUser();
+		String areaCodes = userLogin.getAreaCodes();
+		String packageIds = StringUtil.objListToString(userLogin.getPositionIds(), ",", "-1");
+		String accessUserIds = StringUtil.objListToString(userLogin.getAccessUserIds(), ",", "-1");
 		try {
-			lstMarginFreePosition = getFreePositionRemind(userLogin);
+			//lstMarginFreePosition = getFreePositionRemind(userLogin);
+			value = baseConfigService.getBaseConfigByCode(ResourceMetasConstant.FREE_POSITION_REMIND);
+			Date today = getCurDay();
+			Date shiftDate = this.addDay(today, Integer.valueOf(value));
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String startDateStr = sdf.format(today);
+			String endDateStr = sdf.format(shiftDate);
+			lstMarginFreePosition = awaitDoingService.getFreePositionRemind(packageIds, areaCodes, startDateStr, endDateStr);
 		} catch (Exception e) {
 			lstMarginFreePosition = null;
 			logger.error("查询空档广告位出错", e);
 		}
 		try {
 			// 资产审核代办事项
-			materialAuditAwaiting = meterialManagerService.queryMaterialWaitingAuditCount(positionIds);
+			//materialAuditAwaiting = meterialManagerService.queryMaterialWaitingAuditCount(positionIds);
+			materialAuditAwaiting = meterialManagerService.getAuditMateNum(accessUserIds);
+						
 		} catch (Exception e) {
 			logger.error("查询待办素材审核时出错", e);
 			materialAuditAwaiting = 0;
 		}
 		try {
 			// 投放策略审核代办事项
-			ployAuditAwaiting = ployService.getWaitingAuditPloyCount(positionIds);
+			//ployAuditAwaiting = ployService.getWaitingAuditPloyCount(positionIds);
+			ployAuditAwaiting = ployService.getWaitingAuditPloyNum(accessUserIds);
 		} catch (Exception e) {
 			logger.error("查询待办策略审核时出错", e);
 			ployAuditAwaiting = 0;
 		}
 		try {
 			// 订单审核代办事项提醒
-			orderAuditAwaiting = orderService.getWaitingAuditOrderCount(positionIds);
+			//orderAuditAwaiting = orderService.getWaitingAuditOrderCount(positionIds);
+			orderAuditAwaiting = orderService.getWaitingAuditOrderNum(accessUserIds);
 		} catch (Exception e) {
 			logger.error("查询待办订单审核时出错", e);
 			orderAuditAwaiting = 0;
@@ -94,7 +111,7 @@ public class AwaitDoing extends BaseActionSupport<Object> implements
 		try {
 			// 合同欠费停播提醒代办事情
 			Date shiftDate = this.addDay(getCurDay(), 7);
-			expireingContractCount = contractAccountsService.getExpireingContractCount(contractIds, getCurDay(), shiftDate);
+			expireingContractCount = 0; //contractAccountsService.getExpireingContractCount(contractIds, getCurDay(), shiftDate);
 		} catch (Exception e) {
 			logger.error("查询待办将要到期欠费的合同时出错", e);
 			expireingContractCount = 0;
@@ -108,7 +125,7 @@ public class AwaitDoing extends BaseActionSupport<Object> implements
 		}
 		
 		//获取到达门限值的问卷订单列表
-		findQuestionnaireOrderList(userLogin);
+		//findQuestionnaireOrderList(userLogin);
 		return SUCCESS;
 	}
 
@@ -270,9 +287,9 @@ public class AwaitDoing extends BaseActionSupport<Object> implements
         calendar.setTimeInMillis(date.getTime());
         
         calendar.add(Calendar.DAY_OF_MONTH, n);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND,59);
+//        calendar.set(Calendar.HOUR_OF_DAY, 23);
+//        calendar.set(Calendar.MINUTE, 59);
+//        calendar.set(Calendar.SECOND,59);
         return new Date(calendar.getTimeInMillis());
     }
 	

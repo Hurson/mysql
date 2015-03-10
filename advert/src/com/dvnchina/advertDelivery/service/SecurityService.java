@@ -70,10 +70,10 @@ public interface SecurityService {
 	 * @return
 	 */
 	
-	public String getUserOwnLocationCodes(Integer userId);
+	public String getUserOwnLocationCodes(Integer userId, Integer roleType);
 	
 	
-	public List<Integer> getAccessUserIdList(Integer userId);
+	public List<Integer> getAccessUserIdList(List<Integer> lstPositionPackageIds,String locationCodes,Integer userId, Integer roleType, Integer customerId);
 	/**
 	 * 获取地区    用户所在的地区
 	 * @param userId
@@ -88,7 +88,7 @@ public interface SecurityService {
 	 */
 	public void logout(User user);
 
-	List<Integer> getPositionPackageIds(Integer userId);
+	List<Integer> getPositionPackageIds(Integer userId, Integer roleType);
 
 	Integer getCustomerIds(Integer userId);
 

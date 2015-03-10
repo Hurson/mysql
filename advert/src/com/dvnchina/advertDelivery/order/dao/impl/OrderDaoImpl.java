@@ -1445,6 +1445,18 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		return rowcount;
 	}
 	
+	
+	
+	@Override
+	public int getWaitingAuditOrderNum(String accessUserIds) {
+		String sql = "select count(1) from t_order where state in(1,2,3) and operator_id in(" + accessUserIds + ")";
+		List list = getDataBySql(sql, null);
+		if(null != list && list.size() > 0){			
+			return toInteger(list.get(0));
+		}
+		return 0;
+	}
+
 	/**
 	 * 根据广告位类型获取图片素材文件总大小
 	 * @param positionType 广告位类型

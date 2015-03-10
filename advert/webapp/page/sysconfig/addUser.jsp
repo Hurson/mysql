@@ -147,13 +147,13 @@
 			 }
 		}
 		
-		if($("#roleId").val() == 2 && $("#user_positions").val() == '' ){
+		if(roleType == '2' && $("#user_positions").val() == '' ){
 			alert("请选择广告位！");
 			$("#user_positions").focus();
 			return false;
 		}
 		
-		if($("#roleId").val() == 2 && $("#user_area_names").val() == '' ){
+		if(roleType == '2' && $("#user_area_names").val() == '' ){
 			alert("请选择区域！");
 			$("#user_area_names").focus();
 			return false;

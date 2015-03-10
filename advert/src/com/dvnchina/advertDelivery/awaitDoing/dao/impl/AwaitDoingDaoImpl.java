@@ -56,4 +56,35 @@ public class AwaitDoingDaoImpl extends BaseDaoImpl implements AwaitDoingDao{
 		List list = this.getDataBySql(sql, null);
 		return list;
 	}
+
+	@Override
+	public List<String> getFreePositionRemind(String packageIds,String areaCodes, String startDateStr, String endDateStr) {
+		String sql = "select a.position_name from t_advertposition a where a.position_package_id in(" + packageIds + ")"
+				+ " and not exists (select 1 from t_order o, t_ploy p where a.id = o.position_id and o.ploy_id = p.ploy_id"
+				+ " and p.area_id in(" + areaCodes + ") and o.start_time <= '" + startDateStr + "' and o.end_time >= '" + endDateStr + "')";
+		List list = this.getDataBySql(sql, null);
+		List<String> resultList = new ArrayList<String>();
+		for(Object obj : list){
+			resultList.add((String)obj);
+		}
+		return resultList;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

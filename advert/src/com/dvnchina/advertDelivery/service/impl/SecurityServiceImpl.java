@@ -124,14 +124,14 @@ public class SecurityServiceImpl implements SecurityService{
 	}
 
 	@Override
-	public String getUserOwnLocationCodes(Integer userId){
+	public String getUserOwnLocationCodes(Integer userId, Integer roleType){
 		
 		StringBuffer sb = new StringBuffer();
 		List<String> locationCodeList = new ArrayList<String>();
-		User user = userDao.getUserDetailById(userId);
-		if(user !=null && user.getRoleType()==2){
+		//User user = userDao.getUserDetailById(userId);
+		if(roleType == 2){
 			locationCodeList = userLocationDao.getUserOwnLocationCodes(userId);
-		}else if(user != null && user.getRoleType() == 1){
+		}else if(roleType == 1){
 			locationCodeList = userLocationDao.getUserOwnLocationCodes2(userId);
 		}
 		 
@@ -142,21 +142,55 @@ public class SecurityServiceImpl implements SecurityService{
 		if(sb.length() > 0){
 			return sb.toString().substring(1);
 		}
-		return "";
+		return "-1";
 		
 	}
 	
 	@Override
-	public List<Integer> getAccessUserIdList(Integer userId){
-		User user = userDao.getUserDetailById(userId);
-		if(user !=null && user.getRoleType()==2){
-			return userLocationDao.getAccessUserIdList(userId);
-		}else {
-			List<Integer> userIdList = new ArrayList<Integer>();
-			userIdList.add(userId);
-			return userIdList;
+	public List<Integer> getAccessUserIdList(List<Integer> lstPositionPackageIds,String locationCodes,Integer userId,Integer roleType, Integer customerId){
+		//User user = userDao.getUserDetailById(userId);
+		
+		if(roleType == 2){  //运营商
+			List<Integer> userIdList = userLocationDao.getAllAvailableUserId(userId);
+			List<Integer> resultList = new ArrayList<Integer>();
+			resultList.add(userId);
+			if(null != userIdList && userIdList.size() > 0){
+				for(Integer currentUserId : userIdList){
+					Integer currentRoleType = getRoleTypeByUserId(currentUserId);
+					
+					List<Integer> currentPackageIdList = getPositionPackageIds(currentUserId, currentRoleType);
+					String currentLocationCodes = getUserOwnLocationCodes(currentUserId, currentRoleType);
+					
+					if(lessThan(currentPackageIdList, lstPositionPackageIds) && lessThan(currentLocationCodes, locationCodes)){
+						resultList.add(currentUserId);
+					}
+				}
+			}
+			return resultList;
+			
+		}else {  //广告商
+			return userLocationDao.getCustomerAccessUserIdList(customerId);
 		}
 		
+	}
+	
+	private boolean lessThan(List<Integer> userIdList, List<Integer> loginUserIdList){
+		for(Integer userId : userIdList){
+			if(!loginUserIdList.contains(userId)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean lessThan(String locationCodes, String loginUserlocationCodes){
+		String[] areaCodeArray = locationCodes.split(",");
+		for(String areaCode : areaCodeArray){
+			if(loginUserlocationCodes.indexOf(areaCode) < 0){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -173,8 +207,8 @@ public class SecurityServiceImpl implements SecurityService{
 		return userCustomerDao.getCustomerIds(userId);
 	}
 	@Override
-	public List<Integer> getPositionPackageIds(Integer userId){
-		return userCustomerDao.getPositionPackageIds(userId);
+	public List<Integer> getPositionPackageIds(Integer userId, Integer roleType){
+		return userCustomerDao.getPositionPackageIds(userId,roleType);
 	}
 
 	@Override

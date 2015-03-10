@@ -20,5 +20,7 @@ public interface AwaitDoingDao {
 	 * @return
 	 */
 	public List<Object[]> getPositionContractByCustomer(Integer customerId);
+	
+	public List<String> getFreePositionRemind(String packageIds, String areaCodes, String startDateStr, String endDateStr);
 
 }

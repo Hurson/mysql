@@ -29,7 +29,7 @@ public interface UserCustomerDao  extends BaseDao{
 	
 	public Integer getCustomerIds(Integer userId);
 	
-	public List<Integer> getPositionPackageIds(Integer userId);
+	public List<Integer> getPositionPackageIds(Integer userId, Integer roleType);
 	
 	public void addUserAdvertPackage(List<UserPositionPackage> list);
 

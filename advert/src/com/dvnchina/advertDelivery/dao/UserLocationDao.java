@@ -50,6 +50,11 @@ public interface UserLocationDao  extends BaseDao{
 	 * @return
 	 */
 	public List<Integer> getAccessUserIdList(Integer userId);
+	
+	public List<Integer> getCustomerAccessUserIdList(Integer customerId);
+	
+	public List<Integer> getAllAvailableUserId(Integer exceptId);
+	
 	/**
 	 * 分页查询所有区域
 	 * @param start

@@ -671,8 +671,8 @@ function closeSavePane() {
 		}
 		
 		
-		if(!isEmpty($$("textMeta.durationTime").value) && !isNumber($$("textMeta.durationTime").value)){
-			alert("文本显示持续时间只能是数字！");
+		if(isEmpty($$("textMeta.durationTime").value)){
+			alert("文本显示持续时间不能为空！");
 			$$("textMeta.durationTime").focus();
 			return true;
 		}
@@ -1000,11 +1000,11 @@ function closeSavePane() {
                          </td>
                       </tr>
                       <tr>
-                          <td  align="right"><span class="required"></span>文本显示动作：</td>
+                          <td  align="right"></td>
                           <td>
                           <!--<input id="textMeta.action" name="textMeta.action" value="${textMeta.action}" />  -->
 	            		      
-	            		      <select  id="sel_textMeta_action"  name="textMeta.action" onchange="changeTextAction()">
+	            		      <select style="display:none" id="sel_textMeta_action"  name="textMeta.action" onchange="changeTextAction()">
 								               <!-- <option id="action_id" value="-1">请选择...</option>
 										         --> 
 										        <option  value="1" <c:if test="${textMeta.action== 1}">selected="selected"</c:if> >
@@ -1016,9 +1016,9 @@ function closeSavePane() {
 										      
 							  </select>
                           </td>
-                          <td  align="right"><span class="required"></span></td>
+                          <td  align="right"><span class="required">*</span>显示持续时间（毫秒）：</td>
                           <td>
-	            		      <input style="display:none" id="textMeta.durationTime" name="textMeta.durationTime" value="${textMeta.durationTime}"/>
+	            		      <input  id="textMeta.durationTime" name="textMeta.durationTime" value="${textMeta.durationTime}"/><span class="required">0表示一直显示</span>
                          </td>
                       </tr>
                       <tr>
@@ -1028,13 +1028,13 @@ function closeSavePane() {
                           </td>
                           <td  align="right"><span class="required"></span>文字颜色：</td>
                           <td>
-	            		      <input id="textMeta.fontColor" class="color" name="textMeta.fontColor" value="${textMeta.fontColor}"/><span class="required">格式：#235612</span>
+	            		      <input id="textMeta.fontColor" class="color" onchange="showText();" name="textMeta.fontColor" value="${textMeta.fontColor}"/><span class="required">格式：235612</span>
                          </td>
                       </tr>
                       <tr>
                           <td  align="right"><span class="required"></span>文本显示背景色：</td>
                           <td>
-	            		      <input id="textMeta.bkgColor" class="color" name="textMeta.bkgColor" value="${textMeta.bkgColor}"/><span class="required">格式：#235612</span>
+	            		      <input id="textMeta.bkgColor" name="textMeta.bkgColor" onchange="showText();" value="${textMeta.bkgColor}"/><span class="required">格式：235612</span>
                           </td>
                           <td  align="right"><span class="required"></span>文本显示滚动速度：</td>
                           <td>
@@ -1042,6 +1042,9 @@ function closeSavePane() {
 	            		  -->	     
 	            		      
 	            		        <select  id="textMeta.rollSpeed"  name="textMeta.rollSpeed" onchange="showText();">
+	            		        				 <option  value="0" <c:if test="${textMeta.rollSpeed==0}">selected="selected"</c:if> >
+										                         静止
+										         </option>
 								                 <option  value="2" <c:if test="${textMeta.rollSpeed==2}">selected="selected"</c:if> >
 										                        低速
 										        </option>

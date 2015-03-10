@@ -817,7 +817,14 @@ public class OrderServiceImpl implements OrderService{
 	public int getWaitingAuditOrderCount(String ids){
 		return orderDao.getWaitingAuditOrderCount(ids);
 	}
+		
 	
+	@Override
+	public int getWaitingAuditOrderNum(String accessUserIds) {
+		
+		return orderDao.getWaitingAuditOrderNum(accessUserIds);
+	}
+
 	/**
 	 * 根据素材ID获取素材信息
 	 * @param id

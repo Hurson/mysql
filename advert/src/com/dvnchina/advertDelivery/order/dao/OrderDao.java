@@ -240,6 +240,8 @@ public interface OrderDao extends BaseDao{
 	 */
 	public int getWaitingAuditOrderCount(String ids);
 	
+	public int getWaitingAuditOrderNum(String accessUserIds);
+	
 	/**
 	 * 根据订单ID获取待恢复订单列表
 	 * @param ids

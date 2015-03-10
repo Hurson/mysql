@@ -1068,6 +1068,14 @@ public class PloyServiceImpl implements PloyService {
 	public int getWaitingAuditPloyCount(String ids){
 		return ployDao.getWaitingAuditPloyCount(ids);
 	}
+		
+	
+	@Override
+	public int getWaitingAuditPloyNum(String accessUserIds) {
+		
+		return ployDao.getWaitingAuditPloyNum(accessUserIds);
+	}
+
 	/**
 	 * 校验策略是否可删除
 	 * return 1不可删除 0 可删除

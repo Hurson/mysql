@@ -1395,6 +1395,7 @@ function addTvnNumber()
     row.appendChild(td1);
     row.appendChild(td2);
     tab.appendChild(row);  
+    document.getElementById("addTvnBtn").disabled="true";
 }
 function add_Npvr(npvrid,npvrname)
 {
@@ -3173,11 +3174,12 @@ function exporttvn(objname)
                 </td>
               </tr>
              </c:forEach>
+             
             </table>
         </div></td>
       </tr>
       <tr>
-        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="addTvnNumber()"/>
+        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" id="addTvnBtn" onclick="addTvnNumber()"/>
             <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable17','selectedcheckbox17')" />
         </td>
       </tr>

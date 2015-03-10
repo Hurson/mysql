@@ -97,6 +97,15 @@ public class MeterialManagerServiceImpl implements MeterialManagerService{
 		
 		return meterialManagerDao.queryMeterialList(resource, accessUserIds, pageSize, pageNumber);
 	}
+	
+	
+
+
+	@Override
+	public int getAuditMateNum(String accessUserIds) {
+		
+		return meterialManagerDao.getAuditMateNum(accessUserIds);
+	}
 
 
 	/**

@@ -274,6 +274,19 @@ public class MeterialManagerDaoImpl extends HibernateSQLTemplete implements Mete
 	     }
 	     return pageResultList; 
 	}
+	
+	
+
+
+	@Override
+	public int getAuditMateNum(String accessUserIds) {
+		String sql = "select count(1) from t_resource_backup where state = 0 and operation_id in(" + accessUserIds + ")";
+		List list = getDataBySql(sql, null);
+		if(null != list && list.size() > 0){			
+			return toInteger(list.get(0));
+		}
+		return 0;
+	}
 
 
 	/**

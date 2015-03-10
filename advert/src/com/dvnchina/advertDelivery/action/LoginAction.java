@@ -154,24 +154,33 @@ public class LoginAction extends BaseActionSupport<Object>  {
 			}
 			List<Column> userOwnCoulumn = securityService.getColumnByUserId(userId);
 			Integer id = Integer.valueOf(userId);
-			//绑定的区域码列表
-			String locationCodes = securityService.getUserOwnLocationCodes(id);
-			//登陆用户具有访问权限的用户id
-			List<Integer> accessUserId = securityService.getAccessUserIdList(id);
 			
-			List<Integer> lstPositionPackageIds = securityService.getPositionPackageIds(id);
+			//用户角色类型
 			int roleType = securityService.getRoleTypeByUserId(id);
+			
+			//广告商Id
 			Integer customerId = 0;
 			if(roleType == 1){
 				customerId = securityService.getCustomerIds(id);
 			}
+			
+			//绑定的广告位包Id
+			List<Integer> lstPositionPackageIds = securityService.getPositionPackageIds(id, roleType);
+			
+			//绑定的区域码列表
+			String locationCodes = securityService.getUserOwnLocationCodes(id, roleType);
+			
+			//登陆用户具有访问权限的用户id
+			List<Integer> accessUserId = securityService.getAccessUserIdList(lstPositionPackageIds,locationCodes,id,roleType, customerId);
+			
+			
 			UserLogin userLogin = (UserLogin) this.getRequest().getSession().getAttribute("USER_LOGIN_INFO");
 			if(userLogin != null){
+				userLogin.setRoleType(roleType);
 				userLogin.setCustomerId(customerId);
 				userLogin.setPositionIds(lstPositionPackageIds);
 				userLogin.setAreaCodes(locationCodes);
 				userLogin.setAccessUserIds(accessUserId);
-				userLogin.setRoleType(roleType);
 			}
 			
 			request.setAttribute("flag", "test");

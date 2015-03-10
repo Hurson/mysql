@@ -1236,6 +1236,17 @@ public class PloyDaoImpl extends BaseDaoImpl implements PloyDao {
 		Long count = getDataTotal(sql, null);
 		return count.intValue();
 	}
+		
+	
+	@Override
+	public int getWaitingAuditPloyNum(String accessUserIds) {
+		String sql = "select count(1) from t_ploy_backup where state <> '1' and delflag = 0 and operator_id in(" + accessUserIds + ")";
+		List list = getDataBySql(sql, null);
+		if(null != list && list.size() > 0){			
+			return toInteger(list.get(0));
+		}
+		return 0;
+	}
 	/**
 	 * 校验策略是否可删除
 	 * return 1不可删除 0 可删除

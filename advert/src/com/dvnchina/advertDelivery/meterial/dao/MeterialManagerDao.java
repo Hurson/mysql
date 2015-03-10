@@ -44,6 +44,7 @@ public interface MeterialManagerDao {
     
     public PageBeanDB queryMeterialList(Resource resource, String accessUserIds, Integer pageSize, Integer pageNumber);
     
+    public int getAuditMateNum(String accessUserIds);
     
     /**
      * 

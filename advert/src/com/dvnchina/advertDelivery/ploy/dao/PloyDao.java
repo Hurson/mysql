@@ -184,6 +184,8 @@ public interface PloyDao {
 	 */
 	public int getWaitingAuditPloyCount(String ids);
 	
+	public int getWaitingAuditPloyNum(String accessUserIds);
+	
 	/**
 	 * 校验策略是否可删除
 	 * return 1不可删除 0 可删除

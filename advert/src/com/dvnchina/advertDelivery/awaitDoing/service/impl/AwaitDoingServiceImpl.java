@@ -33,4 +33,12 @@ public class AwaitDoingServiceImpl implements AwaitDoingService{
 		this.awaitDoingDao = awaitDoingDao;
 	}
 
+	@Override
+	public List<String> getFreePositionRemind(String packageIds, String areaCodes, String startDateStr, String endDateStr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+
 }

@@ -55,6 +55,23 @@ public class UserLocationDaoImpl extends BaseDaoImpl implements UserLocationDao{
 		
 		return query.list();
 	}
+		
+	
+	@Override
+	public List<Integer> getCustomerAccessUserIdList(Integer customerId) {
+		String sql = "select distinct u.user_id from t_user u, t_user_adcustomer uc where u.user_id = uc.user_id and uc.cutomer_id = " + customerId + " and u.delflag = 0";
+		Query query = this.getSession().createSQLQuery(sql).addScalar("user_id",Hibernate.INTEGER);
+		return query.list();
+	}
+	
+
+	@Override
+	public List<Integer> getAllAvailableUserId(Integer exceptId) {
+		String sql = "select distinct user_id from t_user where delflag = 0 and user_id <>" + exceptId;
+		Query query = this.getSession().createSQLQuery(sql).addScalar("user_id",Hibernate.INTEGER);
+		return query.list();
+	}
+
 	@Override
 	public PageBeanDB queryAllLocations(int pageNo, int pageSize){
 
