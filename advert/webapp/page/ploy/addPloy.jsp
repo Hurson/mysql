@@ -171,7 +171,7 @@ var firstflag=true;
 	if (radio!=null && radio.length>0)
 	{
 		document.getElementById("selectedtable17").style.display="";
-		document.getElementById("tvnBtn").style.display="none";
+		$("#tvnBtn :button").attr("disabled",true);
 		document.getElementById("selectedOption17").checked=true;
 	}   
 	changePosition();
@@ -1113,7 +1113,7 @@ function addselectContract() {
 		 {
 			document.getElementById("selectedtable"+selecttable).style.display="" ;
 			if(selecttable == 17){
-				document.getElementById("tvnBtn").style.display="" ;
+				$("#tvnBtn :button").attr("disabled",false);
 			}
 			//selectedtable0
 		 }
@@ -1399,7 +1399,7 @@ function addTvnNumber()
     row.appendChild(td2);
     tab.appendChild(row); 
     if(document.getElementsByName("preciseUiBean.tvnNumber").length>0){
-    	document.getElementById("tvnBtn").style.display="none";
+    	$("#tvnBtn :button").attr("disabled",true);
     }
     //document.getElementById("addTvnBtn").disabled="true";
 }
@@ -3187,6 +3187,7 @@ function exporttvn(objname)
       <tr id="tvnBtn" >
         <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="addTvnNumber()"/>
             <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable17','selectedcheckbox17')" />
+        
         </td>
       </tr>
     </table>

@@ -677,7 +677,7 @@ function closeSavePane() {
 			return true;
 		}
 		
-		if($$("sel_textMeta_action").value=='1'){
+		//if($$("sel_textMeta_action").value=='1'){
 		//滚动
 			if(!isEmpty($$("textMeta.rollSpeed").value) && !isNumber($$("textMeta.rollSpeed").value)){
 			alert("文本显示滚动速度只能是数字！");
@@ -685,7 +685,7 @@ function closeSavePane() {
 			return true;
 		    }
 
-		    if($$("textMeta.rollSpeed").value<=0){
+		    if($$("textMeta.rollSpeed").value<0){
 		    alert("文本显示滚动速度必须大于0！");
 			$$("textMeta.rollSpeed").focus();
 			return true;
@@ -696,7 +696,7 @@ function closeSavePane() {
 			$$("textMeta.rollSpeed").focus();
     		return true;
 		}
-		}
+		//}
 		
 		if(!isEmpty($$("textMeta.durationTime").value) && !isNumber($$("textMeta.durationTime").value)){
 			alert("文本显示持续时间只能是数字！");
