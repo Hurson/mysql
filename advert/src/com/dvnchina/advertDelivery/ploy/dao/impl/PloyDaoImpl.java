@@ -193,7 +193,22 @@ public class PloyDaoImpl extends BaseDaoImpl implements PloyDao {
 	   
 	      //分页查询 
 	      List params = null;
-	      return this.getPageList(sql, params, pageNumber, pageSize); 
+	      PageBeanDB page = this.getPageList(sql, params, pageNumber, pageSize);
+	      List<PloyBackup> data = (List<PloyBackup>)page.getDataList();
+	      
+	      //查询策略是否已关联订单，修改策略显示状态
+	      String hql = "from Order o where o.ployId = ?";
+	      if(data != null && data.size() > 0){
+	    	  int count = 0;
+	    	  for(PloyBackup record : data){
+	    		  count = getTotalCountHQL(hql,new Integer[]{record.getPloyId()});
+	    		  if(count > 0){
+	    			  record.setState("3");
+	    		  }
+	    	  }
+	      }
+	      
+	      return page;
 	}
 
 	@Override
@@ -1240,7 +1255,7 @@ public class PloyDaoImpl extends BaseDaoImpl implements PloyDao {
 	
 	@Override
 	public int getWaitingAuditPloyNum(String accessUserIds) {
-		String sql = "select count(1) from t_ploy_backup where state <> '1' and delflag = 0 and operator_id in(" + accessUserIds + ")";
+		String sql = "select count(distinct ploy_id) from t_ploy_backup where state <> '1' and delflag = 0 and operator_id in(" + accessUserIds + ")";
 		List list = getDataBySql(sql, null);
 		if(null != list && list.size() > 0){			
 			return toInteger(list.get(0));

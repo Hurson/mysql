@@ -719,7 +719,7 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 			}
 									
 		}
-		print(result);
+		renderText(result);
 		return NONE;
 	}
     
@@ -752,7 +752,7 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 			}
 									
 		}
-		print(result);
+		renderText(result);
 		return NONE;
 	}
 	
@@ -1604,7 +1604,7 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 			}
 		}
 
-		print(result);
+		renderText(result);
 		return NONE;
 	}
     

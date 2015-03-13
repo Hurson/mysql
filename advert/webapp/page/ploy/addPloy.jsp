@@ -171,6 +171,7 @@ var firstflag=true;
 	if (radio!=null && radio.length>0)
 	{
 		document.getElementById("selectedtable17").style.display="";
+		document.getElementById("tvnBtn").style.display="none";
 		document.getElementById("selectedOption17").checked=true;
 	}   
 	changePosition();
@@ -1111,7 +1112,9 @@ function addselectContract() {
 		 if (object.checked==true)
 		 {
 			document.getElementById("selectedtable"+selecttable).style.display="" ;
-			
+			if(selecttable == 17){
+				document.getElementById("tvnBtn").style.display="" ;
+			}
 			//selectedtable0
 		 }
 		 else
@@ -1394,8 +1397,11 @@ function addTvnNumber()
 	row.setAttribute("id", "contentrow"+(rowcount++));
     row.appendChild(td1);
     row.appendChild(td2);
-    tab.appendChild(row);  
-    document.getElementById("addTvnBtn").disabled="true";
+    tab.appendChild(row); 
+    if(document.getElementsByName("preciseUiBean.tvnNumber").length>0){
+    	document.getElementById("tvnBtn").style.display="none";
+    }
+    //document.getElementById("addTvnBtn").disabled="true";
 }
 function add_Npvr(npvrid,npvrname)
 {
@@ -3178,8 +3184,8 @@ function exporttvn(objname)
             </table>
         </div></td>
       </tr>
-      <tr>
-        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" id="addTvnBtn" onclick="addTvnNumber()"/>
+      <tr id="tvnBtn" >
+        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="addTvnNumber()"/>
             <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable17','selectedcheckbox17')" />
         </td>
       </tr>

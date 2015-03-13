@@ -13,6 +13,12 @@
 <script type="text/javascript" src="<%=path %>/js/jquery/jquery-1.9.0.js"></script>
 <title>广告位运营商指定</title>
 <script type="text/javascript">
+	
+	function init(){
+		var user_positions = window.dialogArguments.document.getElementById("user_position_ids").value;
+		$("#user_positions").val(user_positions); 
+	
+	}
    function save() {
 		if (getCheckCount('packageid') <= 0) {
 			alert("请给运营商指定广告位！");
@@ -32,7 +38,7 @@
 </script>
 </head>
 
-<body class="mainBody">
+<body class="mainBody" onload="init()">
 <div class="search">
 <div class="path">首页 >>用户管理 >> 广告位运营商指定</div>
 <div class="searchContent" >
@@ -40,7 +46,7 @@
 
 <input type="hidden" id="pageNo" name="page.pageNo" value="${page.pageNo}"/>
 <input type="hidden" id="pageSize" name="page.pageSize" value="${page.pageSize}"/>
-
+<input type="hidden" id="user_positions" name="user_positions"/>
 <div id="messageDiv" style="margin-top: 15px;color: red;font-size: 14px;font-weight: bold;"></div> 
 <table cellspacing="1" class="searchList">
     <tr class="title">

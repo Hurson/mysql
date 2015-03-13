@@ -1351,7 +1351,7 @@ function closeSavePane() {
                 		document.getElementById("saveForm").submit();
                 		//alert("ok");
                     }
-                    else
+                    else 
                     {
 						alert("素材名称已存在，请重新输入！");
 						$$("material.resourceName").focus();
@@ -1581,7 +1581,7 @@ function IsAlpha(cCheck) {
 			return true;
 		}
 		}
-		if($$("sel_textMeta_action").value=='1'){
+		//if($$("sel_textMeta_action").value=='1'){
 		//滚动
 			if(!isEmpty($$("textMeta.rollSpeed").value) && !isNumber($$("textMeta.rollSpeed").value)){
 			alert("文本显示滚动速度只能是数字！");
@@ -1589,8 +1589,8 @@ function IsAlpha(cCheck) {
 			return true;
 		    }
 
-		    if($$("textMeta.rollSpeed").value<=0){
-		    alert("文本显示滚动速度必须大于0！");
+		    if($$("textMeta.rollSpeed").value<0){
+		    alert("文本显示滚动速度必须大于等于0！");
 			$$("textMeta.rollSpeed").focus();
 			return true;
 		    }
@@ -1600,7 +1600,7 @@ function IsAlpha(cCheck) {
 			$$("textMeta.rollSpeed").focus();
     		return true;
 		}
-		}
+		//}
 		if(isEmpty($$("textMeta.positionVertexCoordinates").value)){
 			alert("文本显示坐标不能为空！");
 			$$("textMeta.positionVertexCoordinates").focus();
