@@ -34,6 +34,9 @@ public class UixServiceImpl implements UixService {
 	public boolean sendUiUpdateMsg(String mod, String areaCode, Integer type, String updatePath) {
 		String url = InitConfig.getConfigMap().get("nit.interface.address");
 		HttpClient httpClient = new HttpClient();
+		//设置超时
+		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
+		httpClient.getHttpConnectionManager().getParams().setSoTimeout(60000);
         GetMethod getMethod = new GetMethod(bulidGetUrl(url, mod, areaCode, type, updatePath));
         getMethod.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=gbk");    
              

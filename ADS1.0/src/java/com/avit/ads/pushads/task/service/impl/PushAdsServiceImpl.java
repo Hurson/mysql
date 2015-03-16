@@ -2852,8 +2852,8 @@ public class PushAdsServiceImpl implements PushAdsService {
 	        }
 		
 			//查询新增列表， 下载素材到本地 
-	        String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.areas = ? and ads.endTime >=? and (ads.adSiteCode =? or ads.adSiteCode =? )";
-	        List<AdPlaylistGis> newResultList = pushAdsDao.getTemplate().find(newHql, areaCode, startTime, ConstantsAdsCode.PUSH_FREQUENCE_HD, ConstantsAdsCode.PUSH_LIVE_UNDER_HD);
+	        String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.areas = ? and ads.startTime <=? and ads.endTime >=? and (ads.adSiteCode =? or ads.adSiteCode =? )";
+	        List<AdPlaylistGis> newResultList = pushAdsDao.getTemplate().find(newHql, areaCode, startTime, startTime, ConstantsAdsCode.PUSH_FREQUENCE_HD, ConstantsAdsCode.PUSH_LIVE_UNDER_HD);
 			if(null != newResultList && newResultList.size() > 0){
 				changed = true; 
 				Gson gson = new Gson();	
@@ -2961,8 +2961,9 @@ public class PushAdsServiceImpl implements PushAdsService {
 		sendChannelSubtitle(overdueList, "0", "4");
 		
 		//查询新增列表（播出单结束时间 > 当前时间，且状态为0），发送显示字幕，更新播出单状态为1
-		String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.endTime >=? and ads.adSiteCode =? ";       
-		List<AdPlaylistGis> newList = pushAdsDao.getTemplate().find(newHql, new Date(), ConstantsAdsCode.PUSH_CHANNEL_SUBTITLE);
+		String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.startTime <= ? and ads.endTime >=? and ads.adSiteCode =? ";    
+		Date now = new Date();
+		List<AdPlaylistGis> newList = pushAdsDao.getTemplate().find(newHql, now, now, ConstantsAdsCode.PUSH_CHANNEL_SUBTITLE);
 		sendChannelSubtitle(newList, "1", "1");
 		
 	}
@@ -3061,8 +3062,9 @@ public class PushAdsServiceImpl implements PushAdsService {
 		sendSubtitle(overdueList, "0", "4");
 		
 		//查询新增列表（播出单结束时间 > 当前时间，且状态为0），发送显示字幕，更新播出单状态为1
-		String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.endTime >=? and ads.adSiteCode =? ";       
-		List<AdPlaylistGis> newList = pushAdsDao.getTemplate().find(newHql, new Date(), ConstantsAdsCode.PUSH__SUBTITLE);
+		String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.startTime <= ? and ads.endTime >=? and ads.adSiteCode =? ";   
+		Date now = new Date();
+		List<AdPlaylistGis> newList = pushAdsDao.getTemplate().find(newHql, now, now, ConstantsAdsCode.PUSH__SUBTITLE);
 		sendSubtitle(newList, "1", "1");
 	}
 	

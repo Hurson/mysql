@@ -71,14 +71,7 @@
 	<Npvr ip="192.168.2.224" port="21" user="root" pwd="111111" >
 	</Npvr>
 	<!-- OCG投放信息 -->
-	<Ocg streamId="2" bitrate="1000" sendAddress="224.0.0.3" sendPort="19668"></Ocg>
-	<Ocg streamId="3" bitrate="1000" sendAddress="224.0.0.4" sendPort="19667"></Ocg>
-	<Ocg streamId="4" bitrate="1000" sendAddress="224.0.0.5" sendPort="19666"></Ocg>
-	<Ocg streamId="6" bitrate="1000" sendAddress="224.0.0.6" sendPort="19665"></Ocg>
-	<!-- 下面三种用于测试，暂无广告 -->
-	<Ocg streamId="1" bitrate="1000" sendAddress="224.0.0.6" sendPort="19665"></Ocg>
-	<Ocg streamId="5" bitrate="1000" sendAddress="224.0.0.6" sendPort="19665"></Ocg>
-	<Ocg streamId="7" bitrate="1000" sendAddress="224.0.0.6" sendPort="19665"></Ocg>
+	<Ocg streamId="0" bitrate="1000" sendAddress="224.0.0.3" sendPort="19668"></Ocg>
 	
 	<!--UNT  UI  -->
 	<HttpServer ip="192.168.102.104" port="21" user="root" pwd="111111" adsTempPath="/root/adstemp/start" adsTargetPath="httpPath" httpurl="http://www.baidu.com">

@@ -158,5 +158,6 @@ public interface OcgService {
 	
 	public boolean sendUNTMessageUpdateByIp(String ip,int sendType,Object message,String areaCode);
 	
+	public boolean sendUntUpdateByAreaCode(int sendType,Object message,String areaCode);
 	
 }

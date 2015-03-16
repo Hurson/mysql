@@ -880,6 +880,88 @@ public class OcgServiceImpl implements OcgService {
 		}
 		return false;	
 	}
+	
+	
+
+	public boolean sendUntUpdateByAreaCode(int sendType, Object message, String areaCode) {
+		
+		UNTMessage uNTMessage = new UNTMessage();
+		uNTMessage.setSendType(sendType + "");
+
+		switch (sendType) {
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_WEATHER:
+				uNTMessage.setWeatherforecast((Weatherforecast) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE:
+				uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
+				uNTMessage.setAdsConfig((AdsConfigJs) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE:
+				uNTMessage.setAdsImage((AdsImage) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_STB:
+				uNTMessage.setSystemMaintain((SystemMaintain) message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE:
+				uNTMessage.setChannelSubtitle((ChannelSubtitle)message);
+				break;
+			case ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNE_RECOMMEND:
+				uNTMessage.setChannelRecomend((ChannelRecomend) message);
+				break;
+			default:
+				break;
+		}
+
+		String sendMsg = helper.toXML(uNTMessage);
+		String destPath =InitConfig.getConfigMap().get(ConstantsHelper.DEST_FILE_PATH);
+		String logPath = InitConfig.getConfigMap().get(ConstantsHelper.LOG_FILE_PATH)+File.separator+ConstantsHelper.LOG_FILE_NAME;
+		int version = untDao.getUntVersion(areaCode, sendType);
+		version = (version + 1) % 32;
+		
+		boolean result = GenerateFileJni.getInstance().geneTSFile(sendMsg, version, version, destPath, logPath);
+		
+		boolean success = false;
+		
+		if(result){
+			List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+			boolean ocgExist = false;
+			for (OcgInfo ocg : ocgList) {
+				if (ocg.getAreaCode().equals(areaCode)) {
+					ocgExist = true;	
+					HeaderInfo headerInfo = new HeaderInfo("0", ocg.getMulticastBitrate(),ocg.getMulticastIp(), ocg.getMulticastPort());
+					String url = "http://" + ocg.getIp() + ":" + ConstantsHelper.OCG_HTTP_PORT;
+					HttpResponse res = sendHttpMsg(headerInfo, url, destPath+File.separator+sendType+ConstantsHelper.TS_FILE_SUFFIX);
+					if(null == res){
+						break;
+					}
+					int code = res.getStatusLine().getStatusCode();
+					if(code == 200){
+						untDao.updateVersion(areaCode, sendType);
+						success = true;
+						logger.info("UNT更新成功！");
+					}else if(code == 400){
+						logger.info("参数格式不正确！");
+					}else if(code == 401){
+						logger.info("发送OCG消息失败！");
+					}
+				}
+			}
+			
+			if(!ocgExist){
+				String errMsg = "t_ocginfo表未配置区域【" + areaCode + "】的OCG信息";
+				logger.error(errMsg);
+				warnHelper.writeWarnMsgToDb(errMsg);
+			}
+			
+		}else{
+			logger.error("构造unt表失败.");
+		}
+		return success;
+
+	}
+
 
 	/**
 	 * 以下全部为调试接口专用
