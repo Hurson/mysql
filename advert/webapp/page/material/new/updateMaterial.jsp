@@ -1198,7 +1198,7 @@ function closeSavePane() {
 						    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 						     position: relative;">
 								<img id="pImage3" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
-								<!-- <img id="mImage" src="${viewPath}/${imageMeta.name}" /> -->
+								<img id="mImage" src="${viewPath}/${imageMeta.name}" />
 							</div>
 					     </td>						
 			         </tr>
@@ -1253,7 +1253,7 @@ function closeSavePane() {
 						    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 						     position: relative;">
 								<img id="pImage4" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
-								<!-- <img id="mImage4" src="${viewPath}/${zipMeta.fileHeigth}" />-->
+								<img id="mImage4" src="${viewPath}/${zipMeta.fileHeigth}" />
 							</div>
 					     </td>						
 			         </tr>
