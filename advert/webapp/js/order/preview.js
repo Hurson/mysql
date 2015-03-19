@@ -220,10 +220,10 @@ function showText(material){
 	//alert(material.text.positionVertexCoordinates);
 	//alert(material.text.positionWidthHeight);
 	//alert(coordinates[0]);
-	var left = coordinates[0]+"px";
-	var bottom = coordinates[1]+"px";					 				  
-	var width = size[0]+"px";
-	var height = size[1]+"px";
+	var left = coordinates[0]/1280*426+"px";
+	var bottom = coordinates[1]/720*240+"px";					 				  
+	var width = size[0]/1280*426+"px";
+	var height = size[1]/720*240+"px";
 	
 	$('#text').css('width',width);
 	$('#text').css('height',height);

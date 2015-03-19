@@ -1717,8 +1717,8 @@ function IsAlpha(cCheck) {
 					}
 					else
 					{
-					   var left = coordinates[0]+"px";
-					   var bottom = coordinates[1]+"px";					 				  
+					   var left = coordinates[0]/1280*426+"px";
+					   var bottom = coordinates[1]/720*240+"px";					 				  
 					   $('#text').css('left',left);
 					   $('#text').css('top',bottom);
 					}				
@@ -1730,8 +1730,8 @@ function IsAlpha(cCheck) {
 					}
 			    else
 			    {
-			    	   var width = size[0]+"px";
-					   var height = size[1]+"px";
+			    	   var width = size[0]/1280*426+"px";
+					   var height = size[1]/720*240+"px";
 					   $('#text').css('width',width);
 					   $('#text').css('height',height);
 					}
@@ -1761,8 +1761,8 @@ function IsAlpha(cCheck) {
 					}
 					else
 					{
-					   var left = coordinates[0]+"px";
-					   var bottom = coordinates[1]+"px";					 				  
+					   var left = coordinates[0]/1280*426+"px";
+					   var bottom = coordinates[1]/720*240+"px";					 				  
 					   $('#text2').css('left',left);
 					   $('#text2').css('top',bottom);
 					}				
@@ -1774,10 +1774,10 @@ function IsAlpha(cCheck) {
 					}
 			    else
 			    {
-			    	 var left = coordinates[0]+"px";
-					   var bottom = coordinates[1]+"px";					 				  
-					   var width = size[0]+"px";
-					   var height = size[1]+"px";
+			    	 var left = coordinates[0]/1280*426+"px";
+					   var bottom = coordinates[1]/720*240+"px";					 				  
+					   var width = size[0]/1280*426+"px";
+					   var height = size[1]/720*240+"px";
 					   $('#text2').css('width',width);
 					   $('#text2').css('height',height);
 					}

@@ -79,7 +79,7 @@ public class OnlineUpgradeAction extends BaseAction{
 		if(descFile.exists()){
 			OperatePropertyFile oper = new OperatePropertyFile(descFile.getAbsolutePath());
 			
-			newVersion = oper.getValue("version");
+			newVersion = "".equals(oper.getValue("version"))? "1.0" : oper.getValue("version");
 			upgradePath = oper.getValue("upgrade_package_file_path");
 		}else{
 			newVersion = "1.0";

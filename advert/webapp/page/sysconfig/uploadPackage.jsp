@@ -16,22 +16,30 @@
 <script src="<%=path%>/js/jquery/ui/jquery.ui.core.js"></script>
 <script src="<%=path%>/js/jquery/ui/jquery.ui.widget.js"></script>
 <script type="text/javascript">
-
+	var result1 =false;
+	var result2 =false;
 	function checkExt(obj){
+		var name=obj.name;
 		var val= obj.value
-		
 		var ext=val.substring(val.lastIndexOf("."),val.length);
-		if(ext == ".txt" || ext ==".war" ||ext==".ear" || ext==".tar" || ext==".zip" || ext==".properties"){
-			return true;
+		if(name == "upgrade" && (ext==".tar" || ext==".zip" )){
+			result1 = true;
+		}
+		
+		else if(name=="description" && val.substring(val.lastIndexOf("\\")+1)=="description.properties"){
+			result2 = true;
 		}else{
 			alert("不支持的文件类型"+ext+",请重新选择！");
 			obj.focus();
 			obj.value="";
-			return false;
 		}
 	}
 	function save() {
-		$("#editForm").submit();
+		if(result1 && result2){
+			$("#editForm").submit();
+		}else{
+			alert("不支持的文件类型,请重新选择！");
+		}
 	}
 	
 </script>
@@ -52,7 +60,7 @@
 		</tr>
 		
 		<tr>
-			<td width="20%" align="right">升级包.war文件：</td>
+			<td width="20%" align="right">升级包压缩文件：</td>
 			<td><input type="file" name="upgrade" onchange="checkExt(this);"/></td>
 		</tr>
 		<tr class="sec">

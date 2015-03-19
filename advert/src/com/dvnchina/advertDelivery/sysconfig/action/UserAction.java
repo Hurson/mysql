@@ -244,7 +244,7 @@ public class UserAction extends BaseAction{
 	public String getUserAdvertPackage(){
 		String user_positions_ids = getRequest().getParameter("user_positions");
 		List<Integer> positionsIdList= StringUtil.getIntegerList(user_positions_ids, PurviewConstant.SIGN_COMMA);
-		page = positionService.queryPositionPackageList(page.getPageNo(), page.getPageSize());
+		page = positionService.queryPositionPackageList(page.getPageNo(), 100);
 		getRequest().setAttribute("positionsIdList", positionsIdList);
 		return SUCCESS;
 	}

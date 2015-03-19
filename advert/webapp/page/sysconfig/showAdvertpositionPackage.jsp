@@ -13,12 +13,41 @@
 <script type="text/javascript" src="<%=path %>/js/jquery/jquery-1.9.0.js"></script>
 <title>广告位运营商指定</title>
 <script type="text/javascript">
-	
+	var array = "";
 	function init(){
-		var user_positions = window.dialogArguments.document.getElementById("user_position_ids").value;
-		$("#user_positions").val(user_positions); 
+		
+		array = "${positionsIdList}".replace(/\[|\]|\s+/g,"");
+		$("#user_positions").val(array); 
 	
 	}
+   function changeArray(obj){
+   	    if(obj.checked ==true){
+   	    	if(array != ""){
+   	    		array+=","+obj.value.split("_")[0];
+   	    	}else{
+   	    		array=obj.value.split("_")[0];
+   	    	}
+   	    	
+   	    }else{
+   	    	var values = array.split(",");
+   	    	
+   	    	var arr = "";
+   	    	for(var i=0; i<values.length; i++){
+   	    		if(values[i] == obj.value.split("_")[0]){
+   	    			continue;
+   	    		}
+   	    		else if(arr==""){
+   	    			arr=values[i];
+   	    		}else{
+   	    			arr+=","+values[i];
+   	    		}
+   	    	}
+   	    	array =arr;
+   	    }
+   	    
+   	    $("#user_positions").val(array); 
+   	    //alert($("#user_positions").val());
+   }
    function save() {
 		if (getCheckCount('packageid') <= 0) {
 			alert("请给运营商指定广告位！");
@@ -63,7 +92,7 @@
     </tr>
     <c:forEach items="${page.dataList}" var="package" varStatus="pl">
 		<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
-			<td><input type="checkbox"  id="packageid" name="packageid" value="${package.id}_${package.positionPackageName}"
+			<td><input type="checkbox"  id="packageid" name="packageid" onclick="changeArray(this)" value="${package.id}_${package.positionPackageName}"
 			<c:forEach items="${positionsIdList}" var="pid">
 						<c:if test="${pid == package.id}">checked="checked" </c:if>
 					</c:forEach>
@@ -88,7 +117,7 @@
     <td colspan="6">
     	<input type="button" value="确定" class="btn" onclick="javascript:save();"/>&nbsp;&nbsp;
         <input type="button" value="取消" class="btn" onclick="javascript :window.close();"/>
-        <jsp:include page="../common/page.jsp" flush="true" />
+       
     </td>
   </tr>
 </table>
