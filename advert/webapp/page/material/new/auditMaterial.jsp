@@ -482,13 +482,16 @@
 			            		      ${textMeta.rollSpeed}
 			            		    -->     
 			            		       <select  disabled="disabled"  id="textMeta.rollSpeed"  name="textMeta.rollSpeed" >
-								                 <option  value="1" <c:if test="${textMeta.rollSpeed==1}">selected="selected"</c:if> >
+								                  <option  value="0" <c:if test="${textMeta.rollSpeed==0}">selected="selected"</c:if> >
+										                         静止
+										         </option>
+								                 <option  value="2" <c:if test="${textMeta.rollSpeed==2}">selected="selected"</c:if> >
 										                        低速
 										        </option>
-										        <option  value="2" <c:if test="${textMeta.rollSpeed== 2}">selected="selected"</c:if> >
+										        <option  value="6" <c:if test="${textMeta.rollSpeed== 6}">selected="selected"</c:if> >
 										                        中速
 										        </option>
-										         <option  value="3" <c:if test="${textMeta.rollSpeed== 3}">selected="selected"</c:if> >
+										         <option  value="12" <c:if test="${textMeta.rollSpeed== 12}">selected="selected"</c:if> >
 										                        高速
 										        </option>
 							  </select>  
