@@ -22,7 +22,7 @@
 		var name=obj.name;
 		var val= obj.value
 		var ext=val.substring(val.lastIndexOf("."),val.length);
-		if(name == "upgrade" && (ext==".tar" || ext==".zip" )){
+		if(name == "upgrade" && (ext==".tar" || ext==".zip" || ext==".gz")){
 			result1 = true;
 		}
 		
@@ -38,7 +38,7 @@
 		if(result1 && result2){
 			$("#editForm").submit();
 		}else{
-			alert("不支持的文件类型,请重新选择！");
+			alert("包文件或描述文件没有选择或选择错误,请重新选择！");
 		}
 	}
 	
