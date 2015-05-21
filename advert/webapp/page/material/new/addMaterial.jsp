@@ -41,6 +41,7 @@ var uploadImage="";
 var uploadVideo="";
 var uploadZip="";
 var i=0;
+var rowCount = 1;
 var  maTerialType=-1;
 //选择子广告位
 function selectAdPosition() {
@@ -1083,6 +1084,9 @@ function changeType2()
 		document.getElementById('image_file').style.display = "none";
 		document.getElementById('video_file').style.display = "none";
 		document.getElementById('zip_file').style.display = "none";
+		
+		$("#addContentBut").click();	
+		
 	}
 	else if (materialType == 3 )
 	{//调查问卷
@@ -1502,6 +1506,7 @@ function IsAlpha(cCheck) {
 	*/
 	function checkText(){
 		
+		//文字标题
 		if(isEmpty($$("textMeta.name").value)){
 			alert("文字标题不能为空！");
 			$$("textMeta.name").focus();
@@ -1519,12 +1524,28 @@ function IsAlpha(cCheck) {
     		return true;
 		}
 		
-		if($$("sel_textMeta_action").value=='-1'){
-			alert("文字显示动作不能为空！");
-			$$("sel_textMeta_action").focus();
-			return true;
+		//文字链接
+		if(!isEmpty($$("textMeta.URL").value)){
+			if($$("textMeta.URL").value.length>255){
+			alert("文本URL必须小于255个字节！");
+			$$("textMeta.URL").focus();
+    		return true;
+		    }
 		}
 		
+		//显示时长
+		if(isEmpty($$("textMeta.durationTime").value)){
+			alert("文本显示持续时间不能为空！");
+			$$("textMeta.durationTime").focus();
+    		return true;
+		}
+		if(!isEmpty($$("textMeta.durationTime").value) && !isNumber($$("textMeta.durationTime").value)){
+			alert("文本显示持续时间只能是数字！");
+			$$("textMeta.durationTime").focus();
+    		return true;
+		}
+		
+		//文字大小
 		if(isEmpty($$("textMeta.fontSize").value)){
 			alert("文字大小不能为空！");
 			$$("textMeta.fontSize").focus();
@@ -1540,67 +1561,46 @@ function IsAlpha(cCheck) {
 			$$("textMeta.fontSize").focus();
     		return true;
 		}
-		if(isEmpty($$("textMeta.fontColor").value)){
-			alert("文字颜色不能为空！");
-			$$("textMeta.fontColor").focus();
-    		return true;
-		}
-		if($$("textMeta.fontColor").value.length>10){
-			alert("文字颜色必须小于10个字节！");
-			$$("textMeta.fontColor").focus();
-    		return true;
-		}
 		
+		//文字颜色，无需校验
+		
+		//背景颜色
 		var pat = new RegExp("^[A-Fa-f0-9]+$"); 
-		var str = $$("textMeta.fontColor").value;
-
-		if(str.length==6 && pat.test(str)){
-			
-		}else{
-		     alert("文字颜色格式不正确！");
-			$$("textMeta.fontColor").focus();
-			return true;
-		}
-		
-		
-		
 		if(!isEmpty($$("textMeta.bkgColor").value)){
-		//长度效验
-		if($$("textMeta.bkgColor").value.length>10){
-			alert("文字显示背景色必须小于10个字节！");
-			$$("textMeta.bkgColor").focus();
-    		return true;
-		}		
-		   //效验背景色
-		   str = $$("textMeta.bkgColor").value;
-		   if(str.length==6&& pat.test(str)){
-			
+			if($$("textMeta.bkgColor").value.length>10){
+				alert("文字显示背景色必须小于10个字节！");
+				$$("textMeta.bkgColor").focus();
+	    		return true;
+			}		
+			str = $$("textMeta.bkgColor").value;
+			if(str.length==6 && pat.test(str)){
+				
+			}else{
+			    alert("文字显示背景色格式不正确！");
+				$$("textMeta.bkgColor").focus();
+				return true;
+			}
+		}
+		
+		//滚动速度
+		if(isEmpty($$("textMeta.rollSpeed").value)){
+			alert("文本显示滚动速度不能为空！");
+			$$("textMeta.rollSpeed").focus();
+			return true;
 		}else{
-		     alert("文字显示背景色格式不正确！");
-			$$("textMeta.bkgColor").focus();
-			return true;
-		}
-		}
-		//if($$("sel_textMeta_action").value=='1'){
-		//滚动
 			if(!isEmpty($$("textMeta.rollSpeed").value) && !isNumber($$("textMeta.rollSpeed").value)){
-			alert("文本显示滚动速度只能是数字！");
-			$$("textMeta.rollSpeed").focus();
-			return true;
+				alert("文本显示滚动速度只能是数字！");
+				$$("textMeta.rollSpeed").focus();
+				return true;
 		    }
-
 		    if($$("textMeta.rollSpeed").value<0){
-		    alert("文本显示滚动速度必须大于等于0！");
-			$$("textMeta.rollSpeed").focus();
-			return true;
+			    alert("文本显示滚动速度必须大于等于0！");
+				$$("textMeta.rollSpeed").focus();
+				return true;
 		    }
-		    
-		    if($$("textMeta.rollSpeed").value.length>10){
-			alert("文本显示滚动速度必须小于10个字节！");
-			$$("textMeta.rollSpeed").focus();
-    		return true;
 		}
-		//}
+		
+		//显示坐标
 		if(isEmpty($$("textMeta.positionVertexCoordinates").value)){
 			alert("文本显示坐标不能为空！");
 			$$("textMeta.positionVertexCoordinates").focus();
@@ -1612,70 +1612,79 @@ function IsAlpha(cCheck) {
 				$$("textMeta.positionVertexCoordinates").focus();
 	    		return true;
 			}
+			if($$("textMeta.positionVertexCoordinates").value.length>20){
+				alert("文本显示坐标必须小于20个字节！");
+				$$("textMeta.positionVertexCoordinates").focus();
+	    		return true;
+			}
 		}
 		
-		if($$("textMeta.positionVertexCoordinates").value.length>20){
-			alert("文本显示坐标必须小于20个字节！");
-			$$("textMeta.positionVertexCoordinates").focus();
+		//显示区域
+		if(isEmpty($$("textMeta.positionWidthHeight").value)){
+			alert("文本显示区域不能为空！");
+			$$("textMeta.positionWidthHeight").focus();
     		return true;
-		}
-		
-		if(isEmpty($$("textMeta.contentMsg").value)){
-			alert("文字内容不能为空！");
-			$$("textMeta.contentMsg").focus();
-    		return true;
-		}
-		
-			if (validateSpecialCharacterAfter($$("textMeta.contentMsg").value))
-		{
-			alert("文字内容不能有特殊字符！");
-			$$("textMeta.contentMsg").focus();
-    		return true;
-		}
-		if(isEmpty($$("textMeta.durationTime").value)){
-			alert("文本显示持续时间不能为空！");
-			$$("textMeta.durationTime").focus();
-    		return true;
-		}
-		if(!isEmpty($$("textMeta.rollSpeed").value) && !isNumber($$("textMeta.rollSpeed").value)){
-			alert("文本显示滚动速度只能是数字！");
-			$$("textMeta.rollSpeed").focus();
-    		return true;
-		}
-		if(!isEmpty($$("textMeta.durationTime").value) && !isNumber($$("textMeta.durationTime").value)){
-			alert("文本显示持续时间只能是数字！");
-			$$("textMeta.durationTime").focus();
-    		return true;
-		}
-		if(!isEmpty($$("textMeta.positionWidthHeight").value)){
+		}else{
 			var size = $$("textMeta.positionWidthHeight").value.split("*");
 			if(size.length != 2 || !isNumber(size[0]) || !isNumber(size[1])){
 				alert("文本显示区域格式不正确！");
 				$$("textMeta.positionWidthHeight").focus();
 	    		return true;
 			}
-			
 			if($$("textMeta.positionWidthHeight").value.length>20){
-			alert("文本显示区域必须小于20个字节！");
-			$$("textMeta.positionWidthHeight").focus();
-    		return true;
+				alert("文本显示区域必须小于20个字节！");
+				$$("textMeta.positionWidthHeight").focus();
+	    		return true;
 		    }
 		}
 		
-		if(!isEmpty($$("textMeta.URL").value)){
-			if($$("textMeta.URL").value.length>255){
-			alert("文本URL必须小于255个字节！");
-			$$("textMeta.URL").focus();
+		var msgArray =  document.getElementsByName("textMeta.contentMsg");
+		var priArray = document.getElementsByName("textMeta.priority");
+		var validateArray = [];
+		var length = msgArray.length;
+		if(length == 0){
+			alert("字幕条数必须大于0！");
     		return true;
-		    }
 		}
-		if(!isEmpty($$("textMeta.durationTime").value)){
-			if($$("textMeta.durationTime").value.length>10){
-			alert("文本显示持续时间必须小于10个字节！");
-			$$("textMeta.durationTime").focus();
+		if(length > 60){
+			alert("字幕条数不能超过60！");
     		return true;
-		    }
 		}
+		var sum = 0;
+		for(var i = 0; i < length; i++){
+			var msg = msgArray[i].value.replace(/(^\s*)|(\s*$)/g,'');
+			sum += msg.length;
+			if(isEmpty(msg)){
+				alert("文字内容不能为空！");
+	    		return true;
+			}else if(validateSpecialCharacterAfter(msg)){
+				alert("文字内容不能有特殊字符！");
+	    		return true;
+			}else if(msg.length > 80){
+				alert("单条字幕文字个数不能超过80个！");
+	    		return true;
+			}  
+			var priority = priArray[i].value;
+			if(isEmpty(priority)){
+				alert("文字优先级不能为空！");
+	    		return true;
+			}else if(!isNumber(priority)){
+				alert("文字优先级只能为数字！");
+	    		return true;
+			}else{
+				if(validateArray[priority]){
+					alert("文字优先级不能相同！");
+		    		return true;
+				}else{
+					validateArray[priority] = 1;
+				}
+			}
+		}
+		if(2 * sum + 21 * length > 3800 ){
+			alert("文字总数量过多，请减少字幕条数或文字数量！");
+    		return true;
+		}
+
 		return false;
     }
 
@@ -1689,104 +1698,112 @@ function IsAlpha(cCheck) {
 		   document.getElementById("textMeta.rollSpeed").disabled="true";
 		}
     }
+	
+	function Text(word,priority){ 
+       this.word=word; 
+       this.priority=priority;        
+	} 
+	
 
 	/**预览文字*/
 	function showText(){
 		
-		if($$("sel_textMeta_action").value!='0'){
-		//滚动
-		   $("#textContent").css({
-			   'color':$$("textMeta.fontColor").value,
-			   'font-size':$$("textMeta.fontSize").value+"px",
-			   'background':$$("textMeta.bkgColor").value
-		   });
-		   if($$("textMeta.rollSpeed").value!=''){
-			$("#textContent").attr("scrollamount",$$("textMeta.rollSpeed").value);
-		   }
-		   
-		   var content = $$("textMeta.contentMsg").value;
-		   if($$("textMeta.URL").value!=''){
-			 content = "<a href='"+$$("textMeta.URL").value+"'>"+content+"</a>";
-		   }
-		     if(isEmpty($$("textMeta.positionVertexCoordinates").value)){
-		   
-		   }else{
-					var coordinates = $$("textMeta.positionVertexCoordinates").value.split("*");
-					if(coordinates.length != 2 || !isNumber(coordinates[0]) || !isNumber(coordinates[1]) || coordinates[0]>1280 || coordinates[1]>720){
-						
-					}
-					else
-					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
-					   $('#text').css('left',left);
-					   $('#text').css('top',bottom);
-					}				
-	  	}
-    	if(!isEmpty($$("textMeta.positionWidthHeight").value)){
-					var size = $$("textMeta.positionWidthHeight").value.split("*");
-					if(size.length != 2 || !isNumber(size[0]) || !isNumber(size[1])){
-					
-					}
-			    else
-			    {
-			    	   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
-					   $('#text').css('width',width);
-					   $('#text').css('height',height);
-					}
-		 }
-		   $("#textContent").html(content);
-		   $("#text").show();
-		   $("#text2").hide();
-		}else{
-		//静止
-		   $("#textContent2").css({
-			   'color':$$("textMeta.fontColor").value,
-			   'font-size':$$("textMeta.fontSize").value+"px"
-		   });
-		   document.getElementById("textMeta.rollSpeed").value="0";
-		   document.getElementById("textMeta.rollSpeed").disabled="true";
-		   
-		   var content = $$("textMeta.contentMsg").value;
-		   if($$("textMeta.URL").value!=''){
-			content = "<a href='"+$$("textMeta.URL").value+"'>"+content+"</a>";
-		   }
-		    if(isEmpty($$("textMeta.positionVertexCoordinates").value)){
-		   
-		   }else{
-					var coordinates = $$("textMeta.positionVertexCoordinates").value.split("*");
-					if(coordinates.length != 2 || !isNumber(coordinates[0]) || !isNumber(coordinates[1]) || coordinates[0]>1280 || coordinates[1]>720){
-						
-					}
-					else
-					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
-					   $('#text2').css('left',left);
-					   $('#text2').css('top',bottom);
-					}				
-	  	}
-    	if(!isEmpty($$("textMeta.positionWidthHeight").value)){
-					var size = $$("textMeta.positionWidthHeight").value.split("*");
-					if(size.length != 2 || !isNumber(size[0]) || !isNumber(size[1])){
-					
-					}
-			    else
-			    {
-			    	 var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
-					   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
-					   $('#text2').css('width',width);
-					   $('#text2').css('height',height);
-					}
-		 }
-		   $("#textContent2").html(content);
-		   $("#text2").show();
-		   $("#text").hide();
+		if(checkText()){
+			return;
 		}
 		
+		var speed = parseInt($$("textMeta.rollSpeed").value);
+		
+		var coordinates = $$("textMeta.positionVertexCoordinates").value.split("*");
+		var coordinateX = coordinates[0]/1280*426;
+		var coordinateY = coordinates[1]/720*240;
+		
+		var size = $$("textMeta.positionWidthHeight").value.split("*");
+		var _width = size[0]/1280*426;
+		var _height = size[1]/720*240;
+		
+		var msgArray =  document.getElementsByName("textMeta.contentMsg");
+		var priArray = document.getElementsByName("textMeta.priority");
+		var length = msgArray.length;
+		var textArray = [];
+		for(var i = 0; i < length; i++){			
+			var msg = msgArray[i].value;
+			var priority = priArray[i].value;
+			textArray[i] = new Text(msg, priority);
+		}
+		textArray.sort(function(o,p){
+			if(typeof o === "object" && typeof p === "object" && o && p){
+				var a = o.priority;
+				var b = p.priority;
+				if(a == b){
+					return 0;
+				}else{
+					return a < b ? -1 : 1;
+				}
+			}else{
+				throw("error");
+			}
+		});
+		var content = "";
+		for(var i = 0; i < length; i++){
+			content += textArray[i].word + "&nbsp;&nbsp;&nbsp;&nbsp"
+		}
+		
+		if(speed != 0){ //滚动
+			
+			$("#textContent").css({
+				'color':$$("textMeta.fontColor").value,
+				'font-size':$$("textMeta.fontSize").value+"px"
+			});
+		
+			$("#textContent").attr({
+				'scrollamount':speed
+			});
+			
+			if(!isEmpty($$("textMeta.bkgColor").value)){
+				$("#textContent").attr({
+					'bgcolor':"#"+$$("textMeta.bkgColor").value
+				});
+			}else{
+				$("#textContent").removeAttr('bgcolor');
+			}
+				
+			$('#text').css({
+				'left':coordinateX,
+				'top': coordinateY,
+				'width':_width,
+				'height':_height
+			});					
+			$("#textContent").html(content);
+			$("#text").show();
+			$("#text2").hide();
+			
+		
+		}else{ //静止
+			$("#textContent2").css({
+				'color':$$("textMeta.fontColor").value,
+				'font-size':$$("textMeta.fontSize").value+"px"
+			});
+			if(!isEmpty($$("textMeta.bkgColor").value)){
+				$('#text2').css({
+					'background':"#"+$$("textMeta.bkgColor").value
+				});
+			}else{
+				$('#text2').css({
+					'background':""
+				});
+			}
+			$('#text2').css({
+				'left':coordinateX,
+				'top': coordinateY,
+				'width':_width,
+				'height':_height
+			});
+		
+			$("#textContent2").html(content);
+			$("#text2").show();
+			$("#text").hide();
+		}
 		
 	}
 		
@@ -1795,7 +1812,29 @@ function IsAlpha(cCheck) {
 		if(input.value==input.defaultValue){
 			input.value="";
 		}
-	}	
+	}
+	
+	function addContent(){
+		var table = $$('text_content_table');
+		var row = document.createElement("tr"); 
+		rowCount += 1;
+		row.setAttribute("id", 'text_content_row' + rowCount);
+		var td1 = document.createElement("td");	
+		td1.innerHTML = '<textarea name="textMeta.contentMsg" cols="80" rows="2" > </textarea>';	
+		var td2 = document.createElement("td");	
+		td2.innerHTML = '<input name="textMeta.priority" type="text" maxlength="2" style="width:30px"/>';
+		var td3 = document.createElement("td");	
+		td3.innerHTML = "<a href='#' onclick='deleteTrById(\"text_content_row" + rowCount + "\");'>删除</a>";
+		row.appendChild(td1);
+		row.appendChild(td2);
+		row.appendChild(td3);
+		table.appendChild(row);
+	}
+	
+	function deleteTrById(id){
+		var tr = $$(id);
+		tr.parentNode.removeChild(tr);
+	}
 
 </script>
 <style>
@@ -1874,33 +1913,7 @@ function IsAlpha(cCheck) {
 		                         <input id="material.keyWords" name="material.keyWords" type="text" />					       
 		                     </td>		                
 		                 </tr>
-		                 
-		                  <!--
-		                  <tr>
-		                     <td align="right"><span class="required">*</span>开始时间：</td>
-		                     <td>		               
-		                         <input id="material.startTime" readonly="readonly"  type="text" style="width:125px;"  name="material.startTime"   onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-		                     </td>
-		                     <td align="right"><span class="required">*</span>结束时间：</td>
-		                     <td>
-			              	     <input id="material.endTime"  readonly="readonly" class="input_style2" type="text" style="width:125px;"  name="material.endTime"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-		                     </td>
-		                  </tr>
-		                  <tr>
-		                     <td align="right"><span class="required"></span>素材描述：</td>
-		                     <td colspan="3">
-		                	     <textarea id="material.resourceDesc" name="material.resourceDesc" cols="40" rows="3" maxlength="100"></textarea>		              	
-		                     </td>
-		                 </tr>
-		                   -->
-		                  
-		                 <!-- 
-		                 <tr id="b1">
-		            	     <td colspan="4">
-		            		     <input type="button" value="确定" class="btn" onclick="submitForm();"/>
-		            		     <input type="button" value="取消" class="btn" onclick="javascript:closeSavePane();"/>
-		            	     </td>
-		                 </tr> -->
+		                
 		             </table>
 		          </td>
 		        </tr>
@@ -1913,92 +1926,88 @@ function IsAlpha(cCheck) {
 		                          <td colspan="4">文字素材</td>
 		                      </tr>
 		                      <tr>
-		                          <td  align="right"><span class="required">*</span>文字标题：</td>
-		                          <td>
+		                          <td  align="right" width="15%"><span class="required">*</span>文字标题：</td>
+		                          <td width="33%">
 			            		      <input id="textMeta.name" name="textMeta.name" />
-		                          </td>
-		                          <td  align="right">文本URL：</td>
-		                          <td>
+		                          </td >
+		                          <td  align="right" width="15%">文本URL：</td>
+		                          <td >
 			            		      <input id="textMeta.URL" name="textMeta.URL" />
 		                         </td>
 		                      </tr>
 		                      <tr>
-		                          <td  align="right"></td>
-		                          <td>
-			            		      <select style="display:none"  id="sel_textMeta_action"  name="textMeta.action" onchange="changeTextAction()">
-								               <!-- <option id="action_id" value="-1">请选择...</option> --> 
-										          <option  value="1" <c:if test="${textMeta.action== 1}">selected="selected"</c:if> >
-										                        滚动
-										        </option>
-										        <option  value="0" <c:if test="${textMeta.action==0}">selected="selected"</c:if> >
-										                        静止
-										        </option>
-										      
-							          </select>
-		                          </td>
-		                          <td  align="right"><span class="required">*</span>显示持续时间（毫秒）：</td>
-		                          <td>
-			            		      <input id="textMeta.durationTime" name="textMeta.durationTime" value="0"/><span class="required">0表示一直显示</span>
+		                      	 
+		                          <td  align="right"><span class="required">*</span>显示持续时间：</td>
+		                          <td colspan="3">
+			            		      <input id="textMeta.durationTime" name="textMeta.durationTime" value="0"/><span class="required">（毫秒）0表示一直显示</span>
 		                         </td>
 		                      </tr>
 		                      <tr>
 		                          <td  align="right"><span class="required">*</span>文字大小：</td>
 		                          <td>
-			            		      <input id="textMeta.fontSize" name="textMeta.fontSize" onchange="javascript:showText();" value="16" onfocus="clearDefault(this)"/><span class="required">px</span>
+			            		      <input id="textMeta.fontSize" name="textMeta.fontSize"  value="16" onfocus="clearDefault(this)"/><span class="required">px</span>
 		                          </td>
 		                          <td  align="right"><span class="required">*</span>文字颜色：</td>
 		                          <td>
-			            		      <input id="textMeta.fontColor" name="textMeta.fontColor" onchange="javascript:showText();" class="color" value="000000"/>
+			            		      <input id="textMeta.fontColor" name="textMeta.fontColor" class="color" value="000000"/>
 		                         </td>
 		                      </tr>
 		                      <tr>
 		                          <td  align="right">文本显示背景色：</td>
 		                          <td>
-			            		      <input id="textMeta.bkgColor" name="textMeta.bkgColor" onchange="javascript:showText();" value=""/>
+			            		      <input id="textMeta.bkgColor" name="textMeta.bkgColor"  value=""/>
 		                          </td>
 		                          <td  align="right">文本显示滚动速度：</td>
 		                          <td>
-			            		     <!--  <input id="textMeta.rollSpeed" name="textMeta.rollSpeed" /> -->
-			            		        <select  id="textMeta.rollSpeed"  name="textMeta.rollSpeed" onchange="javascript:showText();">
-								                 <option  value="0" <c:if test="${textMeta.rollSpeed==0}">selected="selected"</c:if> >
-										                         静止
-										         </option>
-								                 <option  value="2" <c:if test="${textMeta.rollSpeed==2}">selected="selected"</c:if> >
-										                        低速
-										        </option>
-										        <option  value="6" <c:if test="${textMeta.rollSpeed== 6}">selected="selected"</c:if> >
-										                        中速
-										        </option>
-										         <option  value="12" <c:if test="${textMeta.rollSpeed== 12}">selected="selected"</c:if> >
-										                        高速
-										        </option>
-							  </select>
-		                         </td>
+			            		       <input id="textMeta.rollSpeed" name="textMeta.rollSpeed" maxlength="2" value="6" onfocus="clearDefault(this)"/> <span class="required">0表示静止</span>
+		                          </td>
 		                      </tr>
 		                      <tr>
 		                          <td  align="right"><span class="required">*</span>文本显示坐标：</td>
 		                          <td>
-			            		      <input id="textMeta.positionVertexCoordinates" name="textMeta.positionVertexCoordinates" onchange="javascript:showText();" value="0*10" onfocus="clearDefault(this)"/><span class="required">格式：80*80(坐标x*y)</span>
+			            		      <input id="textMeta.positionVertexCoordinates" name="textMeta.positionVertexCoordinates"  value="0*10" onfocus="clearDefault(this)"/><span class="required">格式：80*80(坐标x*y)</span>
 		                          </td>
 		                          <td  align="right">文本显示区域：</td>
 		                          <td>
-			            		      <input id="textMeta.positionWidthHeight" name="textMeta.positionWidthHeight" onchange="javascript:showText();" value="426*20" onfocus="clearDefault(this)"/><span class="required">格式：80*80(宽高w*h)</span>
+			            		      <input id="textMeta.positionWidthHeight" name="textMeta.positionWidthHeight"  value="426*20" onfocus="clearDefault(this)"/><span class="required">格式：80*80(宽高w*h)</span>
 		                         </td>
 		                      </tr>
 		                      <tr>
-		            	          <td width="15%" align="right"><span class="required">*</span>内容：</td>
+		            	          <td width="15%" align="right" valign="top">
+		            	          	<span class="required">*</span>内容：<br/> <br/>
+		            	          	<input id="addContentBut" type="button" value="添加" onclick="javascript:addContent();"/> 
+		            	          </td>
 		                          <td colspan="3">
-		                	      <textarea id="textMeta.contentMsg" name="textMeta.contentMsg" onchange="javascript:showText();" maxlength="4000" cols="80" rows="5" onfocus="clearDefault(this)">请输入字幕内容</textarea>
+		                          		                       
+			                	      <table id="text_content_table" cellspacing="1" class="content" style="margin-bottom: 0px;">
+				                	      	<tbody>
+					                	      	<tr class="title">
+					                	      		<td width="80%">
+					                	      			文字内容
+					                	      		</td>
+					                	      		<td width="10%">
+					                	      			优先级
+					                	      		</td>
+					                	      		<td >
+					                	      			操作
+					                	      		</td>
+					                	      	</tr>
+				                	      	</tbody>
+			                	      </table>
+
 		                          </td>
 		                      </tr>  
 		                      <tr>
-							      <td align="right" >素材预览效果：</td>
+							      <td align="right" >
+							      	素材预览效果：<br/><br/>
+							      	<input type="button" value="点击预览" onclick="javascript:showText();"/>
+							      </td>
 							      <td colspan="3">
 									  <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 									     position: relative;">
 											<img id="pImage" src="<%=path%>/images/position/position.jpg" width="426px" height="240px" /> 
 											
-											<div id="text"><marquee scrollamount="10" id="textContent"></marquee></div>
+											<div id="text"><marquee direction="left" scrollamount="10" id="textContent" ></marquee></div>
 											<div id="text2"><span id="textContent2"></span></div> 
 											
 										</div>
@@ -2027,26 +2036,7 @@ function IsAlpha(cCheck) {
 		                          </td>
 		                          <div id="fileQueue2"></div>
 		                      </tr>
-		                      <!-- 
-		                      <tr>
-							      <td align="right" >素材预览效果：</td>
-							      <td colspan="3">					 
-								  <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
-								     position: relative;">
-										<img id="pImage" src="<%=path%>/images/position/position.jpg" width="426px" height="240px" />
-										<div id="video">
-											<object type='application/x-vlc-plugin' id='vlc'  classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width="150" height="150">
-										           <param name='mrl'  value=''/>
-													<param name='volume' value='50' />
-													<param name='autoplay' value='false' />
-													<param name='loop' value='false' />
-													<param name='fullscreen' value='false' />
-										    </object>
-										</div>
-									</div>
-							      </td>						
-					          </tr>
-		                       -->			          
+		                      
                        </table>
                        <div id="video_file"> 
 					   </div>
@@ -2077,29 +2067,7 @@ function IsAlpha(cCheck) {
 		                	          <input maxlength="10" id="imageFileHigh" type="text" disabled="disabled"/>
 		                          </td>
 		                     </tr>
-		                     <!--<tr>		            	
-		                         <td width="15%" align="right"><span class="required"></span>图片URL：</td>
-		                          <td width="35%" >
-		                	          <input maxlength="20" id="imageUrl" name="imageUrl" value="" type="text"/>
-		                          </td>
-		                          <td width="15%" >
-		                          </td>
-		                          <td width="35%" >
-		                          </td>
-		                     </tr>
-		                     --><!-- 
-		                     <tr>
-							     <td align="right" >素材预览效果：</td>
-							     <td colspan="3">
-								    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
-								     position: relative;">
-										<img id="pImage" src="<%=path%>/images/position/position.jpg" width="426px" height="240px" /> 
-										<img id="mImage" src="" style="display: none" />
-									</div>
-							     </td>						
-					         </tr>
-		                      -->
-		                     
+		                   
 					         
 		               </table>
 		               <div id="image_file">
@@ -2123,19 +2091,7 @@ function IsAlpha(cCheck) {
 		                          </td>
 		                     </tr>
 		                     
-		                     <!-- 
-		                     <tr>
-							     <td align="right" >素材预览效果：</td>
-							     <td colspan="3">
-								    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
-								     position: relative;">
-										<img id="pImage" src="<%=path%>/images/position/position.jpg" width="426px" height="240px" /> 
-										<img id="mImage" src="" style="display: none" />
-									</div>
-							     </td>						
-					         </tr>
-		                      -->
-		                     
+		                   
 					         
 		               </table>
 		               <div id="zip_file">

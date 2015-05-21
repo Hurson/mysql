@@ -3,6 +3,13 @@ package com.dvnchina.advertDelivery.order.bean.playlist;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Blob;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import com.dvnchina.advertDelivery.meterial.bean.PriorityWordBean;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class TextMate implements Serializable{
 
@@ -55,7 +62,19 @@ public class TextMate implements Serializable{
 			while (in.read(buff) > 0) {
 				buf.append(new String(buff, "gbk"));
 			}
-			this.content = buf.toString();
+			String jsonContent = buf.toString();
+			Gson gson = new Gson();
+			List<PriorityWordBean> list = gson.fromJson(jsonContent, new TypeToken<List<PriorityWordBean>>(){ }.getType());
+			Collections.sort(list, new Comparator<PriorityWordBean>(){
+	            public int compare(PriorityWordBean arg0, PriorityWordBean arg1) {
+	                return arg0.getPriority().compareTo(arg1.getPriority());
+	            }
+	        });
+			String words = "";
+			for(PriorityWordBean entity : list){
+				words += entity.getWord() + "  @_@   ";
+			}
+			this.content = words;
 			in.close();
 		} catch (Exception e) {
 			e.printStackTrace();

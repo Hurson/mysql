@@ -232,7 +232,12 @@ function showText(material){
 	$('#text').css('background',material.text.bkgColor);
 	
 	$("#text").show();
-	$("#textContent").html(material.text.content);
+	var content = material.text.content.split("@_@");
+	var words = "";
+	for(var i = 0; i < content.length; i++){
+		words += content[i];
+	}
+	$("#textContent").html(words);
 }
 
 /**

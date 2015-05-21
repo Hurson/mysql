@@ -347,6 +347,15 @@ var firstflag=true;
 			alert('请选择广告位');
 			return false ;
 		 }
+         
+   
+        if(document.getElementById("ploy.positionId").value == '50'){
+        	if( $('#contenttable13').children().length > 1 ){
+        		alert('字幕广告用户级别不能超过一项');
+    			return false ;
+        	};
+        }
+         
         
         if (document.getElementById("selectedOption0").checked==true)
         {

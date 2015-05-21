@@ -39,7 +39,6 @@
 	var areaCodes =  "${subtitle.areaCodes}";
 	
 	$(function(){
-		
 		var areaCodeArray = areaCodes.replace(/\s/ig,'').split(",");
 		for(var i = 0; i < areaCodeArray.length; i++){
 			$($("#area" + areaCodeArray[i])[0]).attr("checked",true);

@@ -1,5 +1,9 @@
 package com.dvnchina.advertDelivery.model;
 
+import java.util.List;
+
+import com.dvnchina.advertDelivery.meterial.bean.PriorityWordBean;
+
 
 public class MessageMeta implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
@@ -17,6 +21,7 @@ public class MessageMeta implements java.io.Serializable{
 	private byte[] content;
 	private String contentMsg;
 	
+	private String priority;
 	
 	/**
 	 * URL
@@ -32,6 +37,7 @@ public class MessageMeta implements java.io.Serializable{
 	private String positionVertexCoordinates;
 	private String positionWidthHeight;
 	
+	private List<PriorityWordBean> pwList;
 	
 	public MessageMeta(){
 	}
@@ -150,6 +156,22 @@ public class MessageMeta implements java.io.Serializable{
     public void setContentMsg(String contentMsg) {
         this.contentMsg = contentMsg;
     }
+
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+	public List<PriorityWordBean> getPwList() {
+		return pwList;
+	}
+
+	public void setPwList(List<PriorityWordBean> pwList) {
+		this.pwList = pwList;
+	}
 	
 	
 

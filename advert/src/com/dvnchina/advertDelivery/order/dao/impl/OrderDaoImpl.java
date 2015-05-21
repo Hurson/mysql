@@ -1712,6 +1712,9 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 				text.setId(toInteger(obj[0]));
 				text.setName((String)obj[1]);
 				text.setContent((Blob)obj[2]);
+				
+				
+				
 				text.setURL((String)obj[3]);
 				text.setAction((String)obj[4]);
 				text.setDurationTime(toInteger(obj[5]));

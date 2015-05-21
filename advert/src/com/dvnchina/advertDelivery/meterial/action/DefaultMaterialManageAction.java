@@ -318,7 +318,7 @@ public class DefaultMaterialManageAction extends BaseActionSupport<Object> imple
 	            textMeta=meterialManagerService.getTextMetaByID(material.getResourceId());
 	            byte[] contentBlob =textMeta.getContent();
 	            if(contentBlob != null){
-	            	textMeta.setContentMsg(new String(contentBlob));
+	            	textMeta.setContentMsg(new String(contentBlob, "gbk"));
 	            }
 	            
 	        }

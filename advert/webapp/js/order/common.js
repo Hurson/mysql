@@ -169,7 +169,7 @@ function showSource(url,metaId, pollIndex){
 	    	   }else{
 	    		   if(!isEmpty(result)){
 	    			   //var ss=eval(result);
-	    			   var resourceValue=metaId;	
+	    			   var resourceValue=metaId;		  
 	    			   //alert(ss);	    		    	   
 	    		    	//window.open('preview.do?perviewvalue='+perviewvalue,'','location=no,menubar=no,resizable=no,status=no,scrollbars=no,height=250px,width=430px');
 	    		    	//window.open('preview.do?previewValue='+previewValue+'&resourceValue='+resourceValue,'','location=no,menubar=no,resizable=no,status=no,scrollbars=no,height=270px,width=446px');

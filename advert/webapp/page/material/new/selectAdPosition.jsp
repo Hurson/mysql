@@ -131,7 +131,7 @@
     	if (selecItem[3]==1)
     	{
     	   parent.document.getElementById("sel_material_type").options.add(new Option("文字","2"));
-    	   parent.window.showText();
+    	   //parent.window.showText();
     	}
     	if (selecItem[4]==1)
     	{

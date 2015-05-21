@@ -196,99 +196,106 @@
 		 // 播放
 		 vlc.playlist.play();
 	}
+	
+	function Text(word,priority){ 
+       this.word=word; 
+       this.priority=priority;        
+	} 
 
 	/**预览文字*/
 	function showText(){
 		
-		if($$("sel_textMeta_action").value!='0'){
-		//滚动
-		   $("#textContent").css({
-			   'color':$$("textMeta.fontColor").value,
-			   'font-size':$$("textMeta.fontSize").value+"px",
-			   'background':$$("textMeta.bkgColor").value
-		   });
-		   if($$("textMeta.rollSpeed").value!=''){
-			$("#textContent").attr("scrollamount",$$("textMeta.rollSpeed").value);
-		   }
-		   
-		   var content = $$("textMeta.contentMsg").value;
-		   if($$("textMeta.URL").value!=''){
-			 content = "<a href='"+$$("textMeta.URL").value+"'>"+content+"</a>";
-		   }
-		      if(isEmpty($$("textMeta.positionVertexCoordinates").value)){
-		   
-		   }else{
-					var coordinates = $$("textMeta.positionVertexCoordinates").value.split("*");
-					if(coordinates.length != 2 || !isNumber(coordinates[0]) || !isNumber(coordinates[1]) || coordinates[0]>1280 || coordinates[1]>720){
-						
-					}
-					else
-					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
-					   $('#text').css('left',left);
-					   $('#text').css('top',bottom);
-					}				
-	  	}
-    	if(!isEmpty($$("textMeta.positionWidthHeight").value)){
-					var size = $$("textMeta.positionWidthHeight").value.split("*");
-					if(size.length != 2 || !isNumber(size[0]) || !isNumber(size[1])){
-					
-					}
-			    else
-			    {
-			    	   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
-					   $('#text').css('width',width);
-					   $('#text').css('height',height);
-					}
-		 }
-		   
-		   $("#textContent").html(content);
-		   $("#text").show();
-		}else{
-		//静止
-		   $("#textContent2").css({
-			   'color':$$("textMeta.fontColor").value,
-			   'font-size':$$("textMeta.fontSize").value+"px"
-		   });
-		   document.getElementById("textMeta.rollSpeed").value="0";
-		   document.getElementById("textMeta.rollSpeed").disabled="true";
-		   
-		   var content = $$("textMeta.contentMsg").value;
-		   if($$("textMeta.URL").value!=''){
-			content = "<a href='"+$$("textMeta.URL").value+"'>"+content+"</a>";
-		   }
-		      if(isEmpty($$("textMeta.positionVertexCoordinates").value)){
-		   
-		   }else{
-					var coordinates = $$("textMeta.positionVertexCoordinates").value.split("*");
-					if(coordinates.length != 2 || !isNumber(coordinates[0]) || !isNumber(coordinates[1]) || coordinates[0]>1280 || coordinates[1]>720){
-						
-					}
-					else
-					{
-					   var left = coordinates[0]/1280*426+"px";
-					   var bottom = coordinates[1]/720*240+"px";					 				  
-					   $('#text2').css('left',left);
-					   $('#text2').css('top',bottom);
-					}				
-	  	}
-    	if(!isEmpty($$("textMeta.positionWidthHeight").value)){
-					var size = $$("textMeta.positionWidthHeight").value.split("*");
-					if(size.length != 2 || !isNumber(size[0]) || !isNumber(size[1])){
-					
-					}
-			    else
-			    {
-			    	   var width = size[0]/1280*426+"px";
-					   var height = size[1]/720*240+"px";
-					   $('#text2').css('width',width);
-					   $('#text2').css('height',height);
-					}
-		 }
-		   $("#textContent2").html(content);
-		   $("#text2").show();
+		var speed = parseInt($$("textMeta.rollSpeed").value);
+		
+		var coordinates = $$("textMeta.positionVertexCoordinates").value.split("*");
+		var coordinateX = coordinates[0]/1280*426;
+		var coordinateY = coordinates[1]/720*240;
+		
+		var size = $$("textMeta.positionWidthHeight").value.split("*");
+		var _width = size[0]/1280*426;
+		var _height = size[1]/720*240;
+		
+		var msgArray =  document.getElementsByName("textMeta.contentMsg");
+		var priArray = document.getElementsByName("textMeta.priority");
+		var length = msgArray.length;
+		var textArray = [];
+		for(var i = 0; i < length; i++){			
+			var msg = msgArray[i].value;
+			var priority = priArray[i].value;
+			textArray[i] = new Text(msg, priority);
+		}
+		textArray.sort(function(o,p){
+			if(typeof o === "object" && typeof p === "object" && o && p){
+				var a = o.priority;
+				var b = p.priority;
+				if(a == b){
+					return 0;
+				}else{
+					return a < b ? -1 : 1;
+				}
+			}else{
+				throw("error");
+			}
+		});
+		var content = "";
+		for(var i = 0; i < length; i++){
+			content += textArray[i].word + "&nbsp;&nbsp;&nbsp;&nbsp"
+		}
+		
+		if(speed != 0){ //滚动
+			
+			$("#textContent").css({
+				'color':$$("textMeta.fontColor").value,
+				'font-size':$$("textMeta.fontSize").value+"px"
+			});
+		
+			$("#textContent").attr({
+				'scrollamount':speed
+			});
+			
+			if(!isEmpty($$("textMeta.bkgColor").value)){
+				$("#textContent").attr({
+					'bgcolor':"#"+$$("textMeta.bkgColor").value
+				});
+			}else{
+				$("#textContent").removeAttr('bgcolor');
+			}
+				
+			$('#text').css({
+				'left':coordinateX,
+				'top': coordinateY,
+				'width':_width,
+				'height':_height
+			});					
+			$("#textContent").html(content);
+			$("#text").show();
+			$("#text2").hide();
+			
+		
+		}else{ //静止
+			$("#textContent2").css({
+				'color':$$("textMeta.fontColor").value,
+				'font-size':$$("textMeta.fontSize").value+"px"
+			});
+			if(!isEmpty($$("textMeta.bkgColor").value)){
+				$('#text2').css({
+					'background':"#"+$$("textMeta.bkgColor").value
+				});
+			}else{
+				$('#text2').css({
+					'background':""
+				});
+			}
+			$('#text2').css({
+				'left':coordinateX,
+				'top': coordinateY,
+				'width':_width,
+				'height':_height
+			});
+		
+			$("#textContent2").html(content);
+			$("#text2").show();
+			$("#text").hide();
 		}
 		
 		
@@ -444,22 +451,11 @@
 		                         </td>
 		                      </tr>
 		                      <tr>
-		                          <td  align="right"><span class="required"></span></td>
-		                          <td>
-			            		      <select style="display:none" disabled="disabled"  id="sel_textMeta_action"  name="textMeta.action" onchange="changeTextAction()">
-								                <option id="action_id" value="-1">请选择...</option>
-										        <option  value="0" <c:if test="${textMeta.action==0}">selected="selected"</c:if> >
-										                        静止
-										        </option>
-										        <option  value="1" <c:if test="${textMeta.action== 1}">selected="selected"</c:if> >
-										                        滚动
-										        </option>
-							           </select>
-		                          </td>
-		                          <td  align="right"><span class="required"></span>文本显示持续时间：</td>
-		                          <td>
+			                      <td  align="right"><span class="required">*</span>显示持续时间：</td>
+		                          <td colspan="3">
 			            		      ${textMeta.durationTime}
-		                         </td>
+		                          </td>
+		                          
 		                      </tr>
 		                      <tr>
 		                          <td  align="right"><span class="required"></span>文本字体大小：</td>
@@ -478,23 +474,8 @@
 		                          </td>
 		                          <td  align="right"><span class="required"></span>文本显示滚动速度：</td>
 		                          <td>
-		                        <!-- <input id="textMeta.rollSpeed" type="hidden" value="${textMeta.rollSpeed}"/>
 			            		      ${textMeta.rollSpeed}
-			            		    -->     
-			            		       <select  disabled="disabled"  id="textMeta.rollSpeed"  name="textMeta.rollSpeed" >
-								                  <option  value="0" <c:if test="${textMeta.rollSpeed==0}">selected="selected"</c:if> >
-										                         静止
-										         </option>
-								                 <option  value="2" <c:if test="${textMeta.rollSpeed==2}">selected="selected"</c:if> >
-										                        低速
-										        </option>
-										        <option  value="6" <c:if test="${textMeta.rollSpeed== 6}">selected="selected"</c:if> >
-										                        中速
-										        </option>
-										         <option  value="12" <c:if test="${textMeta.rollSpeed== 12}">selected="selected"</c:if> >
-										                        高速
-										        </option>
-							  </select>  
+			            		      <input id="textMeta.rollSpeed"  value="${textMeta.rollSpeed}" type="hidden"/>
 		                         </td>
 		                      </tr>
 		                      <tr>
@@ -512,7 +493,31 @@
 		                      <tr>
 		            	          <td width="15%" align="right"><span class="required"></span>内容：</td>
 		                          <td colspan="3">
-		                	      <textarea disabled="disabled" id="textMeta.contentMsg" name="textMeta.contentMsg" maxlength="4000" cols="80" rows="5">${textMeta.contentMsg}</textarea>
+		                	      		<table id="text_content_table" cellspacing="1" class="content" style="margin-bottom: 0px;">
+				                	      	<tbody>
+					                	      	<tr class="title">
+					                	      		<td width="90%">
+					                	      			文字内容
+					                	      		</td>
+					                	      		<td >
+					                	      			优先级
+					                	      		</td>
+					                	      	</tr>
+				                	      	</tbody>
+				                	      	
+				                	      	<c:forEach items="${textMeta.pwList}" var="pwBean" varStatus="pl">
+				                	      		<tr id="text_content_row${pl.index}">
+				                	      			<td>
+				                	      				<textarea name="textMeta.contentMsg" cols="80" rows="2" disabled="disabled" >${pwBean.word}</textarea>
+				                	      			</td>
+				                	      			<td>
+				                	      				${pwBean.priority}
+				                	      				<input name="textMeta.priority" type="hidden" value="${pwBean.priority}"/>
+				                	      			</td>
+				                	      			
+				                	      		</tr>
+				                	      	</c:forEach>
+	                	     		   </table>
 		                          </td>
 		                      </tr>
 		                      <tr>

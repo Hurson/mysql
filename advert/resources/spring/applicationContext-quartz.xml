@@ -51,10 +51,12 @@
 		<property name="triggers">
 			<list>
 				<ref bean="setOrderStateTimer" />
-				<ref bean="generateReportTimer" />
-				<!-- <ref bean="vodSyncTaskTimer" /> -->
-				<ref bean="reportTaskTimer" />
-				<ref bean="areaCacheTimer" />
+				<!-- 
+				 <ref bean="generateReportTimer" />
+				 <ref bean="vodSyncTaskTimer" /> 
+				 <ref bean="reportTaskTimer" />
+				 <ref bean="areaCacheTimer" />
+				 -->
 			</list>
 		</property>
 	</bean>

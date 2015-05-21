@@ -39,10 +39,10 @@ import com.dvnchina.advertDelivery.log.bean.OperateLog;
 import com.dvnchina.advertDelivery.log.service.OperateLogService;
 import com.dvnchina.advertDelivery.meterial.bean.MaterialCategory;
 import com.dvnchina.advertDelivery.meterial.bean.MaterialType;
+import com.dvnchina.advertDelivery.meterial.bean.PriorityWordBean;
 import com.dvnchina.advertDelivery.meterial.bean.QuestionInfo;
 import com.dvnchina.advertDelivery.meterial.bean.QuestionType;
 import com.dvnchina.advertDelivery.meterial.service.MeterialManagerService;
-import com.dvnchina.advertDelivery.model.ContractAD;
 import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.ImageMeta;
 import com.dvnchina.advertDelivery.model.ImageReal;
@@ -66,6 +66,8 @@ import com.dvnchina.advertDelivery.utils.ConfigureProperties;
 import com.dvnchina.advertDelivery.utils.StringUtil;
 import com.dvnchina.advertDelivery.utils.ftp.FtpUtils;
 import com.dvnchina.advertDelivery.utils.json.Obj2JsonUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -606,8 +608,14 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
                 textMeta=meterialManagerService.getTextMetaByID(material.getResourceId());
                 if(textMeta.getContent()!=null){
                     byte[] contentBlob =textMeta.getContent();
+                    String jsonWord = new String(contentBlob,"gbk");
+                    textMeta.setContentMsg(jsonWord);
                     
-                    textMeta.setContentMsg(new String(contentBlob,"gbk"));
+                    Gson gson = new Gson();
+                    List<PriorityWordBean> list = gson.fromJson(jsonWord, new TypeToken<List<PriorityWordBean>>(){ }.getType());
+                    textMeta.setPwList(list);
+                 
+                    
 //                    logger.info("convert before:"+textMeta.getContentMsg());
 //                    contentBlob =textMeta.getContentMsg().getBytes("gbk");
                   //  textMeta.setContentMsg(new String(contentBlob)); 
@@ -789,6 +797,9 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
      * @return
      * @throws IOException
      */
+	/**
+	 * @return
+	 */
 	public String saveMaterialBackup() {  
 	    try{
 	        UserLogin userLogin = (UserLogin) this.getRequest().getSession().getAttribute("USER_LOGIN_INFO");
@@ -1137,7 +1148,19 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 		        
 	            //保存文字素材子表
 	           // byte[] contentBlob = textMeta.getContentMsg().getBytes("utf-8");
-	            byte[] contentBlob = textMeta.getContentMsg().getBytes("gbk");
+		    	
+		    	String[] words = textMeta.getContentMsg().split(",");
+		    	String[] priorities = textMeta.getPriority().replace(" ", "").split(",");
+		    	List<PriorityWordBean> list = new ArrayList<PriorityWordBean>();
+		    	for(int i = 0; i < words.length; i++){
+		    		PriorityWordBean entity = new PriorityWordBean();
+		    		entity.setWord(words[i].trim());
+		    		entity.setPriority(Integer.valueOf(priorities[i]));
+		    		list.add(entity);
+		    	}
+		    	Gson gson = new Gson();
+		    	
+	            byte[] contentBlob = gson.toJson(list).getBytes("gbk");
 		           
 	            textMeta.setContent(contentBlob);
 	            
