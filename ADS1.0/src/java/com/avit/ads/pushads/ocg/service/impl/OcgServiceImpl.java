@@ -34,11 +34,11 @@ import com.avit.ads.util.message.ChannelRecomend;
 import com.avit.ads.util.message.ChannelRecomendElement;
 import com.avit.ads.util.message.ChannelSubtitle;
 import com.avit.ads.util.message.ChannelSubtitleElement;
-import com.avit.ads.util.message.Channelrecomendurl;
 import com.avit.ads.util.message.MsubtitleInfo;
 import com.avit.ads.util.message.OcgPlayMsg;
 import com.avit.ads.util.message.RetMsg;
 import com.avit.ads.util.message.SsuLocation;
+import com.avit.ads.util.message.Subtitle;
 import com.avit.ads.util.message.SystemMaintain;
 import com.avit.ads.util.message.TvnTarget;
 import com.avit.ads.util.message.UNTMessage;
@@ -246,6 +246,7 @@ public class OcgServiceImpl implements OcgService {
 		HttpClient httpclient = new DefaultHttpClient();
 		
 		httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 5000); 
+		httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 5000);
 
 		try { 
 			HttpPost httpost = new HttpPost(url); 
@@ -266,7 +267,9 @@ public class OcgServiceImpl implements OcgService {
 			HttpResponse response = httpclient.execute(httpost); 
 			return response;
 		}catch(Exception e){
-			logger.error("向OCG发送HTTP请求异常", e);
+			String errorMsg = "向OCG发送HTTP请求异常, url: " + url;
+			logger.error(errorMsg, e);
+			warnHelper.writeWarnMsgToDb(errorMsg);
 			return null;
 		}finally {
 			httpclient.getConnectionManager().shutdown();
@@ -629,6 +632,7 @@ public class OcgServiceImpl implements OcgService {
 	}
 
 	//http发送ts文件
+	/*
 	public boolean sendUNTMessageToOCG(int version, String url, int sendType, Object message, HeaderInfo headerInfo){
 //		InitConfig init = new InitConfig();
 //		init.initConfig();
@@ -685,7 +689,7 @@ public class OcgServiceImpl implements OcgService {
 		}
 		
 		return false;
-	}
+	}*/
 	/**
 	 * OCG集成UNT信息发送
 	 */
@@ -700,7 +704,7 @@ public class OcgServiceImpl implements OcgService {
 			uNTMessage.setWeatherforecast((Weatherforecast) message);
 			break;
 		case ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE:
-			uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
+			uNTMessage.setSubtitle((Subtitle) message);
 			break;
 		case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
 			uNTMessage.setAdsConfig((AdsConfigJs) message);
@@ -765,7 +769,7 @@ public class OcgServiceImpl implements OcgService {
 				uNTMessage.setWeatherforecast((Weatherforecast) message);
 				break;
 			case ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE:
-				uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
+				uNTMessage.setSubtitle((Subtitle) message);
 				break;
 			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
 				uNTMessage.setAdsConfig((AdsConfigJs) message);
@@ -822,7 +826,7 @@ public class OcgServiceImpl implements OcgService {
 				uNTMessage.setWeatherforecast((Weatherforecast) message);
 				break;
 			case ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE:
-				uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
+				uNTMessage.setSubtitle((Subtitle) message);
 				break;
 			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
 				uNTMessage.setAdsConfig((AdsConfigJs) message);
@@ -849,7 +853,7 @@ public class OcgServiceImpl implements OcgService {
 		int version = untDao.getUntVersion(areaCode, sendType);
 		version = (version + 1) % 32;
 		
-		boolean result = GenerateFileJni.getInstance().geneTSFile(sendMsg, version, version, destPath, logPath);
+		boolean result = GenerateFileJni.getInstance().geneTSFile(sendMsg.getBytes(), version, version, destPath, logPath);
 						
 		if(result){
 			Ocg ocg = InitConfig.getOcgConfig("" + sendType);
@@ -893,7 +897,7 @@ public class OcgServiceImpl implements OcgService {
 				uNTMessage.setWeatherforecast((Weatherforecast) message);
 				break;
 			case ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE:
-				uNTMessage.setMsubtitleInfo((MsubtitleInfo) message);
+				uNTMessage.setSubtitle((Subtitle) message);
 				break;
 			case ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG:
 				uNTMessage.setAdsConfig((AdsConfigJs) message);
@@ -919,9 +923,7 @@ public class OcgServiceImpl implements OcgService {
 		String logPath = InitConfig.getConfigMap().get(ConstantsHelper.LOG_FILE_PATH)+File.separator+ConstantsHelper.LOG_FILE_NAME;
 		int version = untDao.getUntVersion(areaCode, sendType);
 		version = (version + 1) % 32;
-		
-		boolean result = GenerateFileJni.getInstance().geneTSFile(sendMsg, version, version, destPath, logPath);
-		
+		boolean result = GenerateFileJni.getInstance().geneTSFile(sendMsg.getBytes(), version, version, destPath, logPath);
 		boolean success = false;
 		
 		if(result){
@@ -932,7 +934,7 @@ public class OcgServiceImpl implements OcgService {
 					ocgExist = true;	
 					HeaderInfo headerInfo = new HeaderInfo("0", ocg.getMulticastBitrate(),ocg.getMulticastIp(), ocg.getMulticastPort());
 					String url = "http://" + ocg.getIp() + ":" + ConstantsHelper.OCG_HTTP_PORT;
-					HttpResponse res = sendHttpMsg(headerInfo, url, destPath+File.separator+sendType+ConstantsHelper.TS_FILE_SUFFIX);
+					HttpResponse res = sendHttpMsg(headerInfo, url, destPath+File.separator+"data_00"+ConstantsHelper.TS_FILE_SUFFIX);
 					if(null == res){
 						break;
 					}
@@ -1128,7 +1130,7 @@ public class OcgServiceImpl implements OcgService {
 		
 		ChannelSubtitleElement elem1 = new ChannelSubtitleElement();
 		elem1.setTvnTarget(tvnTarget1);
-		elem1.setSubtitleInfo(subtitle1);
+	//	elem1.setSubtitleInfo(subtitle1);
 		
 		
 		TvnTarget tvnTarget2 = new TvnTarget();
@@ -1154,7 +1156,7 @@ public class OcgServiceImpl implements OcgService {
 		
 		ChannelSubtitleElement elem2 = new ChannelSubtitleElement();
 		elem2.setTvnTarget(tvnTarget2);
-		elem2.setSubtitleInfo(subtitle2);
+	//	elem2.setSubtitleInfo(subtitle2);
 		
 		TvnTarget tvnTarget3 = new TvnTarget();
 		tvnTarget3.setServiceID("102");
@@ -1179,7 +1181,7 @@ public class OcgServiceImpl implements OcgService {
 		
 		ChannelSubtitleElement elem3 = new ChannelSubtitleElement();
 		elem3.setTvnTarget(tvnTarget3);
-		elem3.setSubtitleInfo(subtitle3);
+	//	elem3.setSubtitleInfo(subtitle3);
 		
 		ChannelSubtitle channelSubtitle = new ChannelSubtitle();
 		List<ChannelSubtitleElement> list = new ArrayList<ChannelSubtitleElement>();
@@ -1273,7 +1275,7 @@ public class OcgServiceImpl implements OcgService {
 		
 		ChannelSubtitleElement elem1 = new ChannelSubtitleElement();
 		elem1.setTvnTarget(tvnTarget1);
-		elem1.setSubtitleInfo(subtitle1);
+//		elem1.setSubtitleInfo(subtitle1);
 		
 		
 		TvnTarget tvnTarget2 = new TvnTarget();
@@ -1299,7 +1301,7 @@ public class OcgServiceImpl implements OcgService {
 		
 		ChannelSubtitleElement elem2 = new ChannelSubtitleElement();
 		elem2.setTvnTarget(tvnTarget2);
-		elem2.setSubtitleInfo(subtitle2);
+//		elem2.setSubtitleInfo(subtitle2);
 		
 		TvnTarget tvnTarget3 = new TvnTarget();
 		tvnTarget3.setServiceID("102");
@@ -1324,7 +1326,7 @@ public class OcgServiceImpl implements OcgService {
 		
 		ChannelSubtitleElement elem3 = new ChannelSubtitleElement();
 		elem3.setTvnTarget(tvnTarget3);
-		elem3.setSubtitleInfo(subtitle3);
+	//	elem3.setSubtitleInfo(subtitle3);
 		
 		ChannelSubtitle channelSubtitle = new ChannelSubtitle();
 		List<ChannelSubtitleElement> list = new ArrayList<ChannelSubtitleElement>();

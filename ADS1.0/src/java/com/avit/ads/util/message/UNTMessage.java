@@ -17,8 +17,8 @@ public class UNTMessage {
 	@XmlElement(name="weatherForecast")
 	private Weatherforecast weatherforecast;
 	
-	@XmlElement(name="subtitleInfo")
-	private MsubtitleInfo msubtitleInfo;
+	@XmlElement(name="subtitle")
+	private Subtitle subtitle;
 	
 	@XmlElement(name="adsConfig")
 	private AdsConfigJs adsConfig;
@@ -54,11 +54,12 @@ public class UNTMessage {
 		this.weatherforecast = weatherforecast;
 	}
 
-	public MsubtitleInfo getMsubtitleInfo() {
-		return msubtitleInfo;
+
+	public Subtitle getSubtitle() {
+		return subtitle;
 	}
-	public void setMsubtitleInfo(MsubtitleInfo msubtitleInfo) {
-		this.msubtitleInfo = msubtitleInfo;
+	public void setSubtitle(Subtitle subtitle) {
+		this.subtitle = subtitle;
 	}
 	public AdsConfigJs getAdsConfig() {
 		return adsConfig;

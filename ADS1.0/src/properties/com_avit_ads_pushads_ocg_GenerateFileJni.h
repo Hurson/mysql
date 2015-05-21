@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_avit_ads_pushads_ocg_GenerateFileJni
  * Method:    geneTSFile
- * Signature: (Ljava/lang/String;IILjava/lang/String;Ljava/lang/String;)Z
+ * Signature: ([BIILjava/lang/String;Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_avit_ads_pushads_ocg_GenerateFileJni_geneTSFile
-  (JNIEnv *, jobject, jstring, jint, jint, jstring, jstring);
+  (JNIEnv *, jobject, jbyteArray, jint, jint, jstring, jstring);
 
 #ifdef __cplusplus
 }
