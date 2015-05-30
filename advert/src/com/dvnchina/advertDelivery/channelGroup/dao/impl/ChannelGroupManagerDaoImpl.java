@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts2.ServletActionContext;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -31,6 +34,7 @@ import com.dvnchina.advertDelivery.model.Contract;
 import com.dvnchina.advertDelivery.model.ContractAD;
 import com.dvnchina.advertDelivery.model.ContractADBackup;
 import com.dvnchina.advertDelivery.model.ContractBackup;
+import com.dvnchina.advertDelivery.model.UserLogin;
 
 import com.dvnchina.advertDelivery.model.MarketingRule;
 import com.dvnchina.advertDelivery.model.Ploy;
@@ -39,6 +43,7 @@ import com.dvnchina.advertDelivery.ploy.bean.PloyAreaChannel;
 import com.dvnchina.advertDelivery.ploy.bean.PloyChannel;
 import com.dvnchina.advertDelivery.ploy.dao.PloyDao;
 import com.dvnchina.advertDelivery.utils.HibernateSQLTemplete;
+import com.dvnchina.advertDelivery.utils.StringUtil;
 import com.dvnchina.advertDelivery.sysconfig.bean.ChannelInfo;
 
 public class ChannelGroupManagerDaoImpl extends HibernateSQLTemplete implements ChannelGroupManagerDao {
@@ -174,8 +179,12 @@ public class ChannelGroupManagerDaoImpl extends HibernateSQLTemplete implements 
 	 */
 	public PageBeanDB queryChanelGroupList(TChannelGroup channelGroup,Integer pageSize,Integer pageNumber) {
 		
+		 HttpSession session = ServletActionContext.getRequest().getSession();
+		 UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		 String accessUserIds = StringUtil.objListToString(user.getAccessUserIds(), ",", "-1");
 		 String sql;
-		 sql=" from TChannelGroup t where 1 = 1" ;
+	     sql="from TChannelGroup t where 1=1  " ;
+	     sql+=" and t.operatorId in (" + accessUserIds + ")";
 	     if (channelGroup!=null && channelGroup.getName()!=null && !"".equals(channelGroup.getName()))
 	     {
 	        		sql=sql+" and t.name='"+channelGroup.getName()+"'";

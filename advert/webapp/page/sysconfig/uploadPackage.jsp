@@ -26,7 +26,7 @@
 			result1 = true;
 		}
 		
-		else if(name=="description" && val.substring(val.lastIndexOf("\\")+1)=="description.properties"){
+		else if(name=="description" && val.substring(val.lastIndexOf("."))==".properties"){
 			result2 = true;
 		}else{
 			alert("不支持的文件类型"+ext+",请重新选择！");

@@ -121,6 +121,7 @@
             <td width="25%">
                 <input id="channelGroup.name" name="channelGroup.name" type="text"  value="${channelGroup.name}"/>
                 <input id="channelGroup.id" name="channelGroup.id" type="hidden" value="${channelGroup.id}"/>
+                <input id="channelGroup.operatorId" name="channelGroup.operatorId" type="hidden" value="${channelGroup.operatorId}"/>
                 <span id="channelGroupName_error" ></span>
             </td>
 			<td width="10%" align="right" ><span class="required">*</span>频道组编号：</td>

@@ -25,5 +25,10 @@
                 <comment>描述</comment>
             </column>
         </property>
+         <property name="operatorId" type="java.lang.Integer">
+            <column name="OPERATOR_ID" length="10">
+                <comment>创建者Id</comment>
+            </column>
+        </property>
     </class>
 </hibernate-mapping>

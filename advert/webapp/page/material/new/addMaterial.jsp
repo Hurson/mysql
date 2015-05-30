@@ -1646,8 +1646,8 @@ function IsAlpha(cCheck) {
 			alert("字幕条数必须大于0！");
     		return true;
 		}
-		if(length > 60){
-			alert("字幕条数不能超过60！");
+		if(length > 120){
+			alert("字幕条数不能超过120！");
     		return true;
 		}
 		var sum = 0;
@@ -1660,8 +1660,8 @@ function IsAlpha(cCheck) {
 			}else if(validateSpecialCharacterAfter(msg)){
 				alert("文字内容不能有特殊字符！");
 	    		return true;
-			}else if(msg.length > 80){
-				alert("单条字幕文字个数不能超过80个！");
+			}else if(msg.length > 160){
+				alert("单条字幕文字个数不能超过160个！");
 	    		return true;
 			}  
 			var priority = priArray[i].value;
@@ -1680,7 +1680,7 @@ function IsAlpha(cCheck) {
 				}
 			}
 		}
-		if(2 * sum + 21 * length > 3800 ){
+		if(sum > 19200 ){
 			alert("文字总数量过多，请减少字幕条数或文字数量！");
     		return true;
 		}
@@ -1813,18 +1813,28 @@ function IsAlpha(cCheck) {
 			input.value="";
 		}
 	}
+	function remainWord(field,id, maxlimit) { 
+		if (field.value.length > maxlimit){ 
+			field.value = field.value.substring(0, maxlimit); 
+		}else{ 
+			
+			document.getElementById(id).value=maxlimit - field.value.length; 
+		} 
+	} 
 	
 	function addContent(){
-		var table = $$('text_content_table');
+		var table = $$('text_content_tbody');
+		var index = $$('text_content_tbody').rows.length;
 		var row = document.createElement("tr"); 
-		rowCount += 1;
-		row.setAttribute("id", 'text_content_row' + rowCount);
+		index += 1;
+		row.setAttribute("id", 'text_content_row' + index);
 		var td1 = document.createElement("td");	
-		td1.innerHTML = '<textarea name="textMeta.contentMsg" cols="80" rows="2" > </textarea>';	
+		td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,\'remain_word' + index+ '\', 160)" cols="80" rows="2" ></textarea>';
+		td1.innerHTML += '<span>剩余字数:</span> <input name="remain_word" type="text" id= "remain_word' + index + '" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="160" size="3" readonly></input>';	
 		var td2 = document.createElement("td");	
-		td2.innerHTML = '<input name="textMeta.priority" type="text" maxlength="2" style="width:30px"/>';
+		td2.innerHTML = '<input name="textMeta.priority" type="text" maxlength="3" value="'+index+'" style="width:30px"/>';
 		var td3 = document.createElement("td");	
-		td3.innerHTML = "<a href='#' onclick='deleteTrById(\"text_content_row" + rowCount + "\");'>删除</a>";
+		td3.innerHTML = "<a href='#' onclick='deleteTrById(\"text_content_row" + index + "\");'>删除</a>";
 		row.appendChild(td1);
 		row.appendChild(td2);
 		row.appendChild(td3);
@@ -1980,18 +1990,20 @@ function IsAlpha(cCheck) {
 		                          <td colspan="3">
 		                          		                       
 			                	      <table id="text_content_table" cellspacing="1" class="content" style="margin-bottom: 0px;">
-				                	      	<tbody>
+				                	      	<thead>
 					                	      	<tr class="title">
-					                	      		<td width="80%">
+					                	      		<td width="87%">
 					                	      			文字内容
 					                	      		</td>
-					                	      		<td width="10%">
+					                	      		<td width="7%">
 					                	      			优先级
 					                	      		</td>
 					                	      		<td >
 					                	      			操作
 					                	      		</td>
 					                	      	</tr>
+				                	      	</thead>
+				                	      	<tbody id="text_content_tbody">
 				                	      	</tbody>
 			                	      </table>
 

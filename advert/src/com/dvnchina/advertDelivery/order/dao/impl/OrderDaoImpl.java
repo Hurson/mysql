@@ -211,27 +211,23 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		PageBeanDB page = new PageBeanDB();
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		String accessUserIds = StringUtil.objListToString(user.getAccessUserIds(), ",", "-1");
 		if(user.getRoleType() != 2){
 			//非运营商
 			return page;
 		}
-		String pids = "-1,";
-		for(Integer pid : user.getPositionIds()){
-			pids += pid+",";
-		}
-		pids = pids.substring(0,pids.length()-1);
 		StringBuffer sql =  new StringBuffer();
 		sql.append("select distinct o.id,o.order_code,o.contract_id,o.position_id,o.ploy_id,o.order_type,o.start_time,o.end_time,");
 		sql.append(" o.create_time,o.modify_time,o.state,c.contract_name,ad.position_name,pl.ploy_name,cust.advertisers_name");	
 		sql.append(" from t_order o left join (t_contract c join t_customer cust on c.custom_id = cust.id) on o.contract_id = c.id,");
-		sql.append(" t_advertposition ad,t_position_package pp,t_ploy pl");
-		sql.append(" where pl.ploy_id=o.ploy_id and ad.id=o.position_id and ad.position_package_id = pp.id");
+		sql.append(" t_advertposition ad,t_ploy pl");
+		sql.append(" where pl.ploy_id=o.ploy_id and ad.id=o.position_id");
 		sql.append(" and o.state in(");
 		sql.append(Constant.ORDER_PENDING_CHECK).append(",").append(Constant.ORDER_PENDING_CHECK_UPDATE);
 		sql.append(",").append(Constant.ORDER_PENDING_CHECK_DELETE).append(") ");
-		sql.append(" and pp.id in ( ").append(pids).append(" ) ");
+			
+		sql.append(" and o.operator_id in (").append(accessUserIds).append(")");
 
-		
 		if(order != null){
 			if(order.getCustomerId() != null){
 				sql.append(" and c.custom_id = " + order.getCustomerId().intValue());

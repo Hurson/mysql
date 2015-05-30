@@ -1,54 +1,29 @@
 package com.dvnchina.advertDelivery.channelGroup.action;
 
-import java.net.URLDecoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
-import com.alibaba.fastjson.JSON;
+
 import com.dvnchina.advertDelivery.action.BaseActionSupport;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
-import com.dvnchina.advertDelivery.bean.contract.ContractContractADRelation;
-import com.dvnchina.advertDelivery.bean.contract.ContractQueryBean;
 import com.dvnchina.advertDelivery.channelGroup.bean.ChannelGroupRef;
 import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.channelGroup.service.ChannelGroupManagerService;
 import com.dvnchina.advertDelivery.constant.Constant;
 import com.dvnchina.advertDelivery.constant.LoginConstant;
-import com.dvnchina.advertDelivery.constant.PageConstant;
-import com.dvnchina.advertDelivery.contract.bean.AdvertPositionPackage;
-import com.dvnchina.advertDelivery.contract.bean.PositionAD;
-import com.dvnchina.advertDelivery.contract.service.ContractManagerService;
 import com.dvnchina.advertDelivery.log.bean.OperateLog;
 import com.dvnchina.advertDelivery.log.service.OperateLogService;
-import com.dvnchina.advertDelivery.model.Contract;
-import com.dvnchina.advertDelivery.model.ContractAD;
-import com.dvnchina.advertDelivery.model.ContractADBackup;
-import com.dvnchina.advertDelivery.model.ContractBackup;
-import com.dvnchina.advertDelivery.model.Customer;
-import com.dvnchina.advertDelivery.model.CustomerBackUp;
-import com.dvnchina.advertDelivery.model.MarketingRule;
-import com.dvnchina.advertDelivery.model.Resource;
-import com.dvnchina.advertDelivery.ploy.bean.PloyAreaChannel;
-import com.dvnchina.advertDelivery.ploy.bean.PloyChannel;
-import com.dvnchina.advertDelivery.ploy.bean.TPreciseMatchBk;
-import com.dvnchina.advertDelivery.ploy.service.PloyService;
-import com.dvnchina.advertDelivery.service.ContractBackupService;
-import com.dvnchina.advertDelivery.service.ContractRunService;
+import com.dvnchina.advertDelivery.model.UserLogin;
 import com.dvnchina.advertDelivery.sysconfig.bean.ChannelInfo;
 import com.dvnchina.advertDelivery.utils.CookieUtils;
-import com.dvnchina.advertDelivery.utils.json.Obj2JsonUtil;
-import com.dvnchina.advertDelivery.utils.page.PageBean;
-import com.dvnchina.advertDelivery.utils.page.PageUtils;
 
 public class ChannelGroupManagerAction extends BaseActionSupport<Object> implements ServletRequestAware{
 	
@@ -159,11 +134,12 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
        try{
     	   String channelGroupDesc = channelGroup.getChannelDesc().trim();
    	    channelGroup.setChannelDesc(channelGroupDesc);
-   	    
+   	    HttpSession session = ServletActionContext.getRequest().getSession();
+   	    UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
    	    //modified by liuwenping 如果编码已存在，不能保存（更新）
    	    String code = channelGroup.getCode().trim();
    	    int count = channelGroupManagerService.getEntityCountByCode(code);
-   	    if(count > 0){ //存在该编码
+   	    if(count > 0 && channelGroup.getId()==null){ //存在该编码
    	    	String url = "queryChannelGroupList.do"; 
    	    	this.renderHtml(generateMessage(url,"该编码已存在，不能重复编码"));
    	    	return null;
@@ -178,6 +154,7 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
    			operLog = this.setOperationLog(Constant.OPERATE_MODULE_CHANNEL_GROUP);
    			operateLogService.saveOperateLog(operLog);
    	    }else{
+   	    	channelGroup.setOperatorId(user.getUserId());
    	        //新增流程
    	    	channelGroupManagerService.saveChannelGroup(channelGroup);
    	        

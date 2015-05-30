@@ -1,7 +1,6 @@
 package com.dvnchina.advertDelivery.channelGroup.bean;
 
 import com.dvnchina.advertDelivery.utils.StringUtil;
-import com.dvnchina.advertDelivery.utils.Transform;
 
 /**
  * TChannelGroup entity. @author MyEclipse Persistence Tools
@@ -11,10 +10,12 @@ public class TChannelGroup implements java.io.Serializable {
 
 	// Fields
 
+	private static final long serialVersionUID = 4146388337082191347L;
 	private Long id;
 	private String code;
 	private String name;
 	private String channelDesc;
+	private Integer operatorId;
 
 	// Constructors
 
@@ -28,10 +29,11 @@ public class TChannelGroup implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public TChannelGroup(String code, String name, String channelDesc) {
+	public TChannelGroup(String code, String name, String channelDesc, Integer operatorId) {
 		this.code = code;
 		this.name = name;
 		this.channelDesc = channelDesc;
+		this.operatorId = operatorId;
 	}
 
 	// Property accessors
@@ -68,6 +70,14 @@ public class TChannelGroup implements java.io.Serializable {
 		this.channelDesc = channelDesc;
 	}
 	
+	public Integer getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(Integer operatorId) {
+		this.operatorId = operatorId;
+	}
+
 	/**
 	 * 操作日志详情描述
 	 */

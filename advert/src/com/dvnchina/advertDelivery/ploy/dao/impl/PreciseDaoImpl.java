@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts2.ServletActionContext;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -21,6 +24,7 @@ import com.dvnchina.advertDelivery.model.ChannelInfo;
 import com.dvnchina.advertDelivery.model.Ploy;
 import com.dvnchina.advertDelivery.model.ProductInfo;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.model.UserLogin;
 import com.dvnchina.advertDelivery.npvrChannelGroup.bean.TNpvrChannelGroup;
 import com.dvnchina.advertDelivery.ploy.bean.LocationCode;
 import com.dvnchina.advertDelivery.ploy.bean.TAssetinfo;
@@ -35,6 +39,7 @@ import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserRank;
 import com.dvnchina.advertDelivery.utils.HibernateSQLTemplete;
+import com.dvnchina.advertDelivery.utils.StringUtil;
 
 public class PreciseDaoImpl extends BaseDaoImpl implements PreciseDao {
 	public Long getDataTotal(String hql, final List params) { 
@@ -515,8 +520,12 @@ public class PreciseDaoImpl extends BaseDaoImpl implements PreciseDao {
  	 */
 	public PageBeanDB queryChannelGroupList(TChannelGroup channelGroup,String ids,Integer pageSize, Integer pageNumber)
 	{
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		String accessUserIds = StringUtil.objListToString(user.getAccessUserIds(), ",", "-1");
 		 String sql;
 	     sql="from TChannelGroup t where 1=1  " ;
+	     sql+=" and t.operatorId in (" + accessUserIds + ")";
 	     if (channelGroup!=null && channelGroup.getName()!=null && !"".equals(channelGroup.getName()))
 	     {
 	        		sql=sql+" and t.name like '%"+channelGroup.getName()+"%'";
