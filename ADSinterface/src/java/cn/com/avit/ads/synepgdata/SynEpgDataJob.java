@@ -7,9 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.avit.ads.util.ContextHolder;
 import com.avit.ads.util.InitConfig;
 import com.avit.ads.util.bean.Epgftp;
@@ -26,7 +28,7 @@ public class SynEpgDataJob {
 	
 	public void synEpgData(){
 		
-		Log log = LogFactory.getLog(this.getClass());
+		Logger log = LoggerFactory.getLogger(this.getClass());
 		
 		FtpService ftpService = (FtpServiceImpl)ContextHolder.getApplicationContext().getBean("FtpService");	
 		WarnHelper warnHelper = (WarnHelper)ContextHolder.getApplicationContext().getBean("warnHelper");	
@@ -63,8 +65,9 @@ public class SynEpgDataJob {
 	    	    }
 	    		
 	    		String localFileName = remoteFileName;
-	    		
-	    		log.info("download channelInfo file [" + remoteFileName +  "] from epg ftp");
+	    		if(log.isInfoEnabled()){
+	    			log.info("download channelInfo file [" + remoteFileName +  "] from epg ftp");
+	    		}
 	    		if(!ftpService.downloadFile(remoteFileName, localFileName, remoteDirectory, localDirectory)){
 	    			return;
 	    		}
@@ -76,10 +79,14 @@ public class SynEpgDataJob {
 	    			BaseDao daoImpl = (BaseDaoImpl)ContextHolder.getApplicationContext().getBean("baseDao");
 	    			BufferedReader br = null;
 	    			try {
-	    				br = new BufferedReader(new InputStreamReader(new FileInputStream(channelInfoFile)));
+	    				String networkId = "";
+	    				if(localFileName.length() > 6){
+	    					networkId = localFileName.substring(1, 6);
+	    				}
+	    				br = new BufferedReader(new InputStreamReader(new FileInputStream(channelInfoFile),"utf-8"));
 	    				String line = "";
 	    				while(null != (line = br.readLine())){
-	    					parseInfoAndUpdateDb(line,daoImpl);
+	    					parseInfoAndUpdateDb(networkId, line,daoImpl);
 	    				} 
 	    				
 	    			} catch (FileNotFoundException e) {
@@ -119,7 +126,7 @@ public class SynEpgDataJob {
 		}
 	}
 	
-	private void parseInfoAndUpdateDb(String line,BaseDao daoImpl){
+	private void parseInfoAndUpdateDb(String networkId, String line,BaseDao daoImpl){
 		String[] datas = line.split("\\|");	
 		if(datas.length == 4){  // 频道名称|servieID|tsid|频道类型	
 			String channelName = datas[0].trim();
@@ -137,7 +144,29 @@ public class SynEpgDataJob {
 //			ChannelInfoTemp tempEntity = new ChannelInfoTemp();			
 //			tempEntity.setServiceId(serviceId);
 //			daoImpl.save(tempEntity);
-			
+			List<ChannelInfoSync> syncList = daoImpl.getListForAll("from ChannelInfoSync cs where cs.serviceId=? and cs.networkId =?", new Object[]{serviceId, networkId});
+			ChannelInfoSync syncEntity = null;
+			if(null != syncList && syncList.size() > 0){
+				syncEntity = syncList.get(0);
+				//名称变了或者类型变了更新，ts_id变了更新
+				if(!channelName.equals(syncEntity.getChannelName()) || !channelType.equals(syncEntity.getChannleType())|| !tsId.equals(syncEntity.getTsId())){
+					syncEntity.setChannelName(channelName);
+					syncEntity.setChannleType(channelType);
+					syncEntity.setTsId(tsId);	
+					
+					daoImpl.save(syncEntity);
+				}
+			}else{
+				syncEntity = new ChannelInfoSync();
+				syncEntity.setServiceId(serviceId);
+				syncEntity.setNetworkId(networkId);
+				syncEntity.setChannelName(channelName);
+				syncEntity.setChannleType(channelType);
+				syncEntity.setTsId(tsId);	
+				
+				daoImpl.save(syncEntity);
+			}
+				
 			List<ChannelInfo> resultList = daoImpl.find("from ChannelInfo ci where ci.serviceId=?", serviceId);
 			ChannelInfo entity = null;
 			if(null != resultList && resultList.size() > 0){

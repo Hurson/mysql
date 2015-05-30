@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "t_channelinfo_temp")
-public class ChannelInfoTemp {
+@Table(name = "t_channelinfo_sync")
+public class ChannelInfoSync {
 	/** 主键 */
 	private Long channelId;
 	
@@ -24,6 +24,9 @@ public class ChannelInfoTemp {
 	
 	/** 频道类型 */
 	private String channleType;
+	
+	/**网络Id*/
+	private String networkId;
 	
 	
 	@Id
@@ -59,7 +62,13 @@ public class ChannelInfoTemp {
 	public void setTsId(Long tsId) {
 		this.tsId = tsId;
 	}	
-	
+	@Column(name="NETWORK_ID")
+	public String getNetworkId() {
+		return networkId;
+	}
+	public void setNetworkId(String networkId) {
+		this.networkId = networkId;
+	}
 	@Column(name = "CHANNEL_TYPE")
 	public String getChannleType() {
 		return channleType;
