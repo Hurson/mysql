@@ -13,6 +13,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
+import com.avit.ads.pushads.task.bean.TMulticastInfo;
 import com.avit.ads.pushads.task.dao.PushAdsDao;
 import com.avit.ads.util.bean.Ads;
 import com.avit.common.page.dao.impl.CommonDaoImpl;
@@ -146,6 +147,34 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 			 updateSql = updateSql + " where ads.id in ("+adsids+")";
 		 }
 	     this.executeByHQL(updateSql,(Object[])null);
+	}
+
+	public String getAreaChannelTsId(final String areaCode, final String serviceId) {
+		final String hql = "select ch.tsId from ChannelInfoSync ch where ch.networkId=? and ch.serviceId=?";
+		
+		return this.getHibernateTemplate().execute(new HibernateCallback<String>(){
+			public String doInHibernate(Session session){
+				Query query = session.createQuery(hql);
+				query.setParameter(0, Long.valueOf(areaCode));
+				query.setParameter(1, serviceId);
+				return query.list().size() > 0 ?String.valueOf(query.list().get(0)) : null;
+			}
+				
+		});
+	}
+	
+	public TMulticastInfo getAreaTsIdUdpUrl(final String areaCode, final String tsId) {
+		final String hql = "from TMulticastInfo ui where ui.areaCode=? and ch.tsId=?";
+		
+		return this.getHibernateTemplate().execute(new HibernateCallback<TMulticastInfo>(){
+			public TMulticastInfo doInHibernate(Session session){
+				Query query = session.createQuery(hql);
+				query.setParameter(0, areaCode);
+				query.setParameter(1, tsId);
+				return (TMulticastInfo)query.uniqueResult();
+			}
+				
+		});
 	}
 
 }

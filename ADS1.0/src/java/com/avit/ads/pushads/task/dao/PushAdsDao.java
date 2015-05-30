@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
+import com.avit.ads.pushads.task.bean.TMulticastInfo;
 import com.avit.ads.util.bean.Ads;
 
 // TODO: Auto-generated Javadoc
@@ -62,5 +63,19 @@ public interface PushAdsDao {
 	 */
 	void updateAdsFlag(String adsids,String flag);
 	
+	/**
+	 * 通过区域码和serviceId获得频道的频点Id
+	 * @param areaCode
+	 * @param serviceId
+	 * @return
+	 */
+	public String getAreaChannelTsId(String areaCode, String serviceId);
+	/**
+	 * 通过区域码和频点Id获取UDP地址
+	 * @param areaCode
+	 * @param tsId
+	 * @return
+	 */
+	public TMulticastInfo getAreaTsIdUdpUrl(String areaCode, String tsId);
 	
 }

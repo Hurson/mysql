@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 
 import com.avit.ads.pushads.cps.service.CpsService;
 import com.avit.ads.pushads.ocg.dao.OcgInfoDao;
+import com.avit.ads.pushads.ocg.dao.UntDao;
 import com.avit.ads.pushads.ocg.service.OcgService;
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
 import com.avit.ads.pushads.task.bean.AdsElement;
@@ -52,6 +53,7 @@ import com.avit.ads.pushads.task.bean.OcgInfo;
 import com.avit.ads.pushads.task.bean.PicMaterial;
 import com.avit.ads.pushads.task.bean.SendAds;
 import com.avit.ads.pushads.task.bean.StartMaterial;
+import com.avit.ads.pushads.task.bean.TMulticastInfo;
 import com.avit.ads.pushads.task.bean.TReleaseArea;
 import com.avit.ads.pushads.task.bean.TextMate;
 import com.avit.ads.pushads.task.cache.AdvertPositionMap;
@@ -80,8 +82,11 @@ import com.avit.ads.util.message.AdsConfigJs;
 import com.avit.ads.util.message.AdsImage;
 import com.avit.ads.util.message.ChannelSubtitle;
 import com.avit.ads.util.message.ChannelSubtitleElement;
+import com.avit.ads.util.message.ChannelSubtitleInfo;
 import com.avit.ads.util.message.MsubtitleInfo;
 import com.avit.ads.util.message.Subtitle;
+import com.avit.ads.util.message.SubtitleContent;
+import com.avit.ads.util.message.SubtitlePart;
 import com.avit.ads.util.message.TvnTarget;
 import com.avit.ads.util.type.UIUpdate;
 import com.avit.ads.util.warn.WarnHelper;
@@ -121,6 +126,9 @@ public class PushAdsServiceImpl implements PushAdsService {
 	UiService uiService;
 	@Inject
 	ADSurveyDAO adsurveyDAO;
+	
+	@Autowired
+	private UntDao untDao;	
 	
 	@Inject
 	private OcgInfoDao ocgInfoDao;
@@ -1038,14 +1046,14 @@ public class PushAdsServiceImpl implements PushAdsService {
 				imageUpdateMsg.setFilepath(imageUpdatePath);
 				imageUpdateMsg.setUiId(ConstantsHelper.UNT_UPDATE_TEMPLATE);
 				
-				boolean picUpdateSuccess = ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE, imageUpdateMsg, areaCode);			
+				boolean picUpdateSuccess = ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE, imageUpdateMsg, areaCode, null);			
 				
 				//发UNT配置文件更新通知
 				AdsConfigJs configUpdateMsg = new AdsConfigJs();
 				String configUpdatePath = ConstantsHelper.UNT_UPDATE_PATH_PREFIX + getDeepestDir(targetConfigDirPath)  + "/" + configFileName;
 				configUpdateMsg.setFilepath(configUpdatePath);
 				configUpdateMsg.setUiId(ConstantsHelper.UNT_UPDATE_TEMPLATE);
-				boolean confUpdateSuccess = ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG, configUpdateMsg, areaCode);
+				boolean confUpdateSuccess = ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_ADCONFIG, configUpdateMsg, areaCode, null);
 				
 				if(!picUpdateSuccess || !confUpdateSuccess){
 					log.error("send unt update message failed! areacode : " + areaCode);
@@ -2956,7 +2964,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 		//查询过期列表（播出单结束时间 < 当前时间），发送不显示字幕，更新播出单状态为4	 
 		String overdueHql =  "from AdPlaylistGis ads where ads.state=1 and ads.endTime <=? and ads.adSiteCode =? ";			            
 		List<AdPlaylistGis> overdueList = pushAdsDao.getTemplate().find(overdueHql, new Date(), ConstantsAdsCode.PUSH_CHANNEL_SUBTITLE);
-		sendChannelSubtitle2(overdueList,"0","4");
+		sendChannelSubtitle3(overdueList,"0","4");
 		try {
 			Thread.sleep(60000);
 		} catch (InterruptedException e) {
@@ -2966,7 +2974,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 		String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.startTime <= ? and ads.endTime >=? and ads.adSiteCode =? ";    
 		Date now = new Date();
 		List<AdPlaylistGis> newList = pushAdsDao.getTemplate().find(newHql, now, now, ConstantsAdsCode.PUSH_CHANNEL_SUBTITLE);
-		sendChannelSubtitle2(newList,"1","1");
+		sendChannelSubtitle3(newList,"1","1");
 		
 	}
 	
@@ -3120,9 +3128,108 @@ public class PushAdsServiceImpl implements PushAdsService {
 			}
 		}
 	} */
+
+	private void sendChannelSubtitle3(List<AdPlaylistGis> playLists, String actionType, String state){
+		List<String> areaList = InitAreas.getInstance().getAreas();
+		for(String areaCode : areaList){
+			List<AdPlaylistGis> pickedList = pickPlayListByAreaCode(playLists, areaCode);
+			if(pickedList.size() > 0){
+				if("1".equals(actionType)){
+					log.info("向区域" + areaCode + "投放频道字幕广告...");
+				}else{
+					log.info("区域" + areaCode + "频道字幕广告到期，发停止消息...");
+				}
+				
+				Map<String, List<ChannelSubtitleElement>> channelTsMap =  new HashMap<String, List<ChannelSubtitleElement>>();
+				//拼装字幕UNT消息
+				for(AdPlaylistGis adGis : pickedList){					
+					String tvn = adGis.getTvn();
+					String userIndustrys = adGis.getUserindustrys();
+					String userLevels = adGis.getUserlevels();
+					
+					TvnTarget tvnTargetModel = new TvnTarget();
+					tvnTargetModel.setTvnType("2"); 
+					tvnTargetModel.setTvn(tvn);
+					tvnTargetModel.setCaIndustryType(userIndustrys);
+					tvnTargetModel.setCaUserLevel(userLevels);
+					
+					List<String> serviceIdList = getListFromJson(adGis.getChannelId());
+					for(String serviceId : serviceIdList){
+						
+						TvnTarget tvnTarget = new TvnTarget();
+						BeanUtils.copyProperties(tvnTargetModel, tvnTarget);
+						tvnTarget.setServiceID(serviceId);
+						
+						Gson gson = new Gson();
+						TextMate text = gson.fromJson(adGis.getContentPath(), TextMate.class);
+						
+						ChannelSubtitleInfo subtitleInfo = new ChannelSubtitleInfo();
+						subtitleInfo.setUiId("a");
+						subtitleInfo.setActionType(actionType);
+						subtitleInfo.setTimeout(text.getDurationTime() + "");
+						subtitleInfo.setFontColor(text.getFontColor());
+						subtitleInfo.setFontSize(text.getFontSize() + "");
+						String[] coordinate = text.getPositionVertexCoordinates().split("\\*");
+						subtitleInfo.setBackgroundX(coordinate[0]);
+						subtitleInfo.setBackgroundY(coordinate[1]);
+						String[] widthHeight = text.getPositionWidthHeight().split("\\*");
+						subtitleInfo.setBackgroundWidth(widthHeight[0]);
+						subtitleInfo.setBackgroundHeight(widthHeight[1]);
+						subtitleInfo.setBackgroundColor(text.getBkgColor());
+						subtitleInfo.setShowFrequency(text.getRollSpeed() + "");
+						
+						String[] words = text.getContent().split("@_@");
+						List<SubtitlePart> subtitleList = new ArrayList<SubtitlePart>();
+						for(int i = 0; i < words.length; i ++){
+							String word = words[i].trim();
+							if(StringUtils.isBlank(word)){
+								continue;
+							}
+							
+							SubtitlePart part = new SubtitlePart();
+							part.setId(i + "");
+							part.setWord(word);
+							
+							subtitleList.add(part);
+						}
+						SubtitleContent content = new SubtitleContent();
+						content.setSubtitleList(subtitleList);
+						ChannelSubtitleElement elem = new ChannelSubtitleElement();
+						elem.setTvnTarget(tvnTarget);
+						elem.setSubtitleInfo(subtitleInfo);
+						elem.setSubtitleContent(content);
+						
+						String tsId = pushAdsDao.getAreaChannelTsId(areaCode, serviceId);
+						if(StringUtils.isBlank(tsId)){
+							continue;
+						}
+						List<ChannelSubtitleElement> elementList = channelTsMap.get(tsId);
+						if(elementList == null){
+							elementList = new ArrayList<ChannelSubtitleElement>();
+							channelTsMap.put(tsId, elementList);
+						}
+						elementList.add(elem);
+					}
+				}
+				
+				for(String tsId : channelTsMap.keySet()){
+					List<ChannelSubtitleElement> channelSubtitleList = channelTsMap.get(tsId);
+				
+					ChannelSubtitle channelSubtitle = new ChannelSubtitle();
+					channelSubtitle.setTsId(tsId);
+					channelSubtitle.setChannelSubtitleElemList(channelSubtitleList);
+					//向OCG发送UNT消息
+					ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle, areaCode, tsId);
+					
+				}
+				for(AdPlaylistGis adGis : pickedList){					
+					pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
+				}
+			}
+		}
+	}
 	
-	
-	private void sendChannelSubtitle2(List<AdPlaylistGis> playLists, String actionType, String state){
+/*	private void sendChannelSubtitle2(List<AdPlaylistGis> playLists, String actionType, String state){
 		List<String> areaList = InitAreas.getInstance().getAreas();
 		for(String areaCode : areaList){
 			List<AdPlaylistGis> pickedList = pickPlayListByAreaCode(playLists, areaCode);
@@ -3202,7 +3309,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				
 			}
 		}
-	}
+	}*/
 	
 	
 	/*private void sendChannelSubtitle(List<AdPlaylistGis> playLists, String actionType, String state){
@@ -3246,21 +3353,53 @@ public class PushAdsServiceImpl implements PushAdsService {
 				subtitleModel.setShowFrequency(text.getRollSpeed() + "");
 				subtitleModel.setWord(text.getContent());
 				
-				List<ChannelSubtitleElement> list = new ArrayList<ChannelSubtitleElement>();
+				Map<String, List<String>> tsIdMap = getMapFromData(areaCode, adGis.getChannelId());
+				for(String tsId : tsIdMap.keySet()){
+					List<ChannelSubtitleElement> list = new ArrayList<ChannelSubtitleElement>();
+					TUdpInfo udpInfo = pushAdsDao.getAreaTsIdUdpUrl(areaCode, tsId);
+					List<String> serviceIdList = tsIdMap.get(tsId);//getListFromJson(adGis.getChannelId());
+					if(serviceIdList == null || serviceIdList.size() < 1){
+						continue;
+					}
+					for(String serviceId : serviceIdList){
+						TvnTarget tvnTarget = new TvnTarget();
+						BeanUtils.copyProperties(tvnTargetModel, tvnTarget);
+						tvnTarget.setServiceID(serviceId);
+						
+						MsubtitleInfo subtitle = new MsubtitleInfo();
+						BeanUtils.copyProperties(subtitleModel, subtitle);
+						
+						ChannelSubtitleElement elem = new ChannelSubtitleElement();
+						elem.setTvnTarget(tvnTarget);
+						elem.setSubtitleInfo(subtitle);
+						
+						list.add(elem);
+					}
+					
+					ChannelSubtitle channelSubtitle = new ChannelSubtitle();
+					channelSubtitle.setChannelSubtitleElemList(list);
+					
+					
+<<<<<<< .mine
+					List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+					boolean ocgExist = false;
+					for (OcgInfo ocg : ocgList) {
+						if (ocg.getAreaCode().equals(areaCode)) {
+							ocgExist = true;
+							String ocgIp = ocg.getIp();
+							//向OCG发送UNT消息
+							ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle,areaCode);																		
+						}
+					}
+					
+					if(!ocgExist){
+						String errMsg = "未配置区域【" + areaCode + "】的IP地址";
+						log.error(errMsg);
+						warnHelper.writeWarnMsgToDb(errMsg);
+					}
+				}
 				
-				List<String> serviceIdList = getListFromJson(adGis.getChannelId());
-				for(String serviceId : serviceIdList){
-					TvnTarget tvnTarget = new TvnTarget();
-					BeanUtils.copyProperties(tvnTargetModel, tvnTarget);
-					tvnTarget.setServiceID(serviceId);
-					
-					MsubtitleInfo subtitle = new MsubtitleInfo();
-					BeanUtils.copyProperties(subtitleModel, subtitle);
-					
-					ChannelSubtitleElement elem = new ChannelSubtitleElement();
-					elem.setTvnTarget(tvnTarget);
-					elem.setSubtitleInfo(subtitle);
-					
+=======
 					list.add(elem);
 				}
 				
@@ -3270,6 +3409,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				//向OCG发送UNT消息
 				ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle,areaCode);																		
 
+>>>>>>> .r18276
 				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
 			}
 		}
@@ -3339,7 +3479,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				subtitle.setSubtitleInfoList(subtitleInfoList);
 		
 				//向OCG发送UNT消息
-				ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE, subtitle, areaCode);																		
+				ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE, subtitle, areaCode, null);																		
 
 				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
 			}
@@ -4445,7 +4585,21 @@ public class PushAdsServiceImpl implements PushAdsService {
 
 	   
 	   
-	   
+	   public static void main(String[] args) {
+		   Map<String, List<String>> tsIdMap = new HashMap<String, List<String>>();
+		   List<String> list = new ArrayList<String>();
+		   list.add("aaa");
+		   list.add("bbb");
+		   tsIdMap.put("first", list);
+		  
+		   Map<String, List<String>> tsIdMap1 = new HashMap<String, List<String>>();
+		   List<String> list1 = new ArrayList<String>();
+		   list.add("ccc");
+		   list.add("ddd");
+		   tsIdMap.put("second", list1);
+		   tsIdMap.putAll(tsIdMap1);
+		   System.out.println(tsIdMap.size());
+	}
 	   
 	   
 	   

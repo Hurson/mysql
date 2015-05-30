@@ -1,5 +1,6 @@
 package com.avit.ads.pushads.task.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,22 +9,29 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.avit.ads.pushads.dtv.service.impl.DtvServiceImpl;
+import com.avit.ads.pushads.ocg.dao.OcgInfoDao;
 import com.avit.ads.pushads.task.bean.AdDefault;
+import com.avit.ads.pushads.task.bean.OcgInfo;
 import com.avit.ads.pushads.task.bean.PicMaterial;
 import com.avit.ads.pushads.task.cache.AdvertPositionMap;
 import com.avit.ads.pushads.task.cache.ChannelMap;
 import com.avit.ads.pushads.task.cache.ChannelNpvrMap;
 import com.avit.ads.pushads.task.cache.LookbackCategoryMap;
 import com.avit.ads.pushads.task.dao.DatainitDao;
+import com.avit.ads.pushads.task.dao.InitAreasDao;
 import com.avit.ads.pushads.task.service.DataInitService;
+import com.avit.ads.util.ConstantsHelper;
 import com.avit.ads.util.InitConfig;
-import com.avit.ads.util.json.Obj2JsonUtil;
 @Service("DatainitService")
 public class DataInitServiceImpl implements DataInitService {
 	/** The push ads dao. */
 	@Inject
 	DatainitDao datainitDao;
+	@Inject
+	private InitAreasDao initAreasDao;
+	@Inject
+	private OcgInfoDao ocgInfoDao;
+	
 	private Logger logger = Logger.getLogger(this.getClass());
 	
 	public void initChannel() {
@@ -39,6 +47,38 @@ public class DataInitServiceImpl implements DataInitService {
 	public void initLookbackCategory() {
 		// TODO Auto-generated method stub
 		LookbackCategoryMap.setCategoryMap(datainitDao.queryLookbackCategory());
+	}
+	public void initAreaTSFile(){
+		String path = InitConfig.getConfigMap().get(ConstantsHelper.DEST_FILE_PATH);
+		List<String> areaCodeList = initAreasDao.getAreas();
+		try{
+			for(String areaCode : areaCodeList){
+				String destPath = path + File.separator + areaCode;
+				File file = new File(destPath);
+				//创建县级及以下目录
+				if(!file.exists()){
+					file = new File(destPath + File.separator + ConstantsHelper.NORMAL_FILE);
+					file.mkdirs();
+					file = new File(destPath + File.separator + ConstantsHelper.CHANNEL_SUBTITLE);
+					file.mkdirs();
+					file = new File(destPath + File.separator + ConstantsHelper.CHANNEL_RECOMMEND);
+					file.mkdirs();
+					file = new File(destPath + File.separator + ConstantsHelper.SEND_FILE);
+					file.mkdirs();
+				}
+				List<OcgInfo> ocgInfoList = ocgInfoDao.getOcgMulticastInfoList(areaCode, null);
+				for(OcgInfo ocg : ocgInfoList){
+					String fileName = destPath + File.separator + ConstantsHelper.CHANNEL_RECOMMEND + File.separator + ocg.getTsId() + ConstantsHelper.TS_FILE_SUFFIX;
+					File tsFile = new File(fileName);
+					if(!tsFile.exists()){
+						tsFile.createNewFile();
+					}
+				}
+			
+			}
+		}catch(Exception e){
+			logger.error("init area ts file error" + e);
+		}
 	}
 	public void  initAdDefalult()
 	{

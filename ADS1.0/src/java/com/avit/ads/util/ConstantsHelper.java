@@ -149,6 +149,12 @@ public class ConstantsHelper {
     public static final String UI_TYPE = "2";
     public static final String RECOMMEND_TYPE = "3";
     
+    /**Ocg打包生成文件参数*/
+    public static final String 	NORMAL_FILE = "normalFile";
+    public static final String 	CHANNEL_SUBTITLE = "channelSubtitle";
+    public static final String 	CHANNEL_RECOMMEND = "channelRecommend";
+    public static final String 	SEND_FILE = "sendFile";
+    
     /**
      * UI更新操作类型
      */

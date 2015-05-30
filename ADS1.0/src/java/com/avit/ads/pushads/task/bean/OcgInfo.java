@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 
@@ -36,16 +37,18 @@ public class OcgInfo implements java.io.Serializable {
 	private String multicastPort;
 	@Column(name = "MULTICAST_BITRATE")
 	private String multicastBitrate;
-	
-	
-	
-	
+	@Transient
+	private String tsId;
+	@Transient
+	private String streamId;
+	@Column(name= "FLAG")
+	private String flag;
 	
 	public OcgInfo() {
 	}
 	
 	public OcgInfo(Integer id, String ip, String port, String user, String pwd,
-			String areaCode) {
+			String areaCode, String tsId, String multicastIp, String multicastPort, String multicastBitrate, String streamId) {
 		super();
 		this.id = id;
 		this.ip = ip;
@@ -53,6 +56,11 @@ public class OcgInfo implements java.io.Serializable {
 		this.user = user;
 		this.pwd = pwd;
 		this.areaCode = areaCode;
+		this.tsId = tsId;
+		this.multicastIp = multicastIp;
+		this.multicastPort = multicastPort;
+		this.multicastBitrate = multicastBitrate;
+		this.streamId = streamId;
 	}
 	
 	public Integer getId() {
@@ -125,9 +133,30 @@ public class OcgInfo implements java.io.Serializable {
 	public void setMulticastBitrate(String multicastBitrate) {
 		this.multicastBitrate = multicastBitrate;
 	}
-	
-	
-	
+
+	public String getTsId() {
+		return tsId;
+	}
+
+	public void setTsId(String tsId) {
+		this.tsId = tsId;
+	}
+
+	public String getStreamId() {
+		return streamId;
+	}
+
+	public void setStreamId(String streamId) {
+		this.streamId = streamId;
+	}
+
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
 	
 	
 }

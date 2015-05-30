@@ -108,6 +108,8 @@ public class InitConfig {
 		//读取数据库 初始化默认素材 
 		dataInitService.initAdDefalult();
 		dataInitService.initAdvertPosition();
+		//各区域频点目录
+		dataInitService.initAreaTSFile();
 		//，回放频道 产品 回看栏目
 		//dataInitService.initChannelNpvr();
 		//dataInitService.initLookbackCategory();
@@ -188,6 +190,8 @@ public class InitConfig {
 		dataInitService.initChannel();
 		//读取数据库 初始化默认素材 
 		dataInitService.initAdDefalult();
+		//各区域频点目录
+		dataInitService.initAreaTSFile();
 		SendAdsElementMap.refreshSendAdsElementMap();
 		//dataInitService.initAdvertPosition();
 		//，回放频道 产品 回看栏目

@@ -7,4 +7,5 @@ import com.avit.ads.pushads.task.bean.OcgInfo;
 public interface OcgInfoDao {
 
 	public List<OcgInfo> getOcgInfoList();
+	public List<OcgInfo> getOcgMulticastInfoList(String areaCode, String tsId);
 }

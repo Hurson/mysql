@@ -261,8 +261,11 @@ public class OcgServiceImpl implements OcgService {
 			httpost.setHeader("effect_time", header.getEffectTime());
 			httpost.setHeader("outdate_time", header.getOutdateTime());
 			
-			FileEntity bodyEntity = new FileEntity(new File(fileName),"binary/octet-stream");
-			httpost.setEntity(bodyEntity); 
+			File file = new File(fileName);
+			if(file.exists()){
+				FileEntity bodyEntity = new FileEntity(new File(fileName),"binary/octet-stream");
+				httpost.setEntity(bodyEntity); 
+			}
 			
 			HttpResponse response = httpclient.execute(httpost); 
 			return response;
@@ -885,9 +888,7 @@ public class OcgServiceImpl implements OcgService {
 		return false;	
 	}
 	
-	
-
-	public boolean sendUntUpdateByAreaCode(int sendType, Object message, String areaCode) {
+	public boolean sendUntUpdateByAreaCode(int sendType, Object message, String areaCode, String tsId) {
 		
 		UNTMessage uNTMessage = new UNTMessage();
 		uNTMessage.setSendType(sendType + "");
@@ -919,7 +920,8 @@ public class OcgServiceImpl implements OcgService {
 		}
 
 		String sendMsg = helper.toXML(uNTMessage);
-		String destPath =InitConfig.getConfigMap().get(ConstantsHelper.DEST_FILE_PATH);
+		String destPath =InitConfig.getConfigMap().get(ConstantsHelper.DEST_FILE_PATH) + File.separator + areaCode;
+		
 		String logPath = InitConfig.getConfigMap().get(ConstantsHelper.LOG_FILE_PATH)+File.separator+ConstantsHelper.LOG_FILE_NAME;
 		int version = untDao.getUntVersion(areaCode, sendType);
 		version = (version + 1) % 32;
@@ -927,30 +929,35 @@ public class OcgServiceImpl implements OcgService {
 		boolean success = false;
 		
 		if(result){
-			List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+			List<OcgInfo> ocgList = ocgInfoDao.getOcgMulticastInfoList(areaCode, tsId);
 			boolean ocgExist = false;
 			for (OcgInfo ocg : ocgList) {
 				if (ocg.getAreaCode().equals(areaCode)) {
 					ocgExist = true;	
-					HeaderInfo headerInfo = new HeaderInfo("0", ocg.getMulticastBitrate(),ocg.getMulticastIp(), ocg.getMulticastPort());
+					HeaderInfo headerInfo = new HeaderInfo(ocg.getStreamId(), ocg.getMulticastBitrate(),ocg.getMulticastIp(), ocg.getMulticastPort());
 					String url = "http://" + ocg.getIp() + ":" + ConstantsHelper.OCG_HTTP_PORT;
-					HttpResponse res = sendHttpMsg(headerInfo, url, destPath+File.separator+"data_00"+ConstantsHelper.TS_FILE_SUFFIX);
+					HttpResponse res = sendHttpMsg(headerInfo, url, destPath+File.separator + ConstantsHelper.SEND_FILE + File.separator + ocg.getTsId() + ConstantsHelper.TS_FILE_SUFFIX);
 					if(null == res){
 						break;
 					}
 					int code = res.getStatusLine().getStatusCode();
 					if(code == 200){
-						untDao.updateVersion(areaCode, sendType);
 						success = true;
 						logger.info("UNT更新成功！");
 					}else if(code == 400){
 						logger.info("参数格式不正确！");
+						success = false;
+						break;
 					}else if(code == 401){
 						logger.info("发送OCG消息失败！");
+						success = false;
+						break;
 					}
 				}
 			}
-			
+			if(success){
+				untDao.updateVersion(areaCode, sendType);
+			}
 			if(!ocgExist){
 				String errMsg = "t_ocginfo表未配置区域【" + areaCode + "】的OCG信息";
 				logger.error(errMsg);
@@ -977,107 +984,6 @@ public class OcgServiceImpl implements OcgService {
 
 	public static void main(String[] args) throws Exception {	
 		
-		//		String ip = "192.168.6.115";
-//		int port = ConstantsHelper.OCG_UDP_PORT;
-//		
-//		OcgPlayMsg sendMsgEntity = new OcgPlayMsg();
-//		sendMsgEntity.setSendPath("/OC/ui/");
-//		sendMsgEntity.setSendType("1");
-//		sendMsgEntity.setAdsType("2");
-//
-//		JaxbXmlObjectConvertor helper = JaxbXmlObjectConvertor.getInstance();
-//		
-//		String sendMsg = helper.toXML(sendMsgEntity);
-//		
-//		byte[] retBuf = new OcgServiceImpl().sendUdpMsg(ip, port, sendMsg);
-//		
-//		if (null == retBuf || retBuf.length == 0) {
-//			return ;
-//		}
-//		String retMsg = new String(retBuf).trim();
-//		RetMsg retMsgEntity = null;
-//		try {
-//			retMsgEntity = (RetMsg) helper.fromXML(retMsg);
-//			if ("200".equals(retMsgEntity.getCode())) {
-//				System.out.println("OCG投放广告成功");
-//				return ;
-//			} else if ("400".equals(retMsgEntity.getCode())) {
-//				System.out.println("OCG投放广告失败: 请求格式不对 ");
-//			} else if ("401".equals(retMsgEntity.getCode())) {
-//				System.out.println("OCG投放广告失败： 为获取广告文件");
-//			}
-//		} catch (Exception e) {
-//			System.out.println("OCG投放广告，返回XML格式消息解析异常");
-//		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-//		OcgServiceImpl ocgService = new OcgServiceImpl();
-//		String ocgXml = initIntefaceDebug();
-//		//String ocgXmlU = new String(ocgXml.getBytes("GBK"), "GB2312");  
-//		
-//		//String ip = "192.168.100.65";
-//		String ip = "192.168.112.65";
-//		int port = 30005;
-//		System.out.println("Start Send---------------->");
-//		byte[] retBuf = ocgService.sendUdpMsg(ip, port,ocgXml);
-//		if (null == retBuf || retBuf.length == 0) {
-//			System.out.println("没有返回数据");
-//			return;
-//		}
-//		String retMsg = new String(retBuf).trim();
-//		/*for(byte b :retMsg.getBytes()){
-//			System.out.println(b);
-//		}*/
-//		//String msg = "<?xml version=\"1.0\" encoding=\"utf-8\"?><serverResponse code=\"200\" />";
-//		//System.out.println(retMsg.equals(msg));	
-//		//for(byte b :msg.getBytes()){
-//		//	System.out.println(b);
-//		//}
-//		//dealIntefaceRs(msg);
-//		dealIntefaceRs(retMsg);
-		
-		/*
-		
-		String ip = "192.168.24.61";
-		String sendMsg = initIntefaceDebug();
-		
-		OcgServiceImpl ocgService = new OcgServiceImpl();
-		
-		int port = ConstantsHelper.OCG_UDP_PORT;
-		
-		System.out.println("发送消息：\n" + sendMsg);
-		byte[] retBuf = ocgService.sendUdpMsg(ip, port, sendMsg);
-		if (null == retBuf || retBuf.length == 0) {
-			System.out.println("retBuf为空");;
-		}
-		String retMsg = new String(retBuf).trim();
-		RetMsg retMsgEntity = null;
-		try {
-			retMsgEntity = (RetMsg) JaxbXmlObjectConvertor.getInstance().fromXML(retMsg);
-			if ("200".equals(retMsgEntity.getCode())) {
-				System.out.println("UNT更新信息成功");
-				return ;
-			} else if ("400".equals(retMsgEntity.getCode())) {
-				System.out.println("UNT更新信息失败：请求参数格式不正确 ");
-			} else if ("401".equals(retMsgEntity.getCode())) {
-				System.out.println("UNT更新信息失败");
-			}
-		} catch (Exception e) {
-			System.out.println("OCG返回消息解析异常");
-			e.printStackTrace();
-		}
-		
-		*/
-		
-		//System.out.println(initIntefaceDebug());
-
 	}
 	
 	public static String initIntefaceDebug(){

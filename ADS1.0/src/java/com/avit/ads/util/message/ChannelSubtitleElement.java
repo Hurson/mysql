@@ -12,8 +12,11 @@ public class ChannelSubtitleElement {
 	@XmlElement(name="tvn_target", required = true)
 	private TvnTarget tvnTarget;
 	
-	@XmlElement(name="subtitle", required = true)
-	private Subtitle subtitle;
+	@XmlElement(name="subtitleInfo", required = true)
+	private ChannelSubtitleInfo subtitleInfo;
+	
+	@XmlElement(name="subtitleSet", required = true)
+	private SubtitleContent subtitleContent;
 
 	public TvnTarget getTvnTarget() {
 		return tvnTarget;
@@ -23,16 +26,20 @@ public class ChannelSubtitleElement {
 		this.tvnTarget = tvnTarget;
 	}
 
-	public Subtitle getSubtitle() {
-		return subtitle;
+	public ChannelSubtitleInfo getSubtitleInfo() {
+		return subtitleInfo;
 	}
 
-	public void setSubtitle(Subtitle subtitle) {
-		this.subtitle = subtitle;
+	public void setSubtitleInfo(ChannelSubtitleInfo subtitleInfo) {
+		this.subtitleInfo = subtitleInfo;
 	}
 
-	
-	
-	
-	
+	public SubtitleContent getSubtitleContent() {
+		return subtitleContent;
+	}
+
+	public void setSubtitleContent(SubtitleContent subtitleContent) {
+		this.subtitleContent = subtitleContent;
+	}
+
 }

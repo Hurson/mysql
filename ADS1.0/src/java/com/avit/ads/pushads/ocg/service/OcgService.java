@@ -1,6 +1,5 @@
 package com.avit.ads.pushads.ocg.service;
 
-import com.avit.ads.util.message.UNTMessage;
 
 public interface OcgService {
 	
@@ -158,6 +157,6 @@ public interface OcgService {
 	
 	public boolean sendUNTMessageUpdateByIp(String ip,int sendType,Object message,String areaCode);
 	
-	public boolean sendUntUpdateByAreaCode(int sendType,Object message,String areaCode);
+	public boolean sendUntUpdateByAreaCode(int sendType,Object message,String areaCode, String tsId);
 	
 }
