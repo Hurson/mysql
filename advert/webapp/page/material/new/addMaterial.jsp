@@ -1646,10 +1646,10 @@ function IsAlpha(cCheck) {
 			alert("字幕条数必须大于0！");
     		return true;
 		}
-		if(length > 120){
+		/*if(length > 120){
 			alert("字幕条数不能超过120！");
     		return true;
-		}
+		}*/
 		var sum = 0;
 		for(var i = 0; i < length; i++){
 			var msg = msgArray[i].value.replace(/(^\s*)|(\s*$)/g,'');
@@ -1766,6 +1766,15 @@ function IsAlpha(cCheck) {
 				});
 			}else{
 				$("#textContent").removeAttr('bgcolor');
+			}
+			/**字体过大会导致显示不全*/
+			if($$("textMeta.fontSize").value>16){
+				$('#textContent').css({
+					'height':_height,
+					'padding-top':$$("textMeta.fontSize").value-16+"px"
+				});
+			}else{
+				$("#textContent").css('padding-top',"0px");
 			}
 				
 			$('#text').css({

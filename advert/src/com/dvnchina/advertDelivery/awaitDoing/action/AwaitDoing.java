@@ -118,7 +118,7 @@ public class AwaitDoing extends BaseAction implements
 		}
 		
 		try{
-			warnInfoList = warnService.getEntityList();
+			warnInfoList = warnService.getEntityList(areaCodes);
 		}catch(Exception e){
 			logger.error("查询告警信息出错", e);
 			warnInfoList = new ArrayList<WarnInfo>();
@@ -304,7 +304,9 @@ public class AwaitDoing extends BaseAction implements
 		if(page == null){
 			page = new PageBeanDB();
 		}
-		page=warnService.queryWarning(page.getPageNo(), page.getPageSize());
+		UserLogin userLogin = (UserLogin) getLoginUser();
+		String areaCodes = userLogin.getAreaCodes();
+		page=warnService.queryWarning(areaCodes, page.getPageNo(), page.getPageSize());
 		return SUCCESS;
 	}
 	public void delWarn(){

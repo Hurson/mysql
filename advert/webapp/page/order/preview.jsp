@@ -4,14 +4,14 @@ String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <base href="<%=basePath%>">
     <script type="text/javascript" src="<%=path%>/js/order/preview.js"></script>
     <script language="javascript" type="text/javascript" src="<%=path%>/js/jquery/jquery-1.9.0.js"></script>
     <title>预览</title>
-    
+    <link rel="stylesheet" type="text/css" href="<%=path %>/css/new/main.css"/>
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
@@ -30,8 +30,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	//alert(pollIndex);
 
 	window.onload = function(){	
-		//preview(previewValue[5],previewValue[6],previewValue[7]);
-		previewMaterial(previewValue,pollIndex);
+		preview(previewValue[5],previewValue[6],previewValue[7]);
+		//previewMaterial(previewValue,pollIndex);
  		viewMaterial(resourceValue);		 
 	} 
 	
@@ -39,10 +39,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
   </head>
   
-  <body>
-
-    <div
-			style="width: 426px; height: 240px; float: left; border: 0px dashed #CCCCCC; margin-left: -10px; color: #CCCCCC; margin-top: -15px; position: relative;">
+  <body class="content">
+    <div style="width: 426px; height: 240px; float: left; border: 0px dashed #CCCCCC; margin-left: 0px; color: #CCCCCC; margin-top: 0px; position: relative;">
 			<img id="pImage" src="<%=path%>/images/position/position.jpg" width="426px" height="240px" /> 
 			<img id="mImage" src=""	style="display: none" />
 			<div id="video">

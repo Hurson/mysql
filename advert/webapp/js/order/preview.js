@@ -211,15 +211,12 @@ function showText(material){
 		'font-size':material.text.fontSize+"px"
 	});
 	if(material.text.rollSpeed!=''){
-		$("#textContent").attr("scrollamount",material.text.rollSpeed);
+		$("#textContent").attr({"scrollamount":material.text.rollSpeed});
 	}
-	//material"positionVertexCoordinates":"1*1","positionWidthHeight"
-	var str1="12:120";
-	var coordinates = material.text.positionVertexCoordinates.split("*");//positionVertexCoordinates
-	var size = material.text.positionWidthHeight.split("*");//material.positionWidthHeight.split(":");
-	//alert(material.text.positionVertexCoordinates);
-	//alert(material.text.positionWidthHeight);
-	//alert(coordinates[0]);
+	
+	var coordinates = material.text.positionVertexCoordinates.split("*");
+	var size = material.text.positionWidthHeight.split("*");
+	
 	var left = coordinates[0]/1280*426+"px";
 	var bottom = coordinates[1]/720*240+"px";					 				  
 	var width = size[0]/1280*426+"px";
@@ -227,15 +224,24 @@ function showText(material){
 	
 	$('#text').css('width',width);
 	$('#text').css('height',height);
-	 $('#text').css('left',left);
+	$('#text').css('left',left);
 	$('#text').css('top',bottom);
-	$('#text').css('background',material.text.bkgColor);
+	$('#text').css('bgcolor',material.text.bkgColor);
 	
 	$("#text").show();
 	var content = material.text.content.split("@_@");
 	var words = "";
 	for(var i = 0; i < content.length; i++){
 		words += content[i];
+	}
+	/**字体过大会导致显示不全*/
+	if(material.text.fontSize>16){
+		$('#textContent').css({
+			'height':height,
+			'padding-top':material.text.fontSize-16+"px"
+		});
+	}else{
+		$("#textContent").css('padding-top',"0px");
 	}
 	$("#textContent").html(words);
 }

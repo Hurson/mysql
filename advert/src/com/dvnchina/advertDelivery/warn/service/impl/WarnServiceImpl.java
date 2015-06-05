@@ -12,8 +12,8 @@ public class WarnServiceImpl implements WarnService {
 	private WarnDao warnDao;
 
 	@Override
-	public List<WarnInfo> getEntityList() {
-		return warnDao.getEntityList();
+	public List<WarnInfo> getEntityList(String areaCodes) {
+		return warnDao.getEntityList(areaCodes);
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public class WarnServiceImpl implements WarnService {
 	}
 
 
-	public PageBeanDB queryWarning(int pageNo, int pageSize) {
+	public PageBeanDB queryWarning(String areaCodes, int pageNo, int pageSize) {
 
-		return warnDao.queryWarning(pageNo, pageSize);
+		return warnDao.queryWarning(areaCodes, pageNo, pageSize);
 	}
 
 	@Override

@@ -17,8 +17,8 @@ import com.dvnchina.advertDelivery.warn.dao.WarnDao;
 public class WarnDaoImpl extends BaseDaoImpl implements WarnDao{
 
 	@Override
-	public List<WarnInfo> getEntityList() {
-		String sql = "SELECT w.id, w.time, w.content FROM t_warn_info w WHERE w.is_processed = 0 ORDER BY w.time DESC limit 0,5";		
+	public List<WarnInfo> getEntityList(String areaCodes) {
+		String sql = "SELECT w.id, w.time, w.content FROM t_warn_info w WHERE w.area_code in(" + areaCodes + ") and w.is_processed = 0 ORDER BY w.time DESC limit 0,5";		
 		List<?> resultList = this.getDataBySql(sql, null);
 		List<WarnInfo> entityList = new ArrayList<WarnInfo>();
 		for(Object obj : resultList){
@@ -40,8 +40,8 @@ public class WarnDaoImpl extends BaseDaoImpl implements WarnDao{
 	}
 
 	@Override
-	public PageBeanDB queryWarning(int pageNo, int pageSize) {
-		String sql = "SELECT w.id, w.time, w.content FROM t_warn_info w WHERE w.is_processed = 0 ORDER BY w.time DESC";
+	public PageBeanDB queryWarning(String areaCodes, int pageNo, int pageSize) {
+		String sql = "SELECT w.id, w.time, w.content FROM t_warn_info w WHERE w.area_code in(" + areaCodes + ") and w.is_processed = 0 ORDER BY w.time DESC";
 		int rowcount = this.getTotalCountSQL(sql.toString(), null);
 		PageBeanDB page = new PageBeanDB();
 		if (pageNo==0){
