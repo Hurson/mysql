@@ -161,7 +161,7 @@ public class UntServiceImpl implements UntService{
         	times--;	        	
 	     }
 	     //三次连接不上，告警	
-    	 warnHelper.writeWarnMsgToDb("【连续三次不能访问UNT服务器】" + "request url: " + url);
+    	// warnHelper.writeWarnMsgToDb(areaCode, "【连续三次不能访问UNT服务器】" + "request url: " + url);
     	 return false;         
     }
 	 

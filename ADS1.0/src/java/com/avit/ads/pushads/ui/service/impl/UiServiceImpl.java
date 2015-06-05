@@ -232,6 +232,7 @@ public class UiServiceImpl implements UiService {
 			        if(!"0".equals(ret)){          //如果连上了，但是请求不对，也告警
 			        	WarnInfo warnEntity = new WarnInfo();
 			    		warnEntity.setTime(new Date());
+			    		warnEntity.setAreaCode(areaCode);
 			    		int retCode = Integer.parseInt(ret);
 			    		switch (retCode) {
 						case 1:
@@ -256,7 +257,7 @@ public class UiServiceImpl implements UiService {
 	        }
 	        //三次连接不上，告警
         	log.error("NIT描述符插入接口发送错误："+responsCode);
-    		warnHelper.writeWarnMsgToDb("【连续三次不能访问UI服务器】" + "areaCode: " + areaCode + " requestBody: " + bodyContent);
+    		warnHelper.writeWarnMsgToDb(areaCode,"【连续三次不能访问UI服务器】" + "areaCode: " + areaCode + " requestBody: " + bodyContent);
 	               
     	}catch(Exception e){
     		//e.printStackTrace();

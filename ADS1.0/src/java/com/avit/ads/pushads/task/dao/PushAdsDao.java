@@ -70,12 +70,12 @@ public interface PushAdsDao {
 	 * @return
 	 */
 	public String getAreaChannelTsId(String areaCode, String serviceId);
+	
 	/**
-	 * 通过区域码和频点Id获取UDP地址
-	 * @param areaCode
-	 * @param tsId
-	 * @return
+	 * 更新订单状态为投放失败
+	 * @param adsid
+	 * @param flag
 	 */
-	public TMulticastInfo getAreaTsIdUdpUrl(String areaCode, String tsId);
+	public void updateOrderState(Long adsid,String flag);
 	
 }

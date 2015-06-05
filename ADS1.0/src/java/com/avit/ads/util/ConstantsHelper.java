@@ -162,6 +162,7 @@ public class ConstantsHelper {
     public static final String UI_DEL = "del";
     public static final String UI_GET = "get";
     
+    public static final String DATA_FILE_SUFFIX = ".data";
     public static final String TS_FILE_SUFFIX = ".ts";
     public static final String DEST_FILE_PATH = "unt_generated_ts_store_path";
     public static final String LOG_FILE_PATH = "unt_logger_path";

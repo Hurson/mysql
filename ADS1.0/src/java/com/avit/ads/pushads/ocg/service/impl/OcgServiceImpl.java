@@ -86,7 +86,7 @@ public class OcgServiceImpl implements OcgService {
 
 		String errMsg = "未配置区域【" + areaCode + "】的OCG FTP连接信息";
 		logger.error(errMsg);
-		warnHelper.writeWarnMsgToDb(errMsg);
+		warnHelper.writeWarnMsgToDb(areaCode, errMsg);
 		return false;
 	}
 	
@@ -161,8 +161,6 @@ public class OcgServiceImpl implements OcgService {
 		}
 		return false;
 	}
-	
-	
 
 	public boolean startOcgPlayByIp(String ip, String sendPath, String sendType, String adsType) {
 		
@@ -239,9 +237,7 @@ public class OcgServiceImpl implements OcgService {
 		return false;
 	}
 
-	private HttpResponse sendHttpMsg(HeaderInfo header,String url, String fileName){
-		
-		//System.out.println("fileName: " + fileName);
+	private HttpResponse sendHttpMsg(String areaCode, HeaderInfo header,String url, String fileName){
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		
@@ -265,6 +261,11 @@ public class OcgServiceImpl implements OcgService {
 			if(file.exists()){
 				FileEntity bodyEntity = new FileEntity(new File(fileName),"binary/octet-stream");
 				httpost.setEntity(bodyEntity); 
+			}else{
+				
+				String errorMsg = "区域【"+ areaCode +"】频点【"+fileName.substring(fileName.lastIndexOf(File.separator))+"】文件生成异常";
+				logger.error(errorMsg);
+				warnHelper.writeWarnMsgToDb(areaCode, errorMsg);
 			}
 			
 			HttpResponse response = httpclient.execute(httpost); 
@@ -272,10 +273,14 @@ public class OcgServiceImpl implements OcgService {
 		}catch(Exception e){
 			String errorMsg = "向OCG发送HTTP请求异常, url: " + url;
 			logger.error(errorMsg, e);
-			warnHelper.writeWarnMsgToDb(errorMsg);
+			warnHelper.writeWarnMsgToDb(areaCode, errorMsg);
 			return null;
 		}finally {
+			try{
 			httpclient.getConnectionManager().shutdown();
+			}catch(Exception e){
+				logger.error("关闭连接异常！", e);
+			}
 		}
 
 	}
@@ -321,7 +326,7 @@ public class OcgServiceImpl implements OcgService {
 		}
 		if (!"".equals(errorMsg)) {
 			errorMsg += sourceFile;
-			warnHelper.writeWarnMsgToDb(errorMsg);
+			warnHelper.writeWarnMsgToDb(areaCode, errorMsg);
 			return true; // 不发送到OCG，流程正常往下走
 		}
 
@@ -342,7 +347,7 @@ public class OcgServiceImpl implements OcgService {
 							+ " sourceFile:" + sourceFile + " targetPath:"
 							+ targetPath, e);
 					warnHelper
-							.writeWarnMsgToDb("【上传文件到OCG异常，请检查OCG连接】 areaCode: "
+							.writeWarnMsgToDb(areaCode, "【上传文件到OCG异常，请检查OCG连接】 areaCode: "
 									+ areaCode + " ip: " + ocg.getIp());
 					return false;
 				}
@@ -394,7 +399,7 @@ public class OcgServiceImpl implements OcgService {
 					logger.error("delete file on ocg --erro:" + areaCode
 							+ " sourceFile:" + sourceFile + " targetPath:"
 							+ targetPath, e);
-					warnHelper.writeWarnMsgToDb("【删除失败，请检查OCG连接】 areaCode: "
+					warnHelper.writeWarnMsgToDb(areaCode, "【删除失败，请检查OCG连接】 areaCode: "
 							+ areaCode + " ip: " + ocg.getIp());
 					return false;
 				}
@@ -422,13 +427,13 @@ public class OcgServiceImpl implements OcgService {
 		String errorMsg = "";
 		if (!foder.exists() || !foder.isDirectory()) { // 不存在或非目录
 			errorMsg = "【向OCG发送文件夹不存在】" + sourcePath;
-			warnHelper.writeWarnMsgToDb(errorMsg);
+			warnHelper.writeWarnMsgToDb(areaCode, errorMsg);
 		} else {
 			for (File file : foder.listFiles()) {
 				if (file.length() == 0) {
 					errorMsg = "【向OCG发送的文件大小为0】" + file.getAbsolutePath(); // 文件大小为0
 					file.delete();
-					warnHelper.writeWarnMsgToDb(errorMsg);
+					warnHelper.writeWarnMsgToDb(areaCode, errorMsg);
 				}
 			}
 		}
@@ -450,7 +455,7 @@ public class OcgServiceImpl implements OcgService {
 							+ "sourcePath:" + sourcePath + "gargetPath:"
 							+ targetPath, e);
 					warnHelper
-							.writeWarnMsgToDb("【上传素材到OCG异常，请检查OCG连接】 areaCode: "
+							.writeWarnMsgToDb(areaCode, "【上传素材到OCG异常，请检查OCG连接】 areaCode: "
 									+ areaCode + " ip: " + ocg.getIp());
 					return false;
 				}
@@ -868,7 +873,7 @@ public class OcgServiceImpl implements OcgService {
 			HeaderInfo headerInfo = new HeaderInfo(ocg.getStreamId(), ocg.getBitrate(),ocg.getSendAddress(), ocg.getSendPort());
 			String url = "http://" + ip + ":" + ConstantsHelper.OCG_HTTP_PORT;
 			
-			HttpResponse res = sendHttpMsg(headerInfo, url, destPath+File.separator+sendType+ConstantsHelper.TS_FILE_SUFFIX);
+			HttpResponse res = sendHttpMsg(areaCode, headerInfo, url, destPath+File.separator+sendType+ConstantsHelper.TS_FILE_SUFFIX);
 			if(null == res){
 				return false;
 			}
@@ -936,7 +941,7 @@ public class OcgServiceImpl implements OcgService {
 					ocgExist = true;	
 					HeaderInfo headerInfo = new HeaderInfo(ocg.getStreamId(), ocg.getMulticastBitrate(),ocg.getMulticastIp(), ocg.getMulticastPort());
 					String url = "http://" + ocg.getIp() + ":" + ConstantsHelper.OCG_HTTP_PORT;
-					HttpResponse res = sendHttpMsg(headerInfo, url, destPath+File.separator + ConstantsHelper.SEND_FILE + File.separator + ocg.getTsId() + ConstantsHelper.TS_FILE_SUFFIX);
+					HttpResponse res = sendHttpMsg(areaCode, headerInfo, url, destPath+File.separator + ConstantsHelper.SEND_FILE + File.separator + ocg.getTsId() + ConstantsHelper.TS_FILE_SUFFIX);
 					if(null == res){
 						break;
 					}
@@ -959,9 +964,9 @@ public class OcgServiceImpl implements OcgService {
 				untDao.updateVersion(areaCode, sendType);
 			}
 			if(!ocgExist){
-				String errMsg = "t_ocginfo表未配置区域【" + areaCode + "】的OCG信息";
+				String errMsg = "t_ocginfo表未配置区域【" + areaCode + "】的OCG信息和频点信息";
 				logger.error(errMsg);
-				warnHelper.writeWarnMsgToDb(errMsg);
+				warnHelper.writeWarnMsgToDb(areaCode, errMsg);
 			}
 			
 		}else{

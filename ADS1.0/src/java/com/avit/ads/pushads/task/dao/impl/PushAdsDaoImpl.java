@@ -1,5 +1,6 @@
 package com.avit.ads.pushads.task.dao.impl;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +14,6 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
-import com.avit.ads.pushads.task.bean.TMulticastInfo;
 import com.avit.ads.pushads.task.dao.PushAdsDao;
 import com.avit.ads.util.bean.Ads;
 import com.avit.common.page.dao.impl.CommonDaoImpl;
@@ -138,6 +138,12 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 		 }
 	     this.executeByHQL(updateSql,(Object[])null);
 	}
+	public void updateOrderState(final Long adsid, final String flag) {
+		// TODO Auto-generated method stub
+		String hql = "update TOrder ord set ord.state=? where ord.id=(select ads.orderId from AdPlaylistGis ads where ads.id=?)";
+		this.executeByHQL(hql, new Object[]{flag, new BigDecimal(adsid)});
+		
+	}
 	public void updateAdsFlag(String adsids,String flag) {
 		// TODO Auto-generated method stub
 		 String updateSql;
@@ -162,19 +168,4 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 				
 		});
 	}
-	
-	public TMulticastInfo getAreaTsIdUdpUrl(final String areaCode, final String tsId) {
-		final String hql = "from TMulticastInfo ui where ui.areaCode=? and ch.tsId=?";
-		
-		return this.getHibernateTemplate().execute(new HibernateCallback<TMulticastInfo>(){
-			public TMulticastInfo doInHibernate(Session session){
-				Query query = session.createQuery(hql);
-				query.setParameter(0, areaCode);
-				query.setParameter(1, tsId);
-				return (TMulticastInfo)query.uniqueResult();
-			}
-				
-		});
 	}
-
-}

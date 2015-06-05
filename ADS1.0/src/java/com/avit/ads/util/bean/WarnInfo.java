@@ -14,6 +14,8 @@ import javax.persistence.Table;
 public class WarnInfo {
 	/** 主键 */
 	private Integer id;
+	/** 区域码*/
+	private String areaCode;
 	/** 告警时间 */
 	private Date time;
 	/** 告警内容 */
@@ -29,6 +31,13 @@ public class WarnInfo {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	@Column(name="area_code")
+	public String getAreaCode() {
+		return areaCode;
+	}
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
 	}
 	@Column(name = "time")
 	public Date getTime() {

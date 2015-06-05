@@ -10,12 +10,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
+import com.avit.ads.pushads.task.service.DataInitService;
 import com.avit.ads.pushads.task.service.PushAdsService;
 import com.avit.ads.util.ContextHolder;
 import com.avit.ads.util.DateUtil;
 import com.avit.ads.util.InitConfig;
-import com.avit.ads.util.bean.Ads;
 import com.avit.ads.util.PushFalierHelper;
+import com.avit.ads.util.bean.Ads;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,6 +38,8 @@ public class AutoAllThread extends Thread {
 		PushAdsService pushAdsService;
 		pushAdsService= (PushAdsService)ContextHolder.getApplicationContext().getBean("PushAdsService");
 		PushFalierHelper pushFalierHelper = (PushFalierHelper)ContextHolder.getApplicationContext().getBean("pushFalierHelper");
+		DataInitService dataInitService = (DataInitService)ContextHolder.getApplicationContext().getBean("DatainitService");
+		
 		try
 		{
 			//系统重新启动，加载已开始发送未完成的播出单
@@ -52,7 +55,9 @@ public class AutoAllThread extends Thread {
 				int length=0;
 				Date loopDate = new Date();
 				loopDate = DateUtil.addSecond(loopDate,0-InitConfig.getAdsConfig().getPreSecond());
-				
+
+				//初始化区域频点目录
+				dataInitService.initAreaTSFile();
 				/*	*/
 				Thread[] tdArray = new Thread[40];
 				List<Ads> adsList = InitConfig.getAdList();//InitConfig.getAdsConfig().getRealTimeAds().getAdsList();
@@ -100,7 +105,6 @@ public class AutoAllThread extends Thread {
 					Thread.sleep(1000);
 				}
 				
-			
 				//汇聚后自动生成adConfigFile.js，cpsadConfigFile.js，npvradConfigFile.js，自动发布
 				pushAdsService.sendAdsData();//(null, null, "", "");
 				

@@ -79,7 +79,7 @@ public class CpsServiceImpl implements CpsService{
 				ftpService.setServer(cpsList.get(i).getIp(),Integer.parseInt(cpsList.get(i).getPort()), cpsList.get(i).getUser(),cpsList.get(i).getPwd());
 			} catch (Exception e) {
 				log.error("发送文件到ftp失败", e);
-				warnHelper.writeWarnMsgToDb("双向广告FTP服务器无法连接   ip:" + cpsList.get(i).getIp());
+				//warnHelper.writeWarnMsgToDb("双向广告FTP服务器无法连接   ip:" + cpsList.get(i).getIp());
 				return false;
 			} 
 			//copy本地文件到资源服务上

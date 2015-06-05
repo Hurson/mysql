@@ -67,7 +67,7 @@ public class UixServiceImpl implements UixService {
      		} 
         }
         //三次连接不上，告警	
-   	 	warnHelper.writeWarnMsgToDb("【连续三次不能访问UI更新服务器】" + "request url: " + url);
+   	 	warnHelper.writeWarnMsgToDb(areaCode, "【连续三次不能访问UI更新服务器】" + "request url: " + url);
 		return false;
 	}
 	
@@ -109,7 +109,7 @@ public class UixServiceImpl implements UixService {
      		} 
         }
         //三次连接不上，告警	
-   	 	warnHelper.writeWarnMsgToDb("【连续三次不能访问UI更新服务器】" + "request url: " + url);
+   	 	warnHelper.writeWarnMsgToDb(areaCode, "【连续三次不能访问UI更新服务器】" + "request url: " + url);
 		return false;
 	}
 
@@ -201,7 +201,7 @@ public class UixServiceImpl implements UixService {
      		} 
         }
         //三次连接不上，告警	
-   	 	warnHelper.writeWarnMsgToDb("【连续三次不能访问UI更新服务器】" + "request url: " + url);
+   	 	warnHelper.writeWarnMsgToDb(areaCode, "【连续三次不能访问UI更新服务器】" + "request url: " + url);
 		return false;
 
 	} 

@@ -53,7 +53,6 @@ import com.avit.ads.pushads.task.bean.OcgInfo;
 import com.avit.ads.pushads.task.bean.PicMaterial;
 import com.avit.ads.pushads.task.bean.SendAds;
 import com.avit.ads.pushads.task.bean.StartMaterial;
-import com.avit.ads.pushads.task.bean.TMulticastInfo;
 import com.avit.ads.pushads.task.bean.TReleaseArea;
 import com.avit.ads.pushads.task.bean.TextMate;
 import com.avit.ads.pushads.task.cache.AdvertPositionMap;
@@ -83,7 +82,6 @@ import com.avit.ads.util.message.AdsImage;
 import com.avit.ads.util.message.ChannelSubtitle;
 import com.avit.ads.util.message.ChannelSubtitleElement;
 import com.avit.ads.util.message.ChannelSubtitleInfo;
-import com.avit.ads.util.message.MsubtitleInfo;
 import com.avit.ads.util.message.Subtitle;
 import com.avit.ads.util.message.SubtitleContent;
 import com.avit.ads.util.message.SubtitlePart;
@@ -676,10 +674,10 @@ public class PushAdsServiceImpl implements PushAdsService {
 		String errorMsg = "";
 		if(!downloadFile.exists()){
 			errorMsg = "【从OCG下载的文件不存在】" + serverFilePath;  //文件不存在
-			warnHelper.writeWarnMsgToDb(errorMsg);
+			warnHelper.writeWarnMsgToDb(areaCode, errorMsg);
 		}else if(downloadFile.length() == 0){
 			errorMsg = "【从OCG下载文件大小为0】" + serverFilePath; //文件大小为0
-			warnHelper.writeWarnMsgToDb(errorMsg);
+			warnHelper.writeWarnMsgToDb(areaCode, errorMsg);
 			ocgService.deleteFile(areaCode, fileName, serverPath); //删除OCG上素材
 		}
 //		if(!"".equals(errorMsg)){
@@ -1034,7 +1032,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 			if(!ocgExist){
 				String errMsg = "未配置区域【" + areaCode + "】的OCG FTP连接信息";
 				log.error(errMsg);
-				warnHelper.writeWarnMsgToDb(errMsg);
+				warnHelper.writeWarnMsgToDb(areaCode,errMsg);
 				sendFlagHelper.decreaseSendTimes(areaCode);
 				return;
 			}
@@ -1818,7 +1816,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
 			} catch (Exception e) {
 				log.error("FTP服务器无法连接",e);
-				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
+				//warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
 				return;
 			}
 			for (int i=0;i<adsList.size();i++)
@@ -2127,6 +2125,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 						uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),true);
 					}
 					uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),false);
+					
 				}else if(ConstantsAdsCode.PUSH_STARTSTB_VIDEO_HD.equals(adsCode)){
 					uixService.delUiUpdateMsg(areaCode, UIUpdate.VIDEO.getType(), UIUpdate.VIDEO.getFileName(),false);
 				}
@@ -2229,7 +2228,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 					if(!ocgExist){
 						String errMsg = "未配置区域【" + areaCode + "】的OCG FTP连接信息";
 						log.error(errMsg);
-						warnHelper.writeWarnMsgToDb(errMsg);
+						warnHelper.writeWarnMsgToDb(areaCode,errMsg);
 						failedToPush(playListId);
 						continue;
 					}
@@ -2359,7 +2358,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				if(!ocgExist){
 					String errMsg = "未配置区域【" + areaCode + "】的OCG FTP连接信息";
 					log.error(errMsg);
-					warnHelper.writeWarnMsgToDb(errMsg);
+					warnHelper.writeWarnMsgToDb(areaCode,errMsg);
 					failedToPush(playListId);
 					continue;
 				}
@@ -2965,11 +2964,14 @@ public class PushAdsServiceImpl implements PushAdsService {
 		String overdueHql =  "from AdPlaylistGis ads where ads.state=1 and ads.endTime <=? and ads.adSiteCode =? ";			            
 		List<AdPlaylistGis> overdueList = pushAdsDao.getTemplate().find(overdueHql, new Date(), ConstantsAdsCode.PUSH_CHANNEL_SUBTITLE);
 		sendChannelSubtitle3(overdueList,"0","4");
-		try {
-			Thread.sleep(60000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(overdueList != null && overdueList.size() > 0){
+			try {
+				Thread.sleep(60000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+		
 		//查询新增列表（播出单结束时间 > 当前时间，且状态为0），发送显示字幕，更新播出单状态为1
 		String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.startTime <= ? and ads.endTime >=? and ads.adSiteCode =? ";    
 		Date now = new Date();
@@ -3211,7 +3213,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 						elementList.add(elem);
 					}
 				}
-				
+				boolean success = false;
 				for(String tsId : channelTsMap.keySet()){
 					List<ChannelSubtitleElement> channelSubtitleList = channelTsMap.get(tsId);
 				
@@ -3219,202 +3221,24 @@ public class PushAdsServiceImpl implements PushAdsService {
 					channelSubtitle.setTsId(tsId);
 					channelSubtitle.setChannelSubtitleElemList(channelSubtitleList);
 					//向OCG发送UNT消息
-					ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle, areaCode, tsId);
-					
+					success = ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle, areaCode, tsId);
+					if(!success){
+						break;
+					}
 				}
-				for(AdPlaylistGis adGis : pickedList){					
-					pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
+				if(success){
+					for(AdPlaylistGis adGis : pickedList){					
+						pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
+					}
+				}else{
+					for(AdPlaylistGis adGis : pickedList){					
+						pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "2");
+						pushAdsDao.updateOrderState(adGis.getId().longValue(), "9");
+					}
 				}
 			}
 		}
 	}
-	
-/*	private void sendChannelSubtitle2(List<AdPlaylistGis> playLists, String actionType, String state){
-		List<String> areaList = InitAreas.getInstance().getAreas();
-		for(String areaCode : areaList){
-			List<AdPlaylistGis> pickedList = pickPlayListByAreaCode(playLists, areaCode);
-			if(pickedList.size() > 0){
-				if("1".equals(actionType)){
-					log.info("向区域" + areaCode + "投放频道字幕广告...");
-				}else{
-					log.info("区域" + areaCode + "频道字幕广告到期，发停止消息...");
-				}
-				List<ChannelSubtitleElement> list = new ArrayList<ChannelSubtitleElement>();
-				//拼装字幕UNT消息
-				for(AdPlaylistGis adGis : pickedList){					
-					String tvn = adGis.getTvn();
-					String userIndustrys = adGis.getUserindustrys();
-					String userLevels = adGis.getUserlevels();
-					
-					TvnTarget tvnTargetModel = new TvnTarget();
-					tvnTargetModel.setTvnType("2"); 
-					tvnTargetModel.setTvn(tvn);
-					tvnTargetModel.setCaIndustryType(userIndustrys);
-					tvnTargetModel.setCaUserLevel(userLevels);
-					
-					
-					List<String> serviceIdList = getListFromJson(adGis.getChannelId());
-					for(String serviceId : serviceIdList){
-						TvnTarget tvnTarget = new TvnTarget();
-						BeanUtils.copyProperties(tvnTargetModel, tvnTarget);
-						tvnTarget.setServiceID(serviceId);
-						
-						Gson gson = new Gson();
-						TextMate text = gson.fromJson(adGis.getContentPath(), TextMate.class);
-						String[] words = text.getContent().split("@_@");
-						List<MsubtitleInfo> subtitleInfoList = new ArrayList<MsubtitleInfo>();
-						for(String word : words){
-							word = word.trim();
-							if(StringUtils.isBlank(word)){
-								continue;
-							}
-							MsubtitleInfo subtitleInfo = new MsubtitleInfo();
-							subtitleInfo.setUiId("a");
-							subtitleInfo.setActionType(actionType);
-							subtitleInfo.setTimeout(text.getDurationTime() + "");
-							subtitleInfo.setFontColor(text.getFontColor());
-							subtitleInfo.setFontSize(text.getFontSize() + "");
-							String[] coordinate = text.getPositionVertexCoordinates().split("\\*");
-							subtitleInfo.setBackgroundX(coordinate[0]);
-							subtitleInfo.setBackgroundY(coordinate[1]);
-							String[] widthHeight = text.getPositionWidthHeight().split("\\*");
-							subtitleInfo.setBackgroundWidth(widthHeight[0]);
-							subtitleInfo.setBackgroundHeight(widthHeight[1]);
-							subtitleInfo.setBackgroundColor(text.getBkgColor());
-							subtitleInfo.setShowFrequency(text.getRollSpeed() + "");
-							subtitleInfo.setWord(word);
-							
-							subtitleInfoList.add(subtitleInfo);
-						}
-						
-						Subtitle subtitle = new Subtitle();
-						subtitle.setSubtitleInfoList(subtitleInfoList);
-						ChannelSubtitleElement elem = new ChannelSubtitleElement();
-						elem.setTvnTarget(tvnTarget);
-						elem.setSubtitle(subtitle);
-						
-						list.add(elem);
-					}
-				}
-				
-				ChannelSubtitle channelSubtitle = new ChannelSubtitle();
-				channelSubtitle.setChannelSubtitleElemList(list);
-
-				//向OCG发送UNT消息
-				ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle,areaCode);																		
-
-				for(AdPlaylistGis adGis : pickedList){					
-					pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
-				}
-				
-			}
-		}
-	}*/
-	
-	
-	/*private void sendChannelSubtitle(List<AdPlaylistGis> playLists, String actionType, String state){
-		if(null != playLists && playLists.size() > 0){
-			for(AdPlaylistGis adGis : playLists){
-				String areaCode = adGis.getAreas(); 
-				
-				if("1".equals(actionType)){
-					log.info("向区域" + areaCode + "投放频道字幕广告...");
-				}else{
-					log.info("区域" + areaCode + "频道字幕广告到期，发停止消息...");
-				}
-				
-				//拼装字幕UNT消息
-				String tvn = adGis.getTvn();
-				String userIndustrys = adGis.getUserindustrys();
-				String userLevels = adGis.getUserlevels();
-				
-				TvnTarget tvnTargetModel = new TvnTarget();
-				tvnTargetModel.setTvnType("2"); 
-				tvnTargetModel.setTvn(tvn);
-				tvnTargetModel.setCaIndustryType(userIndustrys);
-				tvnTargetModel.setCaUserLevel(userLevels);
-				
-				Gson gson = new Gson();
-				TextMate text = gson.fromJson(adGis.getContentPath(), TextMate.class);
-				
-				MsubtitleInfo subtitleModel = new MsubtitleInfo();
-				subtitleModel.setUiId("a");
-				subtitleModel.setActionType(actionType);
-				subtitleModel.setTimeout(text.getDurationTime() + "");
-				subtitleModel.setFontColor(text.getFontColor());
-				subtitleModel.setFontSize(text.getFontSize() + "");
-				String[] coordinate = text.getPositionVertexCoordinates().split("\\*");
-				subtitleModel.setBackgroundX(coordinate[0]);
-				subtitleModel.setBackgroundY(coordinate[1]);
-				String[] widthHeight = text.getPositionWidthHeight().split("\\*");
-				subtitleModel.setBackgroundWidth(widthHeight[0]);
-				subtitleModel.setBackgroundHeight(widthHeight[1]);
-				subtitleModel.setBackgroundColor(text.getBkgColor());
-				subtitleModel.setShowFrequency(text.getRollSpeed() + "");
-				subtitleModel.setWord(text.getContent());
-				
-				Map<String, List<String>> tsIdMap = getMapFromData(areaCode, adGis.getChannelId());
-				for(String tsId : tsIdMap.keySet()){
-					List<ChannelSubtitleElement> list = new ArrayList<ChannelSubtitleElement>();
-					TUdpInfo udpInfo = pushAdsDao.getAreaTsIdUdpUrl(areaCode, tsId);
-					List<String> serviceIdList = tsIdMap.get(tsId);//getListFromJson(adGis.getChannelId());
-					if(serviceIdList == null || serviceIdList.size() < 1){
-						continue;
-					}
-					for(String serviceId : serviceIdList){
-						TvnTarget tvnTarget = new TvnTarget();
-						BeanUtils.copyProperties(tvnTargetModel, tvnTarget);
-						tvnTarget.setServiceID(serviceId);
-						
-						MsubtitleInfo subtitle = new MsubtitleInfo();
-						BeanUtils.copyProperties(subtitleModel, subtitle);
-						
-						ChannelSubtitleElement elem = new ChannelSubtitleElement();
-						elem.setTvnTarget(tvnTarget);
-						elem.setSubtitleInfo(subtitle);
-						
-						list.add(elem);
-					}
-					
-					ChannelSubtitle channelSubtitle = new ChannelSubtitle();
-					channelSubtitle.setChannelSubtitleElemList(list);
-					
-					
-<<<<<<< .mine
-					List<OcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
-					boolean ocgExist = false;
-					for (OcgInfo ocg : ocgList) {
-						if (ocg.getAreaCode().equals(areaCode)) {
-							ocgExist = true;
-							String ocgIp = ocg.getIp();
-							//向OCG发送UNT消息
-							ocgService.sendUNTMessageUpdateByIp(ocgIp, ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle,areaCode);																		
-						}
-					}
-					
-					if(!ocgExist){
-						String errMsg = "未配置区域【" + areaCode + "】的IP地址";
-						log.error(errMsg);
-						warnHelper.writeWarnMsgToDb(errMsg);
-					}
-				}
-				
-=======
-					list.add(elem);
-				}
-				
-				ChannelSubtitle channelSubtitle = new ChannelSubtitle();
-				channelSubtitle.setChannelSubtitleElemList(list);
-
-				//向OCG发送UNT消息
-				ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle,areaCode);																		
-
->>>>>>> .r18276
-				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
-			}
-		}
-	} */
-	
 	
 	@SuppressWarnings("unchecked")
 	public void sendSubtitleAds() {
@@ -3423,10 +3247,13 @@ public class PushAdsServiceImpl implements PushAdsService {
 		String overdueHql =  "from AdPlaylistGis ads where ads.state=1 and ads.endTime <=? and ads.adSiteCode =? ";			            
 		List<AdPlaylistGis> overdueList = pushAdsDao.getTemplate().find(overdueHql, new Date(), ConstantsAdsCode.PUSH__SUBTITLE);
 		sendSubtitle(overdueList, "0", "4");
-		try {
-			Thread.sleep(60000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		
+		if(overdueList != null && overdueList.size() > 0){
+			try {
+				Thread.sleep(60000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		//查询新增列表（播出单结束时间 > 当前时间，且状态为0），发送显示字幕，更新播出单状态为1
 		String newHql =  "from AdPlaylistGis ads where ads.state = 0 and ads.startTime <= ? and ads.endTime >=? and ads.adSiteCode =? ";   
@@ -3450,38 +3277,47 @@ public class PushAdsServiceImpl implements PushAdsService {
 				TextMate text = gson.fromJson(adGis.getContentPath(), TextMate.class);
 				String[] words = text.getContent().split("@_@");
 				
-			
-				List<MsubtitleInfo> subtitleInfoList = new ArrayList<MsubtitleInfo>();
-				for(String word : words){
-					word = word.trim();
+				ChannelSubtitleInfo subtitleInfo = new ChannelSubtitleInfo();
+				subtitleInfo.setUiId("a");
+				subtitleInfo.setActionType(actionType);
+				subtitleInfo.setTimeout(text.getDurationTime() + "");
+				subtitleInfo.setFontColor(text.getFontColor());
+				subtitleInfo.setFontSize(text.getFontSize() + "");
+				String[] coordinate = text.getPositionVertexCoordinates().split("\\*");
+				subtitleInfo.setBackgroundX(coordinate[0]);
+				subtitleInfo.setBackgroundY(coordinate[1]);
+				String[] widthHeight = text.getPositionWidthHeight().split("\\*");
+				subtitleInfo.setBackgroundWidth(widthHeight[0]);
+				subtitleInfo.setBackgroundHeight(widthHeight[1]);
+				subtitleInfo.setBackgroundColor(text.getBkgColor());
+				subtitleInfo.setShowFrequency(text.getRollSpeed() + "");
+				
+				List<SubtitlePart> subtitleInfoList = new ArrayList<SubtitlePart>();
+				for(int i =0; i < words.length; i ++){
+					String word = words[i].trim();
 					if(StringUtils.isBlank(word)){
 						continue;
 					}
-					MsubtitleInfo subtitleInfo = new MsubtitleInfo();
-					subtitleInfo.setUiId("a");
-					subtitleInfo.setActionType(actionType);
-					subtitleInfo.setTimeout(text.getDurationTime() + "");
-					subtitleInfo.setFontColor(text.getFontColor());
-					subtitleInfo.setFontSize(text.getFontSize() + "");
-					String[] coordinate = text.getPositionVertexCoordinates().split("\\*");
-					subtitleInfo.setBackgroundX(coordinate[0]);
-					subtitleInfo.setBackgroundY(coordinate[1]);
-					String[] widthHeight = text.getPositionWidthHeight().split("\\*");
-					subtitleInfo.setBackgroundWidth(widthHeight[0]);
-					subtitleInfo.setBackgroundHeight(widthHeight[1]);
-					subtitleInfo.setBackgroundColor(text.getBkgColor());
-					subtitleInfo.setShowFrequency(text.getRollSpeed() + "");
-					subtitleInfo.setWord(word);
-					
-					subtitleInfoList.add(subtitleInfo);
+					SubtitlePart part = new SubtitlePart();
+					part.setId(i+"");
+					part.setWord(word);
+					subtitleInfoList.add(part);
 				}
+				SubtitleContent content = new SubtitleContent();
+				content.setSubtitleList(subtitleInfoList);
 				Subtitle subtitle = new Subtitle();
-				subtitle.setSubtitleInfoList(subtitleInfoList);
+				subtitle.setSubtitleInfo(subtitleInfo);
+				subtitle.setSubtileContent(content);
 		
 				//向OCG发送UNT消息
-				ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE, subtitle, areaCode, null);																		
-
-				pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
+				boolean success = ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_MSUBTITLE, subtitle, areaCode, null);
+				
+				if(success){
+					pushAdsDao.updateAdsFlag(adGis.getId().longValue(), state);
+				}else{
+					pushAdsDao.updateAdsFlag(adGis.getId().longValue(), "2");
+					pushAdsDao.updateOrderState(adGis.getId().longValue(), "9");
+				}
 			}
 		}
 	}
@@ -3537,7 +3373,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
 			} catch (Exception e) {
 				log.error("FTP服务器无法连接",e);
-				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
+				//warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
 				return;
 			} 
 			Map<String,String> areaMap = new HashMap<String,String>();
@@ -3870,7 +3706,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				ftpService.setServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
 			} catch (Exception e) {
 				log.error("FTP服务器无法连接",e);
-				warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
+				//warnHelper.writeWarnMsgToDb("FTP服务器无法连接   IP:" + InitConfig.getAdsConfig().getAdResource().getIp());
 				return;
 			}
 			for (AdPlaylistGis adGis : adsList){

@@ -15,9 +15,10 @@ public class WarnHelper extends BaseDaoImpl{
 	public void writeWarnInfoToDB(WarnInfo entity){
 		save(entity);
 	}
-	public void writeWarnMsgToDb(String msg){
+	public void writeWarnMsgToDb(String areaCode, String msg){
 		WarnInfo entity = new WarnInfo();
 		entity.setTime(new Date());
+		entity.setAreaCode(areaCode);
 		entity.setContent(msg);
 		entity.setIsProcessed(0);
 		save(entity);

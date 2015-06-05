@@ -49,6 +49,7 @@ public class DataInitServiceImpl implements DataInitService {
 		LookbackCategoryMap.setCategoryMap(datainitDao.queryLookbackCategory());
 	}
 	public void initAreaTSFile(){
+		
 		String path = InitConfig.getConfigMap().get(ConstantsHelper.DEST_FILE_PATH);
 		List<String> areaCodeList = initAreasDao.getAreas();
 		try{
@@ -68,7 +69,7 @@ public class DataInitServiceImpl implements DataInitService {
 				}
 				List<OcgInfo> ocgInfoList = ocgInfoDao.getOcgMulticastInfoList(areaCode, null);
 				for(OcgInfo ocg : ocgInfoList){
-					String fileName = destPath + File.separator + ConstantsHelper.CHANNEL_RECOMMEND + File.separator + ocg.getTsId() + ConstantsHelper.TS_FILE_SUFFIX;
+					String fileName = destPath + File.separator + ConstantsHelper.CHANNEL_RECOMMEND + File.separator + ocg.getTsId() + ConstantsHelper.DATA_FILE_SUFFIX;
 					File tsFile = new File(fileName);
 					if(!tsFile.exists()){
 						tsFile.createNewFile();
@@ -79,6 +80,7 @@ public class DataInitServiceImpl implements DataInitService {
 		}catch(Exception e){
 			logger.error("init area ts file error" + e);
 		}
+		//logger.info("初始化各县频点信息完成！");
 	}
 	public void  initAdDefalult()
 	{

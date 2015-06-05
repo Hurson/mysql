@@ -1,7 +1,5 @@
 package com.avit.ads.util.message;
 
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -11,14 +9,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="subtitle")
 public class Subtitle {
 	@XmlElement(name="subtitleInfo")
-	private List<MsubtitleInfo> subtitleInfoList;
-
-	public List<MsubtitleInfo> getSubtitleInfoList() {
-		return subtitleInfoList;
+	private ChannelSubtitleInfo subtitleInfo;
+	@XmlElement(name="subtitleSet")
+	private SubtitleContent subtileContent;
+	public ChannelSubtitleInfo getSubtitleInfo() {
+		return subtitleInfo;
 	}
-
-	public void setSubtitleInfoList(List<MsubtitleInfo> subtitleInfoList) {
-		this.subtitleInfoList = subtitleInfoList;
+	public void setSubtitleInfo(ChannelSubtitleInfo subtitleInfo) {
+		this.subtitleInfo = subtitleInfo;
+	}
+	public SubtitleContent getSubtileContent() {
+		return subtileContent;
+	}
+	public void setSubtileContent(SubtitleContent subtileContent) {
+		this.subtileContent = subtileContent;
 	}
 	
+
 }
