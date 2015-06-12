@@ -25,6 +25,12 @@ public class AreaDaoImpl extends BaseDaoImpl implements AreaDao {
 	public List<TReleaseArea> getAllArea() {
 		return this.find("from TReleaseArea ra where ra.areaCode <> '152000000000'");
 	}
+
+	public void updateAdCtrlByAreaCode(String areaCode, String adCtrl) {
+		String hql = "update TReleaseArea ra set ra.adCtrl=? where ra.areaCode=?";
+		this.executeByHQL(hql, new Object[]{adCtrl, areaCode});
+		
+	}
 	
 	
 	

@@ -128,6 +128,7 @@ public class UixServiceImpl implements UixService {
 		String onid = areaEntity.getLocationCode();
 		String ocsid = areaEntity.getOcsId();
 		//String tsid = areaEntity.getTsId();
+		String adCtrl = areaEntity.getAdCtrl();
 		
 		String typeParam = "";
 		String versionParam = "";
@@ -152,7 +153,7 @@ public class UixServiceImpl implements UixService {
 			pathParam += path + "+";
 		}
 		
-		return url + "?mod=" + mod + "&areacode=" + areaCode + "&onid=" + onid + "&adctrl=1&type=" + reBuildStr(typeParam)
+		return url + "?mod=" + mod + "&areacode=" + areaCode + "&onid=" + onid + "&adctrl=" + adCtrl + "&type=" + reBuildStr(typeParam)
 				+ "&version=" + reBuildStr(versionParam) + "&path=" + reBuildStr(pathParam) + "&tsid=1&ocsid=1";
 	}
 

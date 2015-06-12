@@ -29,6 +29,8 @@ public class TReleaseArea implements java.io.Serializable {
 //	private String tsId;
 	@Column(name = "OCS_ID")
 	private String ocsId;
+	@Column(name="AD_CTRL")
+	private String adCtrl;
 	
 	public TReleaseArea(){};
 	
@@ -93,6 +95,14 @@ public class TReleaseArea implements java.io.Serializable {
 
 	public void setOcsId(String ocsId) {
 		this.ocsId = ocsId;
+	}
+
+	public String getAdCtrl() {
+		return adCtrl;
+	}
+
+	public void setAdCtrl(String adCtrl) {
+		this.adCtrl = adCtrl;
 	}
 	
 	

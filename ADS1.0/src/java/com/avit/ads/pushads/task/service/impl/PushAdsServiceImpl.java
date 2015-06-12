@@ -2101,7 +2101,6 @@ public class PushAdsServiceImpl implements PushAdsService {
 						int ocgPort = Integer.parseInt(ocg.getPort());
 						String ocgUser = ocg.getUser();
 						String ocgPwd = ocg.getPwd();
-						
 						//建立OCG服务器的FTP连接
 						if(ocgService.connectFtpServer(ocgIp, ocgPort, ocgUser, ocgPwd)){ //连不上就不删了，UI类广告订单到期删除OCG素材意义不大
 							//通过FTP删除OCG上的文件			
@@ -2123,8 +2122,12 @@ public class PushAdsServiceImpl implements PushAdsService {
 					StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getContentPath(), StartMaterial.class);
 					if(StringUtils.isNotBlank(startMaterial.getPic())){ //默认开机图片
 						uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),true);
+						//默认图片到期更新adctrl=1
+						areaDao.updateAdCtrlByAreaCode(areaCode, "1");
+					}else{
+						uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),false);
 					}
-					uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),false);
+					
 					
 				}else if(ConstantsAdsCode.PUSH_STARTSTB_VIDEO_HD.equals(adsCode)){
 					uixService.delUiUpdateMsg(areaCode, UIUpdate.VIDEO.getType(), UIUpdate.VIDEO.getFileName(),false);
@@ -2380,6 +2383,8 @@ public class PushAdsServiceImpl implements PushAdsService {
 				
 				if(isDefault){
 					uiUpdateSuccess = uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),true);
+					//默认开机图片更新adctrl值为0
+					areaDao.updateAdCtrlByAreaCode(areaCode, "0");
 				}else{
 					uiUpdateSuccess = uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName());
 				}
