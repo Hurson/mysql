@@ -223,7 +223,7 @@ function showText(material){
 	var height = size[1]/720*240+"px";
 	
 	$('#text').css('width',width);
-	$('#text').css('height',height);
+	$('#text').css('height',height*3);
 	$('#text').css('left',left);
 	$('#text').css('top',bottom);
 	$('#text').css('bgcolor',material.text.bkgColor);
@@ -234,15 +234,7 @@ function showText(material){
 	for(var i = 0; i < content.length; i++){
 		words += content[i];
 	}
-	/**字体过大会导致显示不全*/
-	if(material.text.fontSize>16){
-		$('#textContent').css({
-			'height':height,
-			'padding-top':material.text.fontSize-16+"px"
-		});
-	}else{
-		$("#textContent").css('padding-top',"0px");
-	}
+	
 	$("#textContent").html(words);
 }
 

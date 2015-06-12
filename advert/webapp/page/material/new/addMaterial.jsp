@@ -57,7 +57,7 @@ function selectAdPosition() {
 			structInfo+="</div>";
 			easyDialog.open({
 			container : {
-				header : "选择广告位",
+				//header : "选择广告位",
 				content : structInfo
 			},
 			overlay : true
@@ -1767,21 +1767,12 @@ function IsAlpha(cCheck) {
 			}else{
 				$("#textContent").removeAttr('bgcolor');
 			}
-			/**字体过大会导致显示不全*/
-			if($$("textMeta.fontSize").value>16){
-				$('#textContent').css({
-					'height':_height,
-					'padding-top':$$("textMeta.fontSize").value-16+"px"
-				});
-			}else{
-				$("#textContent").css('padding-top',"0px");
-			}
-				
+							
 			$('#text').css({
 				'left':coordinateX,
 				'top': coordinateY,
 				'width':_width,
-				'height':_height
+				'height':_height*3
 			});					
 			$("#textContent").html(content);
 			$("#text").show();
@@ -1937,7 +1928,6 @@ function IsAlpha(cCheck) {
 		          </td>
 		        </tr>
 		        
-		        
 		        <tr>
 		        	<td>
 		                <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px; display: none;" id ="div_text" >
@@ -1988,7 +1978,7 @@ function IsAlpha(cCheck) {
 		                          </td>
 		                          <td  align="right">文本显示区域：</td>
 		                          <td>
-			            		      <input id="textMeta.positionWidthHeight" name="textMeta.positionWidthHeight"  value="426*20" onfocus="clearDefault(this)"/><span class="required">格式：80*80(宽高w*h)</span>
+			            		      <input id="textMeta.positionWidthHeight" name="textMeta.positionWidthHeight"  value="1280*40" onfocus="clearDefault(this)"/><span class="required">格式：80*80(宽高w*h)</span>
 		                         </td>
 		                      </tr>
 		                      <tr>
@@ -2024,7 +2014,7 @@ function IsAlpha(cCheck) {
 							      	<input type="button" value="点击预览" onclick="javascript:showText();"/>
 							      </td>
 							      <td colspan="3">
-									  <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
+									  <div style="overflow:hidden;line-height:normal;margin-left:0px;margin-top:0px;background-repeat:no-repeat; width:426px;height:240px;
 									     position: relative;">
 											<img id="pImage" src="<%=path%>/images/position/position.jpg" width="426px" height="240px" /> 
 											

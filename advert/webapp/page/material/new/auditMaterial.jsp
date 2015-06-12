@@ -265,7 +265,7 @@
 				'left':coordinateX,
 				'top': coordinateY,
 				'width':_width,
-				'height':_height
+				'height':_height*3
 			});					
 			$("#textContent").html(content);
 			$("#text").show();
@@ -523,7 +523,7 @@
 		                      <tr>
 							      <td align="right" >素材预览效果：</td>
 							      <td colspan="3">
-									  <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
+									  <div style="overflow:hidden;line-height:normal;margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
 									     position: relative;">
 											<img id="pImage1" lowsrc="" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
 											<div id="text"><marquee scrollamount="10" id="textContent"></marquee></div>

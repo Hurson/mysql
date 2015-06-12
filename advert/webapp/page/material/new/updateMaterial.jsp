@@ -824,21 +824,12 @@ function closeSavePane() {
 			}else{
 				$("#textContent").removeAttr('bgcolor');
 			}
-			/**字体过大会导致显示不全*/
-			if($$("textMeta.fontSize").value>16){
-				$('#textContent').css({
-					'height':_height,
-					'padding-top':$$("textMeta.fontSize").value-16+"px"
-				});
-			}else{
-				$("#textContent").css('padding-top',"0px");
-			}
 			
 			$('#text').css({
 				'left':coordinateX,
 				'top': coordinateY,
 				'width':_width,
-				'height':_height
+				'height':_height*3
 			});					
 			$("#textContent").html(content);
 			$("#text").show();
@@ -1133,7 +1124,7 @@ function closeSavePane() {
 					          <input type="button" value="点击预览" onclick="javascript:showText();"/>
 					      </td>
 					      <td colspan="3">
-							  <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
+							  <div style="overflow:hidden;line-height:normal;margin-left:0px;margin-top:0px;background-repeat:no-repeat; width:426px;height:240px;
 							     position: relative;">
 									<img id="pImage1" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
 									<div id="text"><marquee scrollamount="10" id="textContent"></marquee></div>

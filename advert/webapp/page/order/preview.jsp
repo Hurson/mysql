@@ -30,8 +30,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	//alert(pollIndex);
 
 	window.onload = function(){	
-		preview(previewValue[5],previewValue[6],previewValue[7]);
-		//previewMaterial(previewValue,pollIndex);
+		
+		previewMaterial(previewValue,pollIndex);
  		viewMaterial(resourceValue);		 
 	} 
 	
@@ -52,7 +52,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<param name='fullscreen' value='false' />
 			    </object>
 			</div>
-			<div id="text" style="display: none;">
+			<div id="text" style="display: none;overflow:hidden">
 				<marquee scrollamount="10" id="textContent"></marquee>
 			</div>
 		</div>

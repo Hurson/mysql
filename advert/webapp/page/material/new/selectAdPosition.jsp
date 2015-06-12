@@ -237,7 +237,7 @@
 </script>
 </head>
 
-<body class="mainBody" >
+<body class="mainBody">
 <form action="<%=path %>/page/meterial/selectAdPosition.do" method="post" id="queryForm">
          <s:set name="page" value="%{adPositionPage}" />
 		 <input type="hidden" id="pageNo" name="adPositionPage.pageNo" value="${page.pageNo}"/>
@@ -245,11 +245,11 @@
 		 <input type="hidden" id="adPositionQuery.contractId" name="adPositionQuery.contractId" value="${adPositionQuery.contractId}"/>
 		 <input id="positionPackIds" name="positionPackIds" type="hidden" value="${positionPackIds}"/>
 <div class="search" >
-<div class="searchContent" >
+<div class="searchContent" style="top:0px">
 <table cellspacing="1" class="searchList">
-  <tr class="title">
+ <%-- <tr class="title">
     <td>查询条件</td>
-  </tr>
+  </tr>--%>
   <tr>
     <td class="searchCriteria">
       <span>广告位名称：</span>
