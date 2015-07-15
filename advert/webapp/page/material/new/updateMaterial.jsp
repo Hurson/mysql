@@ -715,7 +715,7 @@ function closeSavePane() {
 			if(isEmpty(msg)){
 				alert("文字内容不能为空！");
 	    		return true;
-			}else if(validateSpecialCharacterAfter(msg)){
+			}else if(validateSpecCharaNotStrict(msg)){
 				alert("文字内容不能有特殊字符！");
 	    		return true;
 			}else if(msg.length > 160){

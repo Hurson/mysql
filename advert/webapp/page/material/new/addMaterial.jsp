@@ -1657,7 +1657,7 @@ function IsAlpha(cCheck) {
 			if(isEmpty(msg)){
 				alert("文字内容不能为空！");
 	    		return true;
-			}else if(validateSpecialCharacterAfter(msg)){
+			}else if(validateSpecCharaNotStrict(msg)){
 				alert("文字内容不能有特殊字符！");
 	    		return true;
 			}else if(msg.length > 160){
@@ -1954,7 +1954,7 @@ function IsAlpha(cCheck) {
 		                      <tr>
 		                          <td  align="right"><span class="required">*</span>文字大小：</td>
 		                          <td>
-			            		      <input id="textMeta.fontSize" name="textMeta.fontSize"  value="16" onfocus="clearDefault(this)"/><span class="required">px</span>
+			            		      <input id="textMeta.fontSize" name="textMeta.fontSize"  value="40" onfocus="clearDefault(this)"/><span class="required">px</span>
 		                          </td>
 		                          <td  align="right"><span class="required">*</span>文字颜色：</td>
 		                          <td>
@@ -1968,17 +1968,17 @@ function IsAlpha(cCheck) {
 		                          </td>
 		                          <td  align="right">文本显示滚动速度：</td>
 		                          <td>
-			            		       <input id="textMeta.rollSpeed" name="textMeta.rollSpeed" maxlength="2" value="6" onfocus="clearDefault(this)"/> <span class="required">0表示静止</span>
+			            		       <input id="textMeta.rollSpeed" name="textMeta.rollSpeed" maxlength="2" value="8" onfocus="clearDefault(this)"/> <span class="required">0表示静止</span>
 		                          </td>
 		                      </tr>
 		                      <tr>
 		                          <td  align="right"><span class="required">*</span>文本显示坐标：</td>
 		                          <td>
-			            		      <input id="textMeta.positionVertexCoordinates" name="textMeta.positionVertexCoordinates"  value="0*10" onfocus="clearDefault(this)"/><span class="required">格式：80*80(坐标x*y)</span>
+			            		      <input id="textMeta.positionVertexCoordinates" name="textMeta.positionVertexCoordinates"  value="0*30" onfocus="clearDefault(this)"/><span class="required">格式：80*80(坐标x*y)</span>
 		                          </td>
 		                          <td  align="right">文本显示区域：</td>
 		                          <td>
-			            		      <input id="textMeta.positionWidthHeight" name="textMeta.positionWidthHeight"  value="1280*40" onfocus="clearDefault(this)"/><span class="required">格式：80*80(宽高w*h)</span>
+			            		      <input id="textMeta.positionWidthHeight" name="textMeta.positionWidthHeight"  value="1280*50" onfocus="clearDefault(this)"/><span class="required">格式：80*80(宽高w*h)</span>
 		                         </td>
 		                      </tr>
 		                      <tr>
