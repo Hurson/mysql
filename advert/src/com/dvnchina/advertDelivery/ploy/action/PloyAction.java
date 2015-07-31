@@ -409,7 +409,6 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		String result="0";
 		if (dataIds!=null)
 		{
-		
 			dataIds = dataIds.replace(" ","");	
 			String id[] = dataIds.split(",");
 			
@@ -425,7 +424,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 						}
 						else
 						{
-							
+							result="0";	
 						}
 					}
 				}
@@ -434,6 +433,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		//符合要求的的付给产出状态。
 		
 		//String json  = "{\"result\":"+result+",\"userId\":"+userId+"}";
+		ServletActionContext.getResponse().setContentType("text/html;charset=UTF-8");
 		print(result);
 		return NONE;
 	}
