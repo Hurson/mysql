@@ -6,7 +6,9 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 /**
@@ -22,7 +24,8 @@ public class LoginInterceptor implements Interceptor {
 	/**
      * 应用启动的时候，初始化拦截器
      */
-    public void init(){
+    @Override
+	public void init(){
     	
     }
     
@@ -35,24 +38,27 @@ public class LoginInterceptor implements Interceptor {
     public String intercept(ActionInvocation invoke) throws Exception{
         try
         {
-	        Map<String, Object> session = ServletActionContext.getContext()
-	                .getSession();
+	        Map<String, Object> session = ActionContext.getContext().getSession();
 	        Object obj = session.get("USER_LOGIN_INFO");
 	        if (obj == null){
 	        	return Action.LOGIN;
 	        }
 	        
+	        ActionSupport as=(ActionSupport)invoke.getAction();
+	        as.clearErrorsAndMessages();
+	        
 	        return invoke.invoke();
         }
         catch (Exception e)
         {
-        	e.printStackTrace();
+e.printStackTrace();
         	logger.error(e);
         	throw e;
         }
     }
 
-    public void destroy() {
+    @Override
+	public void destroy() {
 		
 	}
 }
