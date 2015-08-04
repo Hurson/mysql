@@ -41,7 +41,13 @@
 	
 	<include file="struts/struts-warn.xml"/>
 	
+	<include file="struts/struts-configpolicy.xml"/>
+	<include file="struts/struts-pushScrolling.xml"/>
+	<include file="struts/struts-systemMaintain.xml"/>
 	<include file="struts/struts-subtitle.xml"/>
+	
+	<!-- 打开开发者模式 -->
+	<constant name="struts.devMode" value="true" />
 	
 	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
 	<!-- 指定Web应用的默认编码集,相当于调用HttpServletRequest的setCharacterEncoding方法 -->
@@ -80,21 +86,24 @@
 			</interceptor>-->
 			<!-- 自定义拦截栈 -->
 			<interceptor-stack name="adsInterceptorStack">
-				<interceptor-ref name="defaultStack"/>
 				<interceptor-ref name="loginInterceptor" />
+				<interceptor-ref name="defaultStack"/>
 				<!--<interceptor-ref name="exTokenInterceptor" />-->
 			</interceptor-stack>
 		</interceptors>
 		
 		<!-- 覆盖默认的拦截栈 -->
 		<default-interceptor-ref name="adsInterceptorStack" />
+		 
 		<global-results>
 			<result name="login">/tset/timeoutPage.jsp</result>
 			<result name="error">/error.jsp</result>
+			<result name="input">/error.jsp</result>
 		</global-results>
 		<global-exception-mappings>
 			<exception-mapping exception="java.lang.Exception" result="error"></exception-mapping>
 		</global-exception-mappings>
+		
 		
 		<action name="checkSession" class="baseAction" method="checkSession" />
 		
