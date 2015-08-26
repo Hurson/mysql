@@ -841,7 +841,6 @@ function addselectContract() {
 	 function changePosition(){
 		 
 		 var positionid = document.getElementById("ploy.positionId").value;
-		 
 		 if (firstflag==false)  //什么用意？
 		 {
 		    for (var k=0;k<18;k++)
@@ -1030,6 +1029,11 @@ function addselectContract() {
 					 //else{
 					 //	  document.getElementById("assetdiv").style.display="";  
 					 // }
+					//NVOD主界面广告
+					if(postions[i].positionCode=='02402'){
+						document.getElementById("selectedspan14").style.display=""; 
+						//投放区域
+					}
 					
 					 //影片精准，  针对双向实时请求类广告
 					 if (postions[i].isAsset==1)

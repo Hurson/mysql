@@ -403,7 +403,7 @@ public class PloyServiceImpl implements PloyService {
 					|| ploy.getPositionId()==45 || ploy.getPositionId()==46
 					|| ploy.getPositionId()==47 || ploy.getPositionId()==48   //直播下排
 					|| ploy.getPositionId()==49 || ploy.getPositionId()==50
-					|| ploy.getPositionId()==44)
+					|| ploy.getPositionId()==44 ||  ploy.getPositionId()==51)
 			{
 				lstPloy =this.getBTheAllEntity(ployTimeCGroup, ploy);
 			}

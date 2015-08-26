@@ -509,7 +509,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 					|| ploy.getPositionId()==45 || ploy.getPositionId()==46   //开机视频
 					|| ploy.getPositionId()==47 || ploy.getPositionId()==48   //直播下排
 					|| ploy.getPositionId()==49 || ploy.getPositionId()==50 //滚动字幕
-					|| ploy.getPositionId() == 44)   //热点推荐
+					|| ploy.getPositionId() == 44|| ploy.getPositionId()==51 )   //热点推荐,NVOD主界面广告
 			{
 				if (areaChannelUiBean!=null && areaChannelUiBean.getUserArea()!=null && !areaChannelUiBean.getUserArea().equals(""))
 				{
