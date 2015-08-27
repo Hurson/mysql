@@ -47,5 +47,6 @@
 		<property name="categoryId" column="CATEGORY_ID" type="java.lang.String" />
 		
 		<property name="groupId" column="CHANNEL_GROUP_ID" type="java.lang.String" />
+		<property name="menuTypeCode" column="menu_type_code" type="java.lang.String"/>
 	</class>
 </hibernate-mapping>
