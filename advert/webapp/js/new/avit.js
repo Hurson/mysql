@@ -142,7 +142,8 @@ function validateSpecialCharacterAfter(value) {
 function validateSpecCharaNotStrict(value) {
     for (var i = 0; i < value.length; i++) {
         var character = value.charAt(i);
-        var txt = new RegExp("[\\`,\\~,\\!,\\#,\\$$,\\%,\\^,\\+,\\*,\\&,\\\\,\\?,\\|,\\<,\\>,\\{,\\},\\(,\\),\\'',\\;,\\=,\"]");
+        var txt = new RegExp("[\n\r\·\\\\'\"]");
+        //var txt = new RegExp("[\\\n,\\\r,\\－,\\`,\\~,\\!,\\#,\\$$,\\%,\\^,\\+,\\*,\\&,\\\\,\\?,\\|,\\<,\\>,\\{,\\},\\(,\\),\\'',\\;,\\=,\"]");
         //特殊字符正则表达式
         if (txt.test(character)) {
             return true;

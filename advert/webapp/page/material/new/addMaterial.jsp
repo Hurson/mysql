@@ -42,6 +42,7 @@ var uploadVideo="";
 var uploadZip="";
 var i=0;
 var rowCount = 1;
+var index = 1;
 var  maTerialType=-1;
 //选择子广告位
 function selectAdPosition() {
@@ -870,6 +871,46 @@ $(function(){
 	
 	//<!-- zip end-->
 	
+	//<!-- import text -->
+	$("#textfile_id").uploadify({
+		'uploader':'<%=path%>/js/jquery/upload/image/uploadify.swf',
+		'script':'importText.do',
+		'cancelImg':'<%=path%>/js/jquery/upload/image/cancel.png',
+		'folder':'/uploadFiles',
+		'queueID':'fileQueue',
+		'buttonImg':'<%=path%>/js/jquery/upload/image/uploadify.jpg',
+		'fileDataName': 'backgroundImage',
+		'auto':true,
+		'multi':true,
+		'fileExt':'*.txt',
+		'fileDesc':'*.txt',
+		'displayData':'speed',
+		'onSelect': function (event, queueID, fileObj){ 
+			$("#textfile_id").uploadifySettings('script','importText.do'); 
+		 } ,
+		'onComplete':function(event,queueID,fileObj,response,data){
+			var json = eval('(' + response + ')');
+			if(json != null && json.length > 0){
+				for(var i =0; i < json.length; i ++){
+					var table = $$('text_content_tbody');
+					var row = document.createElement("tr"); 
+					row.setAttribute("id", 'text_content_row' + index);
+					var td1 = document.createElement("td");	
+					td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,\'remain_word' + index+ '\', 160)" cols="80" rows="2" >'+json[i].word+'</textarea>';
+					td1.innerHTML += '<span>剩余字数:</span> <input name="remain_word" type="text" id= "remain_word' + index + '" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="160" size="3" readonly></input>';	
+					var td2 = document.createElement("td");	
+					td2.innerHTML = '<input name="textMeta.priority" type="text" maxlength="3" value="'+json[i].priority+'" style="width:30px"/>';
+					var td3 = document.createElement("td");	
+					td3.innerHTML = "<a href='#' onclick='deleteTrById(\"text_content_row" + index + "\");'>删除</a>";
+					row.appendChild(td1);
+					row.appendChild(td2);
+					row.appendChild(td3);
+					table.appendChild(row);
+					
+				}
+			}
+		}
+	});
 	
 	
 	
@@ -1651,15 +1692,20 @@ function IsAlpha(cCheck) {
     		return true;
 		}*/
 		var sum = 0;
+		var flag = false;
 		for(var i = 0; i < length; i++){
+			if(msgArray[i].getAttribute("class")){
+				msgArray[i].removeAttribute("class");
+			}
 			var msg = msgArray[i].value.replace(/(^\s*)|(\s*$)/g,'');
+			msgArray[i].value = msgArray[i].value.replace(/,/ig,"，").replace(/\|/g,"丨").replace(/</g,"＜").replace(/>/,"＞");
 			sum += msg.length;
 			if(isEmpty(msg)){
 				alert("文字内容不能为空！");
 	    		return true;
 			}else if(validateSpecCharaNotStrict(msg)){
-				alert("文字内容不能有特殊字符！");
-	    		return true;
+				msgArray[i].setAttribute("class","input_error");
+	    		flag =  true;
 			}else if(msg.length > 160){
 				alert("单条字幕文字个数不能超过160个！");
 	    		return true;
@@ -1679,6 +1725,10 @@ function IsAlpha(cCheck) {
 					validateArray[priority] = 1;
 				}
 			}
+		}
+		if(flag){
+			alert("红色区域有特殊字符存在!");
+			return true;
 		}
 		if(sum > 19200 ){
 			alert("文字总数量过多，请减少字幕条数或文字数量！");
@@ -1814,6 +1864,7 @@ function IsAlpha(cCheck) {
 		}
 	}
 	function remainWord(field,id, maxlimit) { 
+		
 		if (field.value.length > maxlimit){ 
 			field.value = field.value.substring(0, maxlimit); 
 		}else{ 
@@ -1821,12 +1872,9 @@ function IsAlpha(cCheck) {
 			document.getElementById(id).value=maxlimit - field.value.length; 
 		} 
 	} 
-	
 	function addContent(){
 		var table = $$('text_content_tbody');
-		var index = $$('text_content_tbody').rows.length;
 		var row = document.createElement("tr"); 
-		index += 1;
 		row.setAttribute("id", 'text_content_row' + index);
 		var td1 = document.createElement("td");	
 		td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,\'remain_word' + index+ '\', 160)" cols="80" rows="2" ></textarea>';
@@ -1839,6 +1887,7 @@ function IsAlpha(cCheck) {
 		row.appendChild(td2);
 		row.appendChild(td3);
 		table.appendChild(row);
+		index += 1;
 	}
 	
 	function deleteTrById(id){
@@ -1854,6 +1903,7 @@ function IsAlpha(cCheck) {
 <style>
 	.easyDialog2_wrapper{ width:426px;height:240px;color:#444; border:3px solid rgba(0,0,0,0); -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px; -webkit-box-shadow:0 0 10px rgba(0,0,0,0.4); -moz-box-shadow:0 0 10px rgba(0,0,0,0.4); box-shadow:0 0 10px rgba(0,0,0,0.4); display:none; font-family:"Microsoft yahei", Arial; }
 	.easyDialog2_text{}
+	.input_error{border: solid 1px #ff0000;background-color: #fef2f2;border-radius: 3px;padding: 3px 2px 2px 2px;color: #000;}
 </style>
 </head>
 <body class="mainBody">
@@ -1984,6 +2034,7 @@ function IsAlpha(cCheck) {
 		                      <tr>
 		            	          <td width="15%" align="right" valign="top">
 		            	          	<span class="required">*</span>内容：<br/> <br/>
+		            	          	<!-- <input id="textfile_id" type="file"  name="upload"/>&nbsp;&nbsp;&nbsp;&nbsp; -->
 		            	          	<input id="addContentBut" type="button" value="添加" onclick="javascript:addContent();"/> 
 		            	          </td>
 		                          <td colspan="3">

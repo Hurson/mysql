@@ -41,6 +41,7 @@
 var width = 0;
 /** 高度 */
 var height = 0;
+var index = 1;
 	// added by liye 如果有订单关联该素材，则不能修改
 	//window.onload = function() {
 	$(function(){
@@ -57,7 +58,7 @@ function init(positionJson){
 	var zipMetaName = document.getElementById('zipMetaName').value;
 	var materialId = document.getElementById('material.id').value;
 	var viewPath = document.getElementById('viewPath').value;
-
+	index = ${fn:length(textMeta.pwList)} + 1;
 	if(materialType!=null && materialType!=""){
 		//预览素材
 		preview(positionJson);
@@ -704,20 +705,21 @@ function closeSavePane() {
 			alert("字幕条数必须大于0！");
     		return true;
 		}
-		/*if(length > 120){
-			alert("字幕条数不能超过120！");
-    		return true;
-		}*/
+		var flag = false;
 		var sum = 0;
 		for(var i = 0; i < length; i++){
+			if(msgArray[i].getAttribute("class")){
+				msgArray[i].removeAttribute("class");
+			}
 			var msg = msgArray[i].value.replace(/(^\s*)|(\s*$)/g,'');
+			msgArray[i].value = msgArray[i].value.replace(/,/ig,"，").replace(/\|/g,"\丨").replace(/</g,"＜").replace(/>/,"＞");
 			sum += msg.length;
 			if(isEmpty(msg)){
 				alert("文字内容不能为空！");
 	    		return true;
 			}else if(validateSpecCharaNotStrict(msg)){
-				alert("文字内容不能有特殊字符！");
-	    		return true;
+				msgArray[i].setAttribute("class","input_error");
+	    		flag =  true;
 			}else if(msg.length > 160){
 				alert("单条字幕文字个数不能超过160个！");
 	    		return true;
@@ -737,6 +739,10 @@ function closeSavePane() {
 					validateArray[priority] = 1;
 				}
 			}
+		}
+		if(flag){
+			alert("红色区域有特殊字符存在!");
+			return true;
 		}
 		if(sum  > 160*120 ){
 			alert("文字总数量过多，请减少字幕条数或文字数量！");
@@ -894,11 +900,8 @@ function closeSavePane() {
 	} 
 	
 	function addContent(){
-		
 		var table = $$('text_content_tbody');
-		var index = $$('text_content_tbody').rows.length;
 		var row = document.createElement("tr"); 
-		index += 1;
 		row.setAttribute("id", 'text_content_row' + index);
 		var td1 = document.createElement("td");	
 		td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,\'remain_word' + index+ '\', 160)" cols="80" rows="2" ></textarea>';
@@ -911,12 +914,14 @@ function closeSavePane() {
 		row.appendChild(td2);
 		row.appendChild(td3);
 		table.appendChild(row);
+		index +=1;
 	}
 
 </script>
 <style>
 	.easyDialog_wrapper{ width:1000px;height:400px;color:#444; border:3px solid rgba(0,0,0,0); -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px; -webkit-box-shadow:0 0 10px rgba(0,0,0,0.4); -moz-box-shadow:0 0 10px rgba(0,0,0,0.4); box-shadow:0 0 10px rgba(0,0,0,0.4); display:none; font-family:"Microsoft yahei", Arial; }
 	.easyDialog_text{}
+	.input_error{border: solid 1px #ff0000;background-color: #fef2f2;border-radius: 3px;padding: 3px 2px 2px 2px;color: #000;}
 </style>
 </head>
 <body class="mainBody" onload='init(${positionJson});'>

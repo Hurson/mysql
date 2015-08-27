@@ -1149,7 +1149,7 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 	            //保存文字素材子表
 	           // byte[] contentBlob = textMeta.getContentMsg().getBytes("utf-8");
 		    	
-		    	String[] words = textMeta.getContentMsg().split(",");
+		    	String[] words = textMeta.getContentMsg().replace("－", "-").replace("—", "-").split(",");
 		    	String[] priorities = textMeta.getPriority().replace(" ", "").split(",");
 		    	List<PriorityWordBean> list = new ArrayList<PriorityWordBean>();
 		    	for(int i = 0; i < words.length; i++){
