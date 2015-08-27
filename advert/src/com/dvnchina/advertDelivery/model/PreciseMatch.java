@@ -23,6 +23,7 @@ public class PreciseMatch {
 	private Integer priority;
 	private Integer ployId;
 	private String categoryId;
+	private String menuTypeCode;//投放类型
 	public Integer getId() {
 		return id;
 	}
@@ -137,5 +138,12 @@ public class PreciseMatch {
 	public void setUserLevelsName(String userLevelsName) {
 		this.userLevelsName = userLevelsName;
 	}
+	public String getMenuTypeCode() {
+		return menuTypeCode;
+	}
+	public void setMenuTypeCode(String menuTypeCode) {
+		this.menuTypeCode = menuTypeCode;
+	}
+
 
 }
