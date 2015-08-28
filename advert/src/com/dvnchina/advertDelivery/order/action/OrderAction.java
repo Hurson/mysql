@@ -26,6 +26,7 @@ import com.dvnchina.advertDelivery.log.service.OperateLogService;
 import com.dvnchina.advertDelivery.model.Contract;
 import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.ImageReal;
+import com.dvnchina.advertDelivery.model.PreciseMatch;
 import com.dvnchina.advertDelivery.model.ResourceReal;
 import com.dvnchina.advertDelivery.model.VideoReal;
 import com.dvnchina.advertDelivery.order.bean.Order;
@@ -38,6 +39,7 @@ import com.dvnchina.advertDelivery.order.service.PlayList4OrderService;
 import com.dvnchina.advertDelivery.order.service.PlayListGisService;
 import com.dvnchina.advertDelivery.order.service.PlayListReqService;
 import com.dvnchina.advertDelivery.ploy.bean.Ploy;
+import com.dvnchina.advertDelivery.ploy.bean.TPreciseMatch;
 import com.dvnchina.advertDelivery.ploy.service.PloyService;
 import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.position.bean.PositionPackage;
@@ -188,6 +190,8 @@ public class OrderAction extends BaseAction{
 			//广播背景
 			else if(ploy.getPositionId().intValue()==13 || ploy.getPositionId().intValue()==14){
 				return "radio";
+			}else if(ploy.getPositionId()==51){
+				return "nvod";
 			}
 			
 		}catch(Exception e){
@@ -362,6 +366,21 @@ public class OrderAction extends BaseAction{
 					}
 				}
 				return "audio";
+			}else if("02402".equals(advertPosition.getPositionCode())){
+				//NVOD主界面广告
+				List<ResourceReal> resourceTempList=new ArrayList<ResourceReal>(resourceList);
+				for(ResourceReal resource : resourceTempList){
+					if(resource.getResourceType().intValue()==0){
+						ImageReal image = orderService.getImageRealById(resource.getResourceId());
+						resource.setFileSize(image.getFileSize());
+					}
+				}
+				String ployId = getRequest().getParameter("ployId");
+				List<Ploy> polyList = orderService.getPloyByPloyId(Integer.valueOf(ployId));
+				getRequest().setAttribute("defaultStart", polyList.get(0).getDefaultstart().trim());
+				getRequest().setAttribute("ployId", ployId);
+				return "nvodMenu";
+				
 			}else{
 				//设置视频广告位编码插播次数
 				String instreamPosition = baseConfigService.getBaseConfigByCode("instreamPosition");
@@ -2094,6 +2113,10 @@ public class OrderAction extends BaseAction{
 				//点播菜单广告
 				returnStr = "vod";
 				page = orderService.queryLookResourceList(omRelTmp,page.getPageNo(), page.getPageSize());
+			}else if(positionId == 51){
+				pageReleaseLocation = ployService.queryCityAreaList(null, 1, 100);
+				returnStr = "nvodMenu";
+				page = orderService.queryNVODMenuResourceList(omRelTmp, page.getPageNo(), page.getPageSize());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -2196,6 +2219,7 @@ public class OrderAction extends BaseAction{
 	 */
 	public void insertOrderMateRelTmp(){
 		try{
+			System.out.println(ploy);
 			String orderCode = getRequest().getParameter("orderCode");
 			String ployId = getRequest().getParameter("ployId");
 			String positionId = getRequest().getParameter("positionId");
@@ -2230,6 +2254,20 @@ public class OrderAction extends BaseAction{
 		//开机图片广告
 		if(positionId==1 || positionId == 2){
 			orderService.insertBootOrderMateRelTmp(orderCode, ployId);
+		}else if(positionId == 51){//NVOD主界面广告
+			//时段与区域的笛卡尔积
+			List<Ploy> ployList = orderService.getPloyByPloyId(ployId);
+			//查询精准匹配
+			
+			List<TPreciseMatch> matches = orderService.getPreciseMatchByPloyId(Long.valueOf(String.valueOf(ployId)));
+			//设置策略的精准匹配临时属性
+			if(null!=matches && matches.size()!=0 && null!=ployList && ployList.size()!=0){
+				for(Ploy ploy : ployList){
+					ploy.setMatches(matches);
+				}
+				//保存订单与素材的临时关系
+				orderService.insertNVODMenuMateRelTmp(orderCode, ployList);	
+			}
 		}
 		//轮询菜单图片广告位
 		else if(positionId==3 || positionId == 4){
@@ -2341,6 +2379,14 @@ private void insertOrderMateRelTmp2(String orderCode, int ployId, int positionId
 			renderText("-1");
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * 保存   NVOD主界面广告图片  订单和素材临时关系数据
+	 */
+	public void saveNVODMenuOrderReTmp(){
+		String orderCode = getRequest().getParameter("orderCode");
+		String omRelTmpIds = getRequest().getParameter("omRelTmpId");
+		String materLocation = getRequest().getParameter("materLocation");
 	}
 	//预览广告位 
 	public String preview(){

@@ -8,6 +8,7 @@ import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.model.Contract;
 import com.dvnchina.advertDelivery.model.ImageReal;
+import com.dvnchina.advertDelivery.model.PreciseMatch;
 import com.dvnchina.advertDelivery.model.ResourceReal;
 import com.dvnchina.advertDelivery.model.VideoReal;
 import com.dvnchina.advertDelivery.order.bean.AreaResource;
@@ -17,6 +18,7 @@ import com.dvnchina.advertDelivery.order.bean.OrderMaterialRelationTmp;
 import com.dvnchina.advertDelivery.order.bean.PutInPlayListBean;
 import com.dvnchina.advertDelivery.order.bean.RequestPlayListBean;
 import com.dvnchina.advertDelivery.ploy.bean.Ploy;
+import com.dvnchina.advertDelivery.ploy.bean.TPreciseMatch;
 import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.sysconfig.bean.ChannelInfo;
 
@@ -540,6 +542,29 @@ public interface OrderService {
 	
 	//验证订单是否绑定素材
 	public boolean valiIsHasSuCai(String orderCode);
+	
+	/**
+	 *  根据时段、区域笛卡尔积查询NVOD主界面广告策略
+	 * @param ploy
+	 * @return
+	 * @author zhumaosheng
+	 */
+	public List<Ploy> getPloyByCartesianproduct(Ploy ploy);
+	/**
+	 * 根据策略查询精确表
+	 * @param ployId
+	 * @return
+	 */
+	public List<TPreciseMatch> getPreciseMatchByPloyId(Long ployId);
+	
+	/**
+	 * 根据时段、区域笛卡尔积查询NVOD主界面广告策略
+	 * @param ploy
+	 * @return
+	 */
+	public void insertNVODMenuMateRelTmp(String orderCode,List<Ploy> ployList);
+	
+	public PageBeanDB queryNVODMenuResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize);
 	
 	
 	

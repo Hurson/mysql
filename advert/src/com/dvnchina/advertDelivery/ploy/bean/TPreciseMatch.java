@@ -30,6 +30,8 @@ public class TPreciseMatch implements java.io.Serializable {
 	private Long ployId;
 
 	private String groupId;
+	
+	private String menuTypeCode;//投放类型
 
 	
 	// Constructors
@@ -237,6 +239,14 @@ public class TPreciseMatch implements java.io.Serializable {
 
 	public void setTvnExpression(String tvnExpression) {
 		this.tvnExpression = tvnExpression;
+	}
+
+	public String getMenuTypeCode() {
+		return menuTypeCode;
+	}
+
+	public void setMenuTypeCode(String menuTypeCode) {
+		this.menuTypeCode = menuTypeCode;
 	}
 
 }

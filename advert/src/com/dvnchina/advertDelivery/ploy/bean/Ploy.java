@@ -3,6 +3,8 @@ package com.dvnchina.advertDelivery.ploy.bean;
 import java.util.Date;
 import java.util.List;
 
+import com.dvnchina.advertDelivery.model.PreciseMatch;
+
 /**
  * 策略实体
  * */
@@ -52,6 +54,8 @@ public class Ploy {
 	private String auditOption;
 	private Date   auditDate;
 	private List<Ploy> subPloyList;//分策略列表
+	private List<TPreciseMatch> matches;
+	
 	public Ploy(Integer ployId,String ployName,Integer contractId,Integer positionId,Integer ruleId,String startTime,String endTime,Integer operationId,Date createTime,Date modifyTime,String state,String description,Integer ployNumber,String action,Integer durationTime,Integer fontSize,String fontColor,String backgroundColor,Integer rollSpeed)
 	{
 		this.ployId=ployId;
@@ -371,5 +375,16 @@ public class Ploy {
 	public void setTvnNumber(String tvnNumber) {
 		this.tvnNumber = tvnNumber;
 	}
+	public List<TPreciseMatch> getMatches() {
+		return matches;
+	}
+	public void setMatches(List<TPreciseMatch> matches) {
+		this.matches = matches;
+	}
+
+	
+	
+	
+	
 
 }

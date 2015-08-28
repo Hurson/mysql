@@ -23,6 +23,7 @@ import com.dvnchina.advertDelivery.constant.Constant;
 import com.dvnchina.advertDelivery.model.Contract;
 import com.dvnchina.advertDelivery.model.ImageMeta;
 import com.dvnchina.advertDelivery.model.ImageReal;
+import com.dvnchina.advertDelivery.model.PreciseMatch;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.ResourceReal;
 import com.dvnchina.advertDelivery.model.VideoReal;
@@ -106,6 +107,10 @@ public class OrderServiceImpl implements OrderService{
 	 */
 	public PageBeanDB queryPloyList(Ploy ploy,Integer adPackageType,int pageNo, int pageSize){
 		return orderDao.queryPloyList(ploy,adPackageType, pageNo, pageSize);
+	}
+	
+	public List<Ploy> getPloyByCartesianproduct(Ploy ploy){
+		return orderDao.getPloyByCartesianproduct(ploy);
 	}
 	
 	/**
@@ -853,6 +858,9 @@ public class OrderServiceImpl implements OrderService{
 	public List<Ploy> getPloyByPloyId(Integer ployId){
 		return orderDao.getPloyByPloyId(ployId);
 	}
+	public List<TPreciseMatch> getPreciseMatchByPloyId(Long ployId){
+		return orderDao.getPreciseMatchByPloyId(ployId);
+	}
 	
 	/**
 	 * 根据频道组ID获取频道serviceId列表
@@ -1432,7 +1440,9 @@ public class OrderServiceImpl implements OrderService{
 	public void saveOrderMateRelTmp(String ids, Integer mateId){
 		orderDao.saveOrderMateRelTmp(ids, mateId);
 	}
-	
+	public void saveNVODMenuOrderReTmp(String orderCode, String omRelTmpIds, String materLocation){
+		
+	}
 	
 	@Override
 	public void saveBootOrderMateRelTmp(String orderCode, String selectedAreas, String materLocation) {
@@ -1524,9 +1534,17 @@ public class OrderServiceImpl implements OrderService{
 		}
 		return true;
 	}
+
+	@Override
+	public void insertNVODMenuMateRelTmp(String orderCode, List<Ploy> ployList) {
+		// TODO Auto-generated method stub
+		orderDao.insertNVODMenuMateRelTmp(orderCode, ployList);
+	}
 	
-	
-	
+	@Override
+	public PageBeanDB queryNVODMenuResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize){
+		return orderDao.queryNVODMenuResourceList(omRelTmp, pageNo, pageSize);
+	}
 	
 	
 	

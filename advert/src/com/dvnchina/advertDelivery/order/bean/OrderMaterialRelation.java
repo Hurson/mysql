@@ -44,6 +44,8 @@ public class OrderMaterialRelation {
 	/** 频道组ID */
 	private Integer channelGroupId;
 	
+	private String menuTypeCode;
+	
 	public OrderMaterialRelation(){
 		
 	}
@@ -170,5 +172,14 @@ public class OrderMaterialRelation {
 	public void setType(Integer type) {
 		this.type = type;
 	}
+
+	public String getMenuTypeCode() {
+		return menuTypeCode;
+	}
+
+	public void setMenuTypeCode(String menuTypeCode) {
+		this.menuTypeCode = menuTypeCode;
+	}
+	
 
 }

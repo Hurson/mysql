@@ -1,18 +1,23 @@
 package com.dvnchina.advertDelivery.order.dao.impl;
 
 import java.sql.Blob;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
@@ -20,6 +25,7 @@ import com.dvnchina.advertDelivery.constant.Constant;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 import com.dvnchina.advertDelivery.model.Contract;
 import com.dvnchina.advertDelivery.model.ImageReal;
+import com.dvnchina.advertDelivery.model.PreciseMatch;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.ResourceReal;
 import com.dvnchina.advertDelivery.model.UserLogin;
@@ -43,6 +49,9 @@ import com.dvnchina.advertDelivery.utils.DateUtil;
 import com.dvnchina.advertDelivery.utils.StringUtil;
 
 public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
+	
+	@Resource(name="jdbcTemplate")
+	private JdbcTemplate jdbcTemplate;//使用spring jdbc模版进行批量保存
 	
 	private PloyDao ployDao;
 	public PloyDao getPloyDao() {
@@ -591,7 +600,11 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 				
 				list = getOne2PloyList(this.getListBySql(sql.toString(), null, pageNo, pageSize));
 			}else{
-				list = getOnePloyList(this.getListBySql(sql.toString(), null, pageNo, pageSize));
+				if(ploy.getPositionId()==51){
+					list=getNvodSubPloyList(this.getListBySql(sql.toString(), null, pageNo, pageSize));
+				}else{
+					list = getOnePloyList(this.getListBySql(sql.toString(), null, pageNo, pageSize));
+				}
 			}
 			
 		}else if(isPlayBack){
@@ -605,6 +618,23 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		page.setDataList(list);
 		return page;
 	}
+	
+	public List<Ploy> getPloyByCartesianproduct(Ploy ploy){
+		StringBuffer sql = new StringBuffer();
+		sql.append("select A.id,A.ploy_id,A.ploy_name");
+		sql.append(" from t_ploy A join (select Max(id) id from t_ploy group by ploy_id,ploy_name) B on A.id=B.id ");
+		if(ploy != null){
+			if (ploy.getPositionId() != null && ploy.getPositionId() != 0) {
+				sql.append(" and A.position_id = " + ploy.getPositionId());
+			}
+			if (StringUtils.isNotBlank(ploy.getPloyName())) {
+				sql.append(" and A.ploy_name like '%" + ploy.getPloyName().trim() + "%' ");
+			}
+		}
+		List<Ploy> result = getOnePloyList(this.getListBySql(sql.toString(), null, -1, -1));
+		return result;
+	}
+
 	
 	/**
 	 * 设置回放（频道）广告位信息
@@ -1266,6 +1296,12 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 	public List<Ploy> getPloyByPloyId(Integer ployId){
 		String hql = "from Ploy where ployId=? order by startTime";
 		return this.list(hql, ployId);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TPreciseMatch> getPreciseMatchByPloyId(Long ployId){
+		String sql = "from TPreciseMatch where ployId =? ";
+		return this.list(sql, ployId);
 	}
 	
 	private void setOrderContract(Order order){
@@ -2095,6 +2131,72 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		}
 		sql.append(" order by tmp.AREA_CODE,tmp.START_TIME ");
 		List<OrderMaterialRelationTmp> list = getBootPicResourceList(this.getListBySql(sql.toString(), null, pageNo, pageSize));
+		int rowcount = this.getTotalCountSQL(sql.toString(), null);
+		//rowcount=list.size();
+		PageBeanDB page = new PageBeanDB();
+		if (pageNo==0){
+			pageNo =1;
+		}		
+		page.setPageSize(pageSize);
+		page.setCount(rowcount);
+		int totalPage = (rowcount - 1) / pageSize + 1;
+		
+		
+		if (rowcount == 0) {
+			pageNo = 1;
+			totalPage = 0;
+		}
+		if (pageNo <= 0) {
+			pageNo = 1;
+		} else if (pageNo > totalPage) {
+			pageNo = totalPage;
+		}
+		
+		page.setTotalPage(totalPage);
+		page.setPageNo(pageNo);
+		page.setDataList(list);
+		return page;
+	}
+	@Override
+	public PageBeanDB queryNVODMenuResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize){
+		StringBuffer sql =  new StringBuffer();
+		sql.append("SELECT DISTINCT tmp.area_code,ra.AREA_NAME,tmp.mate_Id,m.TYPE_NAME,m.TYPE_CODE,tmp.start_time,tmp.end_time,tmp.id ");
+		sql.append("FROM t_order_mate_rel_tmp tmp, t_release_area ra,n_menu_type m ");
+		sql.append("WHERE tmp.area_code = ra.AREA_CODE " );
+		sql.append("and tmp.AREA_CODE<>'152000000000' ");
+		sql.append("and m.TYPE_CODE=tmp.menu_type_code ");
+	
+		if(omRelTmp != null){
+			if(StringUtils.isNotBlank(omRelTmp.getOrderCode())){
+				sql.append(" and tmp.ORDER_CODE = '" + omRelTmp.getOrderCode() + "' ");
+			}
+			if (StringUtils.isNotBlank(omRelTmp.getStartTime())) {
+				sql.append(" and tmp.START_TIME >= '" + omRelTmp.getStartTime() + "' ");
+			}
+			if (StringUtils.isNotBlank(omRelTmp.getEndTime())) {
+				sql.append(" and tmp.END_TIME <= '" + omRelTmp.getEndTime() + "' ");
+			}
+			if (StringUtils.isNotBlank(omRelTmp.getAreaCode())) {
+				sql.append(" and tmp.AREA_CODE = '" + omRelTmp.getAreaCode() + "' ");
+			}
+			
+			/*if (omRelTmp.getChannelGroupId() != null) {
+				sql.append(" and tmp.CHANNEL_GROUP_ID = " + omRelTmp.getChannelGroupId() + " ");
+			}*/
+			if(omRelTmp.getMateId()!=null){
+				sql.append(" and tmp.MATE_ID = " + omRelTmp.getMateId() );
+			}
+			
+			/*if(omRelTmp.isNotNull()){
+					sql.append(" and tmp.MATE_ID is  not null " );
+			}else{
+				if(!"1".equals(omRelTmp.getContain())){
+					sql.append(" and tmp.MATE_ID is null " );
+				}
+			}*/
+		}
+		sql.append(" order by tmp.AREA_CODE,tmp.START_TIME ");
+		List<OrderMaterialRelationTmp> list = getNVODMenuPicResourceList(this.getListBySql(sql.toString(), null, pageNo, pageSize));
 		int rowcount = this.getTotalCountSQL(sql.toString(), null);
 		//rowcount=list.size();
 		PageBeanDB page = new PageBeanDB();
@@ -2965,6 +3067,27 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			ar.setEndTime("23:59:59");			
 			ar.setAreaCode((String)(obj[0]));		
 			ar.setAreaName((String)(obj[1]));
+			if(obj[2]!=null){
+				Object ob = obj[2];
+				ar.setMateId(Integer.parseInt(ob.toString()));
+			}
+			list.add(ar);
+		}
+		return list;
+	}
+	
+	private List<OrderMaterialRelationTmp> getNVODMenuPicResourceList(List<?> resultList) {
+		List<OrderMaterialRelationTmp> list = new ArrayList<OrderMaterialRelationTmp>();
+		for (int i=0; i<resultList.size(); i++) {
+			Object[] obj = (Object[]) resultList.get(i);
+			OrderMaterialRelationTmp ar = new OrderMaterialRelationTmp();	
+			ar.setId(toInteger(obj[7]));
+			ar.setStartTime((String)(obj[5]));
+			ar.setEndTime((String)(obj[6]));			
+			ar.setAreaCode((String)(obj[0]));		
+			ar.setAreaName((String)(obj[1]));
+			ar.setMenuTypeCode((String)(obj[4]));
+			ar.setMenuTypeName((String)(obj[3]));
 			if(obj[2]!=null){
 				Object ob = obj[2];
 				ar.setMateId(Integer.parseInt(ob.toString()));
@@ -3878,8 +4001,69 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		this.executeBySQL(insertSql3.toString(), null);
 	}
 	
-	
-	
+	@Override
+	public void insertNVODMenuMateRelTmp(String orderCode,List<Ploy> ployList){
+		StringBuffer insertSql = new StringBuffer();
+		insertSql.append("insert into t_order_mate_rel_tmp(order_code,precise_id,type,start_time,end_time,area_code,menu_type_code)");
+		insertSql.append(" values(?,?,?,?,?,?,?) ");
+		//删除订单和素材临时关系数据
+		delOrderMateRelTmp(orderCode);
+		//新增订单和素材临时关系数据
+		if(null != ployList && ployList.size()!=0){
+			List<Object[]> dataSet = new ArrayList<Object[]>();
+			//策略的笛卡尔积
+			for (Ploy ploy : ployList) {
+				List<TPreciseMatch> matches = ploy.getMatches();
+				if(null!=matches && matches.size()!=0){
+					for (TPreciseMatch preciseMatch : matches) {
+						Object[] object = new Object[6];
+						object[0]=orderCode;
+						object[1]=preciseMatch.getId();
+						object[2]=ploy.getStartTime();
+						object[3]=ploy.getEndTime();
+						object[4]=ploy.getAreaId();
+						object[5]=preciseMatch.getMenuTypeCode();
+						dataSet.add(object);
+					}
+				}
+			}
+			if(dataSet.size()!=0){
+				batchSaveJdbcCondition(insertSql.toString(), dataSet);
+			}
+		}
+	}
+	/**
+	 * jdbc批量保存NVOD主界面广告订单与素材的临时关系
+	 * @param sql
+	 * @param dataSet
+	 */
+	public void batchSaveJdbcCondition(String sql,final List<Object[]> dataSet) {
+		// TODO Auto-generated method stub
+		BatchPreparedStatementSetter pss = new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement arg0, int arg1) throws SQLException {
+				// TODO Auto-generated method stub
+				Object[] values = dataSet.get(arg1);
+				arg0.setString(1, String.valueOf(values[0]));//order_code
+				arg0.setLong(2,(Long) values[1]);//precise_id
+				arg0.setInt(3, 0);//type
+				arg0.setString(4, String.valueOf(values[2]));//start_time
+				arg0.setString(5, String.valueOf(values[3]));//end_time
+				arg0.setString(6, String.valueOf(values[4]));//area_code
+				arg0.setString(7, String.valueOf(values[5]));//menu_type_code
+			}
+			@Override
+			public int getBatchSize() {
+				// TODO Auto-generated method stub
+				int size = dataSet.size();
+				if(size%50==0){
+					return 50;//每50条数据批量保存一次
+				}
+				return size;
+			}
+		};
+		jdbcTemplate.batchUpdate(sql.toString(), pss);
+	}
 	@Override
 	public void insertBootOrderMateRelTmp(String orderCode, int ployId) {
 		//删除订单和素材临时关系数据
@@ -4181,8 +4365,33 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		return result;
 	}
 	
-	
-	
-	
-	
+	/**
+	 * 设置策略子策略和精准信息
+	 * @param resultList
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private List<Ploy> getNvodSubPloyList(List<?> resultList) {
+		List<Ploy> list = new ArrayList<Ploy>();
+		for (int i=0; i<resultList.size(); i++) {
+			Object[] obj = (Object[]) resultList.get(i);
+			Ploy ploy = new Ploy();
+			ploy.setId(toInteger(obj[0]));
+			ploy.setPloyId(toInteger(obj[1]));
+			ploy.setPloyName((String)(obj[2]));
+			ploy.setSubPloyList(getSubPloyListByPloy(toInteger(obj[1])));
+			List<Ploy> subPloys = ploy.getSubPloyList();
+			//投放类型笛卡尔积
+			if(null!=subPloys && subPloys.size()!=0){
+				List<TPreciseMatch> subMatches = getPreciseMatchByPloyId(toLong(obj[1]));
+				if(null!=subMatches){
+					for (Ploy subPloy : subPloys) {
+						subPloy.setMatches(subMatches);
+					}
+				}
+			}
+			list.add(ploy);
+		}
+		return list;
+	}
 }

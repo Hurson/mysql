@@ -28,6 +28,7 @@
 			<result name="lookBack">/page/order/selectLookBackPloy.jsp</result>
 			<result name="PLAYBACK">/page/order/selectPlayBackPloy.jsp</result>
 			<result name="TEXT">/page/order/selectTextPloy.jsp</result>
+			<result name="nvod">/page/order/selectNvodPloy.jsp</result>
 		</action>
 		
 		<action name="getPloy4Json" class="orderAction" method="getPloy4Json"/>
@@ -46,6 +47,7 @@
 		<action name="queryAreaResourceList" class="orderAction" method="queryAreaResourceList">
 			<result name="boot">/page/order/selectBootResource.jsp</result>
 			<result name="audio">/page/order/selectAudioResource.jsp</result>
+			<result name="nvodMenu">/page/order/selectResource.jsp</result>
 			<result name="success">/page/order/selectResource.jsp</result>
 		</action>
 		
@@ -108,7 +110,8 @@
 			<result name="request">/page/order/selectRequestResource.jsp</result>
 			<result name="timeGroup">/page/order/selectTimeGroupResource.jsp</result>
 			<result name="lookvod">/page/order/selectLookVodResource.jsp</result>
-			<result name="vod">/page/order/selectVodResource.jsp</result>		
+			<result name="vod">/page/order/selectVodResource.jsp</result>	
+			<result name="nvodMenu">/page/order/selectNvodMenuResource.jsp</result>	
 		</action>
 	    <action name="getAreaResource" class="orderAction" method="getSelectMaterialJsonByOrderId">
 		</action>

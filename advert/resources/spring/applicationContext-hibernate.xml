@@ -189,7 +189,6 @@
 				
 				<value>dbmap/SubtitelBean.hbm.xml</value>	
 				<value>dbmap/MenuType.hbm.xml</value>
-				<value>dbmap/PreciseMatch.hbm.xml</value>
 								
 			</list>
 		</property>

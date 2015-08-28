@@ -57,6 +57,10 @@ public class OrderMaterialRelationTmp {
 	
 	private boolean isNotNull;
 	
+	private String menuTypeCode;
+	
+	private String menuTypeName;
+	
 	public OrderMaterialRelationTmp(){
 		
 	}
@@ -232,5 +236,22 @@ public class OrderMaterialRelationTmp {
 		this.isNotNull = isNotNull;
 	}
 
+	public String getMenuTypeCode() {
+		return menuTypeCode;
+	}
+
+	public void setMenuTypeCode(String menuTypeCode) {
+		this.menuTypeCode = menuTypeCode;
+	}
+
+	public String getMenuTypeName() {
+		return menuTypeName;
+	}
+
+	public void setMenuTypeName(String menuTypeName) {
+		this.menuTypeName = menuTypeName;
+	}
+
+	
 
 }

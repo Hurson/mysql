@@ -9,6 +9,7 @@ import com.dvnchina.advertDelivery.dao.BaseDao;
 import com.dvnchina.advertDelivery.model.Contract;
 import com.dvnchina.advertDelivery.model.ImageMeta;
 import com.dvnchina.advertDelivery.model.ImageReal;
+import com.dvnchina.advertDelivery.model.PreciseMatch;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.ResourceReal;
 import com.dvnchina.advertDelivery.model.VideoReal;
@@ -460,6 +461,13 @@ public interface OrderDao extends BaseDao{
 	 */
 	public void insertBootOrderMateRelTmp(String orderCode,int ployId);
 	public void insertBootOrderMateRelTmp2(String orderCode,int ployId);
+	/**
+	 * NVOD主菜单广告的订单与素材临时关系数据
+	 * @param orderCode
+	 * @param ployId
+	 * @author zhumaosheng
+	 */
+	public void insertNVODMenuMateRelTmp(String orderCode,List<Ploy> ployList);
 	
 	/**
 	 * 轮询菜单图片广告位中的订单和素材临时关系数据
@@ -524,7 +532,7 @@ public interface OrderDao extends BaseDao{
 	public PageBeanDB queryBootPicResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize);
 
 	
-	
+	public PageBeanDB queryNVODMenuResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize);
 
 	public void insertLookRepalyOrderMateRelTmp(String orderCode, int ployId,int positionId);
 	public void insertLookRepalyOrderMateRelTmp2(String orderCode, int ployId,int positionId);
@@ -533,4 +541,24 @@ public interface OrderDao extends BaseDao{
 	public List getSelectedLoopPicNumList(String orderCode);
 	
 	public List valiIsHasSuCai(String orderCode);
+	
+	/**
+	 * 根据时段、区域笛卡尔积查询NVOD主界面广告策略
+	 * @param ploy
+	 * @return
+	 */
+	public List<Ploy> getPloyByCartesianproduct(Ploy ploy);
+	
+	/**
+	 * 根据策略查询精确表
+	 * @param ployId
+	 * @return
+	 */
+	public List<TPreciseMatch> getPreciseMatchByPloyId(Long ployId);
+	/**
+	 * jdbc批量保存NVOD主界面广告订单与素材的临时关系
+	 * @param sql
+	 * @param dataSet
+	 */
+	public void batchSaveJdbcCondition(String sql,final List<Object[]> dataSet);
 }
