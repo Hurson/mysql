@@ -845,7 +845,6 @@ function addselectContract() {
 	 function changePosition(){
 		 
 		 var positionid = document.getElementById("ploy.positionId").value;
-		 alert(positionid);
 		 if (firstflag==false)  //什么用意？
 		 {
 		    for (var k=0;k<18;k++)

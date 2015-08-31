@@ -866,6 +866,18 @@ function addselectContract() {
 						document.getElementById("ploy.defaultstart").style.display="";  //是否默认  （可以同上一元素合并）
 						document.getElementById("selectedspan14").style.display="";     //投放区域
 					}
+					//NVOD挂角广告
+						if(postions[i].positionCode=='20432'){
+							document.getElementById("selectedspan14").style.display="";
+						}
+						//NVOD字幕广告
+						if(postions[i].positionCode=='02422'){
+							document.getElementById("selectedspan10").style.display="";
+							document.getElementById("selectedspan14").style.display="";
+							document.getElementById("selectedspan11").style.display="";
+							document.getElementById("selectedspan13").style.display="";
+							document.getElementById("selectedspan17").style.display="";
+						}
 					//影片精准，  针对双向实时请求类广告
 					 if (postions[i].isAsset==1)
 					  {

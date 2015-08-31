@@ -412,12 +412,13 @@ public class PloyServiceImpl implements PloyService {
 					|| ploy.getPositionId()==45 || ploy.getPositionId()==46
 					|| ploy.getPositionId()==47 || ploy.getPositionId()==48   //直播下排
 					|| ploy.getPositionId()==49 || ploy.getPositionId()==50
-					|| ploy.getPositionId()==44 ||  ploy.getPositionId()==51)
+					|| ploy.getPositionId()==44 ||  ploy.getPositionId()==51
+					||  ploy.getPositionId()==54||  ploy.getPositionId()==53)
 			{
 				lstPloy =this.getBTheAllEntity(ployTimeCGroup, ploy);
 			}
-			//单频道滚动字幕添加TVN号、用户级别和行业字段
-			if(ploy.getPositionId() == 50){
+			//单频道滚动字幕、NVOD字幕广告添加TVN号、用户级别和行业字段
+			if(ploy.getPositionId() == 50|| ploy.getPositionId()==53){
 				String userIndustrys = preciseUiBean.getUserindustrys();
 				String userLevels = preciseUiBean.getUserlevels();
 				String tvnNumber = preciseUiBean.getTvnNumber();
