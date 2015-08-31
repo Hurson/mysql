@@ -39,7 +39,7 @@ public class PreciseMatchServiceImpl implements PreciseMatchService {
 		// TODO Auto-generated method stub
 		return preciseDao.getPreciseMatchByID(id);
 	}
-
+	
 	@Override
 	public List queryAdPosition() {
 		// TODO Auto-generated method stub
@@ -61,6 +61,9 @@ public class PreciseMatchServiceImpl implements PreciseMatchService {
 			Integer pageNumber) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public PageBeanDB queryTypelist(Integer pageSize, Integer pageNumber){
+		return preciseDao.queryMenuType(pageSize, pageNumber);
 	}
 
 	@Override

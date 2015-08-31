@@ -30,6 +30,7 @@ import com.dvnchina.advertDelivery.ploy.service.PreciseMatchService;
 import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserRank;
+import com.dvnchina.advertDelivery.order.bean.MenuType;
 
 public class PreciseMatchAction extends BaseAction implements ServletRequestAware{
 	private HttpServletRequest request;
@@ -54,6 +55,7 @@ public class PreciseMatchAction extends BaseAction implements ServletRequestAwar
 
 	PreciseMatchService preciseservice;
 	TPreciseMatchBk precise;
+	MenuType menuType;
 	Long ployId;
 	Long preciseType;
 	Long positionId;
@@ -82,7 +84,7 @@ public class PreciseMatchAction extends BaseAction implements ServletRequestAwar
 	String releaseAreaIds;//用户投放区域
 	String userIndustryIds;//用户行业
 	String userRankIds;//用户类
-	
+	String typeName;//nvod主界面类型名称
 	
 	List   productList,channelList,npvrChannelList,lookbackCategoryList,assetList,assetCategoryList,assetKeyList;
 	List   releaseAreaList,userIndustryList,userRankList,channelGroupList;
@@ -97,7 +99,7 @@ public class PreciseMatchAction extends BaseAction implements ServletRequestAwar
 	private PageBeanDB pagereleaseArea=  new PageBeanDB() ;	
 	private PageBeanDB pageuserIndustry=  new PageBeanDB() ;
 	private PageBeanDB pageuserRank=  new PageBeanDB() ;
-	
+	private PageBeanDB pageMenuType = new PageBeanDB();
 	private PageBeanDB pageChannelGroup=  new PageBeanDB() ;
 	public void initData()
 	{
@@ -477,6 +479,7 @@ public String queryCheckPreciseList(){
 		*/
 		return SUCCESS;
 	}
+	
 	
 	
 	/**
@@ -904,6 +907,10 @@ public String queryCheckPreciseList(){
 		pageChannelGroup = preciseservice.queryChannelGroupList(channelGroup, null, pageChannelGroup.getPageSize(), pageChannelGroup.getPageNo());
 		return SUCCESS;
 	}
+	/**
+	 * 
+	 * @return
+	 */
 	
 	public String queryNpvrChannelGroup()
 	{
@@ -915,6 +922,10 @@ public String queryCheckPreciseList(){
 	public String queryBChannelGroup()
 	{
 		pageChannelGroup = preciseservice.queryChannelGroupList(channelGroup, null, pageChannelGroup.getPageSize(), pageChannelGroup.getPageNo());
+		return SUCCESS;
+	}
+	public String queryMenuType(){
+		pageMenuType = preciseservice.queryTypelist(pageMenuType.getPageSize(), pageMenuType.getPageNo());
 		return SUCCESS;
 	}
 	private String trim(String instr)

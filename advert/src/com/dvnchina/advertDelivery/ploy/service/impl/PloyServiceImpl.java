@@ -13,6 +13,7 @@ import com.dvnchina.advertDelivery.model.ContractAD;
 import com.dvnchina.advertDelivery.model.MarketingRule;
 import com.dvnchina.advertDelivery.model.Ploy;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.order.bean.MenuType;
 import com.dvnchina.advertDelivery.ploy.bean.PloyAreaChannel;
 import com.dvnchina.advertDelivery.ploy.bean.PloyBackup;
 import com.dvnchina.advertDelivery.ploy.bean.PloyTimeCGroup;
@@ -349,6 +350,14 @@ public class PloyServiceImpl implements PloyService {
 	public List<Contract> getContractByAdMerchantId(Integer usetId) {
 		List<Contract> lstContract = ployDao.getContractByAdMerchantId(usetId);
 		return lstContract;
+	}
+	/**
+	 * 根据策略ID获取类型信息
+	 */
+	@Override
+	public List<MenuType> getMenuTypeByPloyID(int ployId) {
+		List<MenuType> lstMenuType = ployDao.getMenuTypeByPloyID(ployId);
+		return lstMenuType;
 	}
 
 	@Override
@@ -1097,4 +1106,6 @@ public class PloyServiceImpl implements PloyService {
 			return "";
 		}
 	}
+
+	
 }

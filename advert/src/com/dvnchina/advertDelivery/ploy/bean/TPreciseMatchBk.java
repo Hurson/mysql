@@ -34,6 +34,7 @@ public class TPreciseMatchBk implements java.io.Serializable {
 	private Integer delflag;
 	private String groupId;
 	// Constructors
+	private String menuTypeCode;
 
 	/** default constructor */
 	public TPreciseMatchBk() {
@@ -49,7 +50,7 @@ public class TPreciseMatchBk implements java.io.Serializable {
 			String productId, String assetName, String assetKey,
 			String assetSortId, String dtvChannelId, String playbackChannelId,
 			String lookbackCategoryId, String userArea, String userindustrys,
-			String userlevels, String tvnNumber, Short priority, Long ployId) {
+			String userlevels, String tvnNumber, Short priority, Long ployId,String menuTypeCode) {
 		this.id = id;
 		this.matchName = matchName;
 		this.precisetype = precisetype;
@@ -66,6 +67,7 @@ public class TPreciseMatchBk implements java.io.Serializable {
 		this.tvnNumber = tvnNumber;
 		this.priority = priority;
 		this.ployId = ployId;
+		this.menuTypeCode = menuTypeCode;
 	}
 
 	// Property accessors
@@ -254,5 +256,14 @@ public class TPreciseMatchBk implements java.io.Serializable {
 	public void setTvnExpression(String tvnExpression) {
 		this.tvnExpression = tvnExpression;
 	}
+
+	public String getMenuTypeCode() {
+		return menuTypeCode;
+	}
+
+	public void setMenuTypeCode(String menuTypeCode) {
+		this.menuTypeCode = menuTypeCode;
+	}
+	
 	
 }

@@ -177,6 +177,11 @@ var firstflag=true;
 	changePosition();
 	
 	}
+	//NVOD主界面类型
+	var type = document.getElementsByName("preciseUiBean.tvnNumber");
+	if(type != null && radio.length>0){
+		
+	}
 	
 	
 	//刷新已有策略列表
@@ -694,7 +699,6 @@ var firstflag=true;
 		 		array[i].style.display="";
 			}
 		}
-		
 		}
 		}
 		
@@ -841,6 +845,7 @@ function addselectContract() {
 	 function changePosition(){
 		 
 		 var positionid = document.getElementById("ploy.positionId").value;
+		 alert(positionid);
 		 if (firstflag==false)  //什么用意？
 		 {
 		    for (var k=0;k<18;k++)
@@ -902,12 +907,11 @@ function addselectContract() {
 					 document.getElementById("selectedspan15").style.display="none";
 					 document.getElementById("selectedspan16").style.display="none";
 					 document.getElementById("selectedspan17").style.display="none";
-					 
 					 document.getElementById("assetployNumber").style.display="none";
 					 document.getElementById("ploy.ployNumber").style.display="none";					 
 					 document.getElementById("defaultflag").style.display="none";
 					 document.getElementById("ploy.defaultstart").style.display="none";
-			 
+			 		
 					 if (firstflag==false)  //页面不是刚刚打开，投放次数置为0；
 					 {
 						 document.getElementById("ploy.ployNumber").value=0;
@@ -945,13 +949,13 @@ function addselectContract() {
 					}
 					
 					//主菜单字幕广告
-					if (postions[i].positionCode=='02301')
+					if (postions[i].positionCode=='02301'||postions[i].positionCode=='02432')
 					{
 						document.getElementById("selectedspan14").style.display="";     //投放区域
 					}
 					
 					//分频道字幕广告
-					if (postions[i].positionCode=='02302')
+					if (postions[i].positionCode=='02302'||postions[i].positionCode=='02422')
 					{
 						document.getElementById("selectedspan12").style.display="";
 						document.getElementById("selectedspan13").style.display="";
@@ -1034,6 +1038,19 @@ function addselectContract() {
 						document.getElementById("selectedspan14").style.display=""; 
 						//投放区域
 					}
+					//NVOD挂角广告
+					if(postions[i].positionCode=='20432'){
+						document.getElementById("selectedspan14").style.display="";
+					}
+					//NVOD字幕广告
+					if(postions[i].positionCode=='02422'){
+						document.getElementById("selectedspan10").style.display="";
+						document.getElementById("selectedspan14").style.display="";
+						document.getElementById("selectedspan11").style.display="";
+						document.getElementById("selectedspan13").style.display="";
+						document.getElementById("selectedspan17").style.display="";
+					}
+					
 					
 					 //影片精准，  针对双向实时请求类广告
 					 if (postions[i].isAsset==1)
@@ -3187,7 +3204,7 @@ function exporttvn(objname)
             <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable17">
               <c:forEach items="${preciseUiBean.tvnNumberList}" var="tvnNumber" >
               <tr id="contentrow">
-                 <td class="dot"><input type="checkbox" name="selectedcheckbox17" value="checkbox"/></td>
+                 <td class="dot"><input type="checkbox" name="selectedcheckbox18" value="checkbox"/></td>
                  <td >
                  <input type="text" id="preciseUiBean.tvnNumber" name="preciseUiBean.tvnNumber"  value="${tvnNumber.datavalue}"/>
                 </td>
@@ -3201,6 +3218,84 @@ function exporttvn(objname)
         <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="addTvnNumber()"/>
             <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable17','selectedcheckbox17')" />
         
+        </td>
+      </tr>
+    </table>
+    <table cellspacing="1" class="typelist"  style="display: none;" id="selectedtable18">
+      <tr class="title">
+        <td height="28" class="dot"><input type="checkbox" name="checkbox3" value="checkbox"  onclick="selectAll(this, 'selectedcheckbox18');"/></td>
+	       <td><b>投放频道</b>
+          </p>
+             
+          </td>
+		</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="conditionList">
+        <div>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable1">
+              <tr >
+                <td class="dot"></td>
+                <td >频道组</td>
+	            	<c:forEach items="${ployTimeCGroup.channelgroupList}" var="NVODtype">
+			              <tr id="contentrow">
+			                <td class="dot"><input type="checkbox" name="selectedcheckbox18" value="checkbox"/></td>
+			                <td width="45%"><input type="hidden" id="channelgroup" name="channelgroup"  value="${groupVar.groupId}"/><a href="#" onclick="javascript:showChannelGroupRef(${groupVar.groupId});">${groupVar.groupName}</a></td>
+			                </td>
+			                <td>
+			                <input type="hidden" name="channelGroupType" value="1"/>
+			                </td>
+			              </tr>
+	               </c:forEach>
+            </table>
+        </div>
+        </td>
+      </tr>
+      <tr>
+      
+        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="selectChannelGroup()"/>
+            <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable10','selectedcheckbox10')" />
+        </td>
+      </tr>
+    </table>
+    
+    <table cellspacing="1" class="typelist"  style="display: none;" id="selectedtable18">
+      <tr class="title">
+        <td height="28" class="dot"><input type="checkbox" name="checkbox3" value="checkbox"  onclick="selectAll(this, 'selectedcheckbox18');"/></td>
+	       <td><b>投放类型</b>            
+          </td>
+		</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="conditionList">
+        <div>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable18">
+              <tr >
+                <td class="dot"></td>
+                <td >投放类型</td>
+              </tr>
+                <c:forEach items="${areaChannelUiBean.userAreaList}" var="preciseareaVar" varStatus="status">  
+	                <tr id="contentrow">
+	                	<td class="dot"><input type="checkbox" name="selectedcheckbox18" value="checkbox"/></td>
+                		<td name="arearow0" id="areaone" >
+                              <select id="areaChannelUiBean.userArea" name="areaChannelUiBean.userArea" style="width:80px">
+                				<c:forEach items="${pageReleaseLocation.dataList}" var="areaVar" >
+                				     <option value="${areaVar.areaCode}" <c:if test="${preciseareaVar==areaVar.areaCode}"> selected</c:if> >
+                            		 	${areaVar.areaName}  
+                            		 </option>   
+                            	</c:forEach>           					
+                			  </select>
+                		</td>             
+               		</tr>
+               </c:forEach> 
+              
+            </table>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="addReleaseArea()"/>
+            <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable14','selectedcheckbox14')" />
         </td>
       </tr>
     </table>

@@ -17,6 +17,7 @@ import com.dvnchina.advertDelivery.ploy.bean.TProductinfo;
 import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserRank;
+import com.dvnchina.advertDelivery.order.bean.MenuType;
 
 public interface PreciseDao {
 	/**
@@ -104,7 +105,10 @@ public interface PreciseDao {
  	 * @return the page bean
  	 */
 	PageBeanDB queryColumnList(String ployId,TLoopbackCategory category,Integer pageSize, Integer pageNumber);
-	
+	/**
+	 * 查询可选类型
+	 */
+	PageBeanDB queryMenuType(Integer pageSize, Integer pageNumber);
 	/**
  	 * 查询可选回看产品
  	 * 

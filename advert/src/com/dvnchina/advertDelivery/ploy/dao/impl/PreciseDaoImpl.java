@@ -40,6 +40,8 @@ import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserRank;
 import com.dvnchina.advertDelivery.utils.HibernateSQLTemplete;
 import com.dvnchina.advertDelivery.utils.StringUtil;
+import com.dvnchina.advertDelivery.order.bean.MenuType;
+
 
 public class PreciseDaoImpl extends BaseDaoImpl implements PreciseDao {
 	public Long getDataTotal(String hql, final List params) { 
@@ -234,6 +236,12 @@ public class PreciseDaoImpl extends BaseDaoImpl implements PreciseDao {
 		      //分页查询 
 		      List params = null;		     
 		      return this.getListForPage(sql, params, 1, 100); 
+	}
+	public PageBeanDB queryMenuType(Integer pageSize, Integer pageNumber){
+		String sql;
+		sql = " from MenuType p where 1=1";
+		List params = null;		     
+	     return this.getPageList(sql, params, pageNumber, pageSize);
 	}
 
 	@Override

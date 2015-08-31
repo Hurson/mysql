@@ -45,6 +45,8 @@ import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.utils.StringUtil;
 import com.dvnchina.advertDelivery.utils.json.Obj2JsonUtil;
 import com.opensymphony.xwork2.ActionSupport;
+import com.dvnchina.advertDelivery.order.bean.MenuType;
+import com.dvnchina.advertDelivery.model.PreciseMatch;
 
 public class PloyAction extends BaseAction implements ServletRequestAware{
 	private HttpServletRequest request;
@@ -59,6 +61,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 	private List<PloyAreaChannel> lstPloyAreaChannel;
 	private List<ReleaseArea> lstReleaseArea;
 	private List<ChannelInfo> lstChannelInfo;
+	private List<MenuType> lstMenuType;
 	private Contract contract=new Contract();
 	private AdvertPosition adPosition = new AdvertPosition();
 	private MarketingRule rule =new MarketingRule();
@@ -71,6 +74,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 	
 	private PageBeanDB pageArea=  new PageBeanDB() ;
 	private PageBeanDB pageChannel=  new PageBeanDB() ;
+	private PageBeanDB pageMenutype = new PageBeanDB();
 	private String areasJson;
 	private int contractId; 
 	private int postionId; 
@@ -152,7 +156,6 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		
 		// added by liuwenping
 		ploy.setState(state);
-		
 		ployTimeCGroup = ployService.getPloyTimeCGroupByPloyID(ployId, channelGroupType);
 		List releaseAreaList = new ArrayList();
 		String [] areas = ployTimeCGroup.getAreas().split(",");
@@ -166,7 +169,8 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		areaChannelUiBean =  new PreciseUiBean();
 		areaChannelUiBean.setUserAreaList(releaseAreaList);
 		preciseUiBean  = ployService.getPreciseUiBeanByPloyID(ployId);
-		
+/*		lstMenuType = ployService.getMenuTypeByPloyID(ployId);
+*/		
 		
 		postionJson = Obj2JsonUtil.list2json(pageAdPosition.getDataList());
 		pageLocation =preciseservice.queryLocationCodeList(null, 100000, 1);
@@ -248,7 +252,6 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		List<ContractAD> lstContractAD = ployService.getAdSiteByContract(contractId);
 		return SUCCESS;
 	}
-	
 	/**
 	 * 异步方法：根据广告位编码获取营销规则
 	 * @param adSiteId 广告位编码
@@ -263,6 +266,13 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 	 */
 	public String getTimeSegmentsByMarketRule(int ruleId){
 		String[] array = ployService.getTimeSegmentsByMarketRule(ruleId);
+		return SUCCESS;
+	}
+	/**
+	 * 异步方法：根据策略ID获取类型
+	 */
+	public String getMenuTypeByPloyId(int ployId){
+		List<MenuType> lstMenuType = ployService.getMenuTypeByPloyID(ployId);
 		return SUCCESS;
 	}
 	/**
@@ -319,7 +329,6 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		pageLocation =preciseservice.queryLocationCodeList(null, 1000, 1);
 		String areaCodes = getLoginUser().getAreaCodes();
 		pageReleaseLocation = ployService.queryAreaListByCodes(areaCodes, 1, 100);
-				
 		return SUCCESS;
 	}
 	
@@ -1143,6 +1152,12 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 	}
 	public void setBchannelgroup(String bchannelgroup) {
 		this.bchannelgroup = bchannelgroup;
+	}
+	public PageBeanDB getPageMenutype() {
+		return pageMenutype;
+	}
+	public void setPageMenutype(PageBeanDB pageMenutype) {
+		this.pageMenutype = pageMenutype;
 	}
 	/**
 	 * 导出ADI

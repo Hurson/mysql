@@ -30,6 +30,7 @@ import com.dvnchina.advertDelivery.ploy.bean.PloyBackup;
 import com.dvnchina.advertDelivery.ploy.bean.PloyChannel;
 import com.dvnchina.advertDelivery.ploy.bean.PloyTimeCGroup;
 import com.dvnchina.advertDelivery.ploy.bean.TPreciseMatchBk;
+import com.dvnchina.advertDelivery.order.bean.MenuType;
 import com.dvnchina.advertDelivery.ploy.dao.PloyDao;
 import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 
@@ -1000,7 +1001,17 @@ public class PloyDaoImpl extends BaseDaoImpl implements PloyDao {
 		List<Contract> lstContract = query.list();
 		return lstContract;
 	}
-	
+	/**
+	 * 根据策略获取类型信息
+	 */
+	public List<MenuType> getMenuTypeByPloyID(int ployId){
+		Session session = this.getSessionFactory().openSession();
+		String hql = "select new MenuType(p.id,p.typeCode,p.typeName) from PreciseMatch p where p.ployId = :ployId";
+		Query query = session.createQuery(hql);
+		query.setInteger("ployId", ployId);
+		List<MenuType> lstMenuType = query.list();
+		return lstMenuType;
+	}
 	public List<ContractAD> getAdSiteByContract(int contractId) {
 		Session session = this.getSessionFactory().openSession();
 		String hql = "select new ContractAD(c.positionId, c.positionName) from ContractAD c where c.contractId = :contractId ";

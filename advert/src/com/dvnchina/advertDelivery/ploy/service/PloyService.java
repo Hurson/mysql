@@ -9,6 +9,7 @@ import com.dvnchina.advertDelivery.model.ContractAD;
 import com.dvnchina.advertDelivery.model.MarketingRule;
 import com.dvnchina.advertDelivery.model.Ploy;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.order.bean.MenuType;
 import com.dvnchina.advertDelivery.ploy.bean.PloyAreaChannel;
 import com.dvnchina.advertDelivery.ploy.bean.PloyBackup;
 import com.dvnchina.advertDelivery.ploy.bean.PloyTimeCGroup;
@@ -70,6 +71,14 @@ public interface PloyService {
   	 * @return the PloyTimeCGroup by ploy id
   	 */
 	public PloyTimeCGroup getPloyTimeCGroupByPloyID(int ployId, String channelGroupType);
+	/**
+	 * 从精准表获取NVOD主界面类型信息
+	 * 策略ID
+	 * 
+	 * @param ployId the ploy id
+	 * @return theMenuTypeCode by ploy id
+	 */ 
+	public List<MenuType> getMenuTypeByPloyID(int ployId);
 	/**
   	 * 获取策略的精准信息   
   	 * 策略ID.
@@ -169,7 +178,10 @@ public interface PloyService {
 	 
 	PageBeanDB queryCityAreaList(PloyBackup ploy,Integer pageSize, Integer pageNumber);
 	
-
+	/**
+	 * 查询可选择的类型
+	 * 
+	 */
 	/**
 	 * 根据用户获取合同信息
 	 * @param usetId

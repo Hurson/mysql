@@ -83,7 +83,10 @@ public interface PreciseMatchService {
 	  * @return the page bean db
 	  */
 	PageBeanDB queryChannelList(String ployId,ChannelInfo channel,String ids,Integer pageSize, Integer pageNumber);
-	
+	/**
+	 * 查询可选类型
+	 */
+	PageBeanDB queryTypelist(Integer pageSize, Integer pageNumber);
 	/**
 	 * 查询可选回放频道
 	 * 根据策略编码  查询支持的区域列表 再根据区域code查询可选回放频道.

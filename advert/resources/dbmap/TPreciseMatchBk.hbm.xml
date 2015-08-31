@@ -115,6 +115,11 @@
                 <comment>删除标识</comment>
             </column>
         </property>
+        <property name="menuTypeCode" type="java.lang.String">
+          <column name="menu_type_code">
+          	<comment>投放类型</comment>
+          </column>
+        </property>
         
     </class>
 </hibernate-mapping>

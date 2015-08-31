@@ -50,7 +50,7 @@ public class TPreciseMatch implements java.io.Serializable {
 			String productId, String assetName, String assetKey,
 			String assetSortId, String dtvChannelId, String playbackChannelId,
 			String lookbackCategoryId, String userArea, String userindustrys,
-			String userlevels, String tvnNumber, Short priority, Long ployId) {
+			String userlevels, String tvnNumber, Short priority, Long ployId,String menuTypeCode) {
 		this.id = id;
 		this.matchName = matchName;
 		this.precisetype = precisetype;
@@ -67,6 +67,7 @@ public class TPreciseMatch implements java.io.Serializable {
 		this.tvnNumber = tvnNumber;
 		this.priority = priority;
 		this.ployId = ployId;
+		this.menuTypeCode = menuTypeCode;
 	}
 
 	// Property accessors

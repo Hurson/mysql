@@ -15,6 +15,7 @@ import com.dvnchina.advertDelivery.ploy.bean.PloyTimeCGroup;
 import com.dvnchina.advertDelivery.ploy.bean.TPreciseMatchBk;
 import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.utils.page.PageBean;
+import com.dvnchina.advertDelivery.order.bean.MenuType;
 
 public interface PloyDao {
 	/**
@@ -49,7 +50,15 @@ public interface PloyDao {
  	 */
     PloyBackup getPloyByPloyID(int ployId);
     List<PloyBackup> getPloyListByPloyID(int ployId);
-	  
+    /**
+	 * 从精准表获取NVOD主界面类型信息
+	 * 策略ID
+	 * 
+	 * @param ployId the ploy id
+	 * @return theMenuTypeCode by ploy id
+	 */ 
+    public List<MenuType> getMenuTypeByPloyID(int ployId);
+    
   	/**
   	 * 获取策略的区域频道信息   
   	 * 策略ID.
@@ -83,8 +92,8 @@ public interface PloyDao {
  	 * @param adPosition the ad position
  	 * @return the page bean
  	 */
-	PageBeanDB queryAdPosition(String customerIds,Integer contractId ,AdvertPosition adPosition,Integer pageSize, Integer pageNumber);
 	
+	PageBeanDB queryAdPosition(String customerIds,Integer contractId ,AdvertPosition adPosition,Integer pageSize, Integer pageNumber);
 	
 	 /**
  	 * 查询可选广告位
