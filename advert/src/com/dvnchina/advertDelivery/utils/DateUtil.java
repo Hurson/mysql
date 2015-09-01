@@ -375,4 +375,17 @@ public class DateUtil {
 		int newTime = Integer.parseInt(dstartTime);
 		return newTime;
     }
+    
+    public static Date StringToDateYYYMMMDD24MM(String dateStr){
+    	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	Date date = null;
+    	try {
+    		date= format.parse(dateStr);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return date;
+    }
 }
