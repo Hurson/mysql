@@ -57,9 +57,11 @@ public class OrderMaterialRelationTmp {
 	
 	private boolean isNotNull;
 	
-	private String menuTypeCode;
+	private String menuTypeCode;//投放类型编码
 	
-	private String menuTypeName;
+	private String menuTypeName;//投放类型名称
+	
+	private String resourceName;//素材名称
 	
 	public OrderMaterialRelationTmp(){
 		
@@ -252,6 +254,15 @@ public class OrderMaterialRelationTmp {
 		this.menuTypeName = menuTypeName;
 	}
 
+	public String getResourceName() {
+		return resourceName;
+	}
+
+	public void setResourceName(String resourceName) {
+		this.resourceName = resourceName;
+	}
+
+	
 	
 
 }

@@ -1,5 +1,6 @@
 package com.dvnchina.advertDelivery.order.dao.impl;
 
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -1303,6 +1304,25 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		String sql = "from TPreciseMatch where ployId =? ";
 		return this.list(sql, ployId);
 	}
+	public List<TPreciseMatch> getPreMatchInfo(Long ployId){
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT t.TYPE_CODE,t.TYPE_NAME from t_precise_match m,n_menu_type t ");
+		sql.append("where t.TYPE_CODE = m.menu_type_code ");
+		sql.append("and m.PLOY_ID=? ");
+		List<Object[]> results = this.getDataBySql(sql.toString(), new Object[]{ployId});
+		List<TPreciseMatch> matches = new ArrayList<TPreciseMatch>();
+		if(null!=results&&results.size()!=0){
+			TPreciseMatch pMatch = null;
+			for(Object[] obj:results){
+				pMatch=new TPreciseMatch();
+				pMatch.setMenuTypeCode((String)obj[0]);
+				pMatch.setMenuTypeName((String)obj[1]);
+				matches.add(pMatch);
+			}
+		}
+		
+		return matches;
+	}
 	
 	private void setOrderContract(Order order){
 		StringBuffer sql = new StringBuffer("select c.contract_name,");
@@ -2160,11 +2180,21 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 	@Override
 	public PageBeanDB queryNVODMenuResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize){
 		StringBuffer sql =  new StringBuffer();
-		sql.append("SELECT DISTINCT tmp.area_code,ra.AREA_NAME,tmp.mate_Id,m.TYPE_NAME,m.TYPE_CODE,tmp.start_time,tmp.end_time,tmp.id ");
+		sql.append("SELECT DISTINCT tmp.area_code,ra.AREA_NAME,tmp.mate_Id,m.TYPE_NAME,m.TYPE_CODE,tmp.start_time,tmp.end_time,tmp.id, ");
+		sql.append("(SELECT r.RESOURCE_NAME FROM t_resource r WHERE r.ID = tmp.mate_id) resourceName ");
+		/*if(null!=omRelTmp.getMateId()){
+			sql.append(",re.RESOURCE_NAME ");
+		}*/
 		sql.append("FROM t_order_mate_rel_tmp tmp, t_release_area ra,n_menu_type m ");
+		/*if(null!=omRelTmp.getMateId()){
+			sql.append(",t_resource re ");
+		}*/
 		sql.append("WHERE tmp.area_code = ra.AREA_CODE " );
 		sql.append("and tmp.AREA_CODE<>'152000000000' ");
 		sql.append("and m.TYPE_CODE=tmp.menu_type_code ");
+		/*if(null!=omRelTmp.getMateId()){
+			sql.append("and tmp.mate_id=re.id");
+		}*/
 	
 		if(omRelTmp != null){
 			if(StringUtils.isNotBlank(omRelTmp.getOrderCode())){
@@ -2187,13 +2217,13 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 				sql.append(" and tmp.MATE_ID = " + omRelTmp.getMateId() );
 			}
 			
-			/*if(omRelTmp.isNotNull()){
+			if(omRelTmp.isNotNull()){
 					sql.append(" and tmp.MATE_ID is  not null " );
 			}else{
 				if(!"1".equals(omRelTmp.getContain())){
 					sql.append(" and tmp.MATE_ID is null " );
 				}
-			}*/
+			}
 		}
 		sql.append(" order by tmp.AREA_CODE,tmp.START_TIME ");
 		List<OrderMaterialRelationTmp> list = getNVODMenuPicResourceList(this.getListBySql(sql.toString(), null, pageNo, pageSize));
@@ -3088,6 +3118,9 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			ar.setAreaName((String)(obj[1]));
 			ar.setMenuTypeCode((String)(obj[4]));
 			ar.setMenuTypeName((String)(obj[3]));
+			if(obj.length==9){
+				ar.setResourceName((String)(obj[8]));
+			}
 			if(obj[2]!=null){
 				Object ob = obj[2];
 				ar.setMateId(Integer.parseInt(ob.toString()));
@@ -3141,6 +3174,11 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 	public void delOrderMateRelTmp(String orderCode){
 		String delSql = "delete from t_order_mate_rel_tmp where order_code='"+orderCode+"'";
 		this.executeBySQL(delSql, null);
+	}
+	
+	public void updateOrderMateRelTmp(String orderCode){
+		String updateSql = "update t_order_mate_rel_tmp set MATE_ID = null where order_code=?";
+		this.executeBySQL(updateSql, new Object[]{orderCode});
 	}
 	
 	/**
@@ -4001,6 +4039,47 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		this.executeBySQL(insertSql3.toString(), null);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<OrderMaterialRelation> getMateReIdFromTable(String orderCode){
+		StringBuffer selSql = new StringBuffer();
+		selSql.append("select rel from OrderMaterialRelation rel,Order o ");
+		selSql.append("where o.id = rel.orderId ");
+		selSql.append("and o.orderCode = ?");
+		return this.getListForAll(selSql.toString(), new Object[]{orderCode});
+	}
+	
+	public void insertNVODMenuMateRelTmpLink(final List<OrderMaterialRelation> relResults,final String orderCode){
+		//删除订单和素材临时关系数据
+		delOrderMateRelTmp(orderCode);
+		StringBuffer insertSql = new StringBuffer();
+		insertSql.append("insert into t_order_mate_rel_tmp(order_code,precise_id,type,start_time,end_time,area_code,menu_type_code,mate_id)");
+		insertSql.append(" values(?,?,?,?,?,?,?,?) ");
+		BatchPreparedStatementSetter pss = new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement arg0, int arg1) throws SQLException {
+				// TODO Auto-generated method stub
+				OrderMaterialRelation values = relResults.get(arg1);
+				arg0.setString(1, orderCode);//order_code
+				arg0.setLong(2,values.getPreciseId());//precise_id
+				arg0.setInt(3, values.getType());//type
+				arg0.setString(4, values.getStartTime());//start_time
+				arg0.setString(5, values.getEndTime());//end_time
+				arg0.setString(6, values.getAreaCode());//area_code
+				arg0.setString(7, values.getMenuTypeCode());//menu_type_code
+				arg0.setInt(8, values.getMateId());
+			}
+			@Override
+			public int getBatchSize() {
+				// TODO Auto-generated method stub
+				int size = relResults.size();
+				if(size%50==0){
+					return 50;//每50条数据批量保存一次
+				}
+				return size;
+			}
+		};
+		jdbcTemplate.batchUpdate(insertSql.toString(), pss);
+	}
 	@Override
 	public void insertNVODMenuMateRelTmp(String orderCode,List<Ploy> ployList){
 		StringBuffer insertSql = new StringBuffer();
@@ -4211,6 +4290,31 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 				+ "' AND PLAY_LOCATION IN( " + locations + ") AND area_code IN(" + areas + ")";
 		this.executeBySQL(updateSql, null);
 	}
+	@Override
+	public void saveNVODMenuOrderMateRelTmp(final String[] tmpIdsArray, final String mateIds){
+		StringBuffer updateSql = new StringBuffer();
+		updateSql.append("update t_order_mate_rel_tmp set mate_id=?");
+		updateSql.append(" where id=?");
+		BatchPreparedStatementSetter pss = new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement arg0, int arg1) throws SQLException {
+				// TODO Auto-generated method stub
+				String values = tmpIdsArray[arg1];
+				arg0.setBigDecimal(1, new BigDecimal(mateIds));
+				arg0.setBigDecimal(2, new BigDecimal(values));
+			}
+			@Override
+			public int getBatchSize() {
+				// TODO Auto-generated method stub
+				int size = tmpIdsArray.length;
+				if(size%50==0){
+					return 50;//每50条数据批量保存一次
+				}
+				return size;
+			}
+		};
+		jdbcTemplate.batchUpdate(updateSql.toString(), pss);
+	}
 	
 	
 
@@ -4229,14 +4333,16 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 	public void saveOrderMaterialRelationFromTmp(Integer orderId, String orderCode){
 		StringBuffer insertSql = new StringBuffer();
 		insertSql.append("insert into t_order_mate_rel(order_id,mate_id,play_location,is_hd,poll_index,precise_id,");
-		insertSql.append("type,start_time,end_time,area_code,channel_group_id,PRECISETYPE)");
+		insertSql.append("type,start_time,end_time,area_code,channel_group_id,PRECISETYPE,menu_type_code)");
 		insertSql.append(" select ").append(orderId).append(",tmp.mate_id,tmp.play_location,tmp.is_hd,tmp.poll_index,");
-		insertSql.append(" tmp.precise_id,tmp.TYPE,tmp.start_time,tmp.end_time,tmp.area_code,tmp.channel_group_id,tmp.PRECISETYPE ");
+		insertSql.append(" tmp.precise_id,tmp.TYPE,tmp.start_time,tmp.end_time,tmp.area_code,tmp.channel_group_id,tmp.PRECISETYPE,tmp.menu_type_code ");
 		insertSql.append(" from t_order_mate_rel_tmp tmp,t_resource r ");
 		insertSql.append(" where tmp.mate_id=r.id and tmp.order_code='").append(orderCode).append("' ");
 		this.executeBySQL(insertSql.toString(), null);
 	}
-	
+	public void saveOrUpdateMaterialRelationFromTmp(Integer positionId){
+		
+	}
 	/**
 	 * 查询订单和素材临时关系数据
 	 * @param orderCode
@@ -4383,7 +4489,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			List<Ploy> subPloys = ploy.getSubPloyList();
 			//投放类型笛卡尔积
 			if(null!=subPloys && subPloys.size()!=0){
-				List<TPreciseMatch> subMatches = getPreciseMatchByPloyId(toLong(obj[1]));
+				List<TPreciseMatch> subMatches = getPreMatchInfo(toLong(obj[1]));
 				if(null!=subMatches){
 					for (Ploy subPloy : subPloys) {
 						subPloy.setMatches(subMatches);

@@ -219,5 +219,6 @@ public class Constant {
 	public static final int POSITION_TYPE_ONE_NOT_REAL_TIME = 3;
 	/**单向数据广播*/
 	public static final int POSITION_TYPE_ONE_DATA_BROADCASTING = 4;
+
 	
 }

@@ -127,6 +127,7 @@
 			<result name="timeGroupDetail">/page/order/selectTimeGroupResourceDetail.jsp</result>
 			<result name="lookvodDetail">/page/order/selectLookVodResourceDetail.jsp</result>	
 			<result name="vodDetail">/page/order/selectVodResourceDetail.jsp</result>	
+			<result	name="nvodMenu">/page/order/selectNVODMenuPicResourceDetail.jsp</result>
 		</action>
 		 <action name="getAreaResourcePath" class="orderAction" method="getAreaResourcePath">
 		</action>
@@ -138,6 +139,8 @@
 		<action name="saveOrderMateRelTmp" class="orderAction" method="saveOrderMateRelTmp"/>
 		<!-- 开机图片订单   保存订单和素材临时关系数据 -->
 		<action name="saveBootOrderMateRelTmp" class="orderAction" method="saveBootOrderMateRelTmp"/>
+		<!-- NVOD主界面订单   保存订单和素材临时关系数据 -->
+		<action name="saveNVODMenuOrderReTmp" class="orderAction" method="saveNVODMenuOrderReTmp"/>
 		<!-- 删除订单和素材临时关系数据 -->
 		<action name="delOrderMateRelTmp" class="orderAction" method="delOrderMateRelTmp">
 			<result name="area">/page/order/selectAreaResource.jsp</result>	

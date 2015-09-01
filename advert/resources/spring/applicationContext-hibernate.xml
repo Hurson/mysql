@@ -218,6 +218,9 @@
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="transactionAttributes">
 			<props>
+				<prop key="save*">
+					PROPAGATION_REQUIRED,-Exception
+				</prop>
 				<prop key="insert*">
 					PROPAGATION_REQUIRED,-Exception
 				</prop>

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.transform.ToListResultTransformer;
 
 import com.avit.ads.webservice.UploadClient;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
@@ -1440,8 +1441,14 @@ public class OrderServiceImpl implements OrderService{
 	public void saveOrderMateRelTmp(String ids, Integer mateId){
 		orderDao.saveOrderMateRelTmp(ids, mateId);
 	}
-	public void saveNVODMenuOrderReTmp(String orderCode, String omRelTmpIds, String materLocation){
-		
+	public void saveNVODMenuOrderReTmp(String[] tmpIdsArray, String mateIds){
+		//保存
+		orderDao.saveNVODMenuOrderMateRelTmp(tmpIdsArray, mateIds);
+	}
+	
+	public void updateOrderMateRelTmp(String orderCode){
+		//删除原来的订单和素材的临时关系
+		orderDao.updateOrderMateRelTmp(orderCode);
 	}
 	
 	@Override
@@ -1539,6 +1546,10 @@ public class OrderServiceImpl implements OrderService{
 	public void insertNVODMenuMateRelTmp(String orderCode, List<Ploy> ployList) {
 		// TODO Auto-generated method stub
 		orderDao.insertNVODMenuMateRelTmp(orderCode, ployList);
+		List<OrderMaterialRelation> relResults = orderDao.getMateReIdFromTable(orderCode);
+		if(null !=relResults && relResults.size()!=0){
+			orderDao.insertNVODMenuMateRelTmpLink(relResults, orderCode);
+		}
 	}
 	
 	@Override

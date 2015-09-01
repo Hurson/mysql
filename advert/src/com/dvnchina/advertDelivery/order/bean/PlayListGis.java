@@ -73,7 +73,8 @@ public class PlayListGis implements RowMapper<PlayListGis> {
 	
 	/** 点播随片*/
 	private Integer priority;
-	
+	/**投放类型NVOD主界面广告*/
+	private String menuTypeCode;
 
 	public Integer getPriority() {
 		if(null == priority){
@@ -276,6 +277,18 @@ public class PlayListGis implements RowMapper<PlayListGis> {
 	public void setAssetId(String assetId) {
 		this.assetId = assetId;
 	}
+	
+	
+
+	public String getMenuTypeCode() {
+		return menuTypeCode;
+	}
+
+
+	public void setMenuTypeCode(String menuTypeCode) {
+		this.menuTypeCode = menuTypeCode;
+	}
+
 
 	@Override
 	public PlayListGis mapRow(ResultSet rs, int num) throws SQLException {

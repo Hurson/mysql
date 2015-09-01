@@ -566,7 +566,18 @@ public interface OrderService {
 	
 	public PageBeanDB queryNVODMenuResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize);
 	
+	/**
+	 * 批量更新订单和临时素材的关系
+	 * @param tmpIdsArray
+	 * @param mateIds
+	 */
+	public void saveNVODMenuOrderReTmp(String[] tmpIdsArray, String mateIds);
 	
+	/**
+	 * 根据订单号删除订单和素材的临时关系
+	 * @param orderCode
+	 */
+	public void updateOrderMateRelTmp(String orderCode);
 	
 	
 	

@@ -30,6 +30,8 @@ public class PrecisePlayListGisRel {
 	private String startTime;//开始时段
 	private String endTime;//结束时段
 	private Integer priority; //优先级
+	private String areaCode;//投放区域
+	private String menuTypeCode;//投放类型
 	public Integer getMateId() {
 		return mateId;
 	}
@@ -155,6 +157,18 @@ public class PrecisePlayListGisRel {
 	}
 	public void setPriority(Integer priority) {
 		this.priority = priority;
+	}
+	public String getAreaCode() {
+		return areaCode;
+	}
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
+	}
+	public String getMenuTypeCode() {
+		return menuTypeCode;
+	}
+	public void setMenuTypeCode(String menuTypeCode) {
+		this.menuTypeCode = menuTypeCode;
 	}
 	
 	

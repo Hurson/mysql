@@ -157,4 +157,6 @@ public interface PlayListGisDao extends PlayListDao {
 	 */
 	public void repush(Integer orderId);
 	
+	public List<PrecisePlayListGisRel> getNVODMenuPrecisePlayListByOrder(Integer orderId);
+	
 }

@@ -555,10 +555,41 @@ public interface OrderDao extends BaseDao{
 	 * @return
 	 */
 	public List<TPreciseMatch> getPreciseMatchByPloyId(Long ployId);
+	
+	/**
+	 * 根据策略查询投放类型和投放名称并封装到精确表实体中
+	 * @param ployId
+	 * @return
+	 */
+	public List<TPreciseMatch> getPreMatchInfo(Long ployId);
+	
 	/**
 	 * jdbc批量保存NVOD主界面广告订单与素材的临时关系
 	 * @param sql
 	 * @param dataSet
 	 */
 	public void batchSaveJdbcCondition(String sql,final List<Object[]> dataSet);
+	
+	/**
+	 * 批量更新订单和素材的临时关系
+	 * @param tmpIdsArray
+	 * @param mateIds
+	 * @author zhumaosheng
+	 */
+	public void saveNVODMenuOrderMateRelTmp(final String[] tmpIdsArray, String mateIds);
+	
+	/**
+	 * 
+	 * @param orderCode
+	 * @return
+	 */
+	public List<OrderMaterialRelation> getMateReIdFromTable(String orderCode);
+	
+	public void insertNVODMenuMateRelTmpLink(final List<OrderMaterialRelation> relResults,final String orderCode);
+	
+	/**
+	 * 清空订单和素材临时关系中的mate_id
+	 * @param orderCode
+	 */
+	public void updateOrderMateRelTmp(String orderCode);
 }

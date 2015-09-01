@@ -2206,6 +2206,10 @@ public class OrderAction extends BaseAction{
 				returnStr = "lookvodDetail";
 				page = orderService.queryLookResourceList(omRelTmp,page.getPageNo(), page.getPageSize());
 				
+			}else if(positionId==51){
+				pageReleaseLocation = ployService.queryAreaList(null, 1, 100);
+				returnStr = "nvodMenu";
+				page = orderService.queryNVODMenuResourceList(omRelTmp,page.getPageNo(), page.getPageSize());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -2384,9 +2388,14 @@ private void insertOrderMateRelTmp2(String orderCode, int ployId, int positionId
 	 * 保存   NVOD主界面广告图片  订单和素材临时关系数据
 	 */
 	public void saveNVODMenuOrderReTmp(){
-		String orderCode = getRequest().getParameter("orderCode");
 		String omRelTmpIds = getRequest().getParameter("omRelTmpId");
-		String materLocation = getRequest().getParameter("materLocation");
+		String mateIds = getRequest().getParameter("mateIds");
+		String orderCode = getRequest().getParameter("orderCode");
+		String[] tmpIdsArray = omRelTmpIds.split(",");
+		//删除订单和素材的临时关系
+		orderService.updateOrderMateRelTmp(orderCode);
+		
+		orderService.saveNVODMenuOrderReTmp(tmpIdsArray, mateIds);
 	}
 	//预览广告位 
 	public String preview(){
