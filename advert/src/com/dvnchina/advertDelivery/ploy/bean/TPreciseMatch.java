@@ -32,6 +32,8 @@ public class TPreciseMatch implements java.io.Serializable {
 	private String groupId;
 	
 	private String menuTypeCode;//投放类型
+	
+	private String menuTypeName;//投放类型名称
 
 	
 	// Constructors
@@ -249,5 +251,15 @@ public class TPreciseMatch implements java.io.Serializable {
 	public void setMenuTypeCode(String menuTypeCode) {
 		this.menuTypeCode = menuTypeCode;
 	}
+
+	public String getMenuTypeName() {
+		return menuTypeName;
+	}
+
+	public void setMenuTypeName(String menuTypeName) {
+		this.menuTypeName = menuTypeName;
+	}
+	
+	
 
 }
