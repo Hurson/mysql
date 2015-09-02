@@ -59,13 +59,9 @@
 			<action name="queryChannelGroup" class="preciseAction" method="queryChannelGroup">
 			<result name="success">/page/ploy/precise/bindingChannelGroup.jsp</result>
 		</action>	
-		<action name="queryMenuType" class="preciseAction" method="queryMenuType">
+		
+		<action name="queryType" class="preciseAction" method="queryType">
 			<result name="success">/page/ploy/precise/bindingMenuType.jsp</result>
-		</action>	
-		
-		
-		<action name="queryChannelGroup" class="preciseAction" method="queryChannelGroup">
-			<result name="success">/page/ploy/precise/bindingChannelGroup.jsp</result>
 		</action>	
 		
 			

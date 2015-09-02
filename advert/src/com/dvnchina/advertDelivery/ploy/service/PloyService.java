@@ -78,7 +78,7 @@ public interface PloyService {
 	 * @param ployId the ploy id
 	 * @return theMenuTypeCode by ploy id
 	 */ 
-	public List<MenuType> getMenuTypeByPloyID(int ployId);
+	public List<MenuType> getTypeNameByTypeCode(int typeCode);
 	/**
   	 * 获取策略的精准信息   
   	 * 策略ID.

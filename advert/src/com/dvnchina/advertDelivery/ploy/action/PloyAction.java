@@ -170,7 +170,12 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 		areaChannelUiBean.setUserAreaList(releaseAreaList);
 		preciseUiBean  = ployService.getPreciseUiBeanByPloyID(ployId);
 /*		lstMenuType = ployService.getMenuTypeByPloyID(ployId);
-*/		
+		if(preciseUiBean.getTypeMenuList() != null){
+			for(int i=0;i<preciseUiBean.getTypeMenuList().size();i++){
+				 preciseUiBean.getTypeMenuList().get(i);
+			}
+		}
+ */		
 		
 		postionJson = Obj2JsonUtil.list2json(pageAdPosition.getDataList());
 		pageLocation =preciseservice.queryLocationCodeList(null, 100000, 1);
@@ -266,13 +271,6 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 	 */
 	public String getTimeSegmentsByMarketRule(int ruleId){
 		String[] array = ployService.getTimeSegmentsByMarketRule(ruleId);
-		return SUCCESS;
-	}
-	/**
-	 * 异步方法：根据策略ID获取类型
-	 */
-	public String getMenuTypeByPloyId(int ployId){
-		List<MenuType> lstMenuType = ployService.getMenuTypeByPloyID(ployId);
 		return SUCCESS;
 	}
 	/**

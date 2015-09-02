@@ -77,6 +77,10 @@ public class PreciseUiBean {
 	private String tvnExpression11;
 	private String tvnNumber11;
 	private Short priority11;
+	//NVOD主界面广告
+	private String tvnExpression18;
+	private String tvnNumber18;
+	private Short priority18;
 	
 	private String tvnExpression12;
 	private String tvnNumber12;
@@ -109,6 +113,7 @@ public class PreciseUiBean {
 	//private List tvnNumber;
 	private List priorityList;
 	private List groupIdList;
+	private List typeMenuList;
 	public String getProductId() {
 		return productId;
 	}
@@ -579,6 +584,30 @@ public class PreciseUiBean {
 	}
 	public void setTvnNumberList(List tvnNumberList) {
 		this.tvnNumberList = tvnNumberList;
+	}
+	public String getTvnExpression18() {
+		return tvnExpression18;
+	}
+	public void setTvnExpression18(String tvnExpression18) {
+		this.tvnExpression18 = tvnExpression18;
+	}
+	public String getTvnNumber18() {
+		return tvnNumber18;
+	}
+	public void setTvnNumber18(String tvnNumber18) {
+		this.tvnNumber18 = tvnNumber18;
+	}
+	public Short getPriority18() {
+		return priority18;
+	}
+	public void setPriority18(Short priority18) {
+		this.priority18 = priority18;
+	}
+	public List getTypeMenuList() {
+		return typeMenuList;
+	}
+	public void setTypeMenuList(List typeMenuList) {
+		this.typeMenuList = typeMenuList;
 	}
 	
 }

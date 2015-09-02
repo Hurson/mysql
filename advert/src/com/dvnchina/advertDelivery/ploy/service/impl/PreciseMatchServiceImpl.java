@@ -62,6 +62,9 @@ public class PreciseMatchServiceImpl implements PreciseMatchService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	/**
+	 * NVOD主界面类型
+	 */
 	public PageBeanDB queryTypelist(Integer pageSize, Integer pageNumber){
 		return preciseDao.queryMenuType(pageSize, pageNumber);
 	}

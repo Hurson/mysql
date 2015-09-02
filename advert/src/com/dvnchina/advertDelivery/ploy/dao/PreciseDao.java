@@ -184,6 +184,14 @@ public interface PreciseDao {
 	
 	PageBeanDB queryNpvrChannelGroupList(TNpvrChannelGroup channelGroup,String ids,Integer pageSize, Integer pageNumber);
 	
+	/**
+	 * 查询NVOD可选类型
+	 * @param location
+	 * @param pageSize
+	 * @param pageNumber
+	 * @return
+	 */
+	PageBeanDB queryTypeList(Integer pageSize,Integer pageNumber);
 	
 	PageBeanDB queryLocationCodeList(LocationCode location,Integer pageSize, Integer pageNumber);
 	

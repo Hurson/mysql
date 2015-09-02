@@ -549,7 +549,16 @@ public class PreciseDaoImpl extends BaseDaoImpl implements PreciseDao {
 	      List params = null;
 	      return this.getPageList(sql, params, pageNumber, pageSize); 
 	}
-	
+	//查询可选择的NVOD主界面分类
+	public PageBeanDB queryTypeList(Integer pageSize,Integer pageNumber){
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		UserLogin user = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		String accessUserIds = StringUtil.objListToString(user.getAccessUserIds(), ",", "-1");
+		String sql;
+		sql="from MenuType p where 1=1";
+		List params = null;
+		 return this.getPageList(sql, params, pageNumber, pageSize);
+	}
 	
 	@Override
 	public PageBeanDB queryNpvrChannelGroupList(TNpvrChannelGroup channelGroup, String ids, Integer pageSize, Integer pageNumber) {

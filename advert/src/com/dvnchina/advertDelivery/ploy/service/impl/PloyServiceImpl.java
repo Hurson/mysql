@@ -25,6 +25,7 @@ import com.dvnchina.advertDelivery.ploy.dao.PloyDao;
 import com.dvnchina.advertDelivery.ploy.service.PloyService;
 import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.utils.StringUtil;
+import com.dvnchina.advertDelivery.order.bean.MenuType;
 
 public class PloyServiceImpl implements PloyService {
 
@@ -131,7 +132,8 @@ public class PloyServiceImpl implements PloyService {
 			List userArea3List = new ArrayList();
 			List userindustrysList = new ArrayList();
 			List userlevelsList = new ArrayList();
-			
+			List userTypeList = new ArrayList();
+			List typeMenuList = new ArrayList();
 			List tvnNumberList = new ArrayList();
 			
 			for(int i=0;i<preciseList.size();i++)
@@ -264,6 +266,16 @@ public class PloyServiceImpl implements PloyService {
 					preciseUiBean.setTvnExpression13(preciseList.get(i).getTvnExpression());
 					preciseUiBean.setTvnNumber13(preciseList.get(i).getTvnNumber());	
 				}
+				if(preciseList.get(i).getMenuTypeCode()!=null && !preciseList.get(i).getMenuTypeCode().equals(""))
+				{
+					PreciseData datatemp = new PreciseData();
+					datatemp.setDatavalue(preciseList.get(i).getMenuTypeCode());
+					datatemp.setDataname(preciseList.get(i).getMatchName());
+					typeMenuList.add(datatemp);
+					preciseUiBean.setPriority18(preciseList.get(i).getPriority());
+					preciseUiBean.setTvnExpression18(preciseList.get(i).getTvnExpression());
+					preciseUiBean.setTvnNumber18(preciseList.get(i).getTvnNumber());
+				}
 			}
 			preciseUiBean.setProductIdList(productIdList);
 			preciseUiBean.setAssetKeyList(assetKeyList);
@@ -277,6 +289,7 @@ public class PloyServiceImpl implements PloyService {
 			preciseUiBean.setUserindustrysList(userindustrysList);
 			preciseUiBean.setUserlevelsList(userlevelsList);
 			preciseUiBean.setTvnNumberList(tvnNumberList);
+			preciseUiBean.setTypeMenuList(typeMenuList);;
 			
 		}
 		return preciseUiBean;
@@ -354,11 +367,6 @@ public class PloyServiceImpl implements PloyService {
 	/**
 	 * 根据策略ID获取类型信息
 	 */
-	@Override
-	public List<MenuType> getMenuTypeByPloyID(int ployId) {
-		List<MenuType> lstMenuType = ployDao.getMenuTypeByPloyID(ployId);
-		return lstMenuType;
-	}
 
 	@Override
 	public List<ContractAD> getAdSiteByContract(int contractId) {
@@ -702,7 +710,8 @@ public class PloyServiceImpl implements PloyService {
 					|| ploy.getPositionId()==47 || ploy.getPositionId()==48   //直播下排
 					|| ploy.getPositionId()==49 || ploy.getPositionId()==50   //滚动字幕
 					|| ploy.getPositionId()==45 || ploy.getPositionId()==46
-					|| ploy.getPositionId()== 44)
+					|| ploy.getPositionId()== 44|| ploy.getPositionId()==51
+					||ploy.getPositionId()==54 ||ploy.getPositionId()==53)
 			{
 				lstPloy =this.getBTheAllEntity(ployTimeCGroup, ploy);
 			}
@@ -1106,6 +1115,12 @@ public class PloyServiceImpl implements PloyService {
 		{
 			return "";
 		}
+	}
+
+	@Override
+	public List<MenuType> getTypeNameByTypeCode(int typeCode) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

@@ -84,7 +84,7 @@ public interface PreciseMatchService {
 	  */
 	PageBeanDB queryChannelList(String ployId,ChannelInfo channel,String ids,Integer pageSize, Integer pageNumber);
 	/**
-	 * 查询可选类型
+	 * 查询NVOD主界面类型
 	 */
 	PageBeanDB queryTypelist(Integer pageSize, Integer pageNumber);
 	/**

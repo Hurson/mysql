@@ -101,6 +101,7 @@ public class PreciseMatchAction extends BaseAction implements ServletRequestAwar
 	private PageBeanDB pageuserRank=  new PageBeanDB() ;
 	private PageBeanDB pageMenuType = new PageBeanDB();
 	private PageBeanDB pageChannelGroup=  new PageBeanDB() ;
+	private PageBeanDB pageType = new PageBeanDB();
 	public void initData()
 	{
 		//初始化  
@@ -911,6 +912,10 @@ public String queryCheckPreciseList(){
 	 * 
 	 * @return
 	 */
+	public String queryType(){
+		pageType = preciseservice.queryTypelist(pageChannelGroup.getPageSize(), pageChannelGroup.getPageNo());
+		return SUCCESS;
+	}
 	
 	public String queryNpvrChannelGroup()
 	{
@@ -1235,6 +1240,12 @@ public String queryCheckPreciseList(){
 	}
 	public void setNpvrChannelGroup(TNpvrChannelGroup npvrChannelGroup) {
 		this.npvrChannelGroup = npvrChannelGroup;
+	}
+	public PageBeanDB getPageType() {
+		return pageType;
+	}
+	public void setPageType(PageBeanDB pageType) {
+		this.pageType = pageType;
 	}
 	
 	

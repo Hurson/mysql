@@ -1274,7 +1274,7 @@ function selectChannelGroup()
 	var	height = 550;
 	var width=750;
 	var ployId = document.getElementById("ploy.ployId").value;
-	var actinUrl = '<%=path%>/page/precise/queryChannelGroup.do?ployId='+ployId;
+	var actinUrl = '<%=path%>/page/precise/queryType.do';
 	var modelWin = window.showModalDialog(actinUrl,window,"resizable=no;status=no;scroll=no;center=yes;dialogHeight="+height+"px;dialogWidth="+width+"px");
 	if(modelWin){	
 	} 
@@ -3220,10 +3220,11 @@ function exporttvn(objname)
         </td>
       </tr>
     </table>
+    
     <table cellspacing="1" class="typelist"  style="display: none;" id="selectedtable18">
       <tr class="title">
         <td height="28" class="dot"><input type="checkbox" name="checkbox3" value="checkbox"  onclick="selectAll(this, 'selectedcheckbox18');"/></td>
-	       <td><b>投放频道</b>
+	       <td><b>类型选择</b>
           </p>
              
           </td>
@@ -3235,11 +3236,11 @@ function exporttvn(objname)
             <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable1">
               <tr >
                 <td class="dot"></td>
-                <td >频道组</td>
-	            	<c:forEach items="${ployTimeCGroup.channelgroupList}" var="NVODtype">
+                <td >投放类型</td>
+	            	<c:forEach items="${preciseUiBean.typeMenuList}" var="NVODtype">
 			              <tr id="contentrow">
 			                <td class="dot"><input type="checkbox" name="selectedcheckbox18" value="checkbox"/></td>
-			                <td width="45%"><input type="hidden" id="channelgroup" name="channelgroup"  value="${groupVar.groupId}"/><a href="#" onclick="javascript:showChannelGroupRef(${groupVar.groupId});">${groupVar.groupName}</a></td>
+			                <td width="45%"><input type="hidden" id="type" name="type"  value="${groupVar.groupId}"/><a href="#" onclick="javascript:showChannelGroupRef(${groupVar.groupId});">${groupVar.groupName}</a></td>
 			                </td>
 			                <td>
 			                <input type="hidden" name="channelGroupType" value="1"/>
@@ -3258,46 +3259,8 @@ function exporttvn(objname)
       </tr>
     </table>
     
-    <table cellspacing="1" class="typelist"  style="display: none;" id="selectedtable18">
-      <tr class="title">
-        <td height="28" class="dot"><input type="checkbox" name="checkbox3" value="checkbox"  onclick="selectAll(this, 'selectedcheckbox18');"/></td>
-	       <td><b>投放类型</b>            
-          </td>
-		</td>
-      </tr>
-      <tr>
-        <td colspan="2" class="conditionList">
-        <div>
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable18">
-              <tr >
-                <td class="dot"></td>
-                <td >投放类型</td>
-              </tr>
-                <c:forEach items="${areaChannelUiBean.userAreaList}" var="preciseareaVar" varStatus="status">  
-	                <tr id="contentrow">
-	                	<td class="dot"><input type="checkbox" name="selectedcheckbox18" value="checkbox"/></td>
-                		<td name="arearow0" id="areaone" >
-                              <select id="areaChannelUiBean.userArea" name="areaChannelUiBean.userArea" style="width:80px">
-                				<c:forEach items="${pageReleaseLocation.dataList}" var="areaVar" >
-                				     <option value="${areaVar.areaCode}" <c:if test="${preciseareaVar==areaVar.areaCode}"> selected</c:if> >
-                            		 	${areaVar.areaName}  
-                            		 </option>   
-                            	</c:forEach>           					
-                			  </select>
-                		</td>             
-               		</tr>
-               </c:forEach> 
-              
-            </table>
-        </div>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="addReleaseArea()"/>
-            <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable14','selectedcheckbox14')" />
-        </td>
-      </tr>
-    </table>
+    
+    
   </div>
 </div>
 </form>
