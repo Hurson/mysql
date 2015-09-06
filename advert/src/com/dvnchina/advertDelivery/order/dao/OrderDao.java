@@ -592,4 +592,12 @@ public interface OrderDao extends BaseDao{
 	 * @param orderCode
 	 */
 	public void updateOrderMateRelTmp(String orderCode);
+	
+	public void insertNVODAngleMateRelTmp(String orderCode,List<Ploy> ployList);
+	
+	public void batchSaveNVODAngleMateRelTmp(String sql,final List<Object[]> dataSet);
+	
+	public PageBeanDB queryNVODAngleResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize);
+	
+	public void insertNVODAngleMateRelTmpLink(final List<OrderMaterialRelation> relResults,final String orderCode);
 }

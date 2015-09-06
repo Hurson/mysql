@@ -159,4 +159,8 @@ public interface PlayListGisDao extends PlayListDao {
 	
 	public List<PrecisePlayListGisRel> getNVODMenuPrecisePlayListByOrder(Integer orderId);
 	
+	public List<PrecisePlayListGisRel> getNVODAnglePrecisePlayListByOrder(Integer orderId);
+	
+	public List<String> getNVODAngleRelMateAreaCodeByOrder(Integer orderId);
+	
 }

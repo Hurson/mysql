@@ -2178,6 +2178,68 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		return page;
 	}
 	@Override
+	public PageBeanDB queryNVODAngleResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize){
+		StringBuffer sql =  new StringBuffer();
+		sql.append("SELECT DISTINCT tmp.area_code,ra.AREA_NAME,tmp.mate_Id,tmp.start_time,tmp.end_time,tmp.id,");
+		sql.append("(SELECT r.RESOURCE_NAME FROM t_resource r WHERE r.ID = tmp.mate_id) resourceName,POLL_INDEX ");
+		sql.append("FROM t_order_mate_rel_tmp tmp, t_release_area ra  ");
+		sql.append("WHERE tmp.area_code = ra.AREA_CODE " );
+		sql.append("and tmp.AREA_CODE<>'152000000000' ");
+		if(omRelTmp != null){
+			if(StringUtils.isNotBlank(omRelTmp.getOrderCode())){
+				sql.append(" and tmp.ORDER_CODE = '" + omRelTmp.getOrderCode() + "' ");
+			}
+			if (StringUtils.isNotBlank(omRelTmp.getStartTime())) {
+				sql.append(" and tmp.START_TIME >= '" + omRelTmp.getStartTime() + "' ");
+			}
+			if (StringUtils.isNotBlank(omRelTmp.getEndTime())) {
+				sql.append(" and tmp.END_TIME <= '" + omRelTmp.getEndTime() + "' ");
+			}
+			if (StringUtils.isNotBlank(omRelTmp.getAreaCode())) {
+				sql.append(" and tmp.AREA_CODE = '" + omRelTmp.getAreaCode() + "' ");
+			}
+			
+			if(omRelTmp.getMateId()!=null){
+				sql.append(" and tmp.MATE_ID = " + omRelTmp.getMateId() );
+			}
+			
+			if(omRelTmp.isNotNull()){
+					sql.append(" and tmp.MATE_ID is  not null " );
+			}else{
+				if(!"1".equals(omRelTmp.getContain())){
+					sql.append(" and tmp.MATE_ID is null " );
+				}
+			}
+		}
+		sql.append(" order by tmp.AREA_CODE,tmp.START_TIME,tmp.POLL_INDEX ");
+		List<OrderMaterialRelationTmp> list = getNVODAnglePicResourceList(this.getListBySql(sql.toString(), null, pageNo, pageSize));
+		int rowcount = this.getTotalCountSQL(sql.toString(), null);
+		PageBeanDB page = new PageBeanDB();
+		if (pageNo==0){
+			pageNo =1;
+		}		
+		page.setPageSize(pageSize);
+		page.setCount(rowcount);
+		int totalPage = (rowcount - 1) / pageSize + 1;
+		
+		
+		if (rowcount == 0) {
+			pageNo = 1;
+			totalPage = 0;
+		}
+		if (pageNo <= 0) {
+			pageNo = 1;
+		} else if (pageNo > totalPage) {
+			pageNo = totalPage;
+		}
+		
+		page.setTotalPage(totalPage);
+		page.setPageNo(pageNo);
+		page.setDataList(list);
+		return page;
+	}
+
+	@Override
 	public PageBeanDB queryNVODMenuResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize){
 		StringBuffer sql =  new StringBuffer();
 		sql.append("SELECT DISTINCT tmp.area_code,ra.AREA_NAME,tmp.mate_Id,m.TYPE_NAME,m.TYPE_CODE,tmp.start_time,tmp.end_time,tmp.id, ");
@@ -3105,7 +3167,28 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		}
 		return list;
 	}
-	
+	private List<OrderMaterialRelationTmp> getNVODAnglePicResourceList(List<?> resultList) {
+		List<OrderMaterialRelationTmp> list = new ArrayList<OrderMaterialRelationTmp>();
+		for (int i=0; i<resultList.size(); i++) {
+			Object[] obj = (Object[]) resultList.get(i);
+			OrderMaterialRelationTmp ar = new OrderMaterialRelationTmp();	
+			ar.setId(toInteger(obj[5]));
+			ar.setStartTime((String)(obj[3]));
+			ar.setEndTime((String)(obj[4]));			
+			ar.setAreaCode((String)(obj[0]));		
+			ar.setAreaName((String)(obj[1]));
+			if(obj.length==8){
+				ar.setResourceName((String)(obj[6]));
+			}
+			if(obj[2]!=null){
+				Object ob = obj[2];
+				ar.setMateId(Integer.parseInt(ob.toString()));
+			}
+			ar.setPollIndex(toInteger(obj[7]));
+			list.add(ar);
+		}
+		return list;
+	}
 	private List<OrderMaterialRelationTmp> getNVODMenuPicResourceList(List<?> resultList) {
 		List<OrderMaterialRelationTmp> list = new ArrayList<OrderMaterialRelationTmp>();
 		for (int i=0; i<resultList.size(); i++) {
@@ -4048,6 +4131,38 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 		return this.getListForAll(selSql.toString(), new Object[]{orderCode});
 	}
 	
+	public void insertNVODAngleMateRelTmpLink(final List<OrderMaterialRelation> relResults,final String orderCode){
+		//删除订单和素材临时关系数据
+				delOrderMateRelTmp(orderCode);
+				StringBuffer insertSql = new StringBuffer();
+				insertSql.append("insert into t_order_mate_rel_tmp(order_code,precise_id,type,start_time,end_time,area_code,POLL_INDEX,mate_id)");
+				insertSql.append(" values(?,?,?,?,?,?,?,?) ");
+				BatchPreparedStatementSetter pss = new BatchPreparedStatementSetter() {
+					@Override
+					public void setValues(PreparedStatement arg0, int arg1) throws SQLException {
+						// TODO Auto-generated method stub
+						OrderMaterialRelation values = relResults.get(arg1);
+						arg0.setString(1, orderCode);//order_code
+						arg0.setLong(2,values.getPreciseId());//precise_id
+						arg0.setInt(3, values.getType());//type
+						arg0.setString(4, values.getStartTime());//start_time
+						arg0.setString(5, values.getEndTime());//end_time
+						arg0.setString(6, values.getAreaCode());//area_code
+						arg0.setInt(7, toInteger(values.getPollIndex()));//POLL_INDEX
+						arg0.setInt(8, values.getMateId());
+					}
+					@Override
+					public int getBatchSize() {
+						// TODO Auto-generated method stub
+						int size = relResults.size();
+						if(size%50==0){
+							return 50;//每50条数据批量保存一次
+						}
+						return size;
+					}
+				};
+				jdbcTemplate.batchUpdate(insertSql.toString(), pss);
+	}
 	public void insertNVODMenuMateRelTmpLink(final List<OrderMaterialRelation> relResults,final String orderCode){
 		//删除订单和素材临时关系数据
 		delOrderMateRelTmp(orderCode);
@@ -4079,6 +4194,63 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao{
 			}
 		};
 		jdbcTemplate.batchUpdate(insertSql.toString(), pss);
+	}
+	public void insertNVODAngleMateRelTmp(String orderCode,List<Ploy> ployList){
+		StringBuffer insertSql = new StringBuffer();
+		insertSql.append("insert into t_order_mate_rel_tmp(order_code,precise_id,type,start_time,end_time,area_code,POLL_INDEX )");
+		insertSql.append(" values(?,?,?,?,?,?,?) ");
+		//删除订单和素材临时关系数据
+		delOrderMateRelTmp(orderCode);
+		//新增订单和素材临时关系数据
+		if(null != ployList && ployList.size()!=0){
+			List<Object[]> dataSet = new ArrayList<Object[]>();
+			int pollIndex=0;//轮询索引
+			//策略的笛卡尔积
+			for (Ploy ploy : ployList) {
+				pollIndex++;
+				ploy.getPloyId();
+				Object[] object = new Object[6];
+				object[0]=orderCode;
+				object[1]=ploy.getPloyId();
+				object[2]=ploy.getStartTime();
+				object[3]=ploy.getEndTime();
+				object[4]=ploy.getAreaId();
+				object[5]=pollIndex;
+				dataSet.add(object);
+				if(4==pollIndex)
+					pollIndex=0;
+			}
+			if(dataSet.size()!=0){
+				batchSaveNVODAngleMateRelTmp(insertSql.toString(), dataSet);
+			}
+		}
+	}
+	public void batchSaveNVODAngleMateRelTmp(String sql,final List<Object[]> dataSet) {
+		// TODO Auto-generated method stub
+		BatchPreparedStatementSetter pss = new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement arg0, int arg1) throws SQLException {
+				// TODO Auto-generated method stub
+				Object[] values = dataSet.get(arg1);
+				arg0.setString(1, String.valueOf(values[0]));//order_code
+				arg0.setLong(2,toLong(values[1]));//precise_id
+				arg0.setInt(3, 1);//type
+				arg0.setString(4, String.valueOf(values[2]));//start_time
+				arg0.setString(5, String.valueOf(values[3]));//end_time
+				arg0.setString(6, String.valueOf(values[4]));//area_code
+				arg0.setInt(7, toInteger(values[5]));//POLL_INDEX
+			}
+			@Override
+			public int getBatchSize() {
+				// TODO Auto-generated method stub
+				int size = dataSet.size();
+				if(size%50==0){
+					return 50;//每50条数据批量保存一次
+				}
+				return size;
+			}
+		};
+		jdbcTemplate.batchUpdate(sql.toString(), pss);
 	}
 	@Override
 	public void insertNVODMenuMateRelTmp(String orderCode,List<Ploy> ployList){

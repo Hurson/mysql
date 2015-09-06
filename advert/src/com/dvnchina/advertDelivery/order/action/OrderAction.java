@@ -192,6 +192,8 @@ public class OrderAction extends BaseAction{
 				return "radio";
 			}else if(ploy.getPositionId()==51){
 				return "nvod";
+			}else if(ploy.getPositionId()==54){//NVOD挂角
+				return "angle";
 			}
 			
 		}catch(Exception e){
@@ -366,8 +368,9 @@ public class OrderAction extends BaseAction{
 					}
 				}
 				return "audio";
-			}else if("02402".equals(advertPosition.getPositionCode())){
-				//NVOD主界面广告
+			}else if("02402".equals(advertPosition.getPositionCode())
+					||"02432".equals(advertPosition.getPositionCode())){
+				//NVOD主界面广告和NVOD挂角广告
 				List<ResourceReal> resourceTempList=new ArrayList<ResourceReal>(resourceList);
 				for(ResourceReal resource : resourceTempList){
 					if(resource.getResourceType().intValue()==0){
@@ -381,7 +384,20 @@ public class OrderAction extends BaseAction{
 				getRequest().setAttribute("ployId", ployId);
 				return "nvodMenu";
 				
-			}else{
+			}/*else if("02432".equals(advertPosition.getPositionCode())){
+				List<ResourceReal> resourceTempList=new ArrayList<ResourceReal>(resourceList);
+				for(ResourceReal resource : resourceTempList){
+					if(resource.getResourceType().intValue()==0){
+						ImageReal image = orderService.getImageRealById(resource.getResourceId());
+						resource.setFileSize(image.getFileSize());
+					}
+				}
+				String ployId = getRequest().getParameter("ployId");
+				List<Ploy> polyList = orderService.getPloyByPloyId(Integer.valueOf(ployId));
+				getRequest().setAttribute("defaultStart", polyList.get(0).getDefaultstart().trim());
+				getRequest().setAttribute("ployId", ployId);
+				return "nvodAngle";
+			}*/else{
 				//设置视频广告位编码插播次数
 				String instreamPosition = baseConfigService.getBaseConfigByCode("instreamPosition");
 				if(instreamPosition != null){
@@ -2117,6 +2133,10 @@ public class OrderAction extends BaseAction{
 				pageReleaseLocation = ployService.queryCityAreaList(null, 1, 100);
 				returnStr = "nvodMenu";
 				page = orderService.queryNVODMenuResourceList(omRelTmp, page.getPageNo(), page.getPageSize());
+			}else if(positionId == 54){//NVOD挂角
+				pageReleaseLocation = ployService.queryCityAreaList(null, 1, 100);
+				returnStr = "nvodAngle";
+				page = orderService.queryNVODAngleResourceList(omRelTmp, page.getPageNo(), page.getPageSize());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -2206,10 +2226,14 @@ public class OrderAction extends BaseAction{
 				returnStr = "lookvodDetail";
 				page = orderService.queryLookResourceList(omRelTmp,page.getPageNo(), page.getPageSize());
 				
-			}else if(positionId==51){
+			}else if(positionId==51){//NVOD主界面广告素材详情
 				pageReleaseLocation = ployService.queryAreaList(null, 1, 100);
 				returnStr = "nvodMenu";
 				page = orderService.queryNVODMenuResourceList(omRelTmp,page.getPageNo(), page.getPageSize());
+			}else if(positionId==54){//NVOD挂角广告素材详情
+				pageReleaseLocation = ployService.queryAreaList(null, 1, 100);
+				returnStr = "nvodAngleDetail";
+				page = orderService.queryNVODAngleResourceList(omRelTmp, page.getPageNo(), page.getPageSize());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -2272,6 +2296,18 @@ public class OrderAction extends BaseAction{
 				//保存订单与素材的临时关系
 				orderService.insertNVODMenuMateRelTmp(orderCode, ployList);	
 			}
+		}else if(positionId == 54){
+			//时段与区域的笛卡尔积
+			List<Ploy> ployList = orderService.getPloyByPloyId(ployId);
+			//每条策略对应4条数据
+			List<Ploy> tmpPloyList =new ArrayList<Ploy>();
+			for (Ploy ploy : ployList) {
+				for(int i=0;i<4;i++){
+					tmpPloyList.add(ploy);
+				}
+			}
+			//保存订单与素材的临时关系
+			orderService.insertNVODAngleMateRelTmp(orderCode, tmpPloyList);
 		}
 		//轮询菜单图片广告位
 		else if(positionId==3 || positionId == 4){
@@ -2393,7 +2429,7 @@ private void insertOrderMateRelTmp2(String orderCode, int ployId, int positionId
 		String orderCode = getRequest().getParameter("orderCode");
 		String[] tmpIdsArray = omRelTmpIds.split(",");
 		//删除订单和素材的临时关系
-		orderService.updateOrderMateRelTmp(orderCode);
+		//orderService.updateOrderMateRelTmp(orderCode);
 		
 		orderService.saveNVODMenuOrderReTmp(tmpIdsArray, mateIds);
 	}

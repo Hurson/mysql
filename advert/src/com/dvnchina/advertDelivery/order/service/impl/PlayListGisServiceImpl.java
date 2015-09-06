@@ -1767,27 +1767,14 @@ public class PlayListGisServiceImpl extends PlayListServiceImpl implements
 		List<PlayListGis> ps = new ArrayList<PlayListGis>();
 		//NVOD主界面广告
 		if(order.getPositionId()==51&& order.getPositionPackageType().intValue()==Constant.POSITION_TYPE_ONE_REAL_TIME){
-			Integer prePreciseId = 0;//前一个精准ID
 			List<PrecisePlayListGisRel> pList = playListGisDao.getNVODMenuPrecisePlayListByOrder(order.getId());
 			for(PrecisePlayListGisRel pp : pList){
-				//Integer preciseId = pp.getPreciseId();
-				//根据精准生成播出单（同一个精准可能存在多个素材等）
-			/*	if(prePreciseId.intValue() == preciseId.intValue()){
-					prePreciseId = preciseId;
-					continue;
-				}*/
-			//prePreciseId = preciseId;
 			String contentId = getContentId(pp.getMateId(), pp.getResourceType());//播出单的内容ID
 			String contentPath = pp.getPath();//播出单的素材路径
 			String contentType = "";//播出单的内容类型
 			
 			PlayListGis playList = new PlayListGis();
-			//Date endTime = this.stringToTime(order.getEndDate(), "23:59:59");
 			playList.setStartTime(DateUtil.StringToDateYYYMMMDD24MM(DateUtil.formatDate(order.getStartDate())+" "+pp.getStartTime()));
-			/*if (playList.getStartTime().before(new Date()))
-			{
-				playList.setStartTime(new Date());
-			}*/
 			playList.setEndTime(DateUtil.StringToDateYYYMMMDD24MM(DateUtil.formatDate(order.getEndDate())+" "+pp.getEndTime()));
 			playList.setAdSiteCode(order.getAdvertPosition().getPositionCode());
 			playList.setAreas(pp.getAreaCode());
@@ -1804,6 +1791,52 @@ public class PlayListGisServiceImpl extends PlayListServiceImpl implements
 			
 			}
 			return ps;
+		}
+		//NVOD挂角广告
+		if(order.getPositionId()==54&& order.getPositionPackageType().intValue()==Constant.POSITION_TYPE_ONE_REAL_TIME){
+			//查询挂角的区域
+			List<String> areaCodeList = playListGisDao.getNVODAngleRelMateAreaCodeByOrder(order.getId());
+			//查询订单与素材的关系
+			List<PrecisePlayListGisRel> pList = playListGisDao.getNVODAnglePrecisePlayListByOrder(order.getId());
+			//按区域存放播出单
+			for(String areaCode:areaCodeList){
+				PlayListGis playList = new PlayListGis();
+				int pollIndex = 1;
+				StringBuffer path=new StringBuffer();//每个区域四个素材路径
+				for(PrecisePlayListGisRel pp : pList){
+					if(areaCode.equals(pp.getAreaCode())){
+						if(1==pollIndex){
+							String contentId = getContentId(pp.getMateId(), pp.getResourceType());//播出单的内容ID
+							//String contentPath = pp.getPath();//播出单的素材路径
+							String contentType = "";//播出单的内容类型
+							
+							playList.setStartTime(DateUtil.StringToDateYYYMMMDD24MM(DateUtil.formatDate(order.getStartDate())+" "+pp.getStartTime()));
+							playList.setEndTime(DateUtil.StringToDateYYYMMMDD24MM(DateUtil.formatDate(order.getEndDate())+" "+pp.getEndTime()));
+							playList.setAdSiteCode(order.getAdvertPosition().getPositionCode());
+							playList.setAreas(pp.getAreaCode());
+							playList.setCharacteristicIdentification(getHDStr(order.getAdvertPosition().getIsHD()));
+							playList.setContentId(contentId);
+							//playList.setContentPath(contentPath);
+							playList.setContentType(contentType);
+							playList.setContractId(order.getContractId());
+							playList.setOrderId(order.getId());
+							playList.setPloyId(pp.getPloyId());
+							playList.setState(Constant.VALID);
+							//playList.setMenuTypeCode(pp.getMenuTypeCode());
+							//ps.add(playList);
+						}
+							String contentPath = pp.getPath();//播出单的素材路径
+							path.append(contentPath).append(",");
+							if(4==pollIndex){
+								contentPath = path.toString().substring(0, path.toString().lastIndexOf(","));
+								playList.setContentPath(contentPath);
+								ps.add(playList);
+							}
+						pollIndex++;
+					}
+					
+				}
+			}
 		}
 		Map<String,String> serviceIdMap = new HashMap<String,String>();
 		Map<String,String> categoryIdMap = new HashMap<String,String>();

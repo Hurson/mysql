@@ -1552,9 +1552,21 @@ public class OrderServiceImpl implements OrderService{
 		}
 	}
 	
+	public void insertNVODAngleMateRelTmp(String orderCode,List<Ploy> ployList){
+		orderDao.insertNVODAngleMateRelTmp(orderCode, ployList);
+		List<OrderMaterialRelation> relResults = orderDao.getMateReIdFromTable(orderCode);
+		if(null !=relResults && relResults.size()!=0){
+			orderDao.insertNVODAngleMateRelTmpLink(relResults, orderCode);
+		}
+	}
+	
 	@Override
 	public PageBeanDB queryNVODMenuResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize){
 		return orderDao.queryNVODMenuResourceList(omRelTmp, pageNo, pageSize);
+	}
+	
+	public PageBeanDB queryNVODAngleResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize){
+		return orderDao.queryNVODAngleResourceList(omRelTmp, pageNo, pageSize);
 	}
 	
 	

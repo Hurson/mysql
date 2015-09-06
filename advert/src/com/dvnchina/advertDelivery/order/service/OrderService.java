@@ -579,6 +579,10 @@ public interface OrderService {
 	 */
 	public void updateOrderMateRelTmp(String orderCode);
 	
+	public void insertNVODAngleMateRelTmp(String orderCode,List<Ploy> ployList);
+	
+	public PageBeanDB queryNVODAngleResourceList(OrderMaterialRelationTmp omRelTmp, int pageNo,int pageSize);
+	
 	
 	
 	

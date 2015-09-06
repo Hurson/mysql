@@ -29,6 +29,7 @@
 			<result name="PLAYBACK">/page/order/selectPlayBackPloy.jsp</result>
 			<result name="TEXT">/page/order/selectTextPloy.jsp</result>
 			<result name="nvod">/page/order/selectNvodPloy.jsp</result>
+			<result name="angle">/page/order/selectNvodAnglePloy.jsp</result>
 		</action>
 		
 		<action name="getPloy4Json" class="orderAction" method="getPloy4Json"/>
@@ -112,6 +113,7 @@
 			<result name="lookvod">/page/order/selectLookVodResource.jsp</result>
 			<result name="vod">/page/order/selectVodResource.jsp</result>	
 			<result name="nvodMenu">/page/order/selectNvodMenuResource.jsp</result>	
+			<result name="nvodAngle">/page/order/selectNvodAngleResource.jsp</result>	
 		</action>
 	    <action name="getAreaResource" class="orderAction" method="getSelectMaterialJsonByOrderId">
 		</action>
@@ -128,6 +130,7 @@
 			<result name="lookvodDetail">/page/order/selectLookVodResourceDetail.jsp</result>	
 			<result name="vodDetail">/page/order/selectVodResourceDetail.jsp</result>	
 			<result	name="nvodMenu">/page/order/selectNVODMenuPicResourceDetail.jsp</result>
+			<result	name="nvodAngleDetail">/page/order/selectNvodAngleDetailPloy.jsp</result>
 		</action>
 		 <action name="getAreaResourcePath" class="orderAction" method="getAreaResourcePath">
 		</action>

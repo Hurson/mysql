@@ -773,7 +773,62 @@ public class PlayListGisDaoImpl extends PlayListDaoImpl implements
 				});
 		return pp;
 	}
-	
+	public List<String> getNVODAngleRelMateAreaCodeByOrder(Integer orderId){
+		String sql ="select g.area_code from t_order_mate_rel g where g.ORDER_ID=? GROUP BY g.area_code";
+		List<String> pp=getJdbcTemplate().query(sql, new Object[] { orderId },new RowMapper<String>(){
+			@Override
+			public String mapRow(ResultSet arg0, int arg1) throws SQLException {
+				// TODO Auto-generated method stub
+				String areaCode = arg0.getString("area_code");
+				return areaCode;
+			}
+			
+		});
+		return pp;
+	}
+	public List<PrecisePlayListGisRel> getNVODAnglePrecisePlayListByOrder(Integer orderId){
+		StringBuffer sql = new StringBuffer("SELECT rel.mate_id, rel.area_code, r.resource_type,rel.precise_id,");
+		sql.append("rel.start_time,rel.end_time,rel.poll_index ");
+		sql.append("FROM t_order_mate_rel rel, t_resource r  ");
+		sql.append("WHERE rel.mate_id = r.id AND rel.type = 1 AND rel.order_id = ? ");
+		sql.append("ORDER BY rel.start_time,rel.area_code,rel.POLL_INDEX DESC");
+		List<PrecisePlayListGisRel> pp = getJdbcTemplate().query(sql.toString(),
+				new Object[] { orderId }, new RowMapper<PrecisePlayListGisRel>() {
+
+					@Override
+					public PrecisePlayListGisRel mapRow(ResultSet arg0, int arg1)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						PrecisePlayListGisRel p = new PrecisePlayListGisRel();
+						p.setMateId(arg0.getInt("mate_id"));
+						p.setAreaCode(arg0.getString("area_code"));
+						p.setResourceType(arg0.getInt("resource_type"));
+						p.setPreciseId(arg0.getInt("precise_id"));
+						//p.setPreciseType(arg0.getInt("precisetype"));
+						p.setPloyId(arg0.getInt("precise_id"));
+						//p.setPriority(arg0.getInt("priority"));
+						p.setStartTime(arg0.getString("start_time"));
+						p.setEndTime(arg0.getString("end_time"));
+						//p.setMenuTypeCode(arg0.getString("menu_type_code"));
+						p.setPollIndex(arg0.getInt("poll_index"));
+						getMaterialById(p);
+						return p;
+					}
+
+					private void getMaterialById(final PrecisePlayListGisRel p) {
+						String imageSql = "select CONCAT(m.formal_file_path,'/',m.name) as path from t_resource r,t_image_meta m "
+								+ "where r.resource_id=m.id and r.id="
+								+ p.getMateId()
+								+ " and r.resource_type="
+								+ p.getResourceType();
+						Map<String,Object> iMap = getJdbcTemplate().queryForMap(imageSql);
+						p.setPath(iMap.get("path").toString());
+
+					}
+			
+		});
+		return pp;
+	}
 	public List<PrecisePlayListGisRel> getNVODMenuPrecisePlayListByOrder(Integer orderId){
 		StringBuffer sql = new StringBuffer("SELECT rel.mate_id, rel.area_code, r.resource_type, rel.precise_id, pm.precisetype,");
 		sql.append("pm.ploy_id, pm.priority, rel.start_time,rel.end_time,rel.menu_type_code ");
