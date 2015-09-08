@@ -896,12 +896,12 @@ $(function(){
 					var row = document.createElement("tr"); 
 					row.setAttribute("id", 'text_content_row' + index);
 					var td1 = document.createElement("td");	
-					td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,\'remain_word' + index+ '\', 160)" cols="80" rows="2" >'+json[i].word+'</textarea>';
-					td1.innerHTML += '<span>剩余字数:</span> <input name="remain_word" type="text" id= "remain_word' + index + '" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="160" size="3" readonly></input>';	
+					td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,160)" cols="80" rows="2" >'+json[i].word+'</textarea>';
+					td1.innerHTML += '<span>剩余字数:</span> <input name="remain_word" type="text" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="160" size="3" readonly></input>';	
 					var td2 = document.createElement("td");	
 					td2.innerHTML = '<input name="textMeta.priority" type="text" maxlength="3" value="'+json[i].priority+'" style="width:30px"/>';
 					var td3 = document.createElement("td");	
-					td3.innerHTML = "<a href='#' onclick='deleteTrById(\"text_content_row" + index + "\");'>删除</a>";
+					td3.innerHTML = "<a href='#' onclick='deleteTrById(this);'>删除</a>";
 					row.appendChild(td1);
 					row.appendChild(td2);
 					row.appendChild(td3);
@@ -1863,13 +1863,12 @@ function IsAlpha(cCheck) {
 			input.value="";
 		}
 	}
-	function remainWord(field,id, maxlimit) { 
+	function remainWord(field, maxlimit) { 
 		
 		if (field.value.length > maxlimit){ 
 			field.value = field.value.substring(0, maxlimit); 
 		}else{ 
-			
-			document.getElementById(id).value=maxlimit - field.value.length; 
+			field.parentNode.getElementsByTagName("input")[0].value=maxlimit - field.value.length; 
 		} 
 	} 
 	function addContent(){
@@ -1877,12 +1876,12 @@ function IsAlpha(cCheck) {
 		var row = document.createElement("tr"); 
 		row.setAttribute("id", 'text_content_row' + index);
 		var td1 = document.createElement("td");	
-		td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,\'remain_word' + index+ '\', 160)" cols="80" rows="2" ></textarea>';
-		td1.innerHTML += '<span>剩余字数:</span> <input name="remain_word" type="text" id= "remain_word' + index + '" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="160" size="3" readonly></input>';	
+		td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,160)" cols="80" rows="2" ></textarea>';
+		td1.innerHTML += '<span>剩余字数:</span> <input name="remain_word" type="text" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="160" size="3" readonly></input>';	
 		var td2 = document.createElement("td");	
 		td2.innerHTML = '<input name="textMeta.priority" type="text" maxlength="3" value="'+index+'" style="width:30px"/>';
 		var td3 = document.createElement("td");	
-		td3.innerHTML = "<a href='#' onclick='deleteTrById(\"text_content_row" + index + "\");'>删除</a>";
+		td3.innerHTML = "<a href='#' onclick='deleteTrById(this);'>删除</a>";
 		row.appendChild(td1);
 		row.appendChild(td2);
 		row.appendChild(td3);
@@ -1890,9 +1889,19 @@ function IsAlpha(cCheck) {
 		index += 1;
 	}
 	
-	function deleteTrById(id){
-		var tr = $$(id);
-		tr.parentNode.removeChild(tr);
+	function deleteTrById(filed){
+		if(confirm("你确定删除吗？")){
+			var tr = filed.parentNode.parentNode;
+			tr.parentNode.removeChild(tr);
+			var prioArray = document.getElementsByName("textMeta.priority");
+			for(var i = 0; i < prioArray.length; i ++){
+				if(prioArray[i].value != i+1){
+					prioArray[i].value = i + 1;
+				}
+			}
+			index = prioArray.length +1;
+		}
+		
 	}
 
 </script>
