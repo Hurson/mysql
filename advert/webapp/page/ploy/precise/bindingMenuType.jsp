@@ -32,24 +32,24 @@ function selectData(){
 	
 	if (getCheckCount("dataIds")==0)
 	{
-		alert("请选择频道分组");
+		alert("请选择类型");
 		return ;
 	}
 	var selectData=getCheckValue("dataIds");
 	var strdatas = selectData.split(",");
 	for (var i=0;i<strdatas.length;i++)	{
 		var dataPropertys= strdatas[i].split("_");
-		var optionSelelct =window.dialogArguments.document.getElementsByName("channelgroup");
+		var optionSelelct =window.dialogArguments.document.getElementsByName("menuType");
 		var flag=false;
 		
-        for (var j=0;j<optionSelelct.length;j++){
+          for (var j=0;j<optionSelelct.length;j++){
         	if (optionSelelct[j].value==dataPropertys[0]){
         		flag =true;
         	}
         }
        if (!flag){
-        	window.dialogArguments.add_channelgroup('contenttable10',dataPropertys[0],dataPropertys[1]);
-        }
+        	window.dialogArguments.addType('contenttable18',dataPropertys[0],dataPropertys[1]);
+        } 
       
 	}
     window.close();
@@ -79,8 +79,19 @@ function selectData(){
   <input type="hidden" id="positionId" name="positionId" value="${positionId}"/>
 	
 <div class="search">
-<div class="path">首页 >> 投放策略管理 >> 精准维护>>选择频道分组</div>
+<div class="path">首页 >> 投放策略管理 >> 精准维护>>选择类型</div>
 <div class="searchContent" >
+<table cellspacing="1" class="searchList">
+  <tr class="title">
+    <td>查询条件</td>
+  </tr>
+  <tr>
+    <td class="searchCriteria">
+      <span>类型名称：</span><input onkeypress="return validateSpecialCharacter();" type="text" name="menuType.name" id="menuType.name" value="${menuType.name}"/>
+	 
+        <input type="button" value="查询" onclick="javascript:query();" class="btn"/></td>
+  </tr>
+</table>
 <div id="messageDiv" style="margin-top: 15px;color: red;font-size: 14px;font-weight: bold;">
 <table cellspacing="1" class="searchList">
     <tr class="title">

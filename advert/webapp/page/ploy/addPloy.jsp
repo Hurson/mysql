@@ -157,7 +157,13 @@ var firstflag=true;
 		document.getElementById("selectedOption14").checked=true;
 	}
 	
-	
+	//类型选择
+	var nvodType = document.getElementsByName("preciseUiBean.typeCode");
+	if(nvodType!=null && nvodType.length>0)
+	{
+		document.getElementById("selectedtable18").style.display="";
+		document.getElementById("selectedOption18").checked=true;
+	}
 	//背景广播
 	var radio = document.getElementsByName("bchannelgroup"); 
 	if (radio!=null && radio.length>0)
@@ -176,11 +182,6 @@ var firstflag=true;
 	}   
 	changePosition();
 	
-	}
-	//NVOD主界面类型
-	var type = document.getElementsByName("preciseUiBean.tvnNumber");
-	if(type != null && radio.length>0){
-		
 	}
 	
 	
@@ -906,6 +907,7 @@ function addselectContract() {
 					 document.getElementById("selectedspan15").style.display="none";
 					 document.getElementById("selectedspan16").style.display="none";
 					 document.getElementById("selectedspan17").style.display="none";
+					 document.getElementById("selectedspan18").style.display="none";
 					 document.getElementById("assetployNumber").style.display="none";
 					 document.getElementById("ploy.ployNumber").style.display="none";					 
 					 document.getElementById("defaultflag").style.display="none";
@@ -1035,7 +1037,7 @@ function addselectContract() {
 					//NVOD主界面广告
 					if(postions[i].positionCode=='02402'){
 						document.getElementById("selectedspan14").style.display=""; 
-						//投放区域
+						document.getElementById("selectedspan18").style.display=""; 
 					}
 					//NVOD挂角广告
 					if(postions[i].positionCode=='20432'){
@@ -1274,6 +1276,16 @@ function selectChannelGroup()
 	var	height = 550;
 	var width=750;
 	var ployId = document.getElementById("ploy.ployId").value;
+	var actinUrl = '<%=path%>/page/precise/queryChannelGroup.do?ployId='+ployId;
+	var modelWin = window.showModalDialog(actinUrl,window,"resizable=no;status=no;scroll=no;center=yes;dialogHeight="+height+"px;dialogWidth="+width+"px");
+	if(modelWin){	
+	} 
+}
+function selectType()
+{
+	var	height = 550;
+	var width=750;
+	var ployId = document.getElementById("ploy.ployId").value;
 	var actinUrl = '<%=path%>/page/precise/queryType.do';
 	var modelWin = window.showModalDialog(actinUrl,window,"resizable=no;status=no;scroll=no;center=yes;dialogHeight="+height+"px;dialogWidth="+width+"px");
 	if(modelWin){	
@@ -1329,7 +1341,22 @@ function addNpvrChannelGroup(tblN,groupid,groupname){
     row.appendChild(td4);
     tab.appendChild(row);  
 }
-
+function addType(tblN,typeCode,typeName)
+{
+	var tab = document.getElementById("contenttable18");//$(tblN); 	
+	var row = document.createElement("tr"); 
+	var td1 = document.createElement("td");
+	td1.setAttribute("class","dot");
+	td1.innerHTML = '<input type="checkbox" name="selectedcheckbox18" />';	
+	var td2 = document.createElement("td")
+	//td2.innerHTML = '<input name="channelgroup" type="text" />';
+	
+	td2.innerHTML = '<input type="hidden"  id="preciseUiBean.typeCode" name="preciseUiBean.typeCode"  value="'+typeCode+'" readonly/><input  id="preciseUiBean.typeName" name="preciseUiBean.typeName"  value="'+typeName+'" readonly/>';
+	row.setAttribute("id", "contentrow"+(rowcount++));
+    row.appendChild(td1);
+    row.appendChild(td2);
+    tab.appendChild(row); 
+}
 function showNpvrChannelGroupRef(channelGroupId) {
     var	height = 550;
 	var width=750;
@@ -1412,6 +1439,7 @@ function addAssetKey()
     row.appendChild(td2);
     tab.appendChild(row);  
 }
+
 function addTvnNumber()
 {
 	var tab = document.getElementById("contenttable17");//$(tblN); 	
@@ -2206,8 +2234,9 @@ function exporttvn(objname)
         <span style="display: none;" id="selectedspan14"><input type="checkbox" name="selectedOption14"  id="selectedOption14" value="14" onclick="selecttable(this,'14');"/>投放区域</span>
         <span style="display: none;" id="selectedspan15"><input type="checkbox" name="selectedOption15"  id="selectedOption15" value="15" onclick="selecttable(this,'15');"/>广播频道组</span>
         <span style="display: none;" id="selectedspan17"><input type="checkbox" name="selectedOption17"  id="selectedOption17" value="17" onclick="selecttable(this,'17');"/>TVN号</span>
+        <span style="display: none;" id="selectedspan18"><input type="checkbox" name="selectedOption18"  id="selectedOption17" value="18" onclick="selecttable(this,'18');"/>NVOD类型</span>
          <input id="saveBtn" type="button" class="btn" value="保 存" onclick="submitForm();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-         <input type="button" class="btn" value="取 消" onclick="history.back(-1);"/>
+         <input type="button" class="btn" value="取消" onclick="history.back(-1);"/>
        </td>
         </tr>
   </table>
@@ -3223,27 +3252,27 @@ function exporttvn(objname)
     
     <table cellspacing="1" class="typelist"  style="display: none;" id="selectedtable18">
       <tr class="title">
-        <td height="28" class="dot"><input type="checkbox" name="checkbox3" value="checkbox"  onclick="selectAll(this, 'selectedcheckbox18');"/></td>
+        <td height="28" class="dot"><input type="checkbox" name="checkbox18" value="checkbox"  onclick="selectAll(this, 'selectedcheckbox18');"/></td>
 	       <td><b>类型选择</b>
-          </p>
-             
           </td>
-		</td>
       </tr>
       <tr>
         <td colspan="2" class="conditionList">
         <div>
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable1">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable18">
               <tr >
                 <td class="dot"></td>
                 <td >投放类型</td>
 	            	<c:forEach items="${preciseUiBean.typeMenuList}" var="NVODtype">
 			              <tr id="contentrow">
 			                <td class="dot"><input type="checkbox" name="selectedcheckbox18" value="checkbox"/></td>
-			                <td width="45%"><input type="hidden" id="type" name="type"  value="${groupVar.groupId}"/><a href="#" onclick="javascript:showChannelGroupRef(${groupVar.groupId});">${groupVar.groupName}</a></td>
+			                <td width="45%">
+			                <input type="hidden" id="preciseUiBean.typeCode" name="preciseUiBean.typeCode"  value="${NVODtype.datavalue}" readonly/>
+			                <input  id="preciseUiBean.typeName" name="preciseUiBean.typeName"  value="${NVODtype.dataname}" readonly/>
+			                </td>
 			                </td>
 			                <td>
-			                <input type="hidden" name="channelGroupType" value="1"/>
+			                <input type="hidden" name="channelNVODType" value="1"/>
 			                </td>
 			              </tr>
 	               </c:forEach>
@@ -3253,13 +3282,11 @@ function exporttvn(objname)
       </tr>
       <tr>
       
-        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="selectChannelGroup()"/>
-            <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable10','selectedcheckbox10')" />
+        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="selectType()"/>
+            <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable18','selectedcheckbox18')" />
         </td>
       </tr>
     </table>
-    
-    
     
   </div>
 </div>

@@ -15,7 +15,8 @@ public class PreciseConstants {
 	type=11 按用户区域；
 	type=12 按行业；
 	type=13 按级别；
-	type=17 按TVN号*/
+	type=17 按TVN号
+	type=18 按NVOD类型 */
 	public static String PRODUCT_TYPE="1";
 	public static String ASSET_KEY_TYPE="2";
 	public static String ASSET_CATEGORY_TYPE="4";
@@ -29,5 +30,6 @@ public class PreciseConstants {
 	public static String USER_INDUSTRYS_TYPE="12";
 	public static String USER_RANCK="13";
 	public static String TVN_NUMBER_TYPE="17";
+	public static String NVOD_TYPE = "18";
 	
 }

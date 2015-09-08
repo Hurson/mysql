@@ -98,6 +98,12 @@ window.onload = function() {
 		document.getElementById("selectedtable8").style.display="";
 		document.getElementById("selectedOption8").checked=true;
 	}
+	 var nvodType = document.getElementsByName("preciseUiBean.typeCode");
+	if(nvodType!=null && nvodType.length>0)
+	{
+		document.getElementById("selectedtable18").style.display="";
+		//document.getElementById("selectedOption18").checked=true;
+	} 
 	var assetCategory = document.getElementsByName("preciseUiBean.assetSortId"); 
 	if (assetCategory!=null && assetCategory.length>0)
 	{
@@ -774,7 +780,8 @@ function addselectContract() {
 					 document.getElementById("selectedspan14").style.display="none";
 					 document.getElementById("selectedspan15").style.display="none";
 					 document.getElementById("selectedspan17").style.display="none";
-					
+					 document.getElementById("selectedspan18").style.display="none";
+
 					 
 					 document.getElementById("assetployNumber").style.display="none";
 					 document.getElementById("ploy.ployNumber").style.display="none";					 
@@ -862,10 +869,9 @@ function addselectContract() {
 					 //}
 					 //NVOD主界面广告
 					 if(postions[i].positionCode=='02402'){
-						document.getElementById("defaultflag").style.display="";        //是否默认
-						document.getElementById("ploy.defaultstart").style.display="";  //是否默认  （可以同上一元素合并）
-						document.getElementById("selectedspan14").style.display="";     //投放区域
-					}
+							document.getElementById("selectedspan14").style.display=""; 
+							document.getElementById("selectedspan18").style.display=""; 
+						}
 					//NVOD挂角广告
 						if(postions[i].positionCode=='20432'){
 							document.getElementById("selectedspan14").style.display="";
@@ -2099,6 +2105,44 @@ function showChannelGroupRef(channelGroupId) {
         </div></td>
       </tr>
      
+    </table>
+    
+    <table cellspacing="1" class="typelist"  style="display: none;" id="selectedtable18">
+      <tr class="title">
+        <td height="28" class="dot"><input type="checkbox" name="checkbox18" value="checkbox"  onclick="selectAll(this, 'selectedcheckbox18');"/></td>
+	       <td><b>类型选择</b>
+          </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="conditionList">
+        <div>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" id="contenttable18">
+              <tr >
+                <td class="dot"></td>
+                <td >投放类型</td>
+	            	<c:forEach items="${preciseUiBean.typeMenuList}" var="NVODtype">
+			              <tr id="contentrow">
+			                <td class="dot"><input type="checkbox" name="selectedcheckbox18" value="checkbox"/></td>
+			                <td width="45%">
+			                <input type="hidden" id="preciseUiBean.typeCode" name="preciseUiBean.typeCode"  value="${NVODtype.datavalue}" readonly/>
+			                <input  id="preciseUiBean.typeName" name="preciseUiBean.typeName"  value="${NVODtype.dataname}" readonly/>
+			                </td>
+			                </td>
+			                <td>
+			                <input type="hidden" name="channelNVODType" value="1"/>
+			                </td>
+			              </tr>
+	               </c:forEach>
+            </table>
+        </div>
+        </td>
+      </tr>
+      <tr>
+      
+        <td colspan="2"><input name="button" type="button" class="bottonTwo" value="添加" onclick="selectType()"/>
+            <input name="button" type="button" class="bottonTwo" value="删除" onclick="del_tbl('contenttable18','selectedcheckbox18')" />
+        </td>
+      </tr>
     </table>
     
     

@@ -688,6 +688,26 @@ public class PloyServiceImpl implements PloyService {
 							preciseMatchBkList.add(preciseMatchBk);
 						}
 					}
+					//NOVD主界面类型精准
+					preciseData = trim(preciseUiBean.getTypeCode());
+					if (!preciseData.equals(""))
+					{
+						String preciseDatas[]= preciseData.split(",");
+						String preciseNames[]= trim(preciseUiBean.getTypeName()).split(",");
+						for (int i=0;i<preciseDatas.length;i++)
+						{
+							TPreciseMatchBk preciseMatchBk = new TPreciseMatchBk();
+							preciseMatchBk.setPrecisetype(Long.valueOf(PreciseConstants.NVOD_TYPE));
+							preciseMatchBk.setPloyId(Long.valueOf(maxId+1));
+							preciseMatchBk.setMenuTypeCode(preciseDatas[i]);
+							preciseMatchBk.setMatchName(preciseNames[i]);
+							preciseMatchBk.setPriority(preciseUiBean.getPriority18());
+							preciseMatchBk.setTvnExpression("0");
+							preciseMatchBk.setTvnNumber(preciseUiBean.getTvnNumber18());
+							preciseMatchBkList.add(preciseMatchBk);
+						}
+						
+					}
 					if (preciseMatchBkList.size()>0)
 					{
 						ployDao.saveOrUpdate(preciseMatchBkList,maxId+1);
@@ -711,7 +731,8 @@ public class PloyServiceImpl implements PloyService {
 					|| ploy.getPositionId()==49 || ploy.getPositionId()==50   //滚动字幕
 					|| ploy.getPositionId()==45 || ploy.getPositionId()==46
 					|| ploy.getPositionId()== 44|| ploy.getPositionId()==51
-					||ploy.getPositionId()==54 ||ploy.getPositionId()==53)
+					||ploy.getPositionId()==54 ||ploy.getPositionId()==53
+					||ploy.getPositionId()==52 ||ploy.getPositionId()==51)
 			{
 				lstPloy =this.getBTheAllEntity(ployTimeCGroup, ploy);
 			}
@@ -986,6 +1007,26 @@ public class PloyServiceImpl implements PloyService {
 							preciseMatchBk.setTvnNumber(preciseUiBean.getTvnNumber13());
 							preciseMatchBkList.add(preciseMatchBk);
 						}
+					}
+					//NOVD主界面类型精准
+					preciseData = trim(preciseUiBean.getTypeCode());
+					if (!preciseData.equals(""))
+					{
+						String preciseDatas[]= preciseData.split(",");
+						String preciseNames[]= trim(preciseUiBean.getTypeName()).split(",");
+						for (int i=0;i<preciseDatas.length;i++)
+						{
+							TPreciseMatchBk preciseMatchBk = new TPreciseMatchBk();
+							preciseMatchBk.setPrecisetype(Long.valueOf(PreciseConstants.NVOD_TYPE));
+							preciseMatchBk.setPloyId(Long.valueOf(ployId));
+							preciseMatchBk.setMenuTypeCode(preciseDatas[i]);
+							preciseMatchBk.setMatchName(preciseNames[i]);
+							preciseMatchBk.setPriority(preciseUiBean.getPriority18());
+							preciseMatchBk.setTvnExpression("0");
+							preciseMatchBk.setTvnNumber(preciseUiBean.getTvnNumber18());
+							preciseMatchBkList.add(preciseMatchBk);
+						}
+						
 					}
 					if (preciseMatchBkList.size()>0||trim(preciseUiBean.getLookbackCategoryId()).equals(""))
 					{					
