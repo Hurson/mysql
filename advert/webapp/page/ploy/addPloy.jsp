@@ -3250,10 +3250,11 @@ function exporttvn(objname)
       </tr>
     </table>
     
-    <table cellspacing="1" class="typelist"  style="display: none;" id="selectedtable18">
+    <table cellspacing="1" class="searchList"  style="display: none;" id="selectedtable18">
       <tr class="title">
         <td height="28" class="dot"><input type="checkbox" name="checkbox18" value="checkbox"  onclick="selectAll(this, 'selectedcheckbox18');"/></td>
 	       <td><b>类型选择</b>
+          </td>
           </td>
       </tr>
       <tr>
@@ -3263,6 +3264,7 @@ function exporttvn(objname)
               <tr >
                 <td class="dot"></td>
                 <td >投放类型</td>
+                </tr>
 	            	<c:forEach items="${preciseUiBean.typeMenuList}" var="NVODtype">
 			              <tr id="contentrow">
 			                <td class="dot"><input type="checkbox" name="selectedcheckbox18" value="checkbox"/></td>
