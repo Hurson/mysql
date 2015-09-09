@@ -65,10 +65,10 @@ function query() {
     }
  function addData() {
     var channelGroupId=document.getElementById("channelGroupId").value;
-
+    var channelGroupType=document.getElementById("channelGroupType").value;
 		var structInfo = "";
 			structInfo+="<div style='margin:0px;padding:0px;width:600px'>";
-		    structInfo+="<iframe id='selectChannelFrame' name='selectChannelFrame'  frameBorder='0' width='1000px' height='500px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/page/channelGroup/selectChannel.do?channelGroupId="+channelGroupId+"'></iframe>";
+		    structInfo+="<iframe id='selectChannelFrame' name='selectChannelFrame'  frameBorder='0' width='1000px' height='500px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/page/channelGroup/selectChannel.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType+"'></iframe>";
 		    structInfo+="</div>";
 			
 			easyDialog.open({
@@ -129,7 +129,7 @@ function query() {
          <s:set name="page" value="%{channelListPage}" />
 		 <input type="hidden" id="pageNo" name="channelListPage.pageNo" value="${page.pageNo}"/>
 		 <input type="hidden" id="pageSize" name="channelListPage.pageSize" value="${page.pageSize}"/>
-
+		 <input type="hidden" id="channelGroupType" name="channelListPage.channelGroupType" value="${channelListPage.channelGroupType}"/>
          <input type="hidden" id="channelGroupId" name="channelGroupId" value="${channelGroupId}"/>
 <div class="search">
 <div class="path">首页 >> 系统管理 >> 频道组维护>> 关联频道</div>

@@ -27,6 +27,8 @@ public class PageBeanDB {
 	private int totalPage;
     
 	private List dataList;
+	/**传递频道组类型**/
+	private String channelGroupType;
 	
 	public List getDataList() {
 		return dataList;
@@ -122,4 +124,12 @@ public class PageBeanDB {
 		return pageNo;
 	}
 
+	public String getChannelGroupType() {
+		return channelGroupType;
+	}
+
+	public void setChannelGroupType(String channelGroupType) {
+		this.channelGroupType = channelGroupType;
+	}
+	
 }

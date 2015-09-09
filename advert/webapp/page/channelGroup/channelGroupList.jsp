@@ -81,8 +81,8 @@ function query() {
      
     }
 
-function modifyChannelGroupRef(channelGroupId) {
-    window.location.href="<%=path %>/page/channelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId;
+function modifyChannelGroupRef(channelGroupId,channelGroupType) {
+    window.location.href="<%=path %>/page/channelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType;
   
     }
     
@@ -140,7 +140,8 @@ function modifyChannelGroupRef(channelGroupId) {
         <td width="10%" height="28" class="dot"><input type="checkbox" name="selectAllBox" onclick="selectAll(this, 'dataIds');"/></td>
         <td width="20%" align="center">频道组名称</td>
         <td width="20%" align="center">频道组编号</td>
-        <td width="35%" align="center">描述</td>
+        <td width="15" align="center">频道组类型</td>
+        <td width="20%" align="center">描述</td>
 		<td width="15%" align="center">操作</td>
     </tr>
    				 <c:if test="${channelGroupPage.dataList != null && fn:length(channelGroupPage.dataList) > 0}">
@@ -156,10 +157,13 @@ function modifyChannelGroupRef(channelGroupId) {
                                 ${channelGroupInfo.code}
                             </td>
                             <td>
+                            	${channelGroupInfo.type}
+                            </td>
+                            <td>
                                 ${channelGroupInfo.channelDesc}
                             </td>
                             <td>
-                               <a href="javascript:modifyChannelGroupRef('${channelGroupInfo.id}');">关联频道</a> 
+                               <a href="javascript:modifyChannelGroupRef('${channelGroupInfo.id}','${channelGroupInfo.type}');">关联频道</a> 
                             </td>
                            
 							
@@ -169,7 +173,7 @@ function modifyChannelGroupRef(channelGroupId) {
 
 
   <tr>
-    <td colspan="5">
+    <td colspan="6">
 		<input type="button" value="删除" class="btn" onclick="javascript:deleteDatas();"/>
         <input type="button" value="添加" class="btn" onclick="javascript:addData();"/>
         <jsp:include page="../common/page.jsp" flush="true" />

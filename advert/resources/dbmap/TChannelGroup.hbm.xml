@@ -30,5 +30,10 @@
                 <comment>创建者Id</comment>
             </column>
         </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" length="10">
+                <comment>频道组类型</comment>
+            </column>
+        </property>
     </class>
 </hibernate-mapping>

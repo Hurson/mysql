@@ -145,7 +145,8 @@ selectData = document.getElementById("selChannelIds").value
 <s:set name="page" value="selectchannelPage" />
  <input type="hidden" id="pageNo" name="selectchannelPage.pageNo" value="${selectchannelPage.pageNo}"/>
  <input type="hidden" id="pageSize" name="selectchannelPage.pageSize" value="${selectchannelPage.pageSize}"/>
- <input type="hidden" id="channelGroupId"  value="${channelGroupId}"/>
+ <input type="hidden" id="channelGroupType" name="channelGroupType" value="${channelGroupType}"/>
+ <input type="hidden" id="channelGroupId"  name="channelGroupId" value="${channelGroupId}"/>
  <input type="hidden" id="channelGroupIdTemp" name="channelGroupIdTemp"  value="${channelGroupIdTemp}"/>
 
 <div class="search">
@@ -160,15 +161,6 @@ selectData = document.getElementById("selChannelIds").value
     <td class="searchCriteria">
         <span>频道名称：</span>
         <input type="text" name="selectChannelQuery.channelName" id="selectChannelQuery.channelName" value="${selectChannelQuery.channelName}"/>
-        <span>频道类型：</span>
-        <select id="selectChannelQuery.channelType" name="selectChannelQuery.channelType" style="width:120px">
-              						<option value="视频直播类业务" <c:if test="${'视频直播类业务'==selectChannelQuery.channelType}">
-                            	 selected
-                            	</c:if>>视频直播类业务</option>
-                            	<option value="音频直播类业务" <c:if test="${'音频直播类业务'==selectChannelQuery.channelType}">
-                            	 selected
-                            	</c:if>>音频直播类业务</option>
-        </select>
                   
         <input type="button" value="查询" onclick="javascript:query();" class="btn"/></td>
   </tr>

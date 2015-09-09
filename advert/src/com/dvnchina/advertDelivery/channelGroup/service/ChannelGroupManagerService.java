@@ -83,7 +83,7 @@ public interface ChannelGroupManagerService {
 	 * @param pageNumber
 	 * @return
 	 */
-	public PageBeanDB selectChannelList(ChannelInfo channel,Integer pageSize,Integer pageNumber);
+	public PageBeanDB selectChannelList(ChannelInfo channel,Integer pageSize,Integer pageNumber,String channelGroupType);
 	
 	
 	/**

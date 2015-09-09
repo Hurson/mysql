@@ -236,10 +236,10 @@ public class ChannelGroupManagerDaoImpl extends HibernateSQLTemplete implements 
 	 * @param pageNumber
 	 * @return
 	 */
-	public PageBeanDB selectChannelList(ChannelInfo channel,Integer pageSize,Integer pageNumber) {
+	public PageBeanDB selectChannelList(ChannelInfo channel,Integer pageSize,Integer pageNumber,String channelGroupType){
 		
 		 String sql;
-		 sql="select distinct new com.dvnchina.advertDelivery.sysconfig.bean.ChannelInfo(t.channelId,t.channelName,t.channelCode,t.channelType,t.serviceId,t.tsId,t.networkId,t.isPlayBack) from ChannelInfo t where 1=1 " ;
+		 sql="select distinct new com.dvnchina.advertDelivery.sysconfig.bean.ChannelInfo(t.channelId,t.channelName,t.channelCode,t.channelType,t.serviceId,t.tsId,t.networkId,t.isPlayBack) from ChannelInfo t where t.channelType = '"+channelGroupType+"'";
 		 //sql=sql+"where t.channelId not in(select distinct r.channelId from ChannelGroupRef r)";
 		 if(channel!=null && channel.getChannelGroupId()!=null){
 		     sql=sql+"and  t.channelId not in(select distinct r.channelId from ChannelGroupRef r where r.channelGroupId="+channel.getChannelGroupId()+")";

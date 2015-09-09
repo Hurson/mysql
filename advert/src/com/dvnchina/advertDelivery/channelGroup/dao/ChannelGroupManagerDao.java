@@ -103,7 +103,7 @@ public interface ChannelGroupManagerDao {
 	 * @param pageNumber
 	 * @return
 	 */
-	public PageBeanDB selectChannelList(ChannelInfo channel,Integer pageSize,Integer pageNumber);
+	public PageBeanDB selectChannelList(ChannelInfo channel,Integer pageSize,Integer pageNumber,String channelGroupType);
 	
 	/**
 	 * 

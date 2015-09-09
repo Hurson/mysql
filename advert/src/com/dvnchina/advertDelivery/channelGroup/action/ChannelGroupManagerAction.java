@@ -48,6 +48,7 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
 	private String channelIds;
 	
 	private Integer channelGroupId;
+	private String channelGroupType;
 	private String channelGroupIdTemp;
 	
 	private TChannelGroup channelGroup;
@@ -208,7 +209,8 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
 		
 			
 			channelListPage = channelGroupManagerService.queryChannelGroupRefList(channelQuery, channelListPage.getPageSize(), channelListPage.getPageNo());
-				
+			channelGroupType = new String(channelGroupType.getBytes("iso8859-1"),"utf-8");
+			channelListPage.setChannelGroupType(channelGroupType);	
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("查询频道组所属频道列表异常", e);
@@ -234,7 +236,6 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
 		
 			
 			channelListPage = channelGroupManagerService.queryChannelGroupRefList(channelQuery, channelListPage.getPageSize(), channelListPage.getPageNo());
-				
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("查询频道组所属频道列表异常", e);
@@ -269,10 +270,12 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
        try {
            if(selectChannelQuery==null){
                selectChannelQuery = new ChannelInfo();
+               channelGroupType = new String(channelGroupType.getBytes("iso8859-1"),"utf-8");
            }
-           selectChannelQuery.setChannelGroupId(channelGroupId);
-    	   selectchannelPage = channelGroupManagerService.selectChannelList(selectChannelQuery, selectchannelPage.getPageSize(), selectchannelPage.getPageNo());
 
+           selectChannelQuery.setChannelGroupId(channelGroupId);
+        	   
+    	   selectchannelPage = channelGroupManagerService.selectChannelList(selectChannelQuery, selectchannelPage.getPageSize(), selectchannelPage.getPageNo(),channelGroupType);
        } catch (Exception e) {
     	   e.printStackTrace();
            logger.error("获取频道列表时出现异常",e);
@@ -510,6 +513,16 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
 
 	public void setSelChannelIdList(List selChannelIdList) {
 		this.selChannelIdList = selChannelIdList;
+	}
+
+
+	public String getChannelGroupType() {
+		return channelGroupType;
+	}
+
+
+	public void setChannelGroupType(String channelGroupType) {
+		this.channelGroupType = channelGroupType;
 	}
 
 	

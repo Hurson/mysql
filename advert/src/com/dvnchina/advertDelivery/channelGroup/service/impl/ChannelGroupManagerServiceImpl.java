@@ -118,8 +118,8 @@ public class ChannelGroupManagerServiceImpl implements ChannelGroupManagerServic
 	 * @param pageNumber
 	 * @return
 	 */
-	public PageBeanDB selectChannelList(ChannelInfo channel,Integer pageSize,Integer pageNumber){
-		return channelGroupManagerDao.selectChannelList(channel, pageSize, pageNumber);
+	public PageBeanDB selectChannelList(ChannelInfo channel,Integer pageSize,Integer pageNumber,String channelGroupType){
+		return channelGroupManagerDao.selectChannelList(channel, pageSize, pageNumber,channelGroupType);
 	}
 	
 	

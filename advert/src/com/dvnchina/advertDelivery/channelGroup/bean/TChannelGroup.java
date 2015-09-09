@@ -16,6 +16,7 @@ public class TChannelGroup implements java.io.Serializable {
 	private String name;
 	private String channelDesc;
 	private Integer operatorId;
+	private String type;
 
 	// Constructors
 
@@ -76,6 +77,14 @@ public class TChannelGroup implements java.io.Serializable {
 
 	public void setOperatorId(Integer operatorId) {
 		this.operatorId = operatorId;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**

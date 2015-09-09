@@ -114,7 +114,7 @@
 <div class="detail">
     <table cellspacing="1" class="content" align="left">
         <tr class="title">
-            <td colspan="4">频道组基本信息 </td>
+            <td colspan="8">频道组基本信息 </td>
         </tr>
         <tr >
             <td width="10%" align="right"><span class="required">*</span>频道组名称：</td>
@@ -129,10 +129,18 @@
                 <input id="channelGroup.code" name="channelGroup.code" type="text"  value="${channelGroup.code}"/>
                 <span id="channelGroupCode_error" ></span>
             </td>
+            <td width="10%" align="right" ><span class="required">*</span>频道组类型：</td>
+            <td width="25%">
+            	<select name="channelGroup.type" name="channelGroup.type" style="width:120px">
+            			<option value="视频直播类业务">视频直播类业务</option>
+            			<option value="音频直播类业务">音频直播类业务</option>
+            			<option value="NVOD业务">NVOD业务</option>
+				</select>
+			</td>
         </tr>		 
         <tr>
                 <td width="12%" align="right">描 述：</td>
-                <td width="88%" colspan="3">
+                <td width="88%" colspan="8">
                     <textarea style="" id="channelGroup.channelDesc" name="channelGroup.channelDesc" rows="5">${channelGroup.channelDesc}</textarea>
                     <span id="channelGroupDesc_error"></span>
                 </td>
