@@ -2107,7 +2107,7 @@ function showChannelGroupRef(channelGroupId) {
      
     </table>
     
-    <table cellspacing="1" class="typelist"  style="display: none;" id="selectedtable18">
+    <table cellspacing="1"  class="searchList"  style="display: none;" id="selectedtable18">
       <tr class="title">
         <td height="28" class="dot"><input type="checkbox" name="checkbox18" value="checkbox"  onclick="selectAll(this, 'selectedcheckbox18');"/></td>
 	       <td><b>类型选择</b>
