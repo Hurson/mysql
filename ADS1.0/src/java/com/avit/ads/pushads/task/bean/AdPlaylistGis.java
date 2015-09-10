@@ -37,6 +37,7 @@ public class AdPlaylistGis implements java.io.Serializable {
 	private String categoryId;
 	private String assetId;
 	private Integer priority;
+	private String menuTypeCode;
 	private String rePush;
 	
 	// Constructors
@@ -249,6 +250,15 @@ public class AdPlaylistGis implements java.io.Serializable {
 	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
+	@Column(name="MENU_TYPE_CODE")
+	public String getMenuTypeCode() {
+		return menuTypeCode;
+	}
+
+	public void setMenuTypeCode(String menuTypeCode) {
+		this.menuTypeCode = menuTypeCode;
+	}
+
 	@Column(name = "re_push")
 	public String getRePush() {
 		return rePush;

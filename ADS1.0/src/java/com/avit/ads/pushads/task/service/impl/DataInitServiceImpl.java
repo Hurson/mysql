@@ -17,6 +17,7 @@ import com.avit.ads.pushads.task.cache.AdvertPositionMap;
 import com.avit.ads.pushads.task.cache.ChannelMap;
 import com.avit.ads.pushads.task.cache.ChannelNpvrMap;
 import com.avit.ads.pushads.task.cache.LookbackCategoryMap;
+import com.avit.ads.pushads.task.cache.NvodMenuTypeMap;
 import com.avit.ads.pushads.task.dao.DatainitDao;
 import com.avit.ads.pushads.task.dao.InitAreasDao;
 import com.avit.ads.pushads.task.service.DataInitService;
@@ -38,7 +39,9 @@ public class DataInitServiceImpl implements DataInitService {
 		// TODO Auto-generated method stub
 		ChannelMap.setChannelMap(datainitDao.queryChannel());
 	}
-
+	public void initNvodMenuType(){
+		NvodMenuTypeMap.setMenuTypeMap(datainitDao.queryNvodMenuType());
+	}
 	public void initChannelNpvr() {
 		// TODO Auto-generated method stub
 		ChannelNpvrMap.setChannelMap(datainitDao.queryChannelNpvr());

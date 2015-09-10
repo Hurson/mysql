@@ -242,7 +242,7 @@ public class OcgServiceImpl implements OcgService {
 		HttpClient httpclient = new DefaultHttpClient();
 		
 		httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 5000); 
-		httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 5000);
+		httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
 
 		try { 
 			HttpPost httpost = new HttpPost(url); 
@@ -943,7 +943,7 @@ public class OcgServiceImpl implements OcgService {
 					String url = "http://" + ocg.getIp() + ":" + ConstantsHelper.OCG_HTTP_PORT;
 					HttpResponse res = sendHttpMsg(areaCode, headerInfo, url, destPath+File.separator + ConstantsHelper.SEND_FILE + File.separator + ocg.getTsId() + ConstantsHelper.TS_FILE_SUFFIX);
 					if(null == res){
-						break;
+						continue;
 					}
 					int code = res.getStatusLine().getStatusCode();
 					if(code == 200){
@@ -956,7 +956,6 @@ public class OcgServiceImpl implements OcgService {
 					}else if(code == 401){
 						logger.info("发送OCG消息失败！");
 						success = false;
-						break;
 					}
 				}
 			}

@@ -9,4 +9,5 @@ public interface DataInitService {
 	public void initAdDefalult();
 	public void initAdvertPosition();
 	public void initAreaTSFile();
+	public void initNvodMenuType();
 }

@@ -258,7 +258,7 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		} catch (IOException e) {
 			String errMsg = "FTP连接失败   ip: " + ip;
 			logger.error(errMsg, e);
-			//warnHelper.writeWarnMsgToDb(areaCode, errMsg);
+			warnHelper.writeWarnMsgToDb("0", errMsg);
 			return false;
 		}
 		return true;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.avit.ads.pushads.task.bean.AdDefault;
 import com.avit.ads.pushads.task.bean.AdvertPosition;
+import com.avit.ads.pushads.task.bean.NvodMenuType;
 import com.avit.ads.pushads.task.bean.TChannelinfo;
 import com.avit.ads.pushads.task.bean.TChannelinfoNpvr;
 import com.avit.ads.pushads.task.bean.TLoopbackCategory;
@@ -14,4 +15,5 @@ public interface DatainitDao {
 	public List<TLoopbackCategory> queryLookbackCategory();
 	public List<AdDefault> queryAdDefalult();
 	public List<AdvertPosition> queryAdvertPosition();
+	public List<NvodMenuType> queryNvodMenuType();
 }

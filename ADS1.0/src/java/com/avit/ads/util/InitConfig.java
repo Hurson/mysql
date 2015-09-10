@@ -105,6 +105,8 @@ public class InitConfig {
 		}
 		//读取数据库 初始化频道
 		dataInitService.initChannel();
+		//读取数据库 初始化NVOD主界面分类
+		dataInitService.initNvodMenuType();
 		//读取数据库 初始化默认素材 
 		dataInitService.initAdDefalult();
 		dataInitService.initAdvertPosition();
@@ -187,6 +189,8 @@ public class InitConfig {
 		dataInitService= (DataInitService)ContextHolder.getApplicationContext().getBean("DatainitService");
 		//读取数据库 初始化频道
 		dataInitService.initChannel();
+		//读取数据库 初始化NVOD主界面分类
+		dataInitService.initNvodMenuType();
 		//读取数据库 初始化默认素材 
 		dataInitService.initAdDefalult();
 		

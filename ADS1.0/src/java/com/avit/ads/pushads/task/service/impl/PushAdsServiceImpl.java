@@ -89,6 +89,7 @@ import com.avit.ads.util.message.TvnTarget;
 import com.avit.ads.util.type.UIUpdate;
 import com.avit.ads.util.warn.WarnHelper;
 import com.avit.common.ftp.service.FtpService;
+import com.avit.common.util.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -267,6 +268,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 					if (adPostion.getIsChannel()==1)
 					{
 						paramList=getElementFromData(adGis.getChannelId());
+					//NVOD主菜单
+					}else if(ConstantsAdsCode.NVOD_MENU.equals(adPostion.getPositionCode())){
+						List<String> listparam = new ArrayList<String>();
+						listparam.add(adGis.getMenuTypeCode());
+						paramList.add(listparam);
 					}
 					//NPVR
 					else if (adPostion.getIsPlayback()==1)
@@ -334,7 +340,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				}
 				catch(Exception e)
 				{
-					log.error("adGis.id="+adGis.getId()+"发送缓存失败");
+					log.error("adGis.id="+adGis.getId()+"发送缓存失败!"+ e);
 					//log.info("adGis.id="+adGis.getId()+" send to cache");
 				}
 			}
@@ -408,6 +414,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 					if (adPostion.getIsChannel()==1)
 					{
 						paramList=getElementFromData(adGis.getChannelId());
+					//NVOD主菜单
+					}else if(ConstantsAdsCode.NVOD_MENU.equals(adPostion.getPositionCode())){
+						List<String> listparam = new ArrayList<String>();
+						listparam.add(adGis.getMenuTypeCode());
+						paramList.add(listparam);
 					}
 					//音频频道
 					else if (adPostion.getIsFreq()==1)
@@ -483,7 +494,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 				}
 				catch(Exception e)
 				{
-					log.error("adGis.id="+adGis.getId()+"发送缓存失败");
+					log.error("adGis.id="+adGis.getId()+"发送缓存失败!",e);
 					//log.info("adGis.id="+adGis.getId()+" send to cache");
 				}
 			}
@@ -540,6 +551,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 					if (adPostion.getIsChannel()==1)
 					{
 						paramList=getElementFromData(adGis.getChannelId());
+					//NVOD主菜单
+					}else if(ConstantsAdsCode.NVOD_MENU.equals(adPostion.getPositionCode())){
+						List<String> listparam = new ArrayList<String>();
+						listparam.add(adGis.getMenuTypeCode());
+						paramList.add(listparam);
 					}
 					//音频频道
 					else if (adPostion.getIsFreq()==1)
@@ -742,6 +758,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 				{
 				    continue;
 				}
+				//NVOD主界面，挂角不写配置文件
+				if (ConstantsAdsCode.NVOD_MENU.equals(list.get(i).getAdsTypeCode()) || ConstantsAdsCode.CORNER_APPROACH.equals(list.get(i).getAdsTypeCode()))
+				{
+				    continue;
+				}
 				//首次循环
 				if (prechannelCode.equals("")) 
 				{
@@ -795,6 +816,11 @@ public class PushAdsServiceImpl implements PushAdsService {
 				}
 				//菜单，外框不写配置文件
 				if (ConstantsAdsCode.PUSH_MENU.equals(list.get(i).getAdsTypeCode().substring(0,4)) || ConstantsAdsCode.PUSH_MENU_FRAME.equals(list.get(i).getAdsTypeCode().substring(0,4)))
+				{
+				    continue;
+				}
+				//NVOD主界面，挂角不写配置文件
+				if (ConstantsAdsCode.NVOD_MENU.equals(list.get(i).getAdsTypeCode()) || ConstantsAdsCode.CORNER_APPROACH.equals(list.get(i).getAdsTypeCode()))
 				{
 				    continue;
 				}
@@ -918,6 +944,58 @@ public class PushAdsServiceImpl implements PushAdsService {
 					}
 					
 				}
+				//NVOD主界面广告
+				if (ConstantsAdsCode.NVOD_MENU.equals(list.get(i).getAdsTypeCode()))
+				{
+					String fullpath   = list.get(i).getFilepath();
+					String key = list.get(i).getAdsTypeCode() + ":" + areaCode + ":" + list.get(i).getParamCode();
+					
+					if(adsMap.containsKey(key)){
+						AdsElement realEntity = adsMap.get(key);
+						fullpath = realEntity.getFilepath();
+					}
+					
+					String filename = fullpath.substring(fullpath.lastIndexOf("/")+1);
+					String resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
+					//TODO
+					String adfilename = list.get(i).getParamCode()+".png";
+					
+					if (!sentList.contains(adfilename))
+					{
+						log.info("areacode:" + areaCode + " adsCode: " + list.get(i).getAdsTypeCode() +  " download realtime file: "+ resourcPath + "/" + filename + " and rename it to " + adfilename);
+						ftpService.downloadFile(filename, adfilename, resourcPath, localPicPath);
+						sentList.add(adfilename);
+					}
+					
+				}
+				//NVOD挂角广告
+				else if (ConstantsAdsCode.CORNER_APPROACH.equals(list.get(i).getAdsTypeCode()))
+				{				
+					String[] filenames = list.get(i).getFilepath().split(ConstantsHelper.COMMA);
+					String key = list.get(i).getAdsTypeCode() + ":" + areaCode + ":" + list.get(i).getParamCode();
+					if(adsMap.containsKey(key)){
+						AdsElement realEntity = adsMap.get(key);
+						filenames = realEntity.getFilepath().split(ConstantsHelper.COMMA);
+					}
+					for (int j=0;j<filenames.length;j++)
+					{
+						String fullpath = filenames[j];
+						if(StringUtil.isBlank(fullpath)){
+							continue;
+						}
+						String filename = fullpath.substring(fullpath.lastIndexOf("/")+1);
+						String resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
+						//TODO
+						String adfilename = ConstantsAdsCode.CORNER_APPROACH_FILE.replace("*", i+"");
+						
+						if (!sentList.contains(adfilename))
+						{
+							log.info("areacode:" + areaCode + " adsCode: " + list.get(i).getAdsTypeCode() +  " download realtime file: "+ resourcPath + "/" + filename + " and rename it to " + adfilename);
+							ftpService.downloadFile(filename, adfilename, resourcPath, localPicPath);
+							sentList.add(adfilename);
+						}
+					}
+				}
 				//主菜单广告，素材轮询
 				else if (list.get(i).getFilepath().indexOf(ConstantsHelper.COMMA)>=0)
 				{				
@@ -996,7 +1074,8 @@ public class PushAdsServiceImpl implements PushAdsService {
 					 */		
 					//建立OCG服务器的FTP连接
 					if(!ocgService.connectFtpServer(ocgIp,ocgPort, ocgUser, ocgPwd)){
-						//sendFlagHelper.decreaseSendTimes(areaCode);
+						
+						sendFlagHelper.decreaseSendTimes(areaCode);
 						continue;
 					}
 		 			
@@ -1020,7 +1099,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 					boolean ocgPlaySuccess = ocgService.startOcgPlayByIp(ocgIp, sendPath, ConstantsHelper.ALL_CHANNEL, ConstantsHelper.UNT_TYPE);
 					
 					if(!ocgPlaySuccess){
-						//sendFlagHelper.decreaseSendTimes(areaCode);
+						sendFlagHelper.decreaseSendTimes(areaCode);
 						log.error("start ocg play failed! areacode : " + areaCode + ", ip: " + ocgIp);
 						continue;
 					}	

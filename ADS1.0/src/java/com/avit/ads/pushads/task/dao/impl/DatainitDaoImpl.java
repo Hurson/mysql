@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.avit.ads.pushads.task.bean.AdDefault;
 import com.avit.ads.pushads.task.bean.AdvertPosition;
+import com.avit.ads.pushads.task.bean.NvodMenuType;
 import com.avit.ads.pushads.task.bean.TChannelinfo;
 import com.avit.ads.pushads.task.bean.TChannelinfoNpvr;
 import com.avit.ads.pushads.task.bean.TLoopbackCategory;
@@ -64,6 +65,11 @@ public class DatainitDaoImpl extends CommonDaoImpl implements DatainitDao {
 	      List params = new ArrayList();
 	     // sb.append(" order by ads.id desc "); //按id升序排序
 	      return this.getListForAll(sb.toString(), params); 
+	}
+
+	public List<NvodMenuType> queryNvodMenuType() {
+		String hql = "from NvodMenuType";
+		return this.getListForAll(hql, new ArrayList());
 	}
 
 }

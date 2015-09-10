@@ -2,7 +2,7 @@
 <AdsConfig preSecond="11" >
 	<!-- 广告资源接口服务器配置 -->
 	<!-- 由于素材管理存储的是ＦＴＰ完整路径，故此出设空 -->
-	<AdResource ip="192.168.24.62" port="21" user="root" pwd="123456" adsResourcePath="/"/>
+	<AdResource ip="192.168.2.224" port="21" user="root" pwd="111111" adsResourcePath="/"/>
 	
 	<!--单向非实时广告  adsTempPath="/root/adstemp/start"-->	
 	<UnRealTimeAds preSecond="11" 
@@ -21,14 +21,14 @@
 	
 	<!--单向实时广告 -->
 	<!--
-		1 导航条广告
-		2  音量条广告 
+		1 导航条广告0202
+		2  音量条广告 0204
 		5  频道切换列表广告   02031/02032
-											4  菜单图片广告 6张图片
+											4  菜单图片广告 6张图片0201
 		3  收藏列表广告 02033/02034
-											7  音频广告
-											8  菜单外框
-		6  预告提示
+											
+											8  菜单外框0210
+		6  预告提示0205
 	-->
 	<RealTimeAds adsConfigFile="adConfig.js" adsTempConfigPath="/home/adstemp/realtimeconfig" 
 	             adsTargetConfigPath="/OC/unt/adConfig/" adsTempPath="/home/adstemp/realtime"
@@ -48,6 +48,9 @@
 		<Ads adsCode="02052" position="6" filename="next_event_bg.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
 		<Ads adsCode="02101" position="8" filename="tvLogo.jpg"  defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
 		<Ads adsCode="02102" position="8" filename="tvLogo.jpg" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
+		
+		<Ads adsCode="02402" position="6" filename="next_event_bg.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
+		<Ads adsCode="02412" position="6" filename="next_event_bg.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
 		
 	</RealTimeAds>
 	<!-- 双向实时广告    回看菜单，点播菜单 点播随片-->
