@@ -68,11 +68,18 @@ public class ConstantsAdsCode {
 	//单向主菜单广告
 	public static final String PUSH_MENU = "0201";
 	
+	//NVOD菜单广告
+	public static final String NVOD_MENU = "02402";
+	//挂角广告
+	public static final String CORNER_APPROACH = "02432";
+	
 	public static final String PUSH_MENU_HD = "02012";
 	public static final String PUSH_MENU_SD = "02011";
 	
 	public static final String PUSH_MENU_HD_FILE = "indexAd_";
 	public static final String PUSH_MENU_SD_FILE = "indexAd_sd_";
+	
+	public static final String CORNER_APPROACH_FILE = "corner_*.png";
 	//单向菜单视频外框广告  
 	public static final String PUSH_MENU_FRAME = "0210";
 	public static final String PUSH_MENU_FRAME_HD = "02102";
