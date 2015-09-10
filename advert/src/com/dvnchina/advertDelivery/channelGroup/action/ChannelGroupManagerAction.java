@@ -209,7 +209,6 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
 		
 			
 			channelListPage = channelGroupManagerService.queryChannelGroupRefList(channelQuery, channelListPage.getPageSize(), channelListPage.getPageNo());
-			channelGroupType = new String(channelGroupType.getBytes("iso8859-1"),"utf-8");
 			channelListPage.setChannelGroupType(channelGroupType);	
 		}catch(Exception e){
 			e.printStackTrace();
@@ -270,9 +269,8 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
        try {
            if(selectChannelQuery==null){
                selectChannelQuery = new ChannelInfo();
-               channelGroupType = new String(channelGroupType.getBytes("iso8859-1"),"utf-8");
            }
-
+           
            selectChannelQuery.setChannelGroupId(channelGroupId);
         	   
     	   selectchannelPage = channelGroupManagerService.selectChannelList(selectChannelQuery, selectchannelPage.getPageSize(), selectchannelPage.getPageNo(),channelGroupType);
