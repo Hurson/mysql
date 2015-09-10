@@ -801,8 +801,6 @@ function addselectContract() {
 					 //开机广告，显示 "投放区域"
 					  if (postions[i].positionCode=='01001' || postions[i].positionCode=='01002' || postions[i].positionCode=='01003'|| postions[i].positionCode=='01004')
 					{
-						document.getElementById("defaultflag").style.display="";
-						document.getElementById("ploy.defaultstart").style.display="";
 						document.getElementById("selectedspan14").style.display="";
 						
 					}

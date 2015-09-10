@@ -929,8 +929,6 @@ function addselectContract() {
 					 //开机画面广告
 					 if (postions[i].positionCode=='01001' || postions[i].positionCode=='01002')
 					{
-						document.getElementById("defaultflag").style.display="";        //是否默认
-						document.getElementById("ploy.defaultstart").style.display="";  //是否默认  （可以同上一元素合并）
 						document.getElementById("selectedspan14").style.display="";     //投放区域
 						
 					}
