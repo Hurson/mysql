@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import com.dvnchina.advertDelivery.constant.Constant;
 import com.dvnchina.advertDelivery.order.bean.Order;
+import com.dvnchina.advertDelivery.order.bean.OrderMaterialRelation;
 import com.dvnchina.advertDelivery.order.bean.PlayListGis;
 import com.dvnchina.advertDelivery.order.bean.playlist.BootImageInfo;
 import com.dvnchina.advertDelivery.order.bean.playlist.BootResourceInfo;
@@ -1795,16 +1796,17 @@ public class PlayListGisServiceImpl extends PlayListServiceImpl implements
 		//NVOD挂角广告
 		if(order.getPositionId()==54&& order.getPositionPackageType().intValue()==Constant.POSITION_TYPE_ONE_REAL_TIME){
 			//查询挂角的区域
-			List<String> areaCodeList = playListGisDao.getNVODAngleRelMateAreaCodeByOrder(order.getId());
+			List<OrderMaterialRelation> areaCodeList = playListGisDao.getNVODAngleRelMateAreaCodeByOrder(order.getId());
 			//查询订单与素材的关系
 			List<PrecisePlayListGisRel> pList = playListGisDao.getNVODAnglePrecisePlayListByOrder(order.getId());
 			//按区域存放播出单
-			for(String areaCode:areaCodeList){
+			for(OrderMaterialRelation mate:areaCodeList){
 				PlayListGis playList = new PlayListGis();
 				int pollIndex = 1;
 				StringBuffer path=new StringBuffer();//每个区域四个素材路径
-				for(PrecisePlayListGisRel pp : pList){
-					if(areaCode.equals(pp.getAreaCode())){
+				for(PrecisePlayListGisRel pp : pList ){
+					if(mate.getAreaCode().equals(pp.getAreaCode())&& mate.getStartTime().equals(pp.getStartTime())
+							&& mate.getEndTime().equals(pp.getEndTime())){
 						if(1==pollIndex){
 							String contentId = getContentId(pp.getMateId(), pp.getResourceType());//播出单的内容ID
 							//String contentPath = pp.getPath();//播出单的素材路径
@@ -1822,6 +1824,7 @@ public class PlayListGisServiceImpl extends PlayListServiceImpl implements
 							playList.setOrderId(order.getId());
 							playList.setPloyId(pp.getPloyId());
 							playList.setState(Constant.VALID);
+							playList.setServiceId("[\"0\"]");//和频道无关
 							//playList.setMenuTypeCode(pp.getMenuTypeCode());
 							//ps.add(playList);
 						}
@@ -1837,6 +1840,7 @@ public class PlayListGisServiceImpl extends PlayListServiceImpl implements
 					
 				}
 			}
+			return ps;
 		}
 		Map<String,String> serviceIdMap = new HashMap<String,String>();
 		Map<String,String> categoryIdMap = new HashMap<String,String>();

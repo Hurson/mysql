@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.dvnchina.advertDelivery.order.bean.OrderMaterialRelation;
 import com.dvnchina.advertDelivery.order.bean.PlayListGis;
 import com.dvnchina.advertDelivery.order.bean.playlist.MaterialBean;
 import com.dvnchina.advertDelivery.order.bean.playlist.PloyPlayListGisRel;
@@ -161,6 +162,6 @@ public interface PlayListGisDao extends PlayListDao {
 	
 	public List<PrecisePlayListGisRel> getNVODAnglePrecisePlayListByOrder(Integer orderId);
 	
-	public List<String> getNVODAngleRelMateAreaCodeByOrder(Integer orderId);
+	public List<OrderMaterialRelation> getNVODAngleRelMateAreaCodeByOrder(Integer orderId);
 	
 }

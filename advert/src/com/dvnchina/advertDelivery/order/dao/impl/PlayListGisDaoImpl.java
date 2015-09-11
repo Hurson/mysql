@@ -19,6 +19,7 @@ import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.jdbc.support.lob.LobCreator;
 
 import com.dvnchina.advertDelivery.constant.Constant;
+import com.dvnchina.advertDelivery.order.bean.OrderMaterialRelation;
 import com.dvnchina.advertDelivery.order.bean.PlayListGis;
 import com.dvnchina.advertDelivery.order.bean.playlist.PloyPlayListGisRel;
 import com.dvnchina.advertDelivery.order.bean.playlist.PrecisePlayListGisRel;
@@ -773,14 +774,18 @@ public class PlayListGisDaoImpl extends PlayListDaoImpl implements
 				});
 		return pp;
 	}
-	public List<String> getNVODAngleRelMateAreaCodeByOrder(Integer orderId){
-		String sql ="select g.area_code from t_order_mate_rel g where g.ORDER_ID=? GROUP BY g.area_code";
-		List<String> pp=getJdbcTemplate().query(sql, new Object[] { orderId },new RowMapper<String>(){
+	public List<OrderMaterialRelation> getNVODAngleRelMateAreaCodeByOrder(Integer orderId){
+		
+		String sql ="SELECT g.area_code,g.start_time,g.end_time FROM t_order_mate_rel g WHERE g.ORDER_ID =? GROUP BY g.area_code,g.start_time,g.end_time";
+		List<OrderMaterialRelation> pp=getJdbcTemplate().query(sql, new Object[] { orderId },new RowMapper<OrderMaterialRelation>(){
 			@Override
-			public String mapRow(ResultSet arg0, int arg1) throws SQLException {
+			public OrderMaterialRelation mapRow(ResultSet arg0, int arg1) throws SQLException {
 				// TODO Auto-generated method stub
-				String areaCode = arg0.getString("area_code");
-				return areaCode;
+				OrderMaterialRelation materialRelation = new OrderMaterialRelation();
+				materialRelation.setAreaCode(arg0.getString("area_code"));
+				materialRelation.setEndTime(arg0.getString("end_time"));
+				materialRelation.setStartTime(arg0.getString("start_time"));
+				return materialRelation;
 			}
 			
 		});
