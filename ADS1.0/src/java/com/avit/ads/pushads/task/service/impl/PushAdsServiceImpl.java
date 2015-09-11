@@ -986,7 +986,7 @@ public class PushAdsServiceImpl implements PushAdsService {
 						String filename = fullpath.substring(fullpath.lastIndexOf("/")+1);
 						String resourcPath = fullpath.substring(0,fullpath.lastIndexOf("/"));
 						//TODO
-						String adfilename = ConstantsAdsCode.CORNER_APPROACH_FILE.replace("*", i+"");
+						String adfilename = ConstantsAdsCode.CORNER_APPROACH_FILE.replace("*", j+"");
 						
 						if (!sentList.contains(adfilename))
 						{

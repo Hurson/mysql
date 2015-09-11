@@ -50,7 +50,7 @@
 		<Ads adsCode="02102" position="8" filename="tvLogo.jpg" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
 		
 		<Ads adsCode="02402" position="6" filename="next_event_bg.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
-		<Ads adsCode="02412" position="6" filename="next_event_bg.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
+		<Ads adsCode="02432" position="6" filename="next_event_bg.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
 		
 	</RealTimeAds>
 	<!-- 双向实时广告    回看菜单，点播菜单 点播随片-->

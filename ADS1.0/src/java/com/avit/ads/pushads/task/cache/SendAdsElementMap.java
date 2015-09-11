@@ -63,15 +63,18 @@ public class SendAdsElementMap {
 					AdsElement tempElement = new AdsElement(ads.getAdsCode(),"0",menuType.getTypeCode(),ads.getDefaultRes());
 					adsMap.put(ads.getAdsCode()+":0:"+menuType.getTypeCode(), tempElement);
 				}
-				continue;
 				
-			}
-			//添加默认素材　记录
-			//key=adsTypeCode:0:0 value= AdsConfigElement(高标清特征值采用相同素材)		
-			for (int j=0;j<ChannelMap.getChannelMap().size();j++)
-			{
-				AdsElement tempElement = new AdsElement(ads.getAdsCode(),"0",ChannelMap.getChannelMap().get(j).getServiceId(),ads.getDefaultRes());
-				adsMap.put(ads.getAdsCode()+":0:"+ChannelMap.getChannelMap().get(j).getServiceId(), tempElement);
+			}else if(ConstantsAdsCode.CORNER_APPROACH.equals(ads.getAdsCode())){
+				AdsElement tempElement = new AdsElement(ads.getAdsCode(),"0","0",ads.getDefaultRes());
+				adsMap.put(ads.getAdsCode()+":0:"+"0", tempElement);
+			}else{
+				//添加默认素材　记录
+				//key=adsTypeCode:0:0 value= AdsConfigElement(高标清特征值采用相同素材)		
+				for (int j=0;j<ChannelMap.getChannelMap().size();j++)
+				{
+					AdsElement tempElement = new AdsElement(ads.getAdsCode(),"0",ChannelMap.getChannelMap().get(j).getServiceId(),ads.getDefaultRes());
+					adsMap.put(ads.getAdsCode()+":0:"+ChannelMap.getChannelMap().get(j).getServiceId(), tempElement);
+				}
 			}
 			
 		}
@@ -116,23 +119,24 @@ public class SendAdsElementMap {
 					AdsElement tempElement = new AdsElement(ads.getAdsCode(),"0",menuType.getTypeCode(),ads.getDefaultRes());
 					adsMap.put(ads.getAdsCode()+":0:"+menuType.getTypeCode(), tempElement);
 				}
-				continue;
-				
-			}
-			//添加默认素材　记录
-			//key=adsTypeCode:0:0 value= AdsConfigElement(高标清特征值采用相同素材)			
-			for (int j=0;j<ChannelMap.getChannelMap().size();j++)
-			{
-				AdsElement tempElement = new AdsElement(InitConfig.getAdsConfig().getRealTimeAds().getAdsList().get(i).getAdsCode(),"0",ChannelMap.getChannelMap().get(j).getServiceId(),InitConfig.getAdsConfig().getRealTimeAds().getAdsList().get(i).getDefaultRes());
-				AdsElement element=null;
-				String key = InitConfig.getAdsConfig().getRealTimeAds().getAdsList().get(i).getAdsCode()+":0:"+ChannelMap.getChannelMap().get(j).getServiceId();
-				element = adsMap.get(key);
-				if (element==null)
+			}else if(ConstantsAdsCode.CORNER_APPROACH.equals(ads.getAdsCode())){
+				AdsElement tempElement = new AdsElement(ads.getAdsCode(),"0","0",ads.getDefaultRes());
+				adsMap.put(ads.getAdsCode()+":0:"+"0", tempElement);
+			}else{
+				//添加默认素材　记录
+				//key=adsTypeCode:0:0 value= AdsConfigElement(高标清特征值采用相同素材)			
+				for (int j=0;j<ChannelMap.getChannelMap().size();j++)
 				{
-					adsMap.put(key, tempElement);
+					AdsElement tempElement = new AdsElement(InitConfig.getAdsConfig().getRealTimeAds().getAdsList().get(i).getAdsCode(),"0",ChannelMap.getChannelMap().get(j).getServiceId(),InitConfig.getAdsConfig().getRealTimeAds().getAdsList().get(i).getDefaultRes());
+					AdsElement element=null;
+					String key = InitConfig.getAdsConfig().getRealTimeAds().getAdsList().get(i).getAdsCode()+":0:"+ChannelMap.getChannelMap().get(j).getServiceId();
+					element = adsMap.get(key);
+					if (element==null)
+					{
+						adsMap.put(key, tempElement);
+					}
 				}
 			}
-			
 		}
 		lock.unlock();
 		System.out.println();
