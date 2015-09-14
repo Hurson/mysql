@@ -23,6 +23,27 @@
 
 <title>策略维护</title>
 <script>
+
+window.onload = function() {
+	
+	 refreshSelectList();
+}
+function  refreshSelectList()
+{
+	//var optionSelelct =window.dialogArguments.document.getElementById("precise.groupId");//
+	var optionSelelct =window.dialogArguments.document.getElementsByName("preciseUiBean.typeCode");
+    var flag=false;
+    		
+	for (var j=0;j<optionSelelct.length;j++)
+	{
+		 var data_index = "data_"+optionSelelct[j].value;
+	     var obj= document.getElementById(data_index);
+	     if (obj!=null)
+	     {
+	    	 obj.checked=true;
+	     }
+	}
+}
 function query() {
     document.forms[0].submit();
     
@@ -39,7 +60,7 @@ function selectData(){
 	var strdatas = selectData.split(",");
 	for (var i=0;i<strdatas.length;i++)	{
 		var dataPropertys= strdatas[i].split("_");
-		var optionSelelct =window.dialogArguments.document.getElementsByName("menuType");
+		var optionSelelct =window.dialogArguments.document.getElementsByName("preciseUiBean.typeCode");
 		var flag=false;
 		
           for (var j=0;j<optionSelelct.length;j++){
@@ -103,7 +124,7 @@ function selectData(){
                     <c:forEach items="${pageType.dataList}" var="typeInfo" varStatus="pl">
                         <tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
                             <td>
-                                <input id="data_${typeInfo.id}" type="checkbox" value="<c:out value='${typeInfo.typeCode}_${typeInfo.typeName}'/>" name="dataIds"/>
+                                <input id="data_${typeInfo.typeCode}" type="checkbox" value="<c:out value='${typeInfo.typeCode}_${typeInfo.typeName}'/>" name="dataIds"/>
                              </td>
                             <td width="45%" align="center">
                          

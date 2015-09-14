@@ -1279,8 +1279,7 @@ function selectChannelGroup()
 	if(modelWin){	
 	} 
 }
-function 
-()
+function  selectType()
 {
 	var	height = 550;
 	var width=750;
