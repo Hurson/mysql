@@ -35,9 +35,7 @@ var selectData="";
     	if(selectData==""){
     	    selectData=getCheckValue("channelIds");
     	}
-    	var channelGroupId=document.getElementById("channelGroupId").value;
-    	var i = new Number(channelGroupId);
-    	document.forms[0].action="<%=path %>/page/channelGroup/saveChannelGroupRef.do?channelGroupId="+i;
+    	document.forms[0].action="<%=path %>/page/channelGroup/saveChannelGroupRef.do";
     	document.forms[0].submit(); 
     	parent.refreshChannelList();
         parent.easyDialog.close();

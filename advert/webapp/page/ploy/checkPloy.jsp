@@ -806,8 +806,6 @@ function addselectContract() {
 					}
 					//推荐广告位，显示"投放区域"
 					  if(postions[i].positionCode=='02083'){
-						//document.getElementById("defaultflag").style.display="";
-						//document.getElementById("ploy.defaultstart").style.display="";
 						document.getElementById("selectedspan14").style.display="";
 					  }
 					//直播频道组
@@ -869,10 +867,14 @@ function addselectContract() {
 					 if(postions[i].positionCode=='02402'){
 							document.getElementById("selectedspan14").style.display=""; 
 							document.getElementById("selectedspan18").style.display=""; 
+							document.getElementById("assetployNumber").style.display="none";
+						     document.getElementById("ploy.ployNumber").style.display="none";
 						}
 					//NVOD挂角广告
 						if(postions[i].positionCode=='20432'){
 							document.getElementById("selectedspan14").style.display="";
+							document.getElementById("assetployNumber").style.display="none";
+						     document.getElementById("ploy.ployNumber").style.display="none";
 						}
 						//NVOD字幕广告
 						if(postions[i].positionCode=='02422'){
@@ -881,6 +883,8 @@ function addselectContract() {
 							document.getElementById("selectedspan11").style.display="";
 							document.getElementById("selectedspan13").style.display="";
 							document.getElementById("selectedspan17").style.display="";
+							document.getElementById("assetployNumber").style.display="none";
+						    document.getElementById("ploy.ployNumber").style.display="none";
 						}
 					//影片精准，  针对双向实时请求类广告
 					 if (postions[i].isAsset==1)
@@ -1118,18 +1122,16 @@ function showChannelGroupRef(channelGroupId) {
                         <option value=${positionVar.id} <c:if test="${positionVar.id==ploy.positionId}">
                             	 selected
                             	</c:if>>
-                           
-                            	
                             ${positionVar.positionName}
                 </option>
                </c:forEach>
                 </select>
                  <input  disabled maxlength="30" id="positionCode" name="positionCode" type="text" style="width: 40px" value="${ploy.ployName}"/>
-				<span id="assetployNumber" >&nbsp;&nbsp;&nbsp;&nbsp;投放次数：</span>
-			      	<input disabled onkeypress="return validateSpecialCharacter();"  maxlength="5" id="ploy.ployNumber" name="ploy.ployNumber" type="text" style="width: 50px" value="${ploy.ployNumber}"/>
+				<span id="assetployNumber" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;投放次数：</span>
+			      	<input disabled onkeypress="return validateSpecialCharacter();"  maxlength="5" id="ploy.ployNumber" name="ploy.ployNumber" type="hidden"  value="${ploy.ployNumber}"/>
 			      
-			      <span id="defaultflag" >&nbsp;&nbsp;&nbsp;&nbsp;是否默认：</span>	
-			         			 <select disabled id="ploy.defaultstart" name="ploy.defaultstart" style="width:40px">
+			      <span id="defaultflag" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;是否默认：</span>	
+			         			 <select disabled id="ploy.defaultstart" name="ploy.defaultstart" style="display: none;">
               						<option value=0 <c:if test="${0==ploy.defaultstart}">
                             	 selected
                             	</c:if>>否</option>

@@ -102,7 +102,8 @@ function query() {
     }
     function test(){
     	 var channelGroupId=document.getElementById("channelGroupId").value;
-         window.location.href="<%=path%>/page/channelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId;
+    	 var channelGroupType=document.getElementById("channelGroupType").value;
+         window.location.href="<%=path%>/page/channelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType;
    }
     
     

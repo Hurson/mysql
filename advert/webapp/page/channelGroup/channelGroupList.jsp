@@ -82,12 +82,11 @@ function query() {
     }
 
 function modifyChannelGroupRef(channelGroupId,channelGroupType) {
-    window.location.href="<%=path %>/page/channelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType;
-  
+    window.location.href="<%=path %>/page/channelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType; 
     }
     
-    function modifyData(channelGroupId) {
-      window.location.href="<%=path %>/page/channelGroup/initChannelGroup.do?channelGroupId="+channelGroupId;
+    function modifyData(channelGroupId,channelGroupType) {
+      window.location.href="<%=path %>/page/channelGroup/initChannelGroup.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType;
     }
 </script>
 <style>
@@ -151,7 +150,7 @@ function modifyChannelGroupRef(channelGroupId,channelGroupType) {
                                 <input type="checkbox" value="<c:out value='${channelGroupInfo.id}'/>" name="dataIds"/>
                              </td>
                             <td>
-                                <a href="javascript:modifyData('${channelGroupInfo.id}');">${channelGroupInfo.name}</a>
+                                <a href="javascript:modifyData('${channelGroupInfo.id}','${channelGroupInfo.type}');">${channelGroupInfo.name}</a>
                             </td>
                             <td>
                                 ${channelGroupInfo.code}

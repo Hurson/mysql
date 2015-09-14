@@ -116,7 +116,6 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
 		try {	        
 		    
 			channelGroupPage = channelGroupManagerService.queryChanelGroupList(channelGroupQuery, channelGroupPage.getPageSize(), channelGroupPage.getPageNo());
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("获取频道组列表时出现异常",e);
@@ -181,6 +180,7 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
         try{
         	int channelGroupId = Integer.valueOf(request.getParameter("channelGroupId"));      
             channelGroup = channelGroupManagerService.getChannelGroupByID(channelGroupId);
+            channelGroup.setType(channelGroupType);
         }catch(Exception e){
         	e.printStackTrace();
         	logger.error("初始化频道组信息异常", e);
@@ -206,8 +206,6 @@ public class ChannelGroupManagerAction extends BaseActionSupport<Object> impleme
 			{
 				channelQuery.setChannelGroupId(Integer.valueOf(channelGroupId));
 			}
-		
-			
 			channelListPage = channelGroupManagerService.queryChannelGroupRefList(channelQuery, channelListPage.getPageSize(), channelListPage.getPageNo());
 			channelListPage.setChannelGroupType(channelGroupType);	
 		}catch(Exception e){

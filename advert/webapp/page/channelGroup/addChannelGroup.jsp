@@ -117,30 +117,31 @@
             <td colspan="8">频道组基本信息 </td>
         </tr>
         <tr >
-            <td width="10%" align="right"><span class="required">*</span>频道组名称：</td>
-            <td width="25%">
+            <td width="15%" align="right"><span class="required">*</span>频道组名称：</td>
+            <td width="35%">
                 <input id="channelGroup.name" name="channelGroup.name" type="text"  value="${channelGroup.name}"/>
                 <input id="channelGroup.id" name="channelGroup.id" type="hidden" value="${channelGroup.id}"/>
                 <input id="channelGroup.operatorId" name="channelGroup.operatorId" type="hidden" value="${channelGroup.operatorId}"/>
                 <span id="channelGroupName_error" ></span>
             </td>
-			<td width="10%" align="right" ><span class="required">*</span>频道组编号：</td>
-            <td width="25%">
+			<td width="15%" align="right" ><span class="required">*</span>频道组编号：</td>
+            <td width="35%">
                 <input id="channelGroup.code" name="channelGroup.code" type="text"  value="${channelGroup.code}"/>
                 <span id="channelGroupCode_error" ></span>
             </td>
-            <td width="10%" align="right" ><span class="required">*</span>频道组类型：</td>
-            <td width="25%">
-            	<select name="channelGroup.type" name="channelGroup.type" style="width:120px">
-            			<option value="视频直播类业务">视频直播类业务</option>
-            			<option value="音频直播类业务">音频直播类业务</option>
-            			<option value="NVOD业务">NVOD业务</option>
-				</select>
-			</td>
+            
         </tr>		 
         <tr>
+        		<td width="10%" align="right" ><span class="required">*</span>频道组类型：</td>
+        		<td width="25%">
+            	<select name="channelGroup.type" name="channelGroup.type" style="width:120px" <c:if test="${!empty channelGroup.type}">disabled</c:if>>
+            			<option value="视频直播类业务" <c:if test="${channelGroup.type=='视频直播类业务'}">selected="selected" </c:if>>视频直播类业务</option>
+            			<option value="音频直播类业务" <c:if test="${channelGroup.type=='音频直播类业务'}">selected="selected" </c:if>>音频直播类业务</option>
+            			<option value="NVOD业务" <c:if test="${channelGroup.type=='NVOD业务'}">selected="selected" </c:if>>NVOD业务</option>
+				</select>
+				</td>
                 <td width="12%" align="right">描 述：</td>
-                <td width="88%" colspan="8">
+                <td width="88%" colspan="7">
                     <textarea style="" id="channelGroup.channelDesc" name="channelGroup.channelDesc" rows="5">${channelGroup.channelDesc}</textarea>
                     <span id="channelGroupDesc_error"></span>
                 </td>
