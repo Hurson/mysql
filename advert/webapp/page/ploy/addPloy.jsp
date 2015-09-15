@@ -162,7 +162,7 @@ var firstflag=true;
 	if(nvodType!=null && nvodType.length>0)
 	{
 		document.getElementById("selectedtable18").style.display="";
-		document.getElementById("selectedOption18").checked=true;
+		document.getElementById("selectedOption18").checked="checked";
 	}
 	//背景广播
 	var radio = document.getElementsByName("bchannelgroup"); 
@@ -2232,7 +2232,7 @@ function exporttvn(objname)
         <span style="display: none;" id="selectedspan14"><input type="checkbox" name="selectedOption14"  id="selectedOption14" value="14" onclick="selecttable(this,'14');"/>投放区域</span>
         <span style="display: none;" id="selectedspan15"><input type="checkbox" name="selectedOption15"  id="selectedOption15" value="15" onclick="selecttable(this,'15');"/>广播频道组</span>
         <span style="display: none;" id="selectedspan17"><input type="checkbox" name="selectedOption17"  id="selectedOption17" value="17" onclick="selecttable(this,'17');"/>TVN号</span>
-        <span style="display: none;" id="selectedspan18"><input type="checkbox" name="selectedOption18"  id="selectedOption17" value="18" onclick="selecttable(this,'18');"/>NVOD类型</span>
+        <span style="display: none;" id="selectedspan18"><input type="checkbox"  name="selectedOption18"  id="selectedOption18" value="18" onclick="selecttable(this,'18');"/>NVOD类型</span>
          <input id="saveBtn" type="button" class="btn" value="保 存" onclick="submitForm();"/>&nbsp;&nbsp;&nbsp;&nbsp;
          <input type="button" class="btn" value="取消" onclick="history.back(-1);"/>
        </td>

@@ -144,7 +144,13 @@ window.onload = function() {
 		document.getElementById("selectedtable14").style.display="";
 		document.getElementById("selectedOption14").checked=true;
 	}
-	
+	//类型选择
+	var nvodType = document.getElementsByName("preciseUiBean.typeCode");
+	if(nvodType!=null && nvodType.length>0)
+	{
+		document.getElementById("selectedtable18").style.display="";
+		document.getElementById("selectedOption18").checked="checked";
+	}
 	//背景广播
 	var radio = document.getElementsByName("bchannelgroup"); 
 	if (radio!=null && radio.length>0)
@@ -1167,6 +1173,7 @@ function showChannelGroupRef(channelGroupId) {
       	<span id="selectedspan14"><input type="checkbox" disabled name="selectedOption14"  id="selectedOption14" value="14" />投放区域</span>
         <span id="selectedspan15"><input type="checkbox" disabled name="selectedOption15"  id="selectedOption15" value="15" />广播频道组</span>
         <span id="selectedspan17"><input type="checkbox" disabled name="selectedOption17"  id="selectedOption17" value="17" />TVN号</span>
+        <span id="selectedspan18"><input type="checkbox" disabled name="selectedOption18"  id="selectedOption18" value="18" />类型选择</span>
        </td>
         </tr>
   </table>
