@@ -948,7 +948,7 @@ function addselectContract() {
 					}
 					
 					//主菜单字幕广告
-					if (postions[i].positionCode=='02301'||postions[i].positionCode=='02432')
+					if (postions[i].positionCode=='02301')
 					{
 						document.getElementById("selectedspan14").style.display="";     //投放区域
 					}
@@ -1038,8 +1038,10 @@ function addselectContract() {
 						document.getElementById("selectedspan18").style.display=""; 
 					}
 					//NVOD挂角广告
-					if(postions[i].positionCode=='20432'){
+					if(postions[i].positionCode=='02432'){
 						document.getElementById("selectedspan14").style.display="";
+						document.getElementById("selectedspan10").style.display="none";
+
 					}
 					//NVOD字幕广告
 					if(postions[i].positionCode=='02422'){

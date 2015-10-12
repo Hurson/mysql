@@ -877,8 +877,9 @@ function addselectContract() {
 						     document.getElementById("ploy.ployNumber").style.display="none";
 						}
 					//NVOD挂角广告
-						if(postions[i].positionCode=='20432'){
+						if(postions[i].positionCode=='02432'){
 							document.getElementById("selectedspan14").style.display="";
+							document.getElementById("selectedspan10").style.display="none";
 							document.getElementById("assetployNumber").style.display="none";
 						     document.getElementById("ploy.ployNumber").style.display="none";
 						}
