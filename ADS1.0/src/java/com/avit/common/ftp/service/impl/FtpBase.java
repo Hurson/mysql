@@ -123,7 +123,7 @@ public class FtpBase {
 				FtpClient = new FTPClient();
 				FtpClient.setControlEncoding(ENCODING);
 				FtpClient.setDefaultPort(port);
-				//FtpClient.setConnectTimeout(5000);
+				FtpClient.setConnectTimeout(10000);
 				FtpClient.connect(this.ip);
 				FtpClient.login(this.username, this.password);
 

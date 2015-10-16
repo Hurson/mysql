@@ -79,7 +79,7 @@ public class ConstantsAdsCode {
 	public static final String PUSH_MENU_HD_FILE = "indexAd_";
 	public static final String PUSH_MENU_SD_FILE = "indexAd_sd_";
 	
-	public static final String CORNER_APPROACH_FILE = "corner_*.png";
+	public static final String CORNER_APPROACH_FILE = "corner*.png";
 	//单向菜单视频外框广告  
 	public static final String PUSH_MENU_FRAME = "0210";
 	public static final String PUSH_MENU_FRAME_HD = "02102";

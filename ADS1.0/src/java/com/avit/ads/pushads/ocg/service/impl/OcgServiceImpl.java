@@ -925,6 +925,7 @@ public class OcgServiceImpl implements OcgService {
 		}
 
 		String sendMsg = helper.toXML(uNTMessage);
+		logger.info("SendMsg=【"+sendMsg+"】");
 		String destPath =InitConfig.getConfigMap().get(ConstantsHelper.DEST_FILE_PATH) + File.separator + areaCode;
 		
 		String logPath = InitConfig.getConfigMap().get(ConstantsHelper.LOG_FILE_PATH)+File.separator+ConstantsHelper.LOG_FILE_NAME;
@@ -963,7 +964,7 @@ public class OcgServiceImpl implements OcgService {
 				untDao.updateVersion(areaCode, sendType);
 			}
 			if(!ocgExist){
-				String errMsg = "t_ocginfo表未配置区域【" + areaCode + "】的OCG信息和频点信息";
+				String errMsg = "未配置区域【" + areaCode + "】的频点tsId【"+tsId+"】信息";
 				logger.error(errMsg);
 				warnHelper.writeWarnMsgToDb(areaCode, errMsg);
 			}

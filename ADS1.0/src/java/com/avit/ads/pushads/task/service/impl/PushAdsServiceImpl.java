@@ -459,7 +459,8 @@ public class PushAdsServiceImpl implements PushAdsService {
 						log.info("adGis.id="+adGis.getId()+" data is error");
 						continue;
 					}
-					if (adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_FRAME_HD) || adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_FRAME_SD) ||adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_HD) ||adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_SD) )
+					if (adGis.getAdSiteCode().equals(ConstantsAdsCode.NVOD_MENU) || adGis.getAdSiteCode().equals(ConstantsAdsCode.CORNER_APPROACH) ||
+							adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_FRAME_HD) || adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_FRAME_SD) ||adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_HD) ||adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_SD) )
 					{
 						//sendflag=true;
 						String areaCode = areaList.get(0);
@@ -595,7 +596,8 @@ public class PushAdsServiceImpl implements PushAdsService {
 						log.info("adGis.id="+adGis.getId()+" data is error");
 						continue;
 					}
-					if (adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_FRAME_HD) || adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_FRAME_SD) ||adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_HD) ||adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_SD) )
+					if (adGis.getAdSiteCode().equals(ConstantsAdsCode.CORNER_APPROACH) || adGis.getAdSiteCode().equals(ConstantsAdsCode.NVOD_MENU)||
+							adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_FRAME_HD) || adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_FRAME_SD) ||adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_HD) ||adGis.getAdSiteCode().equals(ConstantsAdsCode.PUSH_MENU_SD) )
 					{
 						//sendflag=true;
 						String areaCode = areaList.get(0);
