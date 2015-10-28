@@ -529,6 +529,11 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 					//ployTimeCGroup.setAreas("152000000000");
 					ployTimeCGroup.setAreas(getLoginUser().getAreaCodes());
 				}
+				/*if(preciseUiBean.getTypeCode()==null&&preciseUiBean.getTypeName()==null){
+					Integer ployId = ploy.getPloyId();
+					List typeMenuList = ployService.getNvodInfoByPloyID(ployId);
+					preciseUiBean.setTypeMenuList(typeMenuList);
+				}*/
 				if (null==bchannelgroup || bchannelgroup=="")
 				{
 					bchannelgroup="0";
@@ -563,7 +568,23 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 				else
 				{
 					ploy.setCustomerId(0);
-				}				
+				}
+				if(preciseUiBean.getTypeCode()==null&&preciseUiBean.getTypeName()==null){
+					pageMenutype = preciseservice.queryTypelist(20,1);
+					StringBuffer tmpCode = new StringBuffer();
+					StringBuffer tmpName = new StringBuffer();
+					for(int i=0;i<pageMenutype.getDataList().size();i++){
+						MenuType tmp = (MenuType)pageMenutype.getDataList().get(i);
+						int j = 0;
+						tmpCode.append(tmp.getTypeCode()+",");
+						tmpName.append(tmp.getTypeName()+",");
+					}
+					String typeCode = tmpCode.substring(0,tmpCode.length()-1);
+					String typeName = tmpName.substring(0,tmpName.length()-1);
+					//typeCode = pageMenutype.getDataList().get(0);
+					preciseUiBean.setTypeCode(typeCode);
+					preciseUiBean.setTypeName(typeName);
+				}
 				flag = ployService.savePloy(ployTimeCGroup, preciseUiBean, ploy);
 			} else if(ploy != null && ploy.getPloyId() > 0) {
 				operType = "operate.update";

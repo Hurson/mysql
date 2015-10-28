@@ -112,6 +112,25 @@ public class PloyServiceImpl implements PloyService {
 	{
 		return ployDao.getPloyTimeCGroupByPloyID(ployId, channelGroupType);
 	}
+	public List getNvodInfoByPloyID(int ployId){
+		List<TPreciseMatchBk> preciseList = ployDao.queryPreciseList(String.valueOf(ployId));
+		PreciseUiBean preciseUiBean=null;
+		List typeMenuList = new ArrayList();
+		if (preciseList!=null && preciseList.size()>0){
+			for(int i=0;i<preciseList.size();i++){
+				if(preciseList.get(i).getMenuTypeCode()!=null && !preciseList.get(i).getMenuTypeCode().equals(""))
+				{
+					PreciseData datatemp = new PreciseData();
+					datatemp.setDatavalue(preciseList.get(i).getMenuTypeCode());
+					datatemp.setDataname(preciseList.get(i).getMatchName());
+					typeMenuList.add(datatemp);
+				}
+			}
+			return typeMenuList;
+		}else{
+			return null;
+		}
+	}
 	public PreciseUiBean getPreciseUiBeanByPloyID(int ployId)
 	{
 		List<TPreciseMatchBk> preciseList = ployDao.queryPreciseList(String.valueOf(ployId));
@@ -289,7 +308,7 @@ public class PloyServiceImpl implements PloyService {
 			preciseUiBean.setUserindustrysList(userindustrysList);
 			preciseUiBean.setUserlevelsList(userlevelsList);
 			preciseUiBean.setTvnNumberList(tvnNumberList);
-			preciseUiBean.setTypeMenuList(typeMenuList);;
+			preciseUiBean.setTypeMenuList(typeMenuList);
 			
 		}
 		return preciseUiBean;

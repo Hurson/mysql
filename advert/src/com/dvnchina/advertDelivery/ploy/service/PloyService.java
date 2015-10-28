@@ -22,6 +22,7 @@ import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
  */
 public interface PloyService {
 	
+	
 	public PageBeanDB getAdPloyList(PloyBackup ploy,AdvertPosition adPosition,Integer pageSize, Integer pageNumber, String userIds);
     
 	public PageBeanDB getAdPositionByPackageIds(String packageIds, Integer pageSize, Integer pageNumber);
@@ -53,7 +54,13 @@ public interface PloyService {
  	 * @return the ploy by ploy id
  	 */
     PloyBackup getPloyByPloyID(int ployId);
-	  
+	 /**
+	  * 如果NVOD不选择 则自动添加所有
+	  * 策略ID
+	  * @author hudongyu
+	  * @return NvodInfo 
+	  */
+    public List getNvodInfoByPloyID(int ployId);
   	/**
   	 * 获取策略的区域频道信息   
   	 * 策略ID.
