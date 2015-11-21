@@ -41,7 +41,7 @@
             document.getElementById("channelGroup.name").disabled="";
             document.getElementById("channelGroup.code").disabled="";
 	        document.getElementById("channelGroup.channelDesc").disabled="";
-			
+	        document.getElementById("channelGroup.type").disabled="";
 			if(checkChannelGroup()){
     		return ;
 		    }		
@@ -134,7 +134,7 @@
         <tr>
         		<td width="10%" align="right" ><span class="required">*</span>频道组类型：</td>
         		<td width="25%">
-            	<select name="channelGroup.type" name="channelGroup.type" style="width:120px" <c:if test="${!empty channelGroup.type}">disabled</c:if>>
+            	<select name="channelGroup.type" id="channelGroup.type" style="width:120px" <c:if test="${!empty channelGroup.type}">disabled</c:if>>
             			<option value="视频直播类业务" <c:if test="${channelGroup.type=='视频直播类业务'}">selected="selected" </c:if>>视频直播类业务</option>
             			<option value="音频直播类业务" <c:if test="${channelGroup.type=='音频直播类业务'}">selected="selected" </c:if>>音频直播类业务</option>
             			<option value="NVOD业务" <c:if test="${channelGroup.type=='NVOD业务'}">selected="selected" </c:if>>NVOD业务</option>

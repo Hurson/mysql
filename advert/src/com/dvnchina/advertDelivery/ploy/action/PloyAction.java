@@ -569,7 +569,7 @@ public class PloyAction extends BaseAction implements ServletRequestAware{
 				{
 					ploy.setCustomerId(0);
 				}
-				if(preciseUiBean.getTypeCode()==null&&preciseUiBean.getTypeName()==null){
+				if(ploy.getPositionId()==51&&preciseUiBean.getTypeCode()==null&&preciseUiBean.getTypeName()==null){
 					pageMenutype = preciseservice.queryTypelist(20,1);
 					StringBuffer tmpCode = new StringBuffer();
 					StringBuffer tmpName = new StringBuffer();
