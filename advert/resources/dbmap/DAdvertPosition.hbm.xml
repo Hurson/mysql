@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.dvnchina.advertDelivery.position.bean.DAdvertPosition" table="D_ADVERTPOSITION"  >
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" length="10" />
+        </id>
+        <property name="positionCode" type="java.lang.String">
+            <column name="POSITION_CODE" length="20" />
+        </property>
+        <property name="positionName" type="java.lang.String">
+            <column name="POSITION_NAME" length="100" />
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="DESCRIPTION" length="255" />
+        </property>
+        <property name="imageRuleId" type="java.lang.Integer">
+            <column name="IMAGE_RULE_ID" length="10" />
+        </property>
+        <property name="videoRuleId" type="java.lang.Integer">
+            <column name="VIDEO_RULE_ID" length="10" />
+        </property>
+        <property name="textRuleId" type="java.lang.Integer">
+            <column name="TEXT_RULE_ID" length="10" />
+        </property>
+        <property name="questionRuleId" type="java.lang.Integer">
+            <column name="QUESTION_RULE_ID" length="10" />
+        </property>
+        <property name="isHD" type="java.lang.Integer">
+            <column name="IS_HD" length="1" />
+        </property>
+        <property name="isAdd" type="java.lang.Integer">
+            <column name="IS_ADD" length="1" />
+        </property>
+        <property name="isLoop" type="java.lang.Integer">
+            <column name="IS_LOOP" length="1" />
+        </property>
+        <property name="loopCount" type="java.lang.Integer">
+            <column name="LOOP_COUNT" length="2" />
+        </property>
+        <property name="deliveryMode" type="java.lang.Integer">
+            <column name="DELIVERY_MODE" length="1" />
+        </property>
+        <property name="price" type="java.lang.String">
+            <column name="PRICE" length="10" />
+        </property>
+        <property name="discount" type="java.lang.String">
+            <column name="DISCOUNT" length="10" />
+        </property>
+        <property name="positionPackageId" type="java.lang.Integer">
+            <column name="POSITION_PACKAGE_ID" length="10" />
+        </property>
+        <property name="backgroundPath" type="java.lang.String">
+            <column name="BACKGROUND_PATH" length="255" />
+        </property>
+        <property name="coordinate" type="java.lang.String">
+            <column name="COORDINATE" length="20" />
+        </property>
+        <property name="widthHeight" type="java.lang.String">
+            <column name="WIDTH_HEIGHT" length="20" />
+        </property>
+        <property name="isAllTime" type="java.lang.Integer">
+            <column name="IS_ALLTIME" length="1" />
+        </property>
+        <property name="isText" type="java.lang.Integer">
+            <column name="IS_TEXT" length="1" />
+        </property>
+        <property name="isImage" type="java.lang.Integer">
+            <column name="IS_IMAGE" length="1" />
+        </property>
+        <property name="isVideo" type="java.lang.Integer">
+            <column name="IS_VIDEO" length="1" />
+        </property>
+        <property name="isQuestion" type="java.lang.Integer">
+            <column name="IS_QUESTION" length="1" />
+        </property>
+        <property name="isArea" type="java.lang.Integer">
+            <column name="IS_AREA" length="1" />
+        </property>
+        <property name="isChannel" type="java.lang.Integer">
+            <column name="IS_CHANNEL" length="1" />
+        </property>
+        <property name="isFreq" type="java.lang.Integer">
+            <column name="IS_FREQ" length="1" />
+        </property>
+        <property name="isLookback" type="java.lang.Integer">
+            <column name="IS_LOOKBACK" length="1" />
+        </property>
+        <property name="isPlayback" type="java.lang.Integer">
+            <column name="IS_PLAYBACK" length="1" />
+        </property>
+        <property name="isCharacteristic" type="java.lang.Integer">
+            <column name="IS_CHARACTERISTIC" length="1" />
+        </property>
+           <property name="isColumn" type="java.lang.Integer">
+            <column name="IS_COLUMN" length="1" />
+        </property>
+        <property name="isLookbackProduct" type="java.lang.Integer">
+            <column name="IS_LOOKBACK_PRODUCT" length="1" />
+        </property>
+        <property name="isAsset" type="java.lang.Integer">
+            <column name="IS_ASSET" length="1" />
+        </property>
+         <property name="isFollowAsset" type="java.lang.Integer">
+            <column name="IS_FOLLOW_ASSET" length="1" />
+        </property>
+        
+    </class>
+</hibernate-mapping>
