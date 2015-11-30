@@ -44,10 +44,10 @@ function firstSubmit(){
 				alert("用户被禁用！");
 			}else if(megs.result == 4){
 				var userId = megs.userId;
-				window.location.href="login.do?method=userLogin&userId="+userId;
+				window.location.href="logon.do?method=userLogin&userId="+userId;
 			}else if(megs.result == 0){
 				var userId = megs.userId;
-				window.location.href="login.do?method=userLogin&userId="+userId;
+				window.location.href="logon.do?method=userLogin&userId="+userId;
 			}
 			
 		}, 
