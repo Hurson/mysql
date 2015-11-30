@@ -1,4 +1,4 @@
-package com.avit.dtmb.position.bean;
+package com.avit.dtmb.order.bean;
 // default package
 
 import static javax.persistence.GenerationType.SEQUENCE;
@@ -8,22 +8,22 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
- * DOrder entity. @author MyEclipse Persistence Tools
+ * PlayList entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_order", catalog = "ads_x")
-public class DOrder  implements java.io.Serializable {
+@Table(name = "d_play_list", catalog = "ads_x")
+public class PlayList implements java.io.Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4312667623943216215L;
+	private static final long serialVersionUID = 4012728974405188658L;
+	
 	private Integer id;
 	private Integer orderCode;
 	private String positionCode;
@@ -36,13 +36,9 @@ public class DOrder  implements java.io.Serializable {
 	private String resourcePaths;
 	private String stateus;
 
-	/** default constructor */
-	public DOrder() {
-	}
-
 	@SequenceGenerator(name = "generator")
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = SEQUENCE, generator = "generator")
 	@Column(name = "Id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
@@ -141,6 +137,5 @@ public class DOrder  implements java.io.Serializable {
 	public void setStateus(String stateus) {
 		this.stateus = stateus;
 	}
-	
 
 }

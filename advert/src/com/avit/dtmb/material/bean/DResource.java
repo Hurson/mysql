@@ -1,4 +1,4 @@
-package com.avit.dtmb.position.bean;
+package com.avit.dtmb.material.bean;
 // default package
 
 import java.sql.Timestamp;

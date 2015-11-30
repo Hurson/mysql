@@ -1,4 +1,4 @@
-package com.avit.dtmb.position.bean;
+package com.avit.dtmb.ploy.bean;
 // default package
 
 import static javax.persistence.GenerationType.IDENTITY;
