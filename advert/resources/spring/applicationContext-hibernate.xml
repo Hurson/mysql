@@ -90,10 +90,17 @@
 
 	<!--Hibernate SessionFatory-->
 	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource">
 			<ref bean="dataSource" />
 		</property>
+		<property name="packagesToScan">
+            <list>
+                <value>com.avit.dtmb.*.bean</value>
+                <value>com.avit.*.*.bean</value>
+                <value>com.avit.*.*.model</value>
+            </list>
+        </property>
 		<property name="mappingResources">
 			<list>
 				<!-- -->

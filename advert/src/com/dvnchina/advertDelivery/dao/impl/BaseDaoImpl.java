@@ -4,18 +4,21 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.hssf.record.formula.functions.T;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
+import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.BaseDao;
 
 @SuppressWarnings("unchecked")
+@Repository
 public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
 	@Override
@@ -301,7 +304,25 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
    });
 	     
 	}
-   
+   public PageBeanDB getPageList2(final String hql, final Object[] params, int pageNumber, final int pageSize) {
+		int rowcount = getTotalCountHQL(hql, params);
+		
+		PageBeanDB pageBean = new PageBeanDB();
+		pageBean.setPageNo(pageSize);
+		pageBean.setCount(rowcount);
+		if (pageNumber==0) {
+			pageNumber=1;
+		}
+		if(pageNumber > pageBean.getPageNo()) {
+			pageNumber = pageBean.getPageNo();
+		}
+		pageBean.setPageNo(pageNumber);
+		
+		List list = this.getListForPage(hql, params, pageNumber, pageSize);
+		pageBean.setDataList(list);
+		
+		return pageBean;
+	}
    public int executeByHQL(final String hql, final Object[] values){
 		return this.getHibernateTemplate().execute(new HibernateCallback<Integer>(){
 			public Integer doInHibernate(Session session) throws HibernateException, SQLException{

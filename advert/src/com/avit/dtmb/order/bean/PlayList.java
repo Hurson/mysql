@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -38,7 +39,7 @@ public class PlayList implements java.io.Serializable {
 
 	@SequenceGenerator(name = "generator")
 	@Id
-	@GeneratedValue(strategy = SEQUENCE, generator = "generator")
+	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	@Column(name = "Id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;

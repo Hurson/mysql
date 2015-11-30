@@ -26,6 +26,7 @@ public class DPloyDetail implements
 	private Integer ployId;
 	private String ployType;
 	private String typeValue;
+	private Integer priority;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -63,6 +64,15 @@ public class DPloyDetail implements
 
 	public void setTypeValue(String typeValue) {
 		this.typeValue = typeValue;
+	}
+	
+	@Column(name = "PRIORITY")
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
 	}
 
 

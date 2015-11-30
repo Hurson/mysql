@@ -68,12 +68,12 @@
 	
 	<constant name="struts.multipart.maxSize" value="1000000000"/>
 	<!-- 如果不是用action作为扩展名，则需要在这个地方配置扩展名，否则映射不上 -->
-	<constant name="struts.action.extension" value="do" />
+	<constant name="struts.action.extension" value="action,do" />
 	
 	<!-- 上传的文件存放目录 -->
 	<constant name="struts.multipart.saveDir" value="tmp"/>
 	
-    <package name="default" extends="struts-default">
+    <package name="default" namespace="/" extends="struts-default">
     
     	<interceptors>
 			<!-- 登录超时拦截器 -->

@@ -1,21 +1,25 @@
 package com.avit.dtmb.ploy.bean;
 // default package
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import java.sql.Timestamp;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * DPloy entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_ploy", catalog = "ads_x")
+@Table(name = "d_ploy")
 public class DPloy implements java.io.Serializable {
 	/**
 	 * 
@@ -32,8 +36,32 @@ public class DPloy implements java.io.Serializable {
 	private String deleteFlag;
 	private Timestamp auditTime;
 	private String auditAdvice;
+    private List<DPloyDetail> ployDetailList;
+   
+    private String customerName;
+    private String positionName;
+
+    public DPloy(){}
+    
+	public DPloy(DPloy ploy, String customerName, String positionName) {
+		super();
+		this.id = ploy.id;
+		this.ployName = ploy.ployName;
+		this.positionCode = ploy.positionCode;
+		this.customerId = ploy.customerId;
+		this.createTime = ploy.createTime;
+		this.modifyTime = ploy.modifyTime;
+		this.status = ploy.status;
+		this.deleteFlag = ploy.deleteFlag;
+		this.auditTime = ploy.auditTime;
+		this.auditAdvice = ploy.auditAdvice;
+		this.ployDetailList = ploy.ployDetailList;
+		this.customerName = customerName;
+		this.positionName = positionName;
+	}
+
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
@@ -123,6 +151,33 @@ public class DPloy implements java.io.Serializable {
 	public void setAuditAdvice(String auditAdvice) {
 		this.auditAdvice = auditAdvice;
 	}
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinColumn(name="PLOY_ID")
+	public List<DPloyDetail> getPloyDetailList() {
+		return ployDetailList;
+	}
 
+	public void setPloyDetailList(List<DPloyDetail> ployDetailList) {
+		this.ployDetailList = ployDetailList;
+	}
+	@Transient
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	
+	@Transient
+	public String getPositionName() {
+		return positionName;
+	}
+
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
+	
+	
+	
 
 }
