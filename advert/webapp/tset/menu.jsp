@@ -49,7 +49,7 @@ function  showColumn(){
 	var menu_first = ['ggzcgl','ggstfgl','bpgl','xtgl','ggwgl','ggsgl','htgl','tfclgl','yxgzgl','ddgl','flsjtbgl','xtcx','rzgl']; 
 	
 
-	var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','ddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','dtfclwh','tfclwh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
+	var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','dggwbgl','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','ddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','dtfclwh','tfclwh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
 
 	
 	var columns = $('#columns').val();//
@@ -158,6 +158,7 @@ function  showColumn(){
 	                    <ul>
 	                    	<li id="ggwbgl" style="display: none;"><a href="#"  onclick="openPage('/page/position/queryPositionPackageList.do', '36', '广告位查询', '广告位查询')">&gt;&gt;&nbsp;广告位查询</a></li>
 	                        <li id="mrscpz" style="display: none;"><a href="#"  onclick="openPage('/page/position/queryResourceList.do', '37', '默认素材配置', '默认素材配置')">&gt;&gt;&nbsp;默认素材配置</a></li>
+	                    	<li id="dggwbgl" style="display: none;"><a href="#"  onclick="openPage('/page/dposition/queryDPositionPackageList.do', '38', '无线广告位查询', '无线广告位查询')">&gt;&gt;&nbsp;广告位查询</a></li>
 	                    </ul>
 	                    <!-- 
 	                    <ul>

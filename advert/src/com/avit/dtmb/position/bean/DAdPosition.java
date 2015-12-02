@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 @Entity
 @Table(name = "d_advertposition")
-public class AdPosition implements Serializable {
+public class DAdPosition implements Serializable {
 
 	private static final long serialVersionUID = 2284044631669410533L;
 	

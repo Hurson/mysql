@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.ploy.dao.DPloyDao;
 import com.avit.dtmb.ploy.service.DPloyService;
-import com.avit.dtmb.position.bean.AdPosition;
+import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 
 @Service("dPloyService")
@@ -31,12 +31,12 @@ public class DPloyServiceImpl implements DPloyService {
 	}
 	
 	@Override
-	public List<AdPosition> queryPositionList(){
+	public List<DAdPosition> queryPositionList(){
 		return null;
 	}
 	
 	@Override
-	public AdPosition getPositionByCode(String positionCode){
+	public DAdPosition getPositionByCode(String positionCode){
 		return null;
 	}
 

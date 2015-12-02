@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller;
 
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.ploy.service.DPloyService;
-import com.avit.dtmb.position.bean.AdPosition;
+import com.avit.dtmb.position.bean.DAdPosition;
 import com.avit.dtmb.type.PloyType;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.common.BaseAction;
@@ -31,8 +31,8 @@ public class DPloyAction extends BaseAction {
 	
 	private DPloy ploy;
 	private PageBeanDB page;
-	private List<AdPosition> listPosition;
-	private AdPosition position;
+	private List<DAdPosition> listPosition;
+	private DAdPosition position;
 	
 	@Resource
 	private DPloyService dPloyService;
@@ -101,19 +101,19 @@ public class DPloyAction extends BaseAction {
 		this.dPloyService = dPloyService;
 	}
 
-	public List<AdPosition> getListPosition() {
+	public List<DAdPosition> getListPosition() {
 		return listPosition;
 	}
 
-	public void setListPosition(List<AdPosition> listPosition) {
+	public void setListPosition(List<DAdPosition> listPosition) {
 		this.listPosition = listPosition;
 	}
 
-	public AdPosition getPosition() {
+	public DAdPosition getPosition() {
 		return position;
 	}
 
-	public void setPosition(AdPosition position) {
+	public void setPosition(DAdPosition position) {
 		this.position = position;
 	}
 	

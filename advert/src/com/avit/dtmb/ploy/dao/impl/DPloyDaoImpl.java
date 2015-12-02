@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.ploy.dao.DPloyDao;
-import com.avit.dtmb.position.bean.AdPosition;
+import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 @Repository("dPloyDao")
@@ -35,14 +35,14 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<AdPosition> queryPositionList() {
+	public List<DAdPosition> queryPositionList() {
 		String hql = "from AdPosition";
 		return this.getListForAll(hql, null);
 	}
 	@Override
-	public AdPosition getPositionByCode(String positionCode) {
+	public DAdPosition getPositionByCode(String positionCode) {
 		String hql = "from AdPosition ap where ap.positionCode = ?";
-		return (AdPosition)this.get(hql, positionCode);
+		return (DAdPosition)this.get(hql, positionCode);
 	}
 
 }

@@ -3,7 +3,7 @@ package com.avit.dtmb.ploy.service;
 import java.util.List;
 
 import com.avit.dtmb.ploy.bean.DPloy;
-import com.avit.dtmb.position.bean.AdPosition;
+import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 
 public interface DPloyService {
@@ -16,7 +16,7 @@ public interface DPloyService {
 	
 	public void deleteDTMBPloy(List<String> ids);
 	
-	public List<AdPosition> queryPositionList();	
+	public List<DAdPosition> queryPositionList();	
 	
-	public AdPosition getPositionByCode(String positionCode);
+	public DAdPosition getPositionByCode(String positionCode);
 }

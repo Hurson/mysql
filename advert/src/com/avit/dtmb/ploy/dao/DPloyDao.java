@@ -3,7 +3,7 @@ package com.avit.dtmb.ploy.dao;
 import java.util.List;
 
 import com.avit.dtmb.ploy.bean.DPloy;
-import com.avit.dtmb.position.bean.AdPosition;
+import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.BaseDao;
 
@@ -20,9 +20,9 @@ public interface DPloyDao extends BaseDao {
 	
 	public void deleteDTMBPloy(Integer id);
 	
-	public List<AdPosition> queryPositionList();	
+	public List<DAdPosition> queryPositionList();	
 	
-	public AdPosition getPositionByCode(String positionCode);
+	public DAdPosition getPositionByCode(String positionCode);
 	
 	
 
