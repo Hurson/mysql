@@ -1,7 +1,4 @@
 package com.avit.dtmb.order.bean;
-// default package
-
-import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.sql.Timestamp;
 
@@ -25,20 +22,30 @@ public class DOrder  implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -4312667623943216215L;
 	private Integer id;
-	private Integer orderCode;
-	private String positionCode;
-	private String areaCode;
-	private Timestamp startTime;
-	private Timestamp endTime;
-	private String ployType;
-	private String typeValue;
-	private String resourceIds;
-	private String resourcePaths;
-	private String stateus;
+    private Integer orderCode;
+    private String positionCode;
+    private Integer ployId;
+    private Integer contractId;
+    private Timestamp startTime;
+    private Timestamp endTime;
+    private Timestamp createTime;
+    private Timestamp modifyTime;
+    private String state;
 
 	/** default constructor */
 	public DOrder() {
 	}
+	public DOrder(Integer orderCode, String positionCode, Integer ployId, Integer contractId, Timestamp startTime, Timestamp endTime, Timestamp createTime, Timestamp modifyTime, String state) {
+        this.orderCode = orderCode;
+        this.positionCode = positionCode;
+        this.ployId = ployId;
+        this.contractId = contractId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+        this.state = state;
+    }
 
 	@SequenceGenerator(name = "generator")
 	@Id
@@ -52,95 +59,95 @@ public class DOrder  implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "ORDER_CODE")
-	public Integer getOrderCode() {
-		return this.orderCode;
-	}
+	@Column(name="ORDER_CODE")
 
-	public void setOrderCode(Integer orderCode) {
-		this.orderCode = orderCode;
-	}
+    public Integer getOrderCode() {
+        return this.orderCode;
+    }
+    
+    public void setOrderCode(Integer orderCode) {
+        this.orderCode = orderCode;
+    }
+    
+    @Column(name="POSITION_CODE")
 
-	@Column(name = "POSITION_CODE", length = 20)
-	public String getPositionCode() {
-		return this.positionCode;
-	}
+    public String getPositionCode() {
+        return this.positionCode;
+    }
+    
+    public void setPositionCode(String positionCode) {
+        this.positionCode = positionCode;
+    }
+    
+    @Column(name="PLOY_ID")
 
-	public void setPositionCode(String positionCode) {
-		this.positionCode = positionCode;
-	}
+    public Integer getPloyId() {
+        return this.ployId;
+    }
+    
+    public void setPloyId(Integer ployId) {
+        this.ployId = ployId;
+    }
+    
+    @Column(name="CONTRACT_ID")
 
-	@Column(name = "AREA_CODE", length = 20)
-	public String getAreaCode() {
-		return this.areaCode;
-	}
+    public Integer getContractId() {
+        return this.contractId;
+    }
+    
+    public void setContractId(Integer contractId) {
+        this.contractId = contractId;
+    }
+    
+    @Column(name="START_TIME", length=19)
 
-	public void setAreaCode(String areaCode) {
-		this.areaCode = areaCode;
-	}
+    public Timestamp getStartTime() {
+        return this.startTime;
+    }
+    
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
+    
+    @Column(name="END_TIME", length=19)
 
-	@Column(name = "START_TIME", length = 19)
-	public Timestamp getStartTime() {
-		return this.startTime;
-	}
+    public Timestamp getEndTime() {
+        return this.endTime;
+    }
+    
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
+    }
+    
+    @Column(name="CREATE_TIME", length=19)
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
-	}
+    public Timestamp getCreateTime() {
+        return this.createTime;
+    }
+    
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+    
+    @Column(name="MODIFY_TIME", length=19)
 
-	@Column(name = "END_TIME", length = 19)
-	public Timestamp getEndTime() {
-		return this.endTime;
-	}
+    public Timestamp getModifyTime() {
+        return this.modifyTime;
+    }
+    
+    public void setModifyTime(Timestamp modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+    
+    @Column(name="STATE", length=2)
 
-	public void setEndTime(Timestamp endTime) {
-		this.endTime = endTime;
-	}
-
-	@Column(name = "PLOY_TYPE", length = 2)
-	public String getPloyType() {
-		return this.ployType;
-	}
-
-	public void setPloyType(String ployType) {
-		this.ployType = ployType;
-	}
-
-	@Column(name = "TYPE_VALUE")
-	public String getTypeValue() {
-		return this.typeValue;
-	}
-
-	public void setTypeValue(String typeValue) {
-		this.typeValue = typeValue;
-	}
-
-	@Column(name = "RESOURCE_IDS")
-	public String getResourceIds() {
-		return this.resourceIds;
-	}
-
-	public void setResourceIds(String resourceIds) {
-		this.resourceIds = resourceIds;
-	}
-
-	@Column(name = "RESOURCE_PATHS")
-	public String getResourcePaths() {
-		return this.resourcePaths;
-	}
-
-	public void setResourcePaths(String resourcePaths) {
-		this.resourcePaths = resourcePaths;
-	}
-
-	@Column(name = "STATEUS", length = 2)
-	public String getStateus() {
-		return this.stateus;
-	}
-
-	public void setStateus(String stateus) {
-		this.stateus = stateus;
-	}
+    public String getState() {
+        return this.state;
+    }
+    
+    public void setState(String state) {
+        this.state = state;
+    }
 	
 
 }
