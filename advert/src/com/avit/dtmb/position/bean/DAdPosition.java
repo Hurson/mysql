@@ -14,7 +14,7 @@ public class DAdPosition implements Serializable {
 
 	private static final long serialVersionUID = 2284044631669410533L;
 	
-	private Integer Id;
+	private Integer id;
 	/**
 	 * 广告位名称
 	 */
@@ -68,10 +68,10 @@ public class DAdPosition implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	public Integer getId() {
-		return Id;
+		return id;
 	}
 	public void setId(Integer id) {
-		Id = id;
+		this.id = id;
 	}
 	@Column(name="POSITION_NAME")
 	public String getPositionName() {
