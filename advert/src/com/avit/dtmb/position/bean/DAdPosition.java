@@ -1,6 +1,8 @@
 package com.avit.dtmb.position.bean;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,13 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.avit.dtmb.type.PloyType;
+import com.google.gson.Gson;
 @Entity
 @Table(name = "d_advertposition")
 public class DAdPosition implements Serializable {
 
 	private static final long serialVersionUID = 2284044631669410533L;
 	
-	private Integer id;
+	private Integer Id;
 	/**
 	 * 广告位名称
 	 */
@@ -64,14 +70,16 @@ public class DAdPosition implements Serializable {
 	 */
 	private String domain;
 	
+	private String ployTypeJson;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	public Integer getId() {
-		return id;
+		return Id;
 	}
 	public void setId(Integer id) {
-		this.id = id;
+		Id = id;
 	}
 	@Column(name="POSITION_NAME")
 	public String getPositionName() {
@@ -156,6 +164,17 @@ public class DAdPosition implements Serializable {
 	}
 	public void setDomain(String domain) {
 		this.domain = domain;
+	}
+	@Transient
+	public String getPloyTypeJson() {
+		String[] ployTypes = getPloyTypes().split("\\|");
+		Map<String, String> typeMap = new LinkedHashMap<String, String>();
+		for(String type : ployTypes){
+			typeMap.put(type, PloyType.getValue(type));
+		}
+		Gson gson = new Gson();
+		ployTypeJson = gson.toJson(typeMap).toString();
+		return ployTypeJson;
 	}
 	
 

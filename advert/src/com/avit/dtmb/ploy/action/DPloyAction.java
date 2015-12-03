@@ -1,9 +1,8 @@
 package com.avit.dtmb.ploy.action;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -17,9 +16,9 @@ import org.springframework.stereotype.Controller;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.ploy.service.DPloyService;
 import com.avit.dtmb.position.bean.DAdPosition;
-import com.avit.dtmb.type.PloyType;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.common.BaseAction;
+import com.dvnchina.advertDelivery.model.ReleaseArea;
 
 @ParentPackage("default")
 @Namespace("/dploy")
@@ -33,50 +32,75 @@ public class DPloyAction extends BaseAction {
 	private PageBeanDB page;
 	private List<DAdPosition> listPosition;
 	private DAdPosition position;
+	private List<ReleaseArea> areaList;
 	
 	@Resource
 	private DPloyService dPloyService;
-	public DPloyAction(){
-		System.out.println("init DPloyAction() .........");
-	}
 	
-	@Action(value = "queryDPloyList", results = { @Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp") })
+	@Action(value = "queryDPloyList", results = {
+			@Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp"),
+			@Result(name = "audit", location = "/page/ploy/dploy/auditDPloyList.jsp")})
 	public String queryDPloyList(){
 		if(page == null){
 			page = new PageBeanDB();
 		}
 		page = dPloyService.queryDTMBPloyList(ploy, page.getPageNo(), page.getPageSize());
-		return SUCCESS;
-	}
-	@Action(value = "getDPloy", results = { @Result(name = "success", location = "/page/ploy/dploy/dPloy.jsp") })
-	public String getDTMBPloy(){
-		
-		ploy = dPloyService.getDTMBPloy(ploy.getId());
-		listPosition = dPloyService.queryPositionList();
-		
-		return SUCCESS;
-	}
-	public void getPositionPolyType(){
-		
-		position = dPloyService.getPositionByCode(position.getPositionCode());
-		String[] ployTypes = position.getPloyTypes().split("\\|");
-		Map<String, String> typeMap = new HashMap<String, String>();
-		for(String type : ployTypes){
-			typeMap.put(type, PloyType.getValue(type));
+		if(ploy != null && ploy.getStatus().equals("1")){
+			return "audit";
 		}
-		System.out.println(typeMap.toString());
-		super.renderJson(typeMap.toString());
-	}
-	public String saveDPloy(){
-		dPloyService.saveDTMBPloy(ploy);
 		return SUCCESS;
 	}
+	@Action(value = "getDPloy", results = { 
+			@Result(name = "success", location = "/page/ploy/dploy/dPloy.jsp"),
+			@Result(name = "audit", location = "/page/ploy/dploy/auditDPloy.jsp")})
+	public String getDTMBPloy(){
+		if(ploy != null){
+			ploy = dPloyService.getDTMBPloy(ploy.getId());
+		}
+		
+		listPosition = dPloyService.queryPositionList();
+		areaList = dPloyService.listReleaseArea();
+		if("audit".equals(operType)){
+			return "audit";
+		}
+		return SUCCESS;
+	}
+	@Action(value = "getPositionPloy")
+	public void getPositionPolyType(){
+		position = dPloyService.getPositionByCode(position.getPositionCode());
+		
+		super.renderJson(position.getPloyTypeJson());
+	}
+	@Action(value = "saveDPloy", results = { @Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp") })
+	public String saveDPloy(){
+		
+		ploy.setCreateTime(new Date());
+		ploy.setCustomerId(0);
+		ploy.setModifyTime(new Date());
+		ploy.setStatus("1");
+		dPloyService.saveDTMBPloy(ploy);
+		ploy = null;
+		return queryDPloyList();
+	}
+	@Action(value = "deleteDPloy", results = { @Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp") })
 	public String deleteDPloy(){
 		List<String> idList = Arrays.asList(ids.split(","));
 		dPloyService.deleteDTMBPloy(idList);
-		return SUCCESS;
+		return queryDPloyList();
 	}
-
+	@Action(value = "checkDPloy")
+	public void checkDPloy(){
+		 String result = dPloyService.checkDPloyName(ploy);
+		this.renderText(result);
+	}
+	@Action(value = "auditDPloy", results = { @Result(name="success", type="redirect", location="/dploy/queryDPloyList.action?ploy.status=1")})
+	public String auditDPloy(){
+		DPloy dploy = dPloyService.getDTMBPloy(ploy.getId());
+		dploy.setStatus(ploy.getStatus());
+		dploy.setAuditTime(new Date());
+		dPloyService.saveDTMBPloy(dploy);
+		return queryDPloyList();
+	}
 	public DPloy getPloy() {
 		return ploy;
 	}
@@ -115,6 +139,13 @@ public class DPloyAction extends BaseAction {
 
 	public void setPosition(DAdPosition position) {
 		this.position = position;
+	}
+	
+	public List<ReleaseArea> getAreaList() {
+		return areaList;
+	}
+	public void setAreaList(List<ReleaseArea> areaList) {
+		this.areaList = areaList;
 	}
 	
 }

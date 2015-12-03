@@ -6,6 +6,7 @@ import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.BaseDao;
+import com.dvnchina.advertDelivery.model.ReleaseArea;
 
 public interface DPloyDao extends BaseDao {
 	/**
@@ -23,6 +24,10 @@ public interface DPloyDao extends BaseDao {
 	public List<DAdPosition> queryPositionList();	
 	
 	public DAdPosition getPositionByCode(String positionCode);
+	
+	public List<ReleaseArea> listReleaseArea();
+	
+	public DPloy getDPloyByName(String ployName);
 	
 	
 

@@ -5,6 +5,7 @@ import java.util.List;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.model.ReleaseArea;
 
 public interface DPloyService {
 
@@ -19,4 +20,8 @@ public interface DPloyService {
 	public List<DAdPosition> queryPositionList();	
 	
 	public DAdPosition getPositionByCode(String positionCode);
+	
+	public List<ReleaseArea> listReleaseArea();
+	
+	public String checkDPloyName(DPloy ploy);
 }

@@ -1,12 +1,13 @@
 package com.avit.dtmb.ploy.bean;
 // default package
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.google.gson.Gson;
 
 /**
  * DPloy entity. @author MyEclipse Persistence Tools
@@ -30,13 +33,14 @@ public class DPloy implements java.io.Serializable {
 	private String ployName;
 	private String positionCode;
 	private Integer customerId;
-	private Timestamp createTime;
-	private Timestamp modifyTime;
+	private Date createTime;
+	private Date modifyTime;
 	private String status;
 	private String deleteFlag;
-	private Timestamp auditTime;
+	private Date auditTime;
 	private String auditAdvice;
     private List<DPloyDetail> ployDetailList;
+    private String ployDetailJson;
    
     private String customerName;
     private String positionName;
@@ -99,20 +103,20 @@ public class DPloy implements java.io.Serializable {
 	}
 
 	@Column(name = "CREATE_TIME", length = 19)
-	public Timestamp getCreateTime() {
+	public Date getCreateTime() {
 		return this.createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 
 	@Column(name = "MODIFY_TIME", length = 19)
-	public Timestamp getModifyTime() {
+	public Date getModifyTime() {
 		return this.modifyTime;
 	}
 
-	public void setModifyTime(Timestamp modifyTime) {
+	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
 	}
 
@@ -135,11 +139,11 @@ public class DPloy implements java.io.Serializable {
 	}
 
 	@Column(name = "AUDIT_TIME", length = 19)
-	public Timestamp getAuditTime() {
+	public Date getAuditTime() {
 		return this.auditTime;
 	}
 
-	public void setAuditTime(Timestamp auditTime) {
+	public void setAuditTime(Date auditTime) {
 		this.auditTime = auditTime;
 	}
 
@@ -151,7 +155,7 @@ public class DPloy implements java.io.Serializable {
 	public void setAuditAdvice(String auditAdvice) {
 		this.auditAdvice = auditAdvice;
 	}
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name="PLOY_ID")
 	public List<DPloyDetail> getPloyDetailList() {
 		return ployDetailList;
@@ -160,6 +164,17 @@ public class DPloy implements java.io.Serializable {
 	public void setPloyDetailList(List<DPloyDetail> ployDetailList) {
 		this.ployDetailList = ployDetailList;
 	}
+	@Transient
+	public String getPloyDetailJson() {
+		Gson gson = new Gson();
+		ployDetailJson = gson.toJson(ployDetailList);
+		return ployDetailJson;
+	}
+
+	public void setPloyDetailJson(String ployDetailJson) {
+		this.ployDetailJson = ployDetailJson;
+	}
+
 	@Transient
 	public String getCustomerName() {
 		return customerName;
