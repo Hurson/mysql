@@ -36,26 +36,9 @@ function query() {
         document.forms[0].submit();
     }
 
- function addData() {
-      window.location.href="<%=path %>/dploy/getDPloy.action";
-    }
- 	function deleteData() {
-		 if (getCheckCount("dataIds") <= 0) {
-	                alert("请勾选需删除的记录！");
-	                return;
-	     }
-		 var dataIds = getCheckValue("dataIds");	 
-		 
-		 var ret = window.confirm("您确定要删除吗？");
-		 if (ret==1){
-			
-			 document.forms[0].action="<%=path %>/dploy/deleteDPloy.action?ids="+dataIds;
-	         document.forms[0].submit();
-	     }
-	   
-    }
+
     function modifyData(ployid, status) {
-	    window.location.href="<%=path %>/dploy/getDPloy.action?ploy.id="+ployid+"&ploy.status=" + status;
+	    window.location.href="<%=path %>/dploy/getDPloy.action?ploy.id="+ployid+"&operType=audit";
     }
 	
 </script>
@@ -75,10 +58,11 @@ function query() {
 
 </head>
 <body class="mainBody">
- <form action="<%=path %>/dploy/queryDPloyList.action" method="post" id="queryForm">
+ <form action="<%=path %>/page/ploy/queryPloyList.do" method="post" id="queryForm">
  <s:set name="page" value="%{page}" />
 		 <input type="hidden" id="pageNo" name="page.pageNo" value="${page.pageNo}"/>
 		 <input type="hidden" id="pageSize" name="page.pageSize" value="${page.pageSize}"/>
+		 <input type="hidden"  name="ploy.status" value="1"/>
 
 <div class="search">
 <div class="path">首页 >> 投放策略管理 >> 策略维护</div>
@@ -91,7 +75,7 @@ function query() {
     <td class="searchCriteria">
       <span>策略名称：</span><input onkeypress="return validateSpecialCharacter();" type="text" name="ploy.ployName" id="ploy.ployName" value="${ploy.ployName}"/>
 					
-	  <span>广告位：</span><input onkeypress="return validateSpecialCharacter();" type="text" name="ploy.positionName" id="ploy.positionName" value="${ploy.positionName}"/>
+	  <span>广告位：</span><input onkeypress="return validateSpecialCharacter();" type="text" name="adPosition.positionName" id="adPosition.positionName" value="${adPosition.positionName}"/>
       <input type="button" value="查询" onclick="javascript:query();" class="btn"/></td>
   </tr>
 </table>
@@ -102,18 +86,14 @@ function query() {
 </div>
 <table cellspacing="1" class="searchList">
     <tr class="title">
-        <td height="28" class="dot"><input type="checkbox" name="selectAllBox" onclick="selectAll(this, 'dataIds');"/></td>
         <td width="30%" align="center">策略名称</td>
-        <td width="30%" align="center">广告商</td>
-        <td width="30%" align="center">广告位</td>
-        <td width="5%" align="center">状态</td>
+        <td width="35%" align="center">广告商</td>
+        <td width="35%" align="center">广告位</td>
     </tr>
    				 <c:if test="${page.dataList != null && fn:length(page.dataList) > 0}">
                     <c:forEach items="${page.dataList}" var="ployInfo" varStatus="pl">
                         <tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
-                            <td>
-                                <input type="checkbox" value="<c:out value='${ployInfo.id}'/>" name="dataIds"/>
-                             </td>
+                           
                             <td align="center">
                                 <a href="javascript:modifyData('${ployInfo.id}','${ployInfo.status}');">${ployInfo.ployName}</a>
                             </td>
@@ -124,20 +104,6 @@ function query() {
 					         	<c:out value="${ployInfo.positionName }"></c:out>
 							</td>
 					    
-					     	 <td width="10%" align="center">
-					        <c:if test="${ployInfo.status==2 }">
-	                            	  通过
-	                            	</c:if>
-	                            	<c:if test="${ployInfo.status==3 }">
-	                            	  驳回
-	                            	</c:if>
-	                               	<c:if test="${ployInfo.status==1 }">
-	                            	 待审
-	                            	</c:if> 
-	                            	<c:if test="${ployInfo.status==4 }">
-	                            	 已关联
-	                            	</c:if> 	
-							</td>
                         </tr>
                     </c:forEach>
                 </c:if>
@@ -146,10 +112,6 @@ function query() {
   <tr>
     <td colspan="5">
 		
-        <input type="button" value="添加" class="btn" onclick="javascript:addData();"/>&nbsp;&nbsp;
-        <input type="button" value="删除" class="btn" onclick="javascript:deleteData();"/>
-		
-								&nbsp;&nbsp;
 		<jsp:include page='../../common/page.jsp' flush="true" />
 	
     </td>
