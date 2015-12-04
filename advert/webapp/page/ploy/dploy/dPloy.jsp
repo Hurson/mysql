@@ -22,11 +22,11 @@
 </head>
 <script type="text/javascript">
 
-var j =${fn:length(ploy.ployDetailList)};
+	var j =${fn:length(ploy.ployDetailList)};
 
 	window.onload = function() {
 		
-		changePosition('${ploy.positionCode}');
+		changePosition('${ploy.dposition.positionCode}');
 		initItem(); 
 		var status = $("#ploy_status").val();
 		if(status == '4'){
@@ -319,17 +319,17 @@ var j =${fn:length(ploy.ployDetailList)};
                <input onkeypress="return validateSpecialCharacter();" maxlength="30" id="ploy.ployName" name="ploy.ployName" type="text" value="${ploy.ployName}"/>
                <span>&nbsp;&nbsp;&nbsp;&nbsp;广告位名称：</span> 
                
-               <select id="ploy.positionCode" name="ploy.positionCode" onchange="changePosition(this.value);"  <c:if test="${ploy.id > 0}"> disabled="disabled" </c:if> >
+               <select id="ploy.positionCode" name="ploy.dposition.positionCode" onchange="changePosition(this.value);"  <c:if test="${ploy.id > 0}"> disabled="disabled" </c:if> >
 	               <c:forEach items="${listPosition}" var="positionVar" >
-	                     <option value="${positionVar.positionCode}" <c:if test="${positionVar.positionCode==ploy.positionCode}"> selected </c:if>  >
+	                     <option value="${positionVar.positionCode}" <c:if test="${positionVar.positionCode==ploy.dposition.positionCode}"> selected </c:if>  >
 	                            ${positionVar.positionName}
 	                	</option>
 	               </c:forEach>
                </select>
                <input type="hidden" name="ploy.id" id="ploy.id" type="text" value="${ploy.id}"/>
-               <input type="hidden" name="ploy.customerId" type="text" value="${ploy.customerId}"/>
+               <input type="hidden" name="ploy.customer.id" type="text" value="${ploy.customer.id}"/>
                <input type="hidden" id="ploy_status" name="ploy.status" type="text" value="${ploy.status}"/>  
-               <input  disabled="disabled" maxlength="30" id="positionCode" name="positionCode" type="text" style="width: 40px" value="${ploy.positionCode}"/>
+               <input  disabled="disabled" maxlength="30" id="positionCode" name="positionCode" type="text" style="width: 40px" value="${ploy.dposition.positionCode}"/>
                
        </td>
       </tr>

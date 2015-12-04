@@ -16,13 +16,12 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 
 	@Override
 	public PageBeanDB queryDTMBPloyList(DPloy ploy, int pageNo, int pageSize) {
-		String hql = "select new DPloy(ploy, cust.advertisersName,ap.positionName) from DPloy ploy, Customer cust, AdPosition ap"
-				+ " where ploy.customerId = cust.id and ploy.positionCode = ap.positionCode";
+		String hql = "from DPloy ploy where 1 = 1";
 		if(ploy != null && StringUtils.isNotBlank(ploy.getPloyName())){
 			hql += " and ploy.ployName like '%" + ploy.getPloyName() + "%'";
 		}
 		if(ploy != null && StringUtils.isNotBlank(ploy.getPositionName())){
-			hql += " and ap.positionName= like '%" + ploy.getPositionName() + "%'";
+			hql += " and ploy.dposition.positionName= like '%" + ploy.getPositionName() + "%'";
 		}
 		if(ploy != null && StringUtils.isNotBlank(ploy.getStatus())){
 			hql += " and ploy.status= '" + ploy.getStatus() + "'";
@@ -47,12 +46,12 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DAdPosition> queryPositionList() {
-		String hql = "from AdPosition";
+		String hql = "from DAdPosition";
 		return (List<DAdPosition>)this.getListForAll(hql, null);
 	}
 	@Override
 	public DAdPosition getPositionByCode(String positionCode) {
-		String hql = "from AdPosition ap where ap.positionCode = ?";
+		String hql = "from DAdPosition ap where ap.positionCode = ?";
 		return (DAdPosition)this.get(hql, positionCode);
 	}
 	@SuppressWarnings("unchecked")

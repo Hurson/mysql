@@ -75,18 +75,18 @@ public class DPloyAction extends BaseAction {
 	public String saveDPloy(){
 		
 		ploy.setCreateTime(new Date());
-		ploy.setCustomerId(0);
+		ploy.getCustomer().setId(0);
 		ploy.setModifyTime(new Date());
 		ploy.setStatus("1");
 		dPloyService.saveDTMBPloy(ploy);
 		ploy = null;
 		return queryDPloyList();
 	}
-	@Action(value = "deleteDPloy", results = { @Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp") })
+	@Action(value = "deleteDPloy", results = { @Result(name = "success", type= "redirect", location = "queryDPloyList.action") })
 	public String deleteDPloy(){
 		List<String> idList = Arrays.asList(ids.split(","));
 		dPloyService.deleteDTMBPloy(idList);
-		return queryDPloyList();
+		return SUCCESS;
 	}
 	@Action(value = "checkDPloy")
 	public void checkDPloy(){

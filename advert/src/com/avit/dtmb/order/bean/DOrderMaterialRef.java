@@ -1,8 +1,6 @@
 package com.avit.dtmb.order.bean;
 // default package
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +21,7 @@ public class DOrderMaterialRef implements
 	 */
 	private static final long serialVersionUID = 6902616209233440440L;
 	private Integer id;
-	private Integer orderCode;
+	private String orderCode;
 	private Integer resourceId;
 	private String startTime;
 	private String endTime;
@@ -44,11 +42,11 @@ public class DOrderMaterialRef implements
 	}
 
 	@Column(name = "ORDER_CODE")
-	public Integer getOrderCode() {
+	public String getOrderCode() {
 		return this.orderCode;
 	}
 
-	public void setOrderCode(Integer orderCode) {
+	public void setOrderCode(String orderCode) {
 		this.orderCode = orderCode;
 	}
 

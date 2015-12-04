@@ -91,7 +91,7 @@ function query() {
     <td class="searchCriteria">
       <span>策略名称：</span><input onkeypress="return validateSpecialCharacter();" type="text" name="ploy.ployName" id="ploy.ployName" value="${ploy.ployName}"/>
 					
-	  <span>广告位：</span><input onkeypress="return validateSpecialCharacter();" type="text" name="ploy.positionName" id="ploy.positionName" value="${ploy.positionName}"/>
+	  <span>广告位：</span><input onkeypress="return validateSpecialCharacter();" type="text" name="ploy.dposition.positionName" id="ploy.positionName" value="${ploy.dposition.positionName}"/>
       <input type="button" value="查询" onclick="javascript:query();" class="btn"/></td>
   </tr>
 </table>
@@ -118,10 +118,10 @@ function query() {
                                 <a href="javascript:modifyData('${ployInfo.id}','${ployInfo.status}');">${ployInfo.ployName}</a>
                             </td>
                             <td width="20%" align="center">
-                            	<c:out value="${ployInfo.customerName }"></c:out>
+                            	<c:out value="${ployInfo.customer.advertisersName }"></c:out>
 							</td>
 					        <td width="15%" align="center">
-					         	<c:out value="${ployInfo.positionName }"></c:out>
+					         	<c:out value="${ployInfo.dposition.positionName }"></c:out>
 							</td>
 					    
 					     	 <td width="10%" align="center">

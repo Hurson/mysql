@@ -1,20 +1,31 @@
 package com.avit.dtmb.order.bean;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
+import com.avit.dtmb.ploy.bean.DPloy;
+import com.avit.dtmb.position.bean.DAdPosition;
+import com.dvnchina.advertDelivery.model.Contract;
 
 /**
  * DOrder entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_order", catalog = "ads_x")
+@Table(name = "d_order")
 public class DOrder  implements java.io.Serializable {
 
 	/**
@@ -22,31 +33,21 @@ public class DOrder  implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -4312667623943216215L;
 	private Integer id;
-    private Integer orderCode;
-    private String positionCode;
-    private Integer ployId;
-    private Integer contractId;
-    private Timestamp startTime;
-    private Timestamp endTime;
-    private Timestamp createTime;
-    private Timestamp modifyTime;
+    private String orderCode;
+    private DAdPosition dposition;
+    private DPloy dploy;
+    private Contract contract;
+    private Date startTime;
+    private Date endTime;
+    private Date createTime;
+    private Date modifyTime;
     private String state;
+
 
 	/** default constructor */
 	public DOrder() {
 	}
-	public DOrder(Integer orderCode, String positionCode, Integer ployId, Integer contractId, Timestamp startTime, Timestamp endTime, Timestamp createTime, Timestamp modifyTime, String state) {
-        this.orderCode = orderCode;
-        this.positionCode = positionCode;
-        this.ployId = ployId;
-        this.contractId = contractId;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.createTime = createTime;
-        this.modifyTime = modifyTime;
-        this.state = state;
-    }
-
+	
 	@SequenceGenerator(name = "generator")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,87 +61,83 @@ public class DOrder  implements java.io.Serializable {
 	}
 
 	@Column(name="ORDER_CODE")
-
-    public Integer getOrderCode() {
+    public String getOrderCode() {
         return this.orderCode;
     }
     
-    public void setOrderCode(Integer orderCode) {
+    public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
     }
     
-    @Column(name="POSITION_CODE")
-
-    public String getPositionCode() {
-        return this.positionCode;
+    @ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "POSITION_CODE", referencedColumnName ="POSITION_CODE", insertable = false, updatable = false)
+    @NotFound(action=NotFoundAction.IGNORE)
+    public DAdPosition getDposition() {
+        return this.dposition;
     }
     
-    public void setPositionCode(String positionCode) {
-        this.positionCode = positionCode;
+    public void setDposition(DAdPosition dposition) {
+        this.dposition = dposition;
     }
     
-    @Column(name="PLOY_ID")
-
-    public Integer getPloyId() {
-        return this.ployId;
+    @ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "PLOY_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+    @NotFound(action=NotFoundAction.IGNORE)
+    public DPloy getDploy() {
+        return this.dploy;
     }
     
-    public void setPloyId(Integer ployId) {
-        this.ployId = ployId;
+    public void setDploy(DPloy dploy) {
+        this.dploy = dploy;
+    }
+    @ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "CONTRACT_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+    @NotFound(action=NotFoundAction.IGNORE)
+    public Contract getContract() {
+        return this.contract;
     }
     
-    @Column(name="CONTRACT_ID")
-
-    public Integer getContractId() {
-        return this.contractId;
-    }
-    
-    public void setContractId(Integer contractId) {
-        this.contractId = contractId;
+    public void setContract(Contract contract) {
+        this.contract = contract;
     }
     
     @Column(name="START_TIME", length=19)
-
-    public Timestamp getStartTime() {
+    public Date getStartTime() {
         return this.startTime;
     }
     
-    public void setStartTime(Timestamp startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
     
     @Column(name="END_TIME", length=19)
-
-    public Timestamp getEndTime() {
+    public Date getEndTime() {
         return this.endTime;
     }
     
-    public void setEndTime(Timestamp endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
     
     @Column(name="CREATE_TIME", length=19)
-
-    public Timestamp getCreateTime() {
+    public Date getCreateTime() {
         return this.createTime;
     }
     
-    public void setCreateTime(Timestamp createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
     
     @Column(name="MODIFY_TIME", length=19)
-
-    public Timestamp getModifyTime() {
+    public Date getModifyTime() {
         return this.modifyTime;
     }
     
-    public void setModifyTime(Timestamp modifyTime) {
+    public void setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
     }
     
     @Column(name="STATE", length=2)
-
     public String getState() {
         return this.state;
     }

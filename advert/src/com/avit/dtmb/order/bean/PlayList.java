@@ -1,16 +1,13 @@
 package com.avit.dtmb.order.bean;
 // default package
 
-import static javax.persistence.GenerationType.SEQUENCE;
-
-import java.sql.Timestamp;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -26,18 +23,17 @@ public class PlayList implements java.io.Serializable {
 	private static final long serialVersionUID = 4012728974405188658L;
 	
 	private Integer id;
-	private Integer orderCode;
+	private String orderCode;
 	private String positionCode;
 	private String areaCode;
-	private Timestamp startTime;
-	private Timestamp endTime;
+	private Date startTime;
+	private Date endTime;
 	private String ployType;
 	private String typeValue;
 	private String resourceIds;
 	private String resourcePaths;
-	private String stateus;
+	private String status;
 
-	@SequenceGenerator(name = "generator")
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	@Column(name = "Id", unique = true, nullable = false)
@@ -50,11 +46,11 @@ public class PlayList implements java.io.Serializable {
 	}
 
 	@Column(name = "ORDER_CODE")
-	public Integer getOrderCode() {
+	public String getOrderCode() {
 		return this.orderCode;
 	}
 
-	public void setOrderCode(Integer orderCode) {
+	public void setOrderCode(String orderCode) {
 		this.orderCode = orderCode;
 	}
 
@@ -77,20 +73,20 @@ public class PlayList implements java.io.Serializable {
 	}
 
 	@Column(name = "START_TIME", length = 19)
-	public Timestamp getStartTime() {
+	public Date getStartTime() {
 		return this.startTime;
 	}
 
-	public void setStartTime(Timestamp startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 
 	@Column(name = "END_TIME", length = 19)
-	public Timestamp getEndTime() {
+	public Date getEndTime() {
 		return this.endTime;
 	}
 
-	public void setEndTime(Timestamp endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 
@@ -130,13 +126,13 @@ public class PlayList implements java.io.Serializable {
 		this.resourcePaths = resourcePaths;
 	}
 
-	@Column(name = "STATEUS", length = 2)
-	public String getStateus() {
-		return this.stateus;
+	@Column(name = "STATUS", length = 2)
+	public String getStatus() {
+		return this.status;
 	}
 
-	public void setStateus(String stateus) {
-		this.stateus = stateus;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

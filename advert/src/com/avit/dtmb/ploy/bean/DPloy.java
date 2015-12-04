@@ -12,10 +12,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
+import com.avit.dtmb.position.bean.DAdPosition;
+import com.dvnchina.advertDelivery.model.Customer;
 import com.google.gson.Gson;
 
 /**
@@ -31,8 +37,8 @@ public class DPloy implements java.io.Serializable {
 	
 	private Integer id;
 	private String ployName;
-	private String positionCode;
-	private Integer customerId;
+	private DAdPosition dposition;
+	private Customer customer;
 	private Date createTime;
 	private Date modifyTime;
 	private String status;
@@ -47,23 +53,6 @@ public class DPloy implements java.io.Serializable {
 
     public DPloy(){}
     
-	public DPloy(DPloy ploy, String customerName, String positionName) {
-		super();
-		this.id = ploy.id;
-		this.ployName = ploy.ployName;
-		this.positionCode = ploy.positionCode;
-		this.customerId = ploy.customerId;
-		this.createTime = ploy.createTime;
-		this.modifyTime = ploy.modifyTime;
-		this.status = ploy.status;
-		this.deleteFlag = ploy.deleteFlag;
-		this.auditTime = ploy.auditTime;
-		this.auditAdvice = ploy.auditAdvice;
-		this.ployDetailList = ploy.ployDetailList;
-		this.customerName = customerName;
-		this.positionName = positionName;
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
@@ -83,23 +72,25 @@ public class DPloy implements java.io.Serializable {
 	public void setPloyName(String ployName) {
 		this.ployName = ployName;
 	}
-
-	@Column(name = "POSITION_CODE")
-	public String getPositionCode() {
-		return this.positionCode;
+	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "POSITION_CODE", referencedColumnName ="POSITION_CODE")
+    @NotFound(action=NotFoundAction.IGNORE)
+	public DAdPosition getDposition() {
+		return dposition;
 	}
 
-	public void setPositionCode(String positionCode) {
-		this.positionCode = positionCode;
+	public void setDposition(DAdPosition dposition) {
+		this.dposition = dposition;
+	}
+	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "CUSTOMER_ID", referencedColumnName ="id")
+    @NotFound(action=NotFoundAction.IGNORE)
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	@Column(name = "CUSTOMER_ID")
-	public Integer getCustomerId() {
-		return this.customerId;
-	}
-
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	@Column(name = "CREATE_TIME", length = 19)
@@ -192,7 +183,4 @@ public class DPloy implements java.io.Serializable {
 		this.positionName = positionName;
 	}
 	
-	
-	
-
 }

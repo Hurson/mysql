@@ -54,6 +54,10 @@ public class DAdPosition implements Serializable {
 	 */
 	private String ployTypes;
 	/**
+	 * 主策略类型（用来求笛卡尔积）
+	 */
+	private String mainPloy;
+	/**
 	 * 描述
 	 */
 	private String description;
@@ -136,6 +140,13 @@ public class DAdPosition implements Serializable {
 	}
 	public void setPloyTypes(String ployTypes) {
 		this.ployTypes = ployTypes;
+	}
+	@Column(name="MAIN_PLOY")
+	public String getMainPloy() {
+		return mainPloy;
+	}
+	public void setMainPloy(String mainPloy) {
+		this.mainPloy = mainPloy;
 	}
 	@Column(name="DESCRIPTION")
 	public String getDescription() {
