@@ -149,16 +149,9 @@
             	ployName = value.split("_")[1];
 	        	$("#ployId").val(ployId);
 				$("#ployName").val(ployName);
-				playNumber = value.split("_")[3];//播放次数
-				if(playNumber && playNumber>0){
-					$("#playNumber").val(playNumber);
-					$("#viewPlayNumber").val(playNumber);
-					$("#periodDate").hide();
-					$("#onceDate").show();
-				}else{
-					$("#periodDate").show();
-					$("#onceDate").hide();
-				}
+			
+				$("#periodDate").show();
+				$("#onceDate").hide();
 				
 				var orderCode = document.getElementById("orderCode").value;
 				$.ajax({   
