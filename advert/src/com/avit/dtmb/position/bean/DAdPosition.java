@@ -76,6 +76,8 @@ public class DAdPosition implements Serializable {
 	
 	private String ployTypeJson;
 	
+	private Map<String, String> mainPloyMap;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
@@ -186,6 +188,16 @@ public class DAdPosition implements Serializable {
 		Gson gson = new Gson();
 		ployTypeJson = gson.toJson(typeMap).toString();
 		return ployTypeJson;
+	}
+	@Transient
+	public Map<String, String> getMainPloyMap() {
+		String[] ployTypes = getMainPloy().split("\\|");
+		mainPloyMap = new LinkedHashMap<String, String>();
+		for(String type : ployTypes){
+			mainPloyMap.put(type, PloyType.getValue(type));
+		}
+		
+		return mainPloyMap;
 	}
 	
 

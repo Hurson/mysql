@@ -66,7 +66,7 @@ public class DOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 	@Action(value = "queryDPloyList", results = { 
-			@Result(name = "success", location = "/page/order/dorder/addOrderArea.jsp")})
+			@Result(name = "success", location = "/page/order/dorder/selectPloy.jsp")})
 	public String queryDPloyList() {
 		if(page == null){
 			page = new PageBeanDB();

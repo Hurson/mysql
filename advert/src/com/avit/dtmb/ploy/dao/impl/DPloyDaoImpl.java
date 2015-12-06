@@ -31,7 +31,8 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 	@Override
 	public void saveDTMBPloy(DPloy ploy) {
 		this.saveOrUpdate(ploy);
-
+		String hql = "delete from DPloyDetail detail where detail.ployId is null";
+		this.executeByHQL(hql, null);
 	}
 	@Override
 	public DPloy getDTMBPloy(Integer id) {
