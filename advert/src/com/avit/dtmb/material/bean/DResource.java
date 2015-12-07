@@ -145,7 +145,7 @@ public class DResource extends CommonObject implements
 		this.isDefault = isDefault;
 	}
 
-	@Column(name = "POSITION_ID",length = 19)
+	@Column(name = "POSITION_CODE",length = 19)
 	public String getPositionCode() {
 		return positionCode;
 	}

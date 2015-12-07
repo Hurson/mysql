@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.avit.dtmb.type.PloyType;
 import com.google.gson.Gson;
 @Entity
@@ -191,8 +193,12 @@ public class DAdPosition implements Serializable {
 	}
 	@Transient
 	public Map<String, String> getMainPloyMap() {
-		String[] ployTypes = getMainPloy().split("\\|");
+		
 		mainPloyMap = new LinkedHashMap<String, String>();
+		if(StringUtils.isBlank(getMainPloy())){
+			return mainPloyMap;
+		}
+		String[] ployTypes = getMainPloy().split("\\|");
 		for(String type : ployTypes){
 			mainPloyMap.put(type, PloyType.getValue(type));
 		}

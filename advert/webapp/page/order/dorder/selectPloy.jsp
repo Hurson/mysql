@@ -72,7 +72,7 @@
 				<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>
 					onmouseout="this.style.backgroundColor=''" onmouseover="this.style.backgroundColor='#fffed9'">
 					<td align="center">
-						<input type="radio"	name="ployId" value="${ploy.id}_${ploy.ployName}_0" 
+						<input type="radio"	name="ployId" value="${ploy.id}_${ploy.ployName}_${ploy.dposition.resourceCount}_${ploy.dposition.mainPloy}" 
 						
 					</td>
 					<td><c:out value="${ploy.ployName}" /></td>

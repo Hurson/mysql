@@ -121,7 +121,7 @@ function viewOneAreaPloy(result,orderCode,ployId,positionId){
 	//$("#sucai").show();
 }
 function hidDetails(){
-	$("#sucai").html('');
+	$("#sucai tr:gt(0)").html('');
 }
 function showAreaResourceDetail(orderCode,resourceId,ployId,positionId){
 	var url = "getAreaResourceDetail.do?order.ployId="+ployId+"&omRelTmp.orderCode="+orderCode+"&omRelTmp.mateId="+resourceId+"&order.positionId="+positionId;

@@ -142,11 +142,14 @@
     	var ployId = document.getElementById("ployId").value;
     	var url = "queryDPloyList.action?ploy.dposition.positionCode="+positionCode;
     	var value = window.showModalDialog(url, window, "dialogHeight=480px;dialogWidth=820px;center=1;resizable=0;status=0;");
+    	
     	var orderId=${order.orderCode};
         if(value){
             if(ployId != value.split("_")[0]){
             	ployId = value.split("_")[0];
             	ployName = value.split("_")[1];
+            	var count = value.split("_")[2];
+            	var mainPloy = value.split("_")[3];
 	        	$("#ployId").val(ployId);
 				$("#ployName").val(ployName);
 			
@@ -155,13 +158,14 @@
 				
 				var orderCode = document.getElementById("orderCode").value;
 				$.ajax({   
-		 		       url:'insertOrderMateRelTmp.do',       
+		 		       url:'insertDOrderMateRelTmp.action',       
 		 		       type: 'POST',    
 		 		       dataType: 'text',   
 		 		       data: {
-		 		    	   orderCode:orderCode,
-		 		    	   ployId:ployId,
-		 		    	   positionId:positionId
+		 		    	   'order.orderCode':orderCode,
+		 		    	   'order.dploy.id':ployId,
+		 		    	   'order.dposition.mainPloy':mainPloy,
+		 		    	   'order.dposition.resourceCount':count
 		 				},                   
 		 		       timeout: 1000000000,                              
 		 		       error: function(){                      
@@ -367,7 +371,7 @@
     
      //选择素材
     function addResouce(){
-    	positionId = document.getElementById("positionId").value;
+    	positionCode = document.getElementById("positionCode").value;
     	ployId = document.getElementById("ployId").value;
     	var orderCode = document.getElementById("orderCode").value;
     	if(!ployId || ployId==-1){
@@ -375,9 +379,12 @@
         	document.getElementById("ploy_error").innerHTML = "策略不能为空";
     		return;
     	}
-    	var url = "initAreaResource.do?order.ployId="+ployId+"&order.positionId="+positionId+"&omRelTmp.orderCode="+orderCode;
+    	var url = "queryDOrderMateRelTmp.action?omrTmp.orderCode="+orderCode+"&order.dposition.positionCode="+positionCode;
     	var value = window.showModalDialog(url, window, "dialogHeight=580px;dialogWidth=820px;center=1;resizable=0;status=0;");
-    	showAreaResource(ployId,'${order.orderCode}',positionId);  
+    	for(var x in value){
+    		alert(value[x]);
+    	}
+    	showAreaResource(ployId,'${order.orderCode}',positionCode);  
     }
     /**
      * 检查开始时间和结束时间是否符合要求
@@ -500,7 +507,8 @@
 				<input type="button" onclick="addResouce();" class="btn" value="新增绑定" />
 			</td>
 	   </tr>
-	        <table  name="sucai" id="sucai"  width="100%" cellspacing="1" class="searchList">
+	        <table name="sucai" id="sucai"  width="100%" cellspacing="1" class="searchList">
+	        	<tr><td>策略详情</td><td>素材</td><td>操作</td></tr>
 	        </table>
 </table>
 <div style="margin-left:50px;">

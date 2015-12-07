@@ -13,7 +13,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "d_order_material_ref", catalog = "ads_x")
-public class DOrderMaterialRef implements
+public class DOrderMateRel implements
 		java.io.Serializable {
 
 	/**
