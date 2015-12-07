@@ -34,6 +34,7 @@ public class DResource extends CommonObject implements
 	private Timestamp auditTime;
 	private Integer categoryId;
 	private String isDefault;
+	private String positionCode;
 
 	@Id
 	@Column(name = "ID", unique = true, nullable = false)
@@ -143,5 +144,15 @@ public class DResource extends CommonObject implements
 	public void setIsDefault(String isDefault) {
 		this.isDefault = isDefault;
 	}
+
+	@Column(name = "POSITION_ID",length = 19)
+	public String getPositionCode() {
+		return positionCode;
+	}
+
+	public void setPositionCode(String positionCode) {
+		this.positionCode = positionCode;
+	}
+	
 
 }
