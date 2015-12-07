@@ -8,12 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.dvnchina.advertDelivery.model.CommonObject;
+
 /**
  * DResource entity. @author MyEclipse Persistence Tools
  */
 @Entity
 @Table(name = "d_resource", catalog = "ads_x")
-public class DResource implements
+public class DResource extends CommonObject implements
 		java.io.Serializable {
 
 	/**
