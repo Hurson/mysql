@@ -1,6 +1,7 @@
 package com.avit.dtmb.order.action;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -38,27 +39,35 @@ public class DOrderAction extends BaseAction {
 	private DOrderMateRelTmp omrTmp;
 	private List<ReleaseArea> releaseAreaList;
 	private DResource resource;
+	private String flag;
 	
 	
 	@Resource
 	private DOrderService dOrderService;
 	
 	@Action(value = "queryDOrderList", results = {
-			@Result(name = "success", location = "/page/order/dorder/dOrderList.jsp"),
-			@Result(name = "audit", location = "/page/order/dorder/auditDOrderList.jsp")})
+			@Result(name = "success", location = "/page/order/dorder/dOrderList.jsp")})
 	public String queryDOrderList(){
 		if(page == null){
 			page = new PageBeanDB();
 		}
 		page = dOrderService.queryDTMBOrderList(order, page.getPageNo(), page.getPageSize());
-		if(order != null && order.getState().equals("1")){
-			return "audit";
-		}
 		return SUCCESS;
 	}
+	
+	@Action(value = "queryAuditDOrderList", results = {
+			@Result(name = "success", location = "/page/order/dorder/auditDOrderList.jsp")})
+	public String queryAuditDOrderList(){
+		if(page == null){
+			page = new PageBeanDB();
+		}
+		page = dOrderService.queryAuditDOrderList(order, page.getPageNo(), page.getPageSize());
+		return SUCCESS;
+	}
+	
 	@Action(value = "getDOrder", results = { 
 			@Result(name = "success", location = "/page/order/dorder/addDOrder.jsp"),
-			@Result(name = "audit", location = "/page/ploy/dploy/auditDPloy.jsp")})
+			@Result(name = "audit", location = "/page/order/dorder/auditDOrder.jsp")})
 	public String getDTMBOrder(){
 		if(order != null){
 			order = dOrderService.getDTMBOrderById(order.getId());
@@ -68,9 +77,13 @@ public class DOrderAction extends BaseAction {
 			dpositionList = dOrderService.queryPositionList();
 		}
 		roleType = getLoginUser().getRoleType();
+		if("audit".equals(operType)){
+			return "audit";
+		}
 		
 		return SUCCESS;
 	}
+	
 	@Action(value = "queryDPloyList", results = { 
 			@Result(name = "success", location = "/page/order/dorder/selectPloy.jsp")})
 	public String queryDPloyList() {
@@ -82,10 +95,12 @@ public class DOrderAction extends BaseAction {
 		
 		return SUCCESS;
 	}
+	
 	@Action(value = "insertDOrderMateRelTmp")
 	public void insertDOrderMateRelTmp(){
 		dOrderService.insertDOrderMateRelTmp(order);
 	}
+	
 	@Action(value = "queryDOrderMateRelTmp", results = { 
 			@Result(name = "success", location = "/page/order/dorder/orderMateRelList.jsp")})
 	public String queryDOrderMateRelTmp(){
@@ -98,10 +113,25 @@ public class DOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "saveDPloy", results = { @Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp") })
-	public String saveDPloy(){
+	@Action(value = "getOrderResourceJson")
+	public void getOrderResourceJson() {
+		String result = dOrderService.getOrderResourceJson(omrTmp);
+		this.renderJson(result);
+	}
+	
+	@Action(value = "saveDOrder", results = { @Result(name = "success",type="redirect", location = "queryDOrderList.action") })
+	public String saveDOrder(){
+		order.setState("0");
+		if(order.getId() == null){
+			order.setCreateTime(new Date());
+			order.setModifyTime(new Date());
+		}else{
+			order.setModifyTime(new Date());
+		}
+		dOrderService.saveDOrder(order);
 		return SUCCESS;
 	}
+	
 	@Action(value = "deleteDPloy", results = { @Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp") })
 	public String deleteDPloy(){
 		List<String> idList = Arrays.asList(ids.split(","));
@@ -119,17 +149,20 @@ public class DOrderAction extends BaseAction {
 		
 		return SUCCESS;
 	}
+	
 	@Action(value = "saveDOrderMateRelTmp")
 	public void saveDOrderMateRelTmp(){
 		dOrderService.saveOrderMateRelTmp(ids, id);
 	}
+	
 	@Action(value = "checkDPloy")
 	public void checkDPloy(){
 		
 	}
-	@Action(value = "auditDPloy", results = { @Result(name="success", type="redirect", location="/dploy/queryDPloyList.action?ploy.status=1")})
-	public String auditDPloy(){
-		return SUCCESS;
+	@Action(value = "auditDOrder")
+	public void auditDPloy(){
+		String result = dOrderService.auditDTMBPloy(order, flag);
+		this.renderText(result);
 	}
 	
 	public DOrder getOrder() {
@@ -179,6 +212,14 @@ public class DOrderAction extends BaseAction {
 	}
 	public void setResource(DResource resource) {
 		this.resource = resource;
+	}
+
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
 	}
 	
 }

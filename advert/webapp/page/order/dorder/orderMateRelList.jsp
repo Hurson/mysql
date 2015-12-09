@@ -21,7 +21,7 @@
 </style>
 </head>
 <script type="text/javascript">
-	var mate = new Array();
+	
 	function query(){
 		$("#queryForm").submit();
 	}
@@ -73,9 +73,6 @@
 					break;
 				}
         	}
-        	if($.inArray(resourceId+"_"+materialName, mate)==-1){
-        		mate.push(resourceId+"_"+materialName);
-        	}
         	for (var i = 0; i < idss.length; i++) {
 	        	if (idss[i].checked) {
 	        		document.getElementById(idss[i].value).innerHTML = materialName;
@@ -103,14 +100,10 @@
         	$("[name='ids']").removeAttr("checked");//取消全选  
     	}
 	}
-	function save(){
-		window.returnValue=mate;
-		window.close();
-	}
-		
+	
 </script>
 <body class="mainBody">
-<form action="initAreaResource.do" method="post" id="queryForm">
+<form action="queryDOrderMateRelTmp.action" method="post" id="queryForm">
 	<input type="hidden" id="pageNo" name="page.pageNo" value="${page.pageNo}"/>
 	<input type="hidden" id="pageSize" name="page.pageSize" value="${page.pageSize}"/>
 	<input type="hidden" id="positionCode" name="order.dposition.positionCode" value="${order.dposition.positionCode}"/>
@@ -124,11 +117,13 @@
                 <td class="searchCriteria">
                 	<span>开始时间段：</span><input name="omrTmp.startTime" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:'HH:mm:ss'})" value="${omrTmp.startTime}" style="width: 14%"/>
                     <span>结束时间段：</span><input name="omrTmp.endTime" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:'HH:mm:ss'})" value="${omrTmp.endTime}" style="width: 14%"/>
-                    <input type="checkbox" name="omrTmp.contain" value="1" 
-                    <c:if test="${omrTmp.contain=='1'}">
-                    	checked="checked"
-                    </c:if> 
-                    /><span>包含已配置</span>
+                    <c:if test="${empty omrTmp.resource.id }">
+	                    <input type="checkbox" name="omrTmp.contain" value="1" 
+	                    <c:if test="${omrTmp.contain=='1'}">
+	                    	checked="checked"
+	                    </c:if> 
+	                    /><span>包含已配置</span>
+                    </c:if>
    				</td>
             </tr>
              <tr>
@@ -159,31 +154,37 @@
 				<td>位置</td>
 				<td>素材</td>
             </tr>
-            <c:forEach items="${page.dataList}" var="omrTmp" varStatus="pl">
+            <c:forEach items="${page.dataList}" var="omr" varStatus="pl">
 				<tr <c:if test="${pl.index%2==1}">class="sec"</c:if> 
 					onmouseout="this.style.backgroundColor=''" onmouseover="this.style.backgroundColor='#fffed9'">
 					<td>
-						<input type="checkbox" name="ids" value="${omrTmp.id}"  onclick="isAll(this,${omrTmp.releaseArea.areaCode})"/>
+						<input type="checkbox" name="ids" value="${omr.id}"  onclick="isAll(this,${omr.releaseArea.areaCode})"/>
 					</td>
-					<td><c:out value="${omrTmp.releaseArea.areaName}" /></td>
-					<td><c:out value="${omrTmp.startTime}" /></td>
-					<td><c:out value="${omrTmp.endTime}" /></td>
-					<c:if test="${not empty omrTmp.ployDetail}">
-						<td><c:out value="${omrTmp.ployDetail.typeValue}" /></td>
+					<td><c:out value="${omr.releaseArea.areaName}" /></td>
+					<td><c:out value="${omr.startTime}" /></td>
+					<td><c:out value="${omr.endTime}" /></td>
+					<c:if test="${not empty omr.ployDetail}">
+						<td><c:out value="${omr.ployDetail.typeValue}" /></td>
 					</c:if>
-					<td><c:out value="${omrTmp.indexNum}" /></td>
-					<td><div id="${omrTmp.id}">${omrTmp.resource.resourceName}</div></td>
+					<td><c:out value="${omr.indexNum}" /></td>
+					<td><div id="${omr.id}">${omr.resource.resourceName}</div></td>
 				</tr>
 			</c:forEach>
             <tr>
-            	<td colspan="7"><span class="required"></span>选择素材：
-            	<input id="resource" name="resource" class="e_input_add" value="" readonly="readonly" type="text" onclick="showResource();"/>
-            	<input type="button" onclick="delResource();" class="btn" value="删除素材" /> &nbsp;&nbsp; 
+            	
+            	<td colspan="7">
+            	<c:if test="${empty omrTmp.resource.id }">
+	            	<span class="required"></span>选择素材：
+	            	<input id="resource" name="resource" class="e_input_add" value="" readonly="readonly" type="text" onclick="showResource();"/>
+	            	<input type="button" onclick="delResource();" class="btn" value="删除素材" /> &nbsp;&nbsp; 
+            	</c:if>
             	<jsp:include page="../../common/page.jsp" flush="true" />
             	</td>
             </tr>
         </table>
-        <input type="button" value="确定" class="btn" onclick="save();"/>
+        <c:if test="${empty omrTmp.resource.id }">
+        	<input type="button" value="确定" class="btn" onclick="javascript:window.close();"/>
+        </c:if>
     </div>
 </form>
 </body>

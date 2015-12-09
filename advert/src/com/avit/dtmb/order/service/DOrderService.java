@@ -13,6 +13,7 @@ import com.dvnchina.advertDelivery.model.ReleaseArea;
 public interface DOrderService {
 
 	public PageBeanDB queryDTMBOrderList(DOrder order, int pageNo, int pageSize);
+	public PageBeanDB queryAuditDOrderList(DOrder order, int pageNo, int pageSize);
 	public DOrder getDTMBOrderById(Integer id);
 	public void saveDOrder(DOrder order);
 	public void deleteDOrder(List<String> ids);
@@ -23,4 +24,6 @@ public interface DOrderService {
 	public List<ReleaseArea> queryReleaseAreaList();
 	public PageBeanDB queryDResourceList(DResource resource, int pageNo, int pageSize);
 	public void saveOrderMateRelTmp(String ids, Integer id);
+	public String getOrderResourceJson(DOrderMateRelTmp omrTmp);
+	public String auditDTMBPloy(DOrder order, String flag);
 }

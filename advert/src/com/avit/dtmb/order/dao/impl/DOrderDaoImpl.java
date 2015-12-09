@@ -24,14 +24,8 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	}
 
 	@Override
-	public DOrder getDTMBOrderById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void saveDOrder(DOrder order) {
-		// TODO Auto-generated method stub
+		this.saveOrUpdate(order);
 
 	}
 
@@ -57,9 +51,10 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	@Override
 	public void insertDOrderMateRelTmp(DOrder order) {
 		int count = order.getDposition().getResourceCount();
-		String mainPloy = order.getDposition().getMainPloy();
-		if(StringUtils.isNotBlank(mainPloy)&& mainPloy.split("\\|").length > 1){
-			for(String type : mainPloy.split("\\|")){
+		String mainPloys = order.getDposition().getMainPloy();
+		String mainPloy = "";
+		if(StringUtils.isNotBlank(mainPloys)&& mainPloys.split("\\|").length > 1){
+			for(String type : mainPloys.split("\\|")){
 				if(type.equals("1") || type.equals("2")){
 					continue;
 				}
@@ -69,7 +64,7 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		}
 		for(int i = 0; i < count; i ++){
 			String sql = "insert into d_order_mate_rel_tmp(order_code,area_code,start_time, end_time,ploy_detail_id,index_num)" +
-					"select "+order.getOrderCode()+",a.type_value,LEFT(b.type_value,8),RIGHT(b.type_value,8)"+(StringUtils.isBlank(mainPloy)?"":",c.id") +","+i+" from d_ploy_detail a,d_ploy_detail b"+(StringUtils.isBlank(mainPloy)?"":",d_ploy_detail c")+
+					"select "+order.getOrderCode()+",a.type_value,LEFT(b.type_value,8),RIGHT(b.type_value,8)"+(StringUtils.isBlank(mainPloy)?",0":",c.id") +","+i+" from d_ploy_detail a,d_ploy_detail b"+(StringUtils.isBlank(mainPloy)?"":",d_ploy_detail c")+
 					" where a.ploy_id = b.ploy_id"+(StringUtils.isBlank(mainPloy)?"":" and b.ploy_id= c.ploy_id")+
 	                " and a.ploy_type='1' and  b.ploy_type='2'"+(StringUtils.isBlank(mainPloy)?"":" and c.ploy_type='"+mainPloy+"'")+" and a.ploy_id=" + order.getDploy().getId();
 			this.executeBySQL(sql, null);
@@ -80,14 +75,20 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	@Override
 	public void deleteDOrderMateRelTmp(DOrder order) {
-		String sql = "delete from DOrderMateRelTmp omr where omr.orderCode ='" + order.getOrderCode()+"'";
-		this.executeBySQL(sql, null);
+		String hql = "delete from DOrderMateRelTmp where orderCode ='" + order.getOrderCode()+"'";
+		this.executeByHQL(hql, null);
 		
 	}
 
 	@Override
 	public PageBeanDB queryDOrderMateRelTmpList(DOrderMateRelTmp omrTmp, int pageNo, int pageSize) {
 		String hql = "from DOrderMateRelTmp tmp where tmp.orderCode = '" + omrTmp.getOrderCode()+"'";
+		if(omrTmp.getResource() == null && StringUtils.isBlank(omrTmp.getContain())){
+			hql += " and tmp.resource.id is null";
+		}
+		if(omrTmp.getResource() != null && omrTmp.getResource().getId() != null){
+			hql += " and tmp.resource.id =" + omrTmp.getResource().getId();
+		}
 		return this.getPageList2(hql, null, pageNo, pageSize);
 	}
 
@@ -109,6 +110,53 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		String sql = "update d_order_mate_rel_tmp omr set omr.resource_id = ? where omr.id in ("+ ids +")";
 		this.executeBySQL(sql, new Object[]{id});
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DResource> getOrderResourceJson(DOrderMateRelTmp omrTmp) {
+		String hql = "select distinct res from DResource res,DOrderMateRelTmp omr where res.id = omr.resource.id and omr.orderCode = '"+omrTmp.getOrderCode()+"'";
+		return (List<DResource>)this.getListForAll(hql, null);
+	}
+
+	@Override
+	public void auditDTMBPloy(DOrder order) {
+		
+		
+	}
+
+	@Override
+	public void saveDOrderMateRel(DOrder order) {
+		String sql = "insert into d_order_mate_rel (select * from d_order_mate_rel_tmp where order_code ='" + order.getOrderCode()+"')";
+		this.executeBySQL(sql, null);
+	}
+
+	@Override
+	public void deleteDOrderMateRel(DOrder order) {
+		String hql = "delete from DOrderMateRel where orderCode ='" + order.getOrderCode() + "'";
+		this.executeByHQL(hql, null);
+		
+	}
+
+	@Override
+	public void copyDOrderMateRelTmp(DOrder order) {
+		String sql = "insert into d_order_mate_rel_tmp (select * from d_order_mate_rel where order_code ='" + order.getOrderCode()+"')";
+		this.executeBySQL(sql, null);
+		
+	}
+
+	@Override
+	public PageBeanDB queryAuditDOrderList(DOrder order, int pageNo, int pageSize) {
+		String hql = "from DOrder order where order.state < '3'";
+		return this.getPageList2(hql, null, pageNo, pageSize);
+	}
+
+	@Override
+	public int insertPlayList(DOrder order) {
+		String sql = "insert into d_play_list(order_code, position_code, area_code, start_time, end_time,ploy_type,type_value,resource_ids,resource_paths,status) "+
+					 "(select od.order_code,od.position_code,omr.area_code,concat(od.start_date,' ',omr.start_time),concat(od.end_date,' ',omr.end_time),dt.ploy_type,dt.type_value,'','','0' "+
+				     "from d_order od, d_order_mate_rel omr,d_ploy_detail dt where od.order_code = omr.order_code and omr.ploy_detail_id=dt.id and od.id="+order.getId()+")";
+		return this.executeBySQL(sql, null);
 	}
 	
 

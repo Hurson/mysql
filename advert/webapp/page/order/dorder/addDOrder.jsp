@@ -3,6 +3,7 @@
 	String path = request.getContextPath();
 %>
 <%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld"%>
+<%@ taglib prefix="fmt" uri="/WEB-INF/tags/fmt.tld"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -49,6 +50,8 @@
 	var previewValue;
 	function init(time){
 		aheadTime = time;
+		showOrderResource(${order.orderCode});
+		$("#periodDate").show();
 	}
 
 	/**
@@ -177,9 +180,12 @@
 		 		    	   }
 		 			   }  
 		 		   });
+		 		   document.getElementById("ployName").style.borderColor="";
+      			   document.getElementById("ploy_error").innerHTML = "";
+                   hidDetails();
             }
         }
-        hidDetails();
+        
     }
      
     function showResource(pId){
@@ -276,8 +282,8 @@
     		var startDate = $("#startTime").val();
     		var endDate = $("#endDate").val();
     		var ployId = $("#ployId").val();
-    		var positionId = $("#positionId").val();
-    		//var selResource = $("#selResource").val();
+    		var positionId = $("#positionCode").val();
+    		
     		var orderCode = $("#orderCode").val();
     		$.ajax({   
    		       url:'checkOrderRule2.do',       
@@ -296,12 +302,12 @@
    		       },    
    		       success: function(result){ 
    		    	   if(result!='-1'){
-   			    	   if(result=='0'){
+   			    	   //if(result=='0'){
    			    			$("#saveForm").submit();
    			    			
-   			    	   }else{
+   			    	   /*}else{
    			    		   alert(result);
-   			    	   }
+   			    	   }*/
    		    	   }else{
    			    		alert("系统错误，请联系管理员！");
    		    	   }
@@ -321,9 +327,9 @@
     		$("#contractId").focus();
     		return false;
     	}
-    	if(isEmpty($("#positionId").val())){
+    	if(isEmpty($("#positionCode").val())){
     		alert("请选择广告位！");
-    		$("#positionId").focus();
+    		$("#positionCode").focus();
     		return false;
     	}
     	if(isEmpty($("#ployId").val())){
@@ -362,7 +368,7 @@
 			return false;
 		}
 		
-    	if($("#sucai").find("tr").length==0){
+    	if($("#sucai").find("tr").length < 2){
     		alert("请为策略绑定素材！");
     		return false;
     	}
@@ -380,12 +386,53 @@
     		return;
     	}
     	var url = "queryDOrderMateRelTmp.action?omrTmp.orderCode="+orderCode+"&order.dposition.positionCode="+positionCode;
-    	var value = window.showModalDialog(url, window, "dialogHeight=580px;dialogWidth=820px;center=1;resizable=0;status=0;");
-    	for(var x in value){
-    		alert(value[x]);
-    	}
-    	showAreaResource(ployId,'${order.orderCode}',positionCode);  
+    	window.showModalDialog(url, window, "dialogHeight=580px;dialogWidth=820px;center=1;resizable=0;status=0;");
+    	showOrderResource(orderCode);
+    	//showAreaResource(ployId,'${order.orderCode}',positionCode);  
     }
+    function showOrderResource(orderCode){
+    	$.ajax({   
+   		       url:'getOrderResourceJson.action',       
+   		       type: 'POST',    
+   		       dataType: 'text',   
+   		       data: {
+	   				'omrTmp.orderCode':orderCode
+   			   },                   
+   		       timeout: 1000000000,                              
+   		       error: function(){                      
+   		    		alert("系统错误，请联系管理员！");
+   		       },    
+   		       success: function(result){ 
+   		    	   if(result!=""){
+   			    	   var json=eval("("+result+")");
+					    var str="<tr><td>策略详情</td><td>素材</td><td>操作</td></tr>";
+					    if(result==null||json==null){
+							   return;
+						}
+					   for(var i = 0;i<json.length;i++){
+					        var obj = json[i];
+						    str+="<tr><td><a style='diplay:block;float:left' href=javascript:showOrderResourceDetail("+orderCode+","+obj.id+")>详情</a></td>"+
+							 	 "<td>"+obj.resourceName+"</td>"+
+						   		 "<td><a style='diplay:block;float:left' href=javascript:previewResource("+obj.id+")>预览</a></td></tr>";
+						   		 
+					   }
+					   $("#sucai").html(str);
+   		    	   }else{
+   			    		alert("系统错误，请联系管理员！");
+   		    	   }
+   		    	   
+   			   }  
+   		   }); 
+    }
+    function showOrderResourceDetail(orderCode, resourceId){
+    
+    	var url = "queryDOrderMateRelTmp.action?omrTmp.orderCode="+orderCode+"&omrTmp.resource.id="+resourceId;
+    	window.showModalDialog(url, window, "dialogHeight=580px;dialogWidth=820px;center=1;resizable=0;status=0;");
+    }
+    function previewResource(resourceId){
+    	//TODO
+    }
+    
     /**
      * 检查开始时间和结束时间是否符合要求
      * */
@@ -423,9 +470,9 @@
 </head>
 
 <body class="mainBody" onload='init(${orderOpAheadTime});'>
-<form action="saveOrder.do" method="post" id="saveForm">
-<input type="hidden" id="selResource" name="order.selResource"  />
-<input type="hidden" id="startTime" name="order.startDateStr"  />
+<form action="saveDOrder.action" method="post" id="saveForm">
+<input type="hidden" name="order.id" id="selResource" value="${order.id }" />
+<input type="hidden" id="startTime" name="order.startDateStr" />
 <div class="detail">
 <table cellspacing="1" class="searchList" align="left">
 	<tr class="title">
@@ -439,7 +486,7 @@
 		<td width="12%" align="right"><span class="required">*</span>合同名称：</td>
 		<td width="33%">
 			<input id="contractName" name="order.contractName" class="e_input_add" readonly="readonly" type="text" onclick="showContent('contract',null);"/>
-			<input type="hidden" id="contractId" name="order.contractId" />
+			<input type="hidden" id="contractId" name="order.contract.id" />
 			<span id="contract_error"></span>
 		</td>
 	</tr>
@@ -449,7 +496,7 @@
 	<tr>
 		<td width="12%" align="right">订单号：</td>
 		<td colspan="3"><input type="hidden" id="orderCode" name="order.orderCode" value="${order.orderCode}" /> ${order.orderCode}</td>
-		<input type="hidden" id="contractId" name="order.contractId" value="0"  />
+		<input type="hidden" id="contractId" name="order.contract.id" value="0"  />
 	</tr>
 	</c:if>
 	<tr>
@@ -472,7 +519,7 @@
 		</td>
 		<td align="right"><span class="required">*</span>策略名称：</td>
 		<td>
-			<input id="ployName" name="order.dploy.ployName" class="e_input_add" readonly="readonly" type="text" onclick="showContent('ploy',null);" />
+			<input id="ployName" name="order.dploy.ployName" value="${order.dploy.ployName }" class="e_input_add" readonly="readonly" type="text" onclick="showContent('ploy',null);" />
 			<input type="hidden"  id="ployId" name="order.dploy.id" value="${order.dploy.id}"/>
 			<span id="ploy_error"></span>
 		</td>
@@ -480,10 +527,9 @@
 	
 	<tr id="periodDate" style="display: none">
 		<td align="right"><span class="required">*</span>开始日期：</td>
-		<td><input type="text" readonly="readonly"  class="e_input_time" id="startDate"	 onclick="selectDate();"/></td>
+		<td><input type="text" name="order.startDate" readonly="readonly"  class="e_input_time" id="startDate"	value="${order.startDate }" onclick="selectDate();"/></td>
 		<td align="right"><span class="required">*</span>结束日期：</td>
-		<td><input type="text" name="order.endDateStr" readonly="readonly" class="e_input_time" id="endDate" 
-			onclick="selectDate();"/></td>
+		<td><input type="text" name="order.endDate" readonly="readonly" class="e_input_time" id="endDate" value="${order.endDate }" onclick="selectDate();"/></td>
 	</tr>
 	
 	<tr id="onceDate" style="display: none">

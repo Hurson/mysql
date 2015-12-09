@@ -16,15 +16,15 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import com.avit.dtmb.material.bean.DResource;
 import com.avit.dtmb.ploy.bean.DPloyDetail;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
-import com.dvnchina.advertDelivery.model.ResourceReal;
 
 /**
  * DOrderMaterialRef entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_order_mate_rel_tmp", catalog = "ads_x")
+@Table(name = "d_order_mate_rel_tmp")
 public class DOrderMateRelTmp implements
 		java.io.Serializable {
 
@@ -34,7 +34,7 @@ public class DOrderMateRelTmp implements
 	private static final long serialVersionUID = 6902616209233440440L;
 	private Integer id;
 	private String orderCode;
-	private ResourceReal resource;
+	private DResource resource;
 	private String startTime;
 	private String endTime;
 	private ReleaseArea releaseArea;
@@ -80,7 +80,7 @@ public class DOrderMateRelTmp implements
 		this.endTime = endTime;
 	}
 
-	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
+	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinColumn(name = "AREA_CODE", referencedColumnName ="AREA_CODE", insertable = false, updatable = false)
 	@NotFound(action=NotFoundAction.IGNORE)
 	public ReleaseArea getReleaseArea() {
@@ -91,14 +91,14 @@ public class DOrderMateRelTmp implements
 		this.releaseArea = releaseArea;
 	}
 
-	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
+	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinColumn(name = "RESOURCE_ID", referencedColumnName ="ID", insertable = false, updatable = false)
 	@NotFound(action=NotFoundAction.IGNORE)
-	public ResourceReal getResource() {
+	public DResource getResource() {
 		return resource;
 	}
 
-	public void setResource(ResourceReal resource) {
+	public void setResource(DResource resource) {
 		this.resource = resource;
 	}
 	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)

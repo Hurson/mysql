@@ -72,7 +72,7 @@ public class DPloy implements java.io.Serializable {
 	public void setPloyName(String ployName) {
 		this.ployName = ployName;
 	}
-	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
+	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "POSITION_CODE", referencedColumnName ="POSITION_CODE")
     @NotFound(action=NotFoundAction.IGNORE)
 	public DAdPosition getDposition() {
@@ -146,7 +146,7 @@ public class DPloy implements java.io.Serializable {
 	public void setAuditAdvice(String auditAdvice) {
 		this.auditAdvice = auditAdvice;
 	}
-	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@JoinColumn(name="PLOY_ID")
 	public List<DPloyDetail> getPloyDetailList() {
 		return ployDetailList;

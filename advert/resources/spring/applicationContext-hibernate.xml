@@ -212,8 +212,7 @@
 	</bean>
 
 	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager"
-		scope="prototype">
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager"	scope="prototype">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="openSessionInViewInterceptor"
@@ -262,7 +261,7 @@
 			</list>
 		</property>
 	</bean>
-	
+ 
 	<!-- jdbc模版 -->
 	 <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource" />

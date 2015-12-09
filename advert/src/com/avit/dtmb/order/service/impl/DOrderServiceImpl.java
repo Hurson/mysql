@@ -15,6 +15,7 @@ import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.google.gson.Gson;
 @Service
 public class DOrderServiceImpl implements DOrderService {
 
@@ -27,13 +28,16 @@ public class DOrderServiceImpl implements DOrderService {
 
 	@Override
 	public DOrder getDTMBOrderById(Integer id) {
-		
-		return (DOrder)dOrderDao.get(DOrder.class, id);
+		DOrder order = (DOrder)dOrderDao.get(DOrder.class, id);
+		dOrderDao.deleteDOrderMateRelTmp(order);
+		dOrderDao.copyDOrderMateRelTmp(order);
+		return order;
 	}
 
 	@Override
 	public void saveDOrder(DOrder order) {
-		// TODO Auto-generated method stub
+		dOrderDao.saveDOrder(order);
+		this.saveOrderMateRel(order);
 
 	}
 
@@ -56,7 +60,7 @@ public class DOrderServiceImpl implements DOrderService {
 
 	@Override
 	public void insertDOrderMateRelTmp(DOrder order) {
-		//dOrderDao.deleteDOrderMateRelTmp(order);
+		dOrderDao.deleteDOrderMateRelTmp(order);
 		dOrderDao.insertDOrderMateRelTmp(order);
 		
 	}
@@ -82,6 +86,49 @@ public class DOrderServiceImpl implements DOrderService {
 	public void saveOrderMateRelTmp(String ids, Integer id) {
 		dOrderDao.saveOrderMateRelTmp(ids, id);
 		
+	}
+
+	@Override
+	public String getOrderResourceJson(DOrderMateRelTmp omrTmp) {
+		List<DResource> resourceList = dOrderDao.getOrderResourceJson(omrTmp);
+		Gson gson = new Gson();
+		return gson.toJson(resourceList);
+	}
+
+	@Override
+	public String auditDTMBPloy(DOrder order, String flag) {
+		
+		DOrder dorder = (DOrder)dOrderDao.get(DOrder.class, order.getId());
+		if(insertPlayList(dorder) > 0){
+			if("1".equals(flag)){
+				dorder.setState("6");
+			}else if("-1".equals(flag)){
+				int state = Integer.parseInt(dorder.getState()) + 3;
+				dorder.setState(state + "");
+			}
+			dorder.setAuditAdvice(order.getAuditAdvice());
+			dOrderDao.saveDOrder(dorder);
+			return "0";
+		}else{
+			return "-1";
+		}
+		
+	}
+	private void saveOrderMateRel(DOrder order){
+		dOrderDao.deleteDOrderMateRel(order);
+		dOrderDao.saveDOrderMateRel(order);
+		dOrderDao.deleteDOrderMateRelTmp(order);
+		
+	}
+
+	@Override
+	public PageBeanDB queryAuditDOrderList(DOrder order, int pageNo, int pageSize) {
+		
+		return dOrderDao.queryAuditDOrderList(order, pageNo, pageSize);
+	}
+	private int insertPlayList(DOrder order){
+		
+		return dOrderDao.insertPlayList(order);
 	}
 
 }

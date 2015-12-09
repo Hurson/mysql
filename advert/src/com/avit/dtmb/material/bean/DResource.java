@@ -1,21 +1,19 @@
 package com.avit.dtmb.material.bean;
 // default package
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.dvnchina.advertDelivery.model.CommonObject;
-
 /**
  * DResource entity. @author MyEclipse Persistence Tools
  */
 @Entity
 @Table(name = "d_resource", catalog = "ads_x")
-public class DResource extends CommonObject implements
+public class DResource implements
 		java.io.Serializable {
 
 	/**
@@ -29,9 +27,9 @@ public class DResource extends CommonObject implements
 	private String description;
 	private Integer customerId;
 	private String status;
-	private Timestamp createTime;
-	private Timestamp modifyTime;
-	private Timestamp auditTime;
+	private Date createTime;
+	private Date modifyTime;
+	private Date auditTime;
 	private Integer categoryId;
 	private String isDefault;
 	private String positionCode;
@@ -101,29 +99,29 @@ public class DResource extends CommonObject implements
 	}
 
 	@Column(name = "CREATE_TIME", length = 19)
-	public Timestamp getCreateTime() {
+	public Date getCreateTime() {
 		return this.createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 
 	@Column(name = "MODIFY_TIME", length = 19)
-	public Timestamp getModifyTime() {
+	public Date getModifyTime() {
 		return this.modifyTime;
 	}
 
-	public void setModifyTime(Timestamp modifyTime) {
+	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
 	}
 
 	@Column(name = "AUDIT_TIME", length = 19)
-	public Timestamp getAuditTime() {
+	public Date getAuditTime() {
 		return this.auditTime;
 	}
 
-	public void setAuditTime(Timestamp auditTime) {
+	public void setAuditTime(Date auditTime) {
 		this.auditTime = auditTime;
 	}
 

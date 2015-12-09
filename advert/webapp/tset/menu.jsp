@@ -264,7 +264,7 @@ function  showColumn(){
 	                    	<li id="ddwh" style="display: none;"><a href="#"  onclick="openPage('/page/order/queryOrderList.do', '91', '订单维护', '订单维护')">&gt;&gt;&nbsp;订单维护</a></li>
 							<li id="ddsh" style="display: none;"><a href="#"  onclick="openPage('/page/order/queryOrderAuditList.do', '92', '订单审核', '订单审核')">&gt;&gt;&nbsp;订单审核</a></li>
 							<li id="wxddwh" style="display: none;"><a href="#"  onclick="openPage('/<%=path%>/dorder/queryDOrderList.action', '94', '无线订单维护', '无线订单维护')">&gt;&gt;&nbsp;无线订单维护</a></li>
-							<li id="wxddsh" style="display: none;"><a href="#"  onclick="openPage('/<%=path%>/dorder/queryDOrderAuditList.action', '95', '无线订单审核', '无线订单审核')">&gt;&gt;&nbsp;无线订单审核</a></li>
+							<li id="wxddsh" style="display: none;"><a href="#"  onclick="openPage('/<%=path%>/dorder/queryAuditDOrderList.action', '95', '无线订单审核', '无线订单审核')">&gt;&gt;&nbsp;无线订单审核</a></li>
 							<li id="zmggdd" style="display: none;"><a href="#"  onclick="openPage('/page/order/findSubtitleList.do', '93', '字幕广告订单', '字幕广告订单')">&gt;&gt;&nbsp;字幕广告订单</a></li>
 	                    </ul>
 	                </li>

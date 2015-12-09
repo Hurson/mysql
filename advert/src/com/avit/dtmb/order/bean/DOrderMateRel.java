@@ -12,7 +12,7 @@ import javax.persistence.Table;
  * DOrderMaterialRef entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_order_material_ref", catalog = "ads_x")
+@Table(name = "d_order_mate_rel")
 public class DOrderMateRel implements
 		java.io.Serializable {
 
@@ -26,8 +26,7 @@ public class DOrderMateRel implements
 	private String startTime;
 	private String endTime;
 	private String areaCode;
-	private Integer ployType;
-	private String typeValue;
+	private Integer ployDetailId;
 	private Integer indexNum;
 
 	@Id
@@ -86,27 +85,18 @@ public class DOrderMateRel implements
 		this.areaCode = areaCode;
 	}
 
-	@Column(name = "PLOY_TYPE")
-	public Integer getPloyType() {
-		return this.ployType;
-	}
-
-	public void setPloyType(Integer ployType) {
-		this.ployType = ployType;
-	}
-
-	@Column(name = "TYPE_VALUE")
-	public String getTypeValue() {
-		return this.typeValue;
-	}
-
-	public void setTypeValue(String typeValue) {
-		this.typeValue = typeValue;
-	}
-
 	@Column(name = "INDEX_NUM")
 	public Integer getIndexNum() {
 		return this.indexNum;
+	}
+	
+	@Column(name = "PLOY_DETAIL_ID")
+	public Integer getPloyDetailId() {
+		return ployDetailId;
+	}
+
+	public void setPloyDetailId(Integer ployDetailId) {
+		this.ployDetailId = ployDetailId;
 	}
 
 	public void setIndexNum(Integer indexNum) {

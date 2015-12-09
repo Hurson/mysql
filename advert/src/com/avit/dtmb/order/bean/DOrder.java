@@ -1,6 +1,7 @@
 package com.avit.dtmb.order.bean;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.NotFoundAction;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.model.Contract;
+import com.dvnchina.advertDelivery.model.Customer;
 
 /**
  * DOrder entity. @author MyEclipse Persistence Tools
@@ -36,12 +38,17 @@ public class DOrder  implements java.io.Serializable {
     private String orderCode;
     private DAdPosition dposition;
     private DPloy dploy;
+    private Customer customer;
     private Contract contract;
-    private Date startTime;
-    private Date endTime;
+    private Date startDate;
+    private Date endDate;
     private Date createTime;
     private Date modifyTime;
     private String state;
+    private String auditAdvice;
+    private Date auditTime;
+    private Integer operatorId;
+    private String description;
 
 
 	/** default constructor */
@@ -69,8 +76,8 @@ public class DOrder  implements java.io.Serializable {
         this.orderCode = orderCode;
     }
     
-    @ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "POSITION_CODE", referencedColumnName ="POSITION_CODE", insertable = false, updatable = false)
+    @ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "POSITION_CODE", referencedColumnName ="POSITION_CODE")
     @NotFound(action=NotFoundAction.IGNORE)
     public DAdPosition getDposition() {
         return this.dposition;
@@ -80,8 +87,8 @@ public class DOrder  implements java.io.Serializable {
         this.dposition = dposition;
     }
     
-    @ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "PLOY_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+    @ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "PLOY_ID", referencedColumnName = "ID")
     @NotFound(action=NotFoundAction.IGNORE)
     public DPloy getDploy() {
         return this.dploy;
@@ -90,8 +97,20 @@ public class DOrder  implements java.io.Serializable {
     public void setDploy(DPloy dploy) {
         this.dploy = dploy;
     }
-    @ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "CONTRACT_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+    
+    @ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
+    @NotFound(action=NotFoundAction.IGNORE)
+    public Customer getCustomer() {
+		return customer;
+	}
+    
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "CONTRACT_ID", referencedColumnName = "ID")
     @NotFound(action=NotFoundAction.IGNORE)
     public Contract getContract() {
         return this.contract;
@@ -101,22 +120,22 @@ public class DOrder  implements java.io.Serializable {
         this.contract = contract;
     }
     
-    @Column(name="START_TIME", length=19)
-    public Date getStartTime() {
-        return this.startTime;
+    @Column(name="START_DATE", length=10)
+    public Date getStartDate() {
+        return this.startDate;
     }
     
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
     
-    @Column(name="END_TIME", length=19)
-    public Date getEndTime() {
-        return this.endTime;
+    @Column(name="END_DATE", length=10)
+    public Date getEndDate() {
+        return this.endDate;
     }
     
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
     
     @Column(name="CREATE_TIME", length=19)
@@ -145,6 +164,38 @@ public class DOrder  implements java.io.Serializable {
     public void setState(String state) {
         this.state = state;
     }
+    @Column(name="AUDIT_ADVICE")
+	public String getAuditAdvice() {
+		return auditAdvice;
+	}
+
+	public void setAuditAdvice(String auditAdvice) {
+		this.auditAdvice = auditAdvice;
+	}
+	 @Column(name="AUDIT_TIME")
+	public Date getAuditTime() {
+		return auditTime;
+	}
+
+	public void setAuditTime(Date auditTime) {
+		this.auditTime = auditTime;
+	}
+	@Column(name="OPERATOR_ID")
+	public Integer getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(Integer operatorId) {
+		this.operatorId = operatorId;
+	}
+	@Column(name="DESCRIPTION")
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	
 
 }
