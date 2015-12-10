@@ -64,6 +64,8 @@
             <tr class="title">
               <td class="dot"></td>
                 <td>策略名称</td>
+                <td>区域</td>
+                <td>时段</td>
                 <c:forEach items="${page.dataList[0].dposition.mainPloyMap }" var="map">
                 	<td>${map.value }</td>
                 </c:forEach>
@@ -75,7 +77,28 @@
 						<input type="radio"	name="ployId" value="${ploy.id}_${ploy.ployName}_${ploy.dposition.resourceCount}_${ploy.dposition.mainPloy}" 
 						
 					</td>
-					<td><c:out value="${ploy.ployName}" /></td>
+					<td>
+						<table>
+							<c:forEach items="${ploy.ployDetailList}" var="sub" >
+							<c:if test="${'1' eq sub.ployType }">
+								<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
+									<td><c:out value="${sub.typeValue}" /></td>
+								</tr>
+							</c:if>
+							</c:forEach>
+						</table>
+					</td>
+					<td>
+						<table>
+							<c:forEach items="${ploy.ployDetailList}" var="sub" >
+							<c:if test="${'2' eq sub.ployType }">
+								<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
+									<td><c:out value="${sub.typeValue}" /></td>
+								</tr>
+							</c:if>
+							</c:forEach>
+						</table>
+					</td>
 					<c:forTokens items="${ploy.dposition.mainPloy}" delims="|" var="type">
 					<td>
 						<table>
