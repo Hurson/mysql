@@ -1,5 +1,6 @@
 package com.avit.dtmb.ploy.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -7,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.avit.dtmb.ploy.bean.DPloy;
+import com.avit.dtmb.ploy.bean.DPloyDetail;
 import com.avit.dtmb.ploy.dao.DPloyDao;
 import com.avit.dtmb.ploy.service.DPloyService;
 import com.avit.dtmb.position.bean.DAdPosition;
@@ -27,6 +29,44 @@ public class DPloyServiceImpl implements DPloyService {
 
 	@Override
 	public void saveDTMBPloy(DPloy ploy) {
+		List<DPloyDetail> detailList = ploy.getPloyDetailList();
+		if(detailList == null){
+			detailList = new ArrayList<DPloyDetail>();
+			ploy.setPloyDetailList(detailList);
+		}
+		
+		boolean timeFlag = false;
+		boolean areaFlag = false;
+		
+		for(DPloyDetail detail : detailList){
+			if(detail == null){
+				continue;
+			}
+			if("1".equals(detail.getPloyType())){
+				areaFlag = true;
+			}
+			if("2".equals(detail.getPloyType())){
+				timeFlag = true;
+			}
+		}
+		if(!areaFlag){
+			List<String> accessAreaCodes = dPloyDao.getUserAccessAreaCode(ploy.getOperatorId());
+			for(String areaCode : accessAreaCodes){
+				DPloyDetail detail = new DPloyDetail();
+				detail.setPloyType("1");
+				detail.setTypeValue(areaCode);
+				detailList.add(detail);
+			}
+			
+		}
+		if(!timeFlag){
+			DPloyDetail detail = new DPloyDetail();
+			detail.setPloyType("2");
+			detail.setStartTime("00:00:00");
+			detail.setEndTime("23:59:59");
+			detailList.add(detail);
+		}
+		
 		dPloyDao.saveDTMBPloy(ploy);
 
 	}

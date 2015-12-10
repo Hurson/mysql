@@ -1,5 +1,6 @@
 package com.avit.dtmb.order.dao.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -19,7 +20,7 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	@Override
 	public PageBeanDB queryDTMBOrderList(DOrder order, int pageNo, int pageSize) {
-		String hql = "from DOrder";
+		String hql = "from DOrder order where order.state < '7'";
 		return this.getPageList2(hql, null, pageNo, pageSize);
 	}
 
@@ -156,6 +157,12 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		String sql = "insert into d_play_list(order_code, position_code, area_code, start_time, end_time,ploy_type,type_value,resource_ids,resource_paths,status) "+
 					 "(select od.order_code,od.position_code,omr.area_code,concat(od.start_date,' ',omr.start_time),concat(od.end_date,' ',omr.end_time),dt.ploy_type,dt.type_value,'','','0' "+
 				     "from d_order od, d_order_mate_rel omr,d_ploy_detail dt where od.order_code = omr.order_code and omr.ploy_detail_id=dt.id and od.id="+order.getId()+")";
+		return this.executeBySQL(sql, null);
+	}
+
+	@Override
+	public int updatePlayListEndDate(DOrder order) {
+		String sql = "update d_play_list set end_time = concat('"+(new SimpleDateFormat("yyyy-MM-dd").format(order.getEndDate()))+"',right(end_time,9)) where order_code = '" +order.getOrderCode()+"'";
 		return this.executeBySQL(sql, null);
 	}
 	

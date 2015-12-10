@@ -102,12 +102,14 @@
 			}
 			op = 1;
 			var orderId = '${order.id}';
+			var endDate = '${order.endDate}';
 			$.ajax( {
 				type : "post",
 				url : 'auditDOrder.action',
 				dataType : 'text',
 				data : {
 					'order.id':orderId,
+					'order.endDate':endDate,
 					'flag': flag,
 					'order.auditAdvice':$("#checkOpinion").val()
 				},

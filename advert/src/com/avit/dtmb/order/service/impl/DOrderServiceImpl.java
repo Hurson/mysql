@@ -1,5 +1,6 @@
 package com.avit.dtmb.order.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -43,7 +44,15 @@ public class DOrderServiceImpl implements DOrderService {
 
 	@Override
 	public void deleteDOrder(List<String> ids) {
-		// TODO Auto-generated method stub
+		for(String id : ids){
+			DOrder order = (DOrder)dOrderDao.get(DOrder.class, Integer.valueOf(id));
+			if("0".equals(order.getState())){
+				dOrderDao.delete(order);
+			}else{
+				order.setState("2");
+				dOrderDao.saveOrUpdate(order);
+			}
+		}
 
 	}
 
@@ -97,21 +106,45 @@ public class DOrderServiceImpl implements DOrderService {
 
 	@Override
 	public String auditDTMBPloy(DOrder order, String flag) {
+		String result = "-1";
 		
 		DOrder dorder = (DOrder)dOrderDao.get(DOrder.class, order.getId());
-		if(insertPlayList(dorder) > 0){
-			if("1".equals(flag)){
+		if("1".equals(flag)){
+			dorder.setEndDate(order.getEndDate());
+			
+			if("0".equals(dorder.getState()) && insertPlayList(dorder) > 0){
 				dorder.setState("6");
-			}else if("-1".equals(flag)){
-				int state = Integer.parseInt(dorder.getState()) + 3;
-				dorder.setState(state + "");
+				result = "0";
+			}else if("1".equals(dorder.getState()) && updatePlayListEndDate(dorder) > 0){
+				dorder.setState("6");
+				result = "0";
+			}else if("2".equals(dorder.getState())){
+				dorder.setEndDate(new Date());
+				if(updatePlayListEndDate(dorder) > 0){
+					dorder.setState("7");
+					result = "0";
+				}else{
+					result = "-1";
+				}
+				
+			}else{
+				result = "-1";
 			}
+		
+		}else if("-1".equals(flag)){
+			int state = Integer.parseInt(dorder.getState()) + 3;
+			dorder.setState(state + "");
+		}else{
+			result = "-1";
+		}
+		
+		if("0".equals(result)){
 			dorder.setAuditAdvice(order.getAuditAdvice());
 			dOrderDao.saveDOrder(dorder);
-			return "0";
-		}else{
-			return "-1";
 		}
+		
+		return result;
+		
 		
 	}
 	private void saveOrderMateRel(DOrder order){
@@ -127,8 +160,12 @@ public class DOrderServiceImpl implements DOrderService {
 		return dOrderDao.queryAuditDOrderList(order, pageNo, pageSize);
 	}
 	private int insertPlayList(DOrder order){
-		
-		return dOrderDao.insertPlayList(order);
+		int result = dOrderDao.insertPlayList(order);
+		return result;
+	}
+	private int updatePlayListEndDate(DOrder order){
+		int result = dOrderDao.updatePlayListEndDate(order);
+		return result;
 	}
 
 }

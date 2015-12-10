@@ -4,7 +4,10 @@ public enum PloyType {
 	Area("1","区域"),
 	Time("2","时段"),
 	ChanGroup("3","频道组"),
-	AudGronp("4","音频频道组");
+	AudGronp("4","广播频道组"),
+	UserIndustry("5","行业"),
+	UserLevel("6","级别"),
+	UserTVNNO("7","TVN号");
 	
 	private String key;
 	private String value;

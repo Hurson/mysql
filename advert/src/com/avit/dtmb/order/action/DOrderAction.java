@@ -121,22 +121,24 @@ public class DOrderAction extends BaseAction {
 	
 	@Action(value = "saveDOrder", results = { @Result(name = "success",type="redirect", location = "queryDOrderList.action") })
 	public String saveDOrder(){
-		order.setState("0");
+		
 		if(order.getId() == null){
 			order.setCreateTime(new Date());
 			order.setModifyTime(new Date());
+			order.setState("0");
 		}else{
+			order.setState("1");
 			order.setModifyTime(new Date());
 		}
 		dOrderService.saveDOrder(order);
 		return SUCCESS;
 	}
 	
-	@Action(value = "deleteDPloy", results = { @Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp") })
-	public String deleteDPloy(){
+	@Action(value = "deleteDOrder", results = { @Result(name = "success",type="redirect", location = "queryDOrderList.action") })
+	public String deleteDOrder(){
 		List<String> idList = Arrays.asList(ids.split(","));
 		dOrderService.deleteDOrder(idList);
-		return SUCCESS;
+		return queryDOrderList();
 	}
 	
 	@Action(value = "queryDResourceList", results = { 

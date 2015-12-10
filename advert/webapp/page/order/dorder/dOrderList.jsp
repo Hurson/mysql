@@ -50,7 +50,7 @@
 	    }
 
 	    if (confirm("您确定需要删除所选的订单记录吗？")) {
-	         document.getElementById("queryForm").action = "delOrder.do";
+	         document.getElementById("queryForm").action = "deleteDOrder.action";
 	         document.getElementById("queryForm").submit();
 	    }
 	}

@@ -188,67 +188,6 @@
         
     }
      
-    function showResource(pId){
-    	var index = selResource.indexOf(pId+"#");
-    	var selectResource = '';
-    	var resStr = '';
-        if(index >= 0){
-        	var index2 = selResource.indexOf("~",index);
-        	var selectResource = selResource.substring(index,index2);
-        	var relsArray = selectResource.split("#");
-        	resStr = relsArray[1];
-				
-        }
-		var url = "showResourceList.do?resource.advertPositionId="+positionId+"&order.selResource="+resStr+"&ployId="+$("#ployId").val();
-		var resourceArray = window.showModalDialog(url, window, "dialogHeight=480px;dialogWidth=820px;center=1;resizable=0;status=0;");
-		var materialJson= "";
-        if (resourceArray && resourceArray != null) {
-        	if(resourceArray.length>0){
-	        	var materialName = "";
-				for(var i=0;i<resourceArray.length;i++){
-				    //视频插播位置
-					var inStreamArray = resourceArray[i].inStreamArray;
-					if(inStreamArray && inStreamArray.length>0){
-						for(var j=0;j<inStreamArray.length;j++){
-							materialJson += resourceArray[i].resourceId+","+resourceArray[i].mLoopsValue+","+inStreamArray[j]+"@";
-							materialName += "<a href='javascript:viewMaterial("+resourceArray[i].resourceId+")'>"+resourceArray[i].resourceName+"</a>";
-							if(inStreamArray[j] != '-1'){
-								materialName +="[播放位置："+inStreamArray[j]+"]";
-							}
-							if(resourceArray[i].mLoopsValue != '-1'){
-								materialName += "[轮询序号："+resourceArray[i].mLoopsValue+"]"
-							}
-							materialName += ",";
-						}
-					}else{
-						materialJson += resourceArray[i].resourceId+","+resourceArray[i].mLoopsValue+",-1@";
-						materialName += "<a href='javascript:viewMaterial("+resourceArray[i].resourceId+")'>"+resourceArray[i].resourceName+"</a>";
-						//materialvalue=resourceArray[i].resourceId;
-						if(resourceArray[i].mLoopsValue != '-1'){
-							materialName += "[轮询序号："+resourceArray[i].mLoopsValue+"]"
-						}
-						materialName += ",";
-					}
-				}
-				index = selResource.indexOf(pId+"#");
-	            if(index >= 0){
-	            	index2 = selResource.indexOf("~",index);
-	            	selResource = selResource.substring(0,index)+selResource.substring(index2+1);
-	            }
-	            selResource = selResource+pId+"#"+materialJson+"~";
-	            //$("#selResource").val(selResource);
-	            $("#mp"+pId).html(materialName.substring(0,materialName.length-1));
-        	}else{//取消绑定素材
-            	index = selResource.indexOf(pId+"#");
-                if(index >= 0){
-                	index2 = selResource.indexOf("~",index);
-                	selResource = selResource.substring(0,index)+selResource.substring(index2+1);
-                }
-        		$("#mp"+pId).html('');
-            }
-    	}
-        $("#selResource").val(selResource);
-	}
 
     /**
     * 选择订单日期
@@ -519,7 +458,12 @@
 		</td>
 		<td align="right"><span class="required">*</span>策略名称：</td>
 		<td>
-			<input id="ployName" name="order.dploy.ployName" value="${order.dploy.ployName }" class="e_input_add" readonly="readonly" type="text" onclick="showContent('ploy',null);" />
+			<c:choose>
+				<c:when test="${empty order.state || order.state=='0' || order.state =='3' }">
+					<input id="ployName" name="order.dploy.ployName" value="${order.dploy.ployName }" class="e_input_add" readonly="readonly" type="text" onclick="showContent('ploy',null);" />
+				</c:when>
+				<c:otherwise><c:out value="${order.dploy.ployName }"/></c:otherwise>
+			</c:choose>
 			<input type="hidden"  id="ployId" name="order.dploy.id" value="${order.dploy.id}"/>
 			<span id="ploy_error"></span>
 		</td>
@@ -527,9 +471,16 @@
 	
 	<tr id="periodDate" style="display: none">
 		<td align="right"><span class="required">*</span>开始日期：</td>
-		<td><input type="text" name="order.startDate" readonly="readonly"  class="e_input_time" id="startDate"	value="${order.startDate }" onclick="selectDate();"/></td>
+		<td>
+		<c:choose>
+			<c:when test="${empty order.state || order.state=='0' || order.state =='3' }">
+				<input type="text" name="order.startDate" readonly="readonly"  class="e_input_time" id="startDate"	value='<fmt:formatDate type="date" value="${order.startDate }"/>' onclick="selectDate();"/>
+			</c:when>
+			<c:otherwise><input type="hidden" name="order.startDate" id="startDate"	value='<fmt:formatDate type="date" value="${order.startDate }"/>'"/><fmt:formatDate type="date" value="${order.startDate }"/></c:otherwise>
+		</c:choose>
+		</td>
 		<td align="right"><span class="required">*</span>结束日期：</td>
-		<td><input type="text" name="order.endDate" readonly="readonly" class="e_input_time" id="endDate" value="${order.endDate }" onclick="selectDate();"/></td>
+		<td><input type="text" name="order.endDate" readonly="readonly" class="e_input_time" id="endDate" value='<fmt:formatDate type="date" value="${order.endDate }"/>' onclick="selectDate();"/></td>
 	</tr>
 	
 	<tr id="onceDate" style="display: none">
@@ -541,6 +492,22 @@
 			<input type="hidden" id="playNumber" name="order.playNumber" />
 		</td>
 	</tr>
+	<c:if test="${not empty order.state }">
+		<tr>
+			<td align="right"><span>订单状态:</span></td>
+			<td colspan="3">
+				<c:if test="${order.state==0 }">【未发布订单】待审核</c:if>
+				<c:if test="${order.state==1}">【修改订单】待审核</c:if>
+				<c:if test="${order.state==2}">【删除订单】待审核</c:if>
+				<c:if test="${order.state==3}">【未发布订单】审核不通过</c:if>
+				<c:if test="${order.state==4}">【修改订单】审核不通过</c:if>
+				<c:if test="${order.state==5}">【删除订单】审核不通过</c:if>
+				<c:if test="${order.state==6}">已发布</c:if>
+				<c:if test="${order.state==7}">执行完毕</c:if>
+				<c:if test="${order.state==9}">投放失败</c:if>
+			</td>
+		</tr>
+	</c:if>
 	<tr>
 		<td align="right">订单描述：</td>
 		<td colspan="3"><textarea id="desc" name="order.description" cols="50" rows="3"></textarea> <span class="required">(长度在0-120字之间)</span></td>
@@ -550,7 +517,9 @@
 				style="display: block; width: 500px;">策略绑定素材信息:</span>
 			</td>
 			<td>
-				<input type="button" onclick="addResouce();" class="btn" value="新增绑定" />
+				<c:if test="${empty order.state || order.state=='0' || order.state =='3' }">
+					<input type="button" onclick="addResouce();" class="btn" value="新增绑定" />
+				</c:if>
 			</td>
 	   </tr>
 	        <table name="sucai" id="sucai"  width="100%" cellspacing="1" class="searchList">

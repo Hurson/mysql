@@ -196,8 +196,7 @@
 	     +' <tr class="title">'
 	     +'   <td height="28" class="dot"><input type="checkbox" onclick="selectAll(this,\'checkbox'+index+'\');"/></td>'
 		 +'      <td><b>'+title+'</b>'
-	     +'     </td>'
-		 +'	</td>'
+		 +'	  </td>'
 	     +' </tr>'
 	     +' <tr>'
 	     +'   <td colspan="2" class="conditionList">'
@@ -206,7 +205,7 @@
 	     +'         <tr >'
 	     +'           <td class="dot"></td>'
 	     +'           <td >'+(index==2?'开始时间':title)+'</td>'
-	     +'           <td >'+(index==2?'结束时间':'优先级')+'</td>'
+	     +'           <td >'+(index==2?'结束时间':'')+'</td>'
 	     +'         </tr>  '
 	     +'       </table>'
 	     +'   </div>'
@@ -320,6 +319,7 @@
                <span>&nbsp;&nbsp;&nbsp;&nbsp;广告位名称：</span> 
                
                <select id="ploy.positionCode" name="ploy.dposition.positionCode" onchange="changePosition(this.value);"  <c:if test="${ploy.id > 0}"> disabled="disabled" </c:if> >
+	               <option value ="0">--请选择--</option>
 	               <c:forEach items="${listPosition}" var="positionVar" >
 	                     <option value="${positionVar.positionCode}" <c:if test="${positionVar.positionCode==ploy.dposition.positionCode}"> selected </c:if>  >
 	                            ${positionVar.positionName}
@@ -328,6 +328,7 @@
                </select>
                <input type="hidden" name="ploy.id" id="ploy.id" type="text" value="${ploy.id}"/>
                <input type="hidden" name="ploy.customer.id" type="text" value="${ploy.customer.id}"/>
+               <input type="hidden" name="ploy.operatorId" type="text" value="${ploy.operatorId}"/>
                <input type="hidden" id="ploy_status" name="ploy.status" type="text" value="${ploy.status}"/>  
                <input  disabled="disabled" maxlength="30" id="positionCode" name="positionCode" type="text" style="width: 40px" value="${ploy.dposition.positionCode}"/>
                

@@ -29,6 +29,8 @@ public interface DPloyDao extends BaseDao {
 	
 	public DPloy getDPloyByName(String ployName);
 	
+	public List<String> getUserAccessAreaCode(Integer userId);
+	
 	
 
 }

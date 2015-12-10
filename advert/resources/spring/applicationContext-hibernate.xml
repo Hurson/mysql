@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
-<beans default-autowire="byName" default-lazy-init="true">
+<!--<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd"> -->
+<beans xmlns="http://www.springframework.org/schema/beans"    
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
+     xmlns:aop="http://www.springframework.org/schema/aop"    
+     xmlns:tx="http://www.springframework.org/schema/tx"    
+     xsi:schemaLocation="    
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd    
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd    
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd"
+     default-autowire="byName" default-lazy-init="true" >
 
 	<!-- 属性文件读入 -->
 	<bean id="propertyConfigurer"
@@ -12,34 +20,6 @@
 		</property>
 	</bean>
 
-	<!-- 数据源定义,使用Apache DBCP 连接池
-		<bean id="dataSource"
-		class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName">
-		<value>${jdbc.driverClassName}</value>
-		</property>
-		<property name="url"><value>${jdbc.url}</value></property>
-		<property name="username"><value>${jdbc.username}</value></property>
-		<property name="password"><value>${jdbc.password}</value></property>
-		
-		<property name="maxActive">
-		<value>${jdbc.maxPoolSize}</value>
-		</property>
-		<property name="initialSize">
-		<value>${jdbc.initialPoolSize}</value>
-		</property>
-		<property name="maxIdle">
-		<value>${jdbc.maxIdleTime}</value>
-		</property>
-		<property name="minIdle">
-		<value>${jdbc.minIdle}</value>
-		</property>
-		<property name="maxWait">
-		<value>${jdbc.maxWait}</value>
-		</property>
-		
-		</bean> -->
  	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true" />
 	<bean id="dataSource"
 		class="com.mchange.v2.c3p0.ComboPooledDataSource"
@@ -261,7 +241,18 @@
 			</list>
 		</property>
 	</bean>
- 
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">    
+	  <tx:attributes>    
+	      <tx:method name="*"/>    
+	  </tx:attributes>    
+	</tx:advice>    
+	      
+   <aop:config>    
+	   <aop:pointcut id="dtmbService" expression="execution(* com.avit.dtmb.*.service.*.*(..))"/>    
+	   <aop:advisor advice-ref="txAdvice" pointcut-ref="dtmbService"/>    
+   </aop:config>  
+	    
 	<!-- jdbc模版 -->
 	 <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource" />

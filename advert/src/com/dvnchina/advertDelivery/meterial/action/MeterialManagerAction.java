@@ -983,9 +983,13 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 	                            isSuccess = sendFile(uploadAllDir,uploadPath);
 	                            
 	                            InputStream inputStream = new FileInputStream(uploadfile);
-	                            BufferedImage bi = ImageIO.read(inputStream);   
-	                            String fileWidth = String.valueOf(bi.getWidth());
-	                            String fileHigh = String.valueOf(bi.getHeight());
+	                            BufferedImage bi = ImageIO.read(inputStream); 
+	                            String fileWidth = "0";
+	                            String fileHigh = "0";
+	                            if(bi!=null){
+	                            	fileWidth= String.valueOf(bi.getWidth());
+		                            fileHigh= String.valueOf(bi.getHeight());
+	                            }
 	                            String imageFormat = imageFileNamestemp[i].substring(imageFileNamestemp[i].indexOf(".")+1, imageFileNamestemp[i].length());                      
 	                            //计算文件大小
 	                            InputStream in = new BufferedInputStream(new FileInputStream(uploadfile), BUFFER_SIZE);

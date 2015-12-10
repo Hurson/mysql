@@ -19,6 +19,7 @@ import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.common.BaseAction;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.model.UserLogin;
 
 @ParentPackage("default")
 @Namespace("/dploy")
@@ -71,16 +72,20 @@ public class DPloyAction extends BaseAction {
 		
 		super.renderJson(position.getPloyTypeJson());
 	}
-	@Action(value = "saveDPloy", results = { @Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp") })
+	@Action(value = "saveDPloy", results = { @Result(name = "success",type="redirect", location = "queryDPloyList.action") })
 	public String saveDPloy(){
+		if(ploy.getId() == null){
+			ploy.setCreateTime(new Date());
+			UserLogin user = getLoginUser();
+			ploy.getCustomer().setId(user.getCustomerId());
+			ploy.setOperatorId(user.getUserId());
+		}
 		
-		ploy.setCreateTime(new Date());
-		ploy.getCustomer().setId(0);
 		ploy.setModifyTime(new Date());
 		ploy.setStatus("1");
 		dPloyService.saveDTMBPloy(ploy);
 		ploy = null;
-		return queryDPloyList();
+		return SUCCESS;
 	}
 	@Action(value = "deleteDPloy", results = { @Result(name = "success", type= "redirect", location = "queryDPloyList.action") })
 	public String deleteDPloy(){

@@ -46,10 +46,11 @@ public class DPloy implements java.io.Serializable {
 	private Date auditTime;
 	private String auditAdvice;
     private List<DPloyDetail> ployDetailList;
+    private Integer operatorId;
     private String ployDetailJson;
-   
-    private String customerName;
+    
     private String positionName;
+    private String customerName;
 
     public DPloy(){}
     
@@ -155,6 +156,16 @@ public class DPloy implements java.io.Serializable {
 	public void setPloyDetailList(List<DPloyDetail> ployDetailList) {
 		this.ployDetailList = ployDetailList;
 	}
+	
+	@Column(name = "OPERATOR_ID")
+	public Integer getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(Integer operatorId) {
+		this.operatorId = operatorId;
+	}
+
 	@Transient
 	public String getPloyDetailJson() {
 		Gson gson = new Gson();
@@ -167,14 +178,6 @@ public class DPloy implements java.io.Serializable {
 	}
 
 	@Transient
-	public String getCustomerName() {
-		return customerName;
-	}
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
-	
-	@Transient
 	public String getPositionName() {
 		return positionName;
 	}
@@ -182,5 +185,15 @@ public class DPloy implements java.io.Serializable {
 	public void setPositionName(String positionName) {
 		this.positionName = positionName;
 	}
+
+	@Transient
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	
 	
 }

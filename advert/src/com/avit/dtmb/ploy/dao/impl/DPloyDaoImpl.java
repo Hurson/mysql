@@ -67,5 +67,11 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 		return (DPloy)this.get(hql, ployName);
 		
 	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getUserAccessAreaCode(Integer userId) {
+		String sql = "select release_areacode from t_user_area where user_id =" + userId;
+		return (List<String>)this.getDataBySql(sql, null);
+	}
 
 }

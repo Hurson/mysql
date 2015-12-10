@@ -31,4 +31,5 @@ public interface DOrderDao extends BaseDao {
 	public void auditDTMBPloy(DOrder order);
 	public void copyDOrderMateRelTmp(DOrder order);
 	public int insertPlayList(DOrder order);
+	public int updatePlayListEndDate(DOrder order);
 }
