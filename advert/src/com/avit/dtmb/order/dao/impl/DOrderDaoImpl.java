@@ -52,17 +52,8 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	@Override
 	public void insertDOrderMateRelTmp(DOrder order) {
 		int count = order.getDposition().getResourceCount();
-		String mainPloys = order.getDposition().getMainPloy();
-		String mainPloy = "";
-		if(StringUtils.isNotBlank(mainPloys)&& mainPloys.split("\\|").length > 1){
-			for(String type : mainPloys.split("\\|")){
-				if(type.equals("1") || type.equals("2")){
-					continue;
-				}
-				mainPloy = type;
-				break;
-			}
-		}
+		String mainPloy = order.getDposition().getMainPloy();
+		
 		for(int i = 0; i < count; i ++){
 			String sql = "insert into d_order_mate_rel_tmp(order_code,area_code,start_time, end_time,ploy_detail_id,index_num)" +
 					"select "+order.getOrderCode()+",a.type_value,LEFT(b.type_value,8),RIGHT(b.type_value,8)"+(StringUtils.isBlank(mainPloy)?",0":",c.id") +","+i+" from d_ploy_detail a,d_ploy_detail b"+(StringUtils.isBlank(mainPloy)?"":",d_ploy_detail c")+
