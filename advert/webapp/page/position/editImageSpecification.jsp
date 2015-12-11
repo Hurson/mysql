@@ -14,11 +14,20 @@
 <title>编辑图片广告位规格</title>
 </head>
 <script type="text/javascript">
+	var flag = "${flag}";
+	alert(flag);
 	function save() {
 		if (!validateBeforeSubmit()) {
 	        return;
 	    }
-		$("#editForm").submit();
+		if(flag!=null){
+			form.action = "saveImg.do";
+			alert("1");
+			$("#editForm").submit();
+		}else{
+			alert("2");
+			$("#editForm").submit();
+		}
 	}
 	
 	//表单验证
@@ -62,7 +71,7 @@
 
 </script>
 <body class="mainBody">
-<form action="saveImageSpecification.do" method="post" id="editForm">
+<form  name = "form" action="saveImageSpecification.do" method="post" id="editForm">
 <input type="hidden" name="id" value="${advertPosition.id}"  />
 <input type="hidden" id="id" name="imageSpe.id" value="${imageSpe.id}"  />
 <div class="detail">

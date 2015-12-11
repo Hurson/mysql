@@ -49,6 +49,7 @@ function  showColumn(){
 	var menu_first = ['ggzcgl','ggstfgl','bpgl','xtgl','ggwgl','ggsgl','htgl','tfclgl','yxgzgl','ddgl','flsjtbgl','xtcx','rzgl']; 
 	
 
+var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','dggwbgl','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','ddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','dtfclwh','tfclwh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
 	var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','dggwbgl','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','wxddwh','ddsh','wxddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','dtfclwh','tfclwh','wxtfclsh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
 
 	
@@ -158,7 +159,7 @@ function  showColumn(){
 	                    <ul>
 	                    	<li id="ggwbgl" style="display: none;"><a href="#"  onclick="openPage('/page/position/queryPositionPackageList.do', '36', '广告位查询', '广告位查询')">&gt;&gt;&nbsp;广告位查询</a></li>
 	                        <li id="mrscpz" style="display: none;"><a href="#"  onclick="openPage('/page/position/queryResourceList.do', '37', '默认素材配置', '默认素材配置')">&gt;&gt;&nbsp;默认素材配置</a></li>
-	                    	<li id="dggwbgl" style="display: none;"><a href="#"  onclick="openPage('/page/dposition/queryDPositionPackageList.do', '38', '无线广告位查询', '无线广告位查询')">&gt;&gt;&nbsp;广告位查询</a></li>
+	                    	<li id="dggwgl" style="display: none;"><a href="#"  onclick="openPage('/<%=path%>/dposition/queryDPositionPackageList.action', '38', '无线广告位查询', '无线广告位查询')">&gt;&gt;&nbsp;无线广告位查询</a></li>
 	                    </ul>
 	                    <!-- 
 	                    <ul>
@@ -243,6 +244,7 @@ function  showColumn(){
 	                        <li id="zcgl" style="display: none;"><a href="#"  onclick="openPage('/page/meterial/queryMeterialList.do', '81', '素材维护', '素材维护')">&gt;&gt;&nbsp;素材维护</a></li>		
 	                        <li id="mrscwh" style="display: none;"><a href="#"  onclick="openPage('/page/meterial/queryDefaultMeterialList.do', '82', '默认素材维护', '默认素材维护')">&gt;&gt;&nbsp;默认素材维护</a></li>
 							<li id="yysscsh" style="display: none;"><a href="#"  onclick="openPage('/page/meterial/auditMaterialList.do', '84', '素材审核', '素材审核')">&gt;&gt;&nbsp;素材审核</a></li>
+							<li id="wxscwh" style="display: none;"><a href="#"  onclick="openPage('/<%=path%>/dmaterial/queryMaterialList.do', '85', '无线素材维护', '无线素材维护')">&gt;&gt;&nbsp;无线素材维护</a></li>
 						<!-- 
 							<li id="zcsxxgl" style="display: none;" ><a href="#"  onclick="openPage('/page/meterial/queryUponLineList.do','86','资产上下线管理','资产上下线管理')">&gt;&gt;&nbsp;资产上下线</a></li>
 						 -->

@@ -51,14 +51,13 @@
         <td >广告位编码</td>
 	    <td >广告位名称</td>
 	    <td >广告位类型</td>
-	    <td >子广告位个数</td>
 	    <td >投放策略</td>
 		<td>操作</td>
     </tr>
     <c:forEach items="${page.dataList}" var="detail" varStatus="pl">
 		<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>
 			onmouseout="this.style.backgroundColor=''" onmouseover="this.style.backgroundColor='#fffed9'">
-			<td><a href="getPositionPackage.do?id=${detail.Id }"><c:out value="${detail.positionCode}" /></a></td>
+			<td><a href="queryDPositionById.do?id=${detail.id }"><c:out value="${detail.positionCode}" /></a></td>
 			<td><c:out value="${detail.positionName}" /></td>
 			<td>
 				<c:choose>
@@ -68,7 +67,7 @@
 				</c:choose>
 			</td>
 			<td><c:out value="${detail.ployTypes}" /></td>
-			<td><a href="#" onclick="viewPositionOccupy('${detail.Id }')">查看占用情况</a></td>
+			<td><a href="#" onclick="viewPositionOccupy('${detail.id }')">查看占用情况</a></td>
 		</tr>
 	</c:forEach>
   <tr>

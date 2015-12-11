@@ -1,7 +1,9 @@
 package com.avit.dtmb.material.bean;
 // default package
 
+import java.sql.Timestamp;
 import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +15,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "d_resource", catalog = "ads_x")
-public class DResource implements
-		java.io.Serializable {
+public class DResource extends CommonObject implements
+public class DResource implements		java.io.Serializable {
 
 	/**
 	 * 
@@ -33,7 +35,26 @@ public class DResource implements
 	private Integer categoryId;
 	private String isDefault;
 	private String positionCode;
-
+	private String customerName;
+	private String positionName;
+	private String advertisersName;
+	
+	public DResource(Integer id,String resourceName,Integer resourceType,Integer customerId,Integer categoryId,String positionCode,
+			String status,Date createTime,String positionName,String  advertisersName){
+		this.id=id;
+		this.resourceName=resourceName;
+		this.resourceType=resourceType;
+		this.customerId=customerId;
+		this.categoryId=categoryId;
+		this.positionCode=positionCode;
+		this.status=status;
+		this.createTime=createTime;
+		this.positionName=positionName;
+		this.advertisersName=advertisersName;
+	}
+	public DResource(){
+		
+	}
 	@Id
 	@Column(name = "ID", unique = true, nullable = false)
 	public Integer getId() {
@@ -103,23 +124,28 @@ public class DResource implements
 		return this.createTime;
 	}
 
+
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 
 	@Column(name = "MODIFY_TIME", length = 19)
+
 	public Date getModifyTime() {
 		return this.modifyTime;
 	}
+
 
 	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
 	}
 
 	@Column(name = "AUDIT_TIME", length = 19)
+
 	public Date getAuditTime() {
 		return this.auditTime;
 	}
+
 
 	public void setAuditTime(Date auditTime) {
 		this.auditTime = auditTime;
@@ -143,6 +169,7 @@ public class DResource implements
 		this.isDefault = isDefault;
 	}
 
+
 	@Column(name = "POSITION_CODE",length = 19)
 	public String getPositionCode() {
 		return positionCode;
@@ -150,6 +177,28 @@ public class DResource implements
 
 	public void setPositionCode(String positionCode) {
 		this.positionCode = positionCode;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getPositionName() {
+		return positionName;
+	}
+
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
+	public String getAdvertisersName() {
+		return advertisersName;
+	}
+	public void setAdvertisersName(String advertisersName) {
+		this.advertisersName = advertisersName;
 	}
 	
 
