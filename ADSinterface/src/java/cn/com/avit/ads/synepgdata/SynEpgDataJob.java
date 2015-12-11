@@ -31,6 +31,7 @@ public class SynEpgDataJob {
 		Logger log = LoggerFactory.getLogger(this.getClass());
 		
 		FtpService ftpService = (FtpServiceImpl)ContextHolder.getApplicationContext().getBean("FtpService");	
+		
 		WarnHelper warnHelper = (WarnHelper)ContextHolder.getApplicationContext().getBean("warnHelper");	
 		
 		//ads.xml中添加EPG提供的FTP访问方式	
@@ -106,10 +107,6 @@ public class SynEpgDataJob {
 	    			//删除同区域非最新文件
 	    			deleteOtherFiles(localDirectory, localFileName);
 	    			
-//	    			//利用临时表删除正式表中多余的serviceid
-//	    			daoImpl.excuteBySql(" DELETE FROM t_channelinfo WHERE SERVICE_ID NOT IN (SELECT SERVICE_ID FROM t_channelinfo_temp)", null);
-//	    			//清空临时表
-//	    			daoImpl.deleteBySql("DELETE FROM t_channelinfo_temp", null);
 	    		}
 	    	}
 	    	log.info("finish syn epg channelinfo data.");
@@ -140,10 +137,6 @@ public class SynEpgDataJob {
 				return;
 			}
 			
-//			//写临时表表，用处：正式表中不存在文件中的serviceid需要删除
-//			ChannelInfoTemp tempEntity = new ChannelInfoTemp();			
-//			tempEntity.setServiceId(serviceId);
-//			daoImpl.save(tempEntity);
 			List<ChannelInfoSync> syncList = daoImpl.getListForAll("from ChannelInfoSync cs where cs.serviceId=? and cs.networkId =?", new Object[]{serviceId, networkId});
 			ChannelInfoSync syncEntity = null;
 			if(null != syncList && syncList.size() > 0){

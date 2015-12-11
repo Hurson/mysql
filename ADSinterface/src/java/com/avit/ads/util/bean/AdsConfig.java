@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="AdsConfig")
-public class AdsConfig {
+public class AdsConfig<DTMBftp> {
 	@XmlAttribute(name="preSecond")
 	private int preSecond;
 	//资源服务器配置 
@@ -32,6 +32,9 @@ public class AdsConfig {
 	//从EPG获取频道信息FTP地址
 	@XmlElement(name="Epgftp")
 	private Epgftp epgftp;
+	
+	@XmlElement(name="DTMBftp")
+	private DtmbFtp dtmbFtp;
 	
 	//单向非实时广告配置    回放菜单，
 	@XmlElement(name="NpvrAds")
@@ -133,6 +136,12 @@ public class AdsConfig {
 	}
 	public void setEpgftp(Epgftp epgftp) {
 		this.epgftp = epgftp;
+	}
+	public DtmbFtp getDtmbFtp() {
+		return dtmbFtp;
+	}
+	public void setDtmbFtp(DtmbFtp dtmbFtp) {
+		this.dtmbFtp = dtmbFtp;
 	}
 	
 	

@@ -35,7 +35,10 @@ public class RealTimeAds {
 	private String epgChannelInfoPath;
 	@XmlAttribute(name="epgTempPath")
 	private String epgTempPath;
-	
+	@XmlAttribute(name = "dtmbChannelInfoPath")
+	private String dtmbChannelInfoPath;
+	@XmlAttribute(name = "dtmbTempPath")
+	private String dtmbTempPath;
 	
 	@XmlElement(name="Ads")
 	private List<Ads> adsList;
@@ -119,6 +122,18 @@ public class RealTimeAds {
 	}
 	public void setEpgTempPath(String epgTempPath) {
 		this.epgTempPath = epgTempPath;
+	}
+	public String getDtmbChannelInfoPath() {
+		return dtmbChannelInfoPath;
+	}
+	public void setDtmbChannelInfoPath(String dtmbChannelInfoPath) {
+		this.dtmbChannelInfoPath = dtmbChannelInfoPath;
+	}
+	public String getDtmbTempPath() {
+		return dtmbTempPath;
+	}
+	public void setDtmbTempPath(String dtmbTempPath) {
+		this.dtmbTempPath = dtmbTempPath;
 	}
 	
 	

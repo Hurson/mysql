@@ -22,7 +22,8 @@
 	<RealTimeAds adsConfigFile="adConfig.js" adsTempConfigPath="D:\ads\temp\realtimeconfig" 
 		adsTargetConfigPath="/OC/unt/adConfig/" adsTempPath="D:\ads\temp\realtime" 
 		adsTargetPath="/OC/unt/adPic/" untUrl="http://192.168.16.100:8888/UNT/" 
-		epgChannelInfoPath="." epgTempPath="D:\ads\temp\epgChannelInfo">
+		epgChannelInfoPath="." epgTempPath="D:\ads\temp\epgChannelInfo"
+		dtmbChannelInfoPath="/epg/dtmbChannelInfo" dtmbTempPath="D:\ads\temp\epgChannelInfo">
 		<Ads adsCode="02011" position="4" defaultRes="/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png" />
 		<Ads adsCode="02012" position="4" defaultRes="/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png"/>
 		<Ads adsCode="02021" position="1" defaultRes="/root/advertres/temp/wfReal/miniepg_ad_5_HD.png"/>
@@ -60,6 +61,8 @@
 	<!-- 获取EPG频道信息FTP地址-->
 	<Epgftp ip="172.30.255.82" port="21" user="ipanelftp" pwd="123456">
 	</Epgftp>
+	<DTMBftp ip="192.168.2.224" port="21" user = "root" pwd = "111111">
+	</DTMBftp>
 	
 	<!-- CPS投放FTP地址-->
 	<Cps ip="10.63.64.72" port="21" user="posterftp" pwd="posterftp" >
