@@ -30,12 +30,6 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	}
 
-	@Override
-	public void deleteOrder(List<String> ids) {
-		// TODO Auto-generated method stub
-
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DAdPosition> queryPositionList() {
@@ -49,16 +43,24 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		return this.getPageList2(hql, null, pageNo, pageSize);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void insertDOrderMateRelTmp(DOrder order) {
 		int count = order.getDposition().getResourceCount();
 		String mainPloy = order.getDposition().getMainPloy();
+		String sql0 = "select count(1) from d_ploy_detail d where d.ploy_type = ? and d.ploy_id = ?";
+		List<Integer> list = (List<Integer>)this.getDataBySql(sql0, new Object[]{mainPloy, order.getDploy().getId()});
+		int num = 0;
+		if(list != null && list.size() > 0){
+			num = this.toInteger(list.get(0));
+		}
 		
 		for(int i = 0; i < count; i ++){
-			String sql = "insert into d_order_mate_rel_tmp(order_code,area_code,start_time, end_time,ploy_detail_id,index_num)" +
-					"select "+order.getOrderCode()+",a.type_value,LEFT(b.type_value,8),RIGHT(b.type_value,8)"+(StringUtils.isBlank(mainPloy)?",0":",c.id") +","+i+" from d_ploy_detail a,d_ploy_detail b"+(StringUtils.isBlank(mainPloy)?"":",d_ploy_detail c")+
-					" where a.ploy_id = b.ploy_id"+(StringUtils.isBlank(mainPloy)?"":" and b.ploy_id= c.ploy_id")+
-	                " and a.ploy_type='1' and  b.ploy_type='2'"+(StringUtils.isBlank(mainPloy)?"":" and c.ploy_type='"+mainPloy+"'")+" and a.ploy_id=" + order.getDploy().getId();
+			String sql = "insert into d_order_mate_rel_tmp(order_code,area_code,start_time, end_time,ploy_type,type_value,index_num)" +
+					"select "+order.getOrderCode()+",a.type_value,LEFT(b.type_value,8),RIGHT(b.type_value,8),"+mainPloy+","+(StringUtils.isBlank(mainPloy) || num == 0?"0":"c.type_value") +","+i+
+					" from d_ploy_detail a,d_ploy_detail b"+(StringUtils.isBlank(mainPloy) || num == 0?"":",d_ploy_detail c")+
+					" where a.ploy_id = b.ploy_id"+(StringUtils.isBlank(mainPloy) || num == 0?"":" and b.ploy_id= c.ploy_id")+
+	                " and a.ploy_type='1' and  b.ploy_type='2'"+(StringUtils.isBlank(mainPloy) || num == 0?"":" and c.ploy_type='"+mainPloy+"'")+" and a.ploy_id=" + order.getDploy().getId();
 			this.executeBySQL(sql, null);
 			
 		}
@@ -112,12 +114,6 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	}
 
 	@Override
-	public void auditDTMBPloy(DOrder order) {
-		
-		
-	}
-
-	@Override
 	public void saveDOrderMateRel(DOrder order) {
 		String sql = "insert into d_order_mate_rel (select * from d_order_mate_rel_tmp where order_code ='" + order.getOrderCode()+"')";
 		this.executeBySQL(sql, null);
@@ -146,8 +142,13 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	@Override
 	public int insertPlayList(DOrder order) {
 		String sql = "insert into d_play_list(order_code, position_code, area_code, start_time, end_time,ploy_type,type_value,resource_ids,resource_paths,status) "+
-					 "(select od.order_code,od.position_code,omr.area_code,concat(od.start_date,' ',omr.start_time),concat(od.end_date,' ',omr.end_time),dt.ploy_type,dt.type_value,'','','0' "+
-				     "from d_order od, d_order_mate_rel omr,d_ploy_detail dt where od.order_code = omr.order_code and omr.ploy_detail_id=dt.id and od.id="+order.getId()+")";
+					 "(select od.order_code,od.position_code,omr.area_code,concat(od.start_date,' ',omr.start_time),concat(od.end_date,' ',omr.end_time),omr.ploy_type,omr.type_value," +
+					 "omr.resource_id,CASE res.resource_type" +
+					 " WHEN 0 THEN (SELECT name from t_image_meta where id=res.resource_id)" +
+					 " WHEN 1 THEN (SELECT name FROM t_video_meta where id=res.resource_id)" +
+					 " WHEN 2 THEN (SELECT content FROM t_text_meta where id = res.resource_id)" +
+					 " ELSE '' END,'0'"+
+				     "from d_order od, d_order_mate_rel omr,d_resource res where od.order_code = omr.order_code and od.id="+order.getId()+")";
 		return this.executeBySQL(sql, null);
 	}
 
@@ -156,6 +157,5 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		String sql = "update d_play_list set end_time = concat('"+(new SimpleDateFormat("yyyy-MM-dd").format(order.getEndDate()))+"',right(end_time,9)) where order_code = '" +order.getOrderCode()+"'";
 		return this.executeBySQL(sql, null);
 	}
-	
 
 }

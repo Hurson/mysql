@@ -26,7 +26,8 @@ public class DOrderMateRel implements
 	private String startTime;
 	private String endTime;
 	private String areaCode;
-	private Integer ployDetailId;
+	private String ployType;
+	private String typeValue;
 	private Integer indexNum;
 
 	@Id
@@ -84,21 +85,29 @@ public class DOrderMateRel implements
 	public void setAreaCode(String areaCode) {
 		this.areaCode = areaCode;
 	}
+	
+	@Column(name="PLOY_TYPE")
+	public String getPloyType() {
+		return ployType;
+	}
+
+	public void setPloyType(String ployType) {
+		this.ployType = ployType;
+	}
+	@Column(name="TYPE_VALUE")
+	public String getTypeValue() {
+		return typeValue;
+	}
+
+	public void setTypeValue(String typeValue) {
+		this.typeValue = typeValue;
+	}
 
 	@Column(name = "INDEX_NUM")
 	public Integer getIndexNum() {
 		return this.indexNum;
 	}
 	
-	@Column(name = "PLOY_DETAIL_ID")
-	public Integer getPloyDetailId() {
-		return ployDetailId;
-	}
-
-	public void setPloyDetailId(Integer ployDetailId) {
-		this.ployDetailId = ployDetailId;
-	}
-
 	public void setIndexNum(Integer indexNum) {
 		this.indexNum = indexNum;
 	}

@@ -30,7 +30,6 @@ public class DPloyDetail implements
 	private Integer id;
 	private Integer ployId;
 	private String ployType;
-	private String typeName;
 	private String typeValue;
 	private Integer priority;
 	private String startTime;
@@ -63,11 +62,6 @@ public class DPloyDetail implements
 
 	public void setPloyType(String ployType) {
 		this.ployType = ployType;
-	}
-	@Transient
-	public String getTypeName() {
-		typeName = PloyType.getValue(this.getPloyType());
-		return typeName;
 	}
 
 	@Column(name = "TYPE_VALUE")

@@ -45,7 +45,7 @@ public class DOrderServiceImpl implements DOrderService {
 	@Override
 	public void deleteDOrder(List<String> ids) {
 		for(String id : ids){
-			DOrder order = (DOrder)dOrderDao.get(DOrder.class, Integer.valueOf(id));
+			DOrder order = (DOrder)dOrderDao.get(DOrder.class, Integer.valueOf(id.trim()));
 			if("0".equals(order.getState())){
 				dOrderDao.delete(order);
 			}else{

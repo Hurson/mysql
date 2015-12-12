@@ -69,7 +69,6 @@ public class DPloyAction extends BaseAction {
 	@Action(value = "getPositionPloy")
 	public void getPositionPolyType(){
 		position = dPloyService.getPositionByCode(position.getPositionCode());
-		
 		super.renderJson(position.getPloyTypeJson());
 	}
 	@Action(value = "saveDPloy", results = { @Result(name = "success",type="redirect", location = "queryDPloyList.action") })
@@ -104,7 +103,7 @@ public class DPloyAction extends BaseAction {
 		dploy.setStatus(ploy.getStatus());
 		dploy.setAuditTime(new Date());
 		dPloyService.saveDTMBPloy(dploy);
-		return queryDPloyList();
+		return SUCCESS;
 	}
 	public DPloy getPloy() {
 		return ploy;

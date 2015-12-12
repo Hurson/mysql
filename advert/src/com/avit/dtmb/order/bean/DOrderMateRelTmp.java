@@ -17,7 +17,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import com.avit.dtmb.material.bean.DResource;
-import com.avit.dtmb.ploy.bean.DPloyDetail;
+import com.avit.dtmb.type.PloyType;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 
 /**
@@ -38,7 +38,9 @@ public class DOrderMateRelTmp implements
 	private String startTime;
 	private String endTime;
 	private ReleaseArea releaseArea;
-	private DPloyDetail ployDetail;
+	private String ployType;
+	private String typeName;
+	private String typeValue;
 	private Integer indexNum;
 	private String contain;
 
@@ -101,15 +103,26 @@ public class DOrderMateRelTmp implements
 	public void setResource(DResource resource) {
 		this.resource = resource;
 	}
-	@ManyToOne(cascade =CascadeType.REFRESH, fetch = FetchType.EAGER)
-	@JoinColumn(name = "PLOY_DETAIL_ID", referencedColumnName ="ID", insertable = false, updatable = false)
-	@NotFound(action=NotFoundAction.IGNORE)
-	public DPloyDetail getPloyDetail() {
-		return ployDetail;
+	@Column(name = "PLOY_TYPE")
+	public String getPloyType() {
+		return ployType;
 	}
 
-	public void setPloyDetail(DPloyDetail ployDetail) {
-		this.ployDetail = ployDetail;
+	public void setPloyType(String ployType) {
+		this.ployType = ployType;
+	}
+	@Transient
+	public String getTypeName(){
+		typeName = PloyType.getValue(ployType);
+		return typeName;
+	}
+	@Column(name = "TYPE_VALUE")
+	public String getTypeValue() {
+		return typeValue;
+	}
+
+	public void setTypeValue(String typeValue) {
+		this.typeValue = typeValue;
 	}
 
 	@Column(name = "INDEX_NUM")

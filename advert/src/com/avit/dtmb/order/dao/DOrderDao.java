@@ -16,7 +16,6 @@ public interface DOrderDao extends BaseDao {
 	public PageBeanDB queryDTMBOrderList(DOrder order, int pageNo, int pageSize);
 	public PageBeanDB queryAuditDOrderList(DOrder order, int pageNo, int pageSize);
 	public void saveDOrder(DOrder order);
-	public void deleteOrder(List<String> ids);
 	public List<DAdPosition> queryPositionList();
 	public PageBeanDB queryDTMBPloyList(DPloy ploy, int pageNo, int pageSize);
 	public void insertDOrderMateRelTmp(DOrder order);
@@ -28,7 +27,6 @@ public interface DOrderDao extends BaseDao {
 	public PageBeanDB queryDResourceList(DResource resource, int pageNo, int pageSize);
 	public void saveOrderMateRelTmp(String ids, Integer id);
 	public List<DResource> getOrderResourceJson(DOrderMateRelTmp omrTmp);
-	public void auditDTMBPloy(DOrder order);
 	public void copyDOrderMateRelTmp(DOrder order);
 	public int insertPlayList(DOrder order);
 	public int updatePlayListEndDate(DOrder order);
