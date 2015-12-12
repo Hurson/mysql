@@ -172,7 +172,7 @@
                 type:"get",
                 async:false,
                 url:"<%=path%>/dploy/getPositionPloy.action",
-                data:{"position.positionCode":positionCode},//Ajax传递的参数
+                data:{'position.positionCode':positionCode},
                 success:function(mess){
                     ployType = eval(mess);
                 },

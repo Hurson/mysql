@@ -148,11 +148,11 @@
     	
     	var orderId=${order.orderCode};
         if(value){
-            if(ployId != value.split("_")[0]){
-            	ployId = value.split("_")[0];
-            	ployName = value.split("_")[1];
-            	var count = value.split("_")[2];
-            	var mainPloy = value.split("_")[3];
+            if(ployId != value.split("|")[0]){
+            	ployId = value.split("|")[0];
+            	ployName = value.split("|")[1];
+            	var count = value.split("|")[2];
+            	var mainPloy = value.split("|")[3];
 	        	$("#ployId").val(ployId);
 				$("#ployName").val(ployName);
 			

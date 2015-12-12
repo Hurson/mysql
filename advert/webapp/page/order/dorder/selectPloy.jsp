@@ -74,13 +74,15 @@
 				<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>
 					onmouseout="this.style.backgroundColor=''" onmouseover="this.style.backgroundColor='#fffed9'">
 					<td align="center">
-						<input type="radio"	name="ployId" value="${ploy.id}_${ploy.ployName}_${ploy.dposition.resourceCount}_${ploy.dposition.mainPloy}" 
+						<input type="radio"	name="ployId" value="${ploy.id}|${ploy.ployName}|${ploy.dposition.resourceCount}|${ploy.dposition.mainPloy}" 
 						
 					</td>
+					<td><c:out value="${ploy.ployName }"/></td>
 					<td>
 						<table>
 							<c:forEach items="${ploy.ployDetailList}" var="sub" >
 							<c:if test="${'1' eq sub.ployType }">
+								
 								<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
 									<td><c:out value="${sub.typeValue}" /></td>
 								</tr>
@@ -102,13 +104,20 @@
 					<c:forTokens items="${ploy.dposition.mainPloy}" delims="|" var="type">
 					<td>
 						<table>
+							<c:set var="flag" value="0"></c:set>
 							<c:forEach items="${ploy.ployDetailList}" var="sub" >
 							<c:if test="${type eq sub.ployType }">
+								<c:set var="flag" value="1"></c:set>
 								<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
 									<td><c:out value="${sub.typeValue}" /></td>
 								</tr>
 							</c:if>
 							</c:forEach>
+							<c:if test="${'0' eq flag}">
+								<tr>
+									<td>全频道</td>
+								</tr>
+							</c:if>
 						</table>
 					</td>
 					</c:forTokens>

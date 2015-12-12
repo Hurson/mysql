@@ -148,8 +148,8 @@
                 <td>区域</td>
                 <td>开始时段</td>
 				<td>结束时段</td>
-				<c:if test="${not empty page.dataList[0].ployDetail }">
-				<td>${page.dataList[0].ployDetail.typeName }</td>
+				<c:if test="${not empty page.dataList[0].ployType }">
+				<td>${page.dataList[0].typeName }</td>
 				</c:if>
 				<td>位置</td>
 				<td>素材</td>
@@ -163,8 +163,8 @@
 					<td><c:out value="${omr.releaseArea.areaName}" /></td>
 					<td><c:out value="${omr.startTime}" /></td>
 					<td><c:out value="${omr.endTime}" /></td>
-					<c:if test="${not empty omr.ployDetail}">
-						<td><c:out value="${omr.ployDetail.typeValue}" /></td>
+					<c:if test="${not empty omr.ployType}">
+						<td><c:out value="${omr.typeValue}" /></td>
 					</c:if>
 					<td><c:out value="${omr.indexNum}" /></td>
 					<td><div id="${omr.id}">${omr.resource.resourceName}</div></td>
