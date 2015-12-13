@@ -164,7 +164,7 @@
 					<td><c:out value="${omr.startTime}" /></td>
 					<td><c:out value="${omr.endTime}" /></td>
 					<c:if test="${not empty omr.ployType}">
-						<td><c:out value="${omr.typeValue}" /></td>
+						<td><c:out value="${omr.valueName}" /></td>
 					</c:if>
 					<td><c:out value="${omr.indexNum}" /></td>
 					<td><div id="${omr.id}">${omr.resource.resourceName}</div></td>
