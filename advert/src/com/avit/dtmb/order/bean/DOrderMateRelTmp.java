@@ -41,6 +41,7 @@ public class DOrderMateRelTmp implements
 	private String ployType;
 	private String typeName;
 	private String typeValue;
+	private String valueName;
 	private Integer indexNum;
 	private String contain;
 
@@ -123,6 +124,14 @@ public class DOrderMateRelTmp implements
 
 	public void setTypeValue(String typeValue) {
 		this.typeValue = typeValue;
+	}
+	@Column(name = "VALUE_NAME")
+	public String getValueName() {
+		return valueName;
+	}
+
+	public void setValueName(String valueName) {
+		this.valueName = valueName;
 	}
 
 	@Column(name = "INDEX_NUM")

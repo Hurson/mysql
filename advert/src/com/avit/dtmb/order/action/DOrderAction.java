@@ -138,7 +138,7 @@ public class DOrderAction extends BaseAction {
 	public String deleteDOrder(){
 		List<String> idList = Arrays.asList(ids.split(","));
 		dOrderService.deleteDOrder(idList);
-		return queryDOrderList();
+		return SUCCESS;
 	}
 	
 	@Action(value = "queryDResourceList", results = { 

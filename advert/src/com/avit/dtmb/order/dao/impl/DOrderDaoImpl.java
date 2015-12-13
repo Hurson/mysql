@@ -56,8 +56,8 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		}
 		
 		for(int i = 0; i < count; i ++){
-			String sql = "insert into d_order_mate_rel_tmp(order_code,area_code,start_time, end_time,ploy_type,type_value,index_num)" +
-					"select "+order.getOrderCode()+",a.type_value,b.type_value,b.value_name,"+mainPloy+","+(StringUtils.isBlank(mainPloy) || num == 0?"0":"c.type_value") +","+i+
+			String sql = "insert into d_order_mate_rel_tmp(order_code,area_code,start_time, end_time,ploy_type,type_value,value_name,index_num)" +
+					"select "+order.getOrderCode()+",a.type_value,b.type_value,b.value_name,"+mainPloy+","+(StringUtils.isBlank(mainPloy) || num == 0?"0,'全频道'":"c.type_value,c.value_name") +","+i+
 					" from d_ploy_detail a,d_ploy_detail b"+(StringUtils.isBlank(mainPloy) || num == 0?"":",d_ploy_detail c")+
 					" where a.ploy_id = b.ploy_id"+(StringUtils.isBlank(mainPloy) || num == 0?"":" and b.ploy_id= c.ploy_id")+
 	                " and a.ploy_type='1' and  b.ploy_type='2'"+(StringUtils.isBlank(mainPloy) || num == 0?"":" and c.ploy_type='"+mainPloy+"'")+" and a.ploy_id=" + order.getDploy().getId();
