@@ -171,8 +171,8 @@ var j ='${fn:length(ploy.ployDetailList)}';
 	     +'       <table width="100%" border="0" cellspacing="0" cellpadding="0" id="table'+index+'">'
 	     +'         <tr >'
 	     +'           <td class="dot"></td>'
-	     +'           <td >'+(index==2?'开始时间':title)+'</td>'
-	     +'           <td >'+(index==2?'结束时间':'优先级')+'</td>'
+	     +'           <td >'+(index==2?'开始时间':'')+(index == 3 || index == 4?'频道组':'')+'</td>'
+	     +'           <td >'+(index==2?'结束时间':'')+(index == 3 || index == 4?'优先级':'')+'</td>'
 	     +'         </tr>  '
 	     +'       </table>'
 	     +'   </div>'
@@ -201,10 +201,28 @@ var j ='${fn:length(ploy.ployDetailList)}';
 					item+='<td ><input name="ploy.ployDetailList['+i+'].typeValue" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.typeValue+'" disabled/></td>'
               			+'<td ><input name="ploy.ployDetailList['+i+'].valueName" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.valueName+'" disabled/></td>';
 	    			break;
+				case '3':
+					item+='<td width="45%"><input type="hidden" name="ploy.ployDetailList['+i+'].typeValue"  value="'+detail.typeValue+'"/><a href="#" onclick="javascript:showChannelGroupRef('+detail.typeValue+');">'+detail.valueName+'</a></td>'
+	                  +'<td align="left" width="45%"><select name="ploy.ployDetailList['+i+'].priority" style="width:40px">'
+					  +'<c:forTokens var="num" items="1,2,3,4,5,6,7,8,9" delims=",">'
+					  +'<option value="${num}" '+('${num}'==detail.priority?'selected':'')+' >${num}</option>'
+          		  	  +'</c:forTokens></select></td>';
+          		  break;
+				case '4':
+					item+='<td width="45%"><input type="hidden" name="ploy.ployDetailList['+i+'].typeValue"  value="'+detail.typeValue+'"/><a href="#" onclick="javascript:showChannelGroupRef('+detail.typeValue+');">'+detail.valueName+'</a></td>'
+		                  +'<td align="left" width="45%"><select name="ploy.ployDetailList['+i+'].priority" style="width:40px">'
+     					  +'<c:forTokens var="num" items="1,2,3,4,5,6,7,8,9" delims=",">'
+     					  +'<option value="${num}" '+('${num}'==detail.priority?'selected':'')+' >${num}</option>'
+                		  +'</c:forTokens></select></td>';
+    				break;
+				case '5':
+					item+='<td width="45%"><input type="hidden" name="ploy.ployDetailList['+i+'].typeValue"  value="'+detail.typeValue+'"/>'+detail.valueName+'</td>';
+					break;
+				case '6':
+					item+='<td width="45%"><input type="hidden" name="ploy.ployDetailList['+i+'].typeValue"  value="'+detail.typeValue+'"/>'+detail.valueName+'</td>';
+					break;
 	    		default:
-	    			item+='<td ><input name="ploy.ployDetailList['+i+'].typeValue" type="text"  value="'+detail.typeValue+'" disabled/></td>'
-              			+'<td ><input name="ploy.ployDetailList['+i+'].priority" type="text"  value="'+detail.priority+'" disabled/></td>';
-              		break;
+	    			item+='<td><input name="ploy.ployDetailList['+i+'].typeValue" type="text"  value="'+detail.typeValue+'"/></td>'
 	    	
 	    	}
 	    	item+='</tr>';
@@ -213,6 +231,15 @@ var j ='${fn:length(ploy.ployDetailList)}';
 	   	});
 			 	
 	 }
+	 function showChannelGroupRef(channelGroupId) {
+		    var	height = 550;
+				var width=750;
+				var actinUrl = "<%=path %>/page/channelGroup/showChannelGroupRefList.do?channelGroupId="+channelGroupId;
+				var modelWin = window.showModalDialog(actinUrl,window,"resizable=no;status=no;scroll=no;center=yes;dialogHeight="+height+"px;dialogWidth="+width+"px");
+				if(modelWin){
+					
+				} 
+		}
 
 </script>
 <body class="mainBody">
