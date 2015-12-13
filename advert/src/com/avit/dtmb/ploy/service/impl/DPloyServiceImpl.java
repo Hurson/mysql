@@ -14,6 +14,7 @@ import com.avit.dtmb.ploy.service.DPloyService;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
 
 @Service("dPloyService")
 public class DPloyServiceImpl implements DPloyService {
@@ -62,8 +63,8 @@ public class DPloyServiceImpl implements DPloyService {
 		if(!timeFlag){
 			DPloyDetail detail = new DPloyDetail();
 			detail.setPloyType("2");
-			detail.setStartTime("00:00:00");
-			detail.setEndTime("23:59:59");
+			detail.setTypeValue("00:00:00");
+			detail.setValueName("23:59:59");
 			detailList.add(detail);
 		}
 		
@@ -108,6 +109,11 @@ public class DPloyServiceImpl implements DPloyService {
 			return "1";
 		}
 		return "0";
+	}
+
+	@Override
+	public PageBeanDB queryUserIndustryList(UserIndustryCategory userIndustryCategory, int pageNo, int pageSize) {
+		return dPloyDao.queryUserIndustryList(userIndustryCategory, pageNo, pageSize);
 	}
 
 }

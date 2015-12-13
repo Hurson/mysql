@@ -8,17 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.avit.dtmb.type.PloyType;
 
 /**
  * DPloyDetail entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_ploy_detail", catalog = "ads_x")
+@Table(name = "d_ploy_detail")
 public class DPloyDetail implements
 		java.io.Serializable {
 
@@ -32,8 +27,7 @@ public class DPloyDetail implements
 	private String ployType;
 	private String typeValue;
 	private Integer priority;
-	private String startTime;
-	private String endTime;
+	private String valueName;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -70,18 +64,7 @@ public class DPloyDetail implements
 	}
 
 	public void setTypeValue(String typeValue) {
-		if(PloyType.Time.getKey().equals(ployType)){
-			if(StringUtils.isNotBlank(typeValue)){
-				String[] times = typeValue.split("\\~");
-				startTime = times[0]; 
-				endTime = times.length == 2?times[1]:"23:59:59";
-			}
-		
-		}
-		if(StringUtils.isNotBlank(typeValue)){
-			this.typeValue = typeValue;
-		}
-		
+		this.typeValue = typeValue;
 	}
 	
 	@Column(name = "PRIORITY")
@@ -92,29 +75,13 @@ public class DPloyDetail implements
 	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
-	@Transient
-	public String getStartTime() {
-		
-		return startTime;
+	@Column(name = "VALUE_NAME")
+	public String getValueName() {
+		return valueName;
 	}
 
-	public void setStartTime(String startTime) {
-		if(StringUtils.isNotBlank(startTime)){
-			this.typeValue = startTime+(StringUtils.isBlank(typeValue)?"":typeValue); 
-		}
-		this.startTime = startTime;
-	}
-	@Transient
-	public String getEndTime() {
-		
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		if(StringUtils.isNotBlank(endTime)){
-			this.typeValue = (StringUtils.isBlank(typeValue)?"":typeValue)+"~"+endTime; 
-		}
-		this.endTime = endTime;
+	public void setValueName(String valueName) {
+		this.valueName = valueName;
 	}
 
 }

@@ -11,6 +11,7 @@ import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
 @Repository("dPloyDao")
 public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 
@@ -26,6 +27,7 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 		if(ploy != null && StringUtils.isNotBlank(ploy.getStatus())){
 			hql += " and ploy.status= '" + ploy.getStatus() + "'";
 		}
+		hql += " order by ploy.id desc";
 		return this.getPageList2(hql, null, pageNo, pageSize);
 	}
 	@Override
@@ -72,6 +74,14 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 	public List<String> getUserAccessAreaCode(Integer userId) {
 		String sql = "select release_areacode from t_user_area where user_id =" + userId;
 		return (List<String>)this.getDataBySql(sql, null);
+	}
+	@Override
+	public PageBeanDB queryUserIndustryList(UserIndustryCategory userIndustryCategory, int pageNo, int pageSize) {
+		String hql = "from UserIndustryCategory indu where 1=1";
+		if(userIndustryCategory != null && StringUtils.isNotBlank(userIndustryCategory.getUserIndustryCategoryValue())){
+			hql += " and indu.userIndustryCategoryValue like '%" + userIndustryCategory.getUserIndustryCategoryValue() + "%'";
+		}
+		return this.getPageList2(hql, null, pageNo, pageSize);
 	}
 
 }

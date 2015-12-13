@@ -20,6 +20,9 @@ import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.common.BaseAction;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.UserLogin;
+import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
+import com.dvnchina.advertDelivery.sysconfig.bean.UserRank;
+import com.dvnchina.advertDelivery.sysconfig.service.UserRankService;
 
 @ParentPackage("default")
 @Namespace("/dploy")
@@ -34,9 +37,12 @@ public class DPloyAction extends BaseAction {
 	private List<DAdPosition> listPosition;
 	private DAdPosition position;
 	private List<ReleaseArea> areaList;
+	private UserRank userRank;
+	private  UserIndustryCategory userIndustryCategory;
 	
-	@Resource
+   	@Resource
 	private DPloyService dPloyService;
+	private UserRankService userRankService;
 	
 	@Action(value = "queryDPloyList", results = {
 			@Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp"),
@@ -105,6 +111,22 @@ public class DPloyAction extends BaseAction {
 		dPloyService.saveDTMBPloy(dploy);
 		return SUCCESS;
 	}
+	@Action(value = "queryUserRankList", results = { @Result(name = "success", location = "/page/ploy/dploy/bindingUserRank.jsp")})
+	public String queryUserRankList(){
+		if(page == null){
+			page = new PageBeanDB();
+		}
+		page = userRankService.queryUserRankList(userRank, page.getPageNo(), page.getPageSize());
+		return SUCCESS;
+	}
+	@Action(value = "queryUserIndustryList", results = { @Result(name = "success", location = "/page/ploy/dploy/bindingUserIndustry.jsp")})
+	public String queryUserIndustryList(){
+		if(page == null){
+			page = new PageBeanDB();
+		}
+		page = dPloyService.queryUserIndustryList(userIndustryCategory, page.getPageNo(), page.getPageSize());
+		return SUCCESS;
+	}
 	public DPloy getPloy() {
 		return ploy;
 	}
@@ -150,6 +172,24 @@ public class DPloyAction extends BaseAction {
 	}
 	public void setAreaList(List<ReleaseArea> areaList) {
 		this.areaList = areaList;
+	}
+	public UserRank getUserRank() {
+		return userRank;
+	}
+	public void setUserRank(UserRank userRank) {
+		this.userRank = userRank;
+	}
+	public UserRankService getUserRankService() {
+		return userRankService;
+	}
+	public void setUserRankService(UserRankService userRankService) {
+		this.userRankService = userRankService;
+	}
+	public UserIndustryCategory getUserIndustryCategory() {
+		return userIndustryCategory;
+	}
+	public void setUserIndustryCategory(UserIndustryCategory userIndustryCategory) {
+		this.userIndustryCategory = userIndustryCategory;
 	}
 	
 }

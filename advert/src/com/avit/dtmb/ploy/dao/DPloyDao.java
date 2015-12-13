@@ -7,6 +7,7 @@ import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.BaseDao;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
 
 public interface DPloyDao extends BaseDao {
 	/**
@@ -30,6 +31,8 @@ public interface DPloyDao extends BaseDao {
 	public DPloy getDPloyByName(String ployName);
 	
 	public List<String> getUserAccessAreaCode(Integer userId);
+	
+	public PageBeanDB queryUserIndustryList(UserIndustryCategory userIndustryCategory, int pageNo, int pageSize);
 	
 	
 

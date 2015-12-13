@@ -22,7 +22,7 @@
 </head>
 <script type="text/javascript">
 
-var j =${fn:length(ploy.ployDetailList)};
+var j ='${fn:length(ploy.ployDetailList)}';
 
 	window.onload = function() {
 		var status = $("#ploy_state").val();
@@ -183,7 +183,7 @@ var j =${fn:length(ploy.ployDetailList)};
 	 
 	 }
 	 function initItem(){
-	    var detailJson = eval(${ploy.ployDetailJson});
+	    var detailJson = eval('${ploy.ployDetailJson}');
 	   	$.each(detailJson, function(i, detail){
 	   		var type= detail.ployType;
 	   		var item = '<tr><td class="dot"><input type="checkbox" name="checkbox'+type+'" value="checkbox" />'
@@ -192,14 +192,14 @@ var j =${fn:length(ploy.ployDetailList)};
 	    		case '1':
 	    			item+='<td><select name="ploy.ployDetailList['+i+'].typeValue" style="width:80px" disabled>'
 	          			+'<c:forEach items="${areaList}" var="areaVar" >'
-				        +'<option value="${areaVar.areaCode}" '+(${areaVar.areaCode}==detail.typeValue?'selected':'')+'>${areaVar.areaName}</option>'   
+				        +'<option value="${areaVar.areaCode}" '+('${areaVar.areaCode}'==detail.typeValue?'selected':'')+'>${areaVar.areaName}</option>'   
 				        +'</c:forEach>' 				         					
 				        +'</select></td>';
 				   
 				    break;
 				case '2':
-					item+='<td ><input name="ploy.ployDetailList['+i+'].startTime" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.startTime+'" disabled/></td>'
-              			+'<td ><input name="ploy.ployDetailList['+i+'].endTime" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.endTime+'" disabled/></td>';
+					item+='<td ><input name="ploy.ployDetailList['+i+'].typeValue" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.typeValue+'" disabled/></td>'
+              			+'<td ><input name="ploy.ployDetailList['+i+'].valueName" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.valueName+'" disabled/></td>';
 	    			break;
 	    		default:
 	    			item+='<td ><input name="ploy.ployDetailList['+i+'].typeValue" type="text"  value="'+detail.typeValue+'" disabled/></td>'

@@ -26,7 +26,7 @@
 		$("#queryForm").submit();
 	}
 	function delResource(){
-		$("#queryForm").attr("action", "delOrderMateRelTmp.do");
+		$("#queryForm").attr("action", "delOrderMateRelTmp.action");
 		$("#queryForm").submit();
 	}
 	

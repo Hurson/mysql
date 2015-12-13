@@ -22,7 +22,11 @@
 </head>
 <script type="text/javascript">
 
-	var j =${fn:length(ploy.ployDetailList)};
+	var j ='${fn:length(ploy.ployDetailList)}';
+	var chanArray=new Array();
+	var audArray=new Array();
+	var induArray=new Array();
+	var levArray=new Array();
 
 	window.onload = function() {
 		
@@ -188,7 +192,7 @@
 	   				 $("#typeList").append('<span><input type="checkbox" id="type'+key+'" value="'+key+'" checked disabled/>'+value+'</span>');
 	   				 createTable(key,value);        
 				});
-       		}
+       	    }
 	 }
 
 	 function createTable(index, title){
@@ -204,8 +208,8 @@
 	     +'       <table width="100%" border="0" cellspacing="0" cellpadding="0" id="table'+index+'">'
 	     +'         <tr >'
 	     +'           <td class="dot"></td>'
-	     +'           <td >'+(index==2?'开始时间':title)+'</td>'
-	     +'           <td >'+(index==2?'结束时间':'')+'</td>'
+	     +'           <td >'+(index==2?'开始时间':'')+(index == 3 || index == 4?'频道组':'')+'</td>'
+	     +'           <td >'+(index==2?'结束时间':'')+(index == 3 || index == 4?'优先级':'')+'</td>'
 	     +'         </tr>  '
 	     +'       </table>'
 	     +'   </div>'
@@ -221,28 +225,51 @@
 	 
 	 }
 	 function initItem(){
-	    var detailJson = eval(${ploy.ployDetailJson});
+	    var detailJson = eval('${ploy.ployDetailJson}');
 	   	$.each(detailJson, function(i, detail){
 	   		var type= detail.ployType;
 	   		var item = '<tr><td class="dot"><input type="checkbox" name="checkbox'+type+'" value="checkbox" />'
-	   				+'<input type="hidden" name="ploy.ployDetailList['+i+'].id" value="'+detail.id+'" /><input type="hidden" name="ploy.ployDetailList['+i+'].ployType" value="'+detail.ployType+'" />'
-	   				+'</td>';
+	   				+'<input type="hidden" name="ploy.ployDetailList['+i+'].id" value="'+detail.id+'" /><input type="hidden" name="ploy.ployDetailList['+i+'].ployType" value="'+detail.ployType+'" /></td>'
+			        +'<input type="hidden" name="ploy.ployDetailList['+i+'].valueName" value="'+detail.valueName+'" '+(type==2?'disabled':'')+'/>';
 	    	switch(type){
 	    		case '1':
-	    			item+='<td><select name="ploy.ployDetailList['+i+'].typeValue" style="width:80px">'
+	    			item+='<td><select name="ploy.ployDetailList['+i+'].typeValue" onchange="selectChange('+i+',this);" style="width:80px">'
 	          			+'<c:forEach items="${areaList}" var="areaVar" >'
-				        +'<option value="${areaVar.areaCode}" '+(${areaVar.areaCode}==detail.typeValue?'selected':'')+'>${areaVar.areaName}</option>'   
+				        +'<option value="${areaVar.areaCode}" '+('${areaVar.areaCode}'==detail.typeValue?'selected':'')+'>${areaVar.areaName}</option>'   
 				        +'</c:forEach>' 				         					
 				        +'</select></td>';
 				   
 				    break;
 				case '2':
-					item+='<td ><input name="ploy.ployDetailList['+i+'].startTime" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.startTime+'"/></td>'
-              			+'<td ><input name="ploy.ployDetailList['+i+'].endTime" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.endTime+'"/></td>';
+					item+='<td ><input name="ploy.ployDetailList['+i+'].typeValue" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.typeValue+'"/></td>'
+              			+'<td ><input name="ploy.ployDetailList['+i+'].valueName" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})" value="'+detail.valueName+'"/></td>';
 	    			break;
+				case '3':
+					chanArray.push(detail.typeValue+"|"+detail.valueName);
+					item+='<td width="45%"><input type="hidden" name="ploy.ployDetailList['+i+'].typeValue"  value="'+detail.typeValue+'"/><a href="#" onclick="javascript:showChannelGroupRef('+detail.typeValue+');">'+detail.valueName+'</a></td>'
+	                  +'<td align="left" width="45%"><select name="ploy.ployDetailList['+i+'].priority" style="width:40px">'
+					  +'<c:forTokens var="num" items="1,2,3,4,5,6,7,8,9" delims=",">'
+					  +'<option value="${num}" '+('${num}'==detail.priority?'selected':'')+' >${num}</option>'
+          		  	  +'</c:forTokens></select></td>';
+          		  break;
+				case '4':
+					audArray.push(detail.typeValue+"|"+detail.valueName);
+					item+='<td width="45%"><input type="hidden" name="ploy.ployDetailList['+i+'].typeValue"  value="'+detail.typeValue+'"/><a href="#" onclick="javascript:showChannelGroupRef('+detail.typeValue+');">'+detail.valueName+'</a></td>'
+		                  +'<td align="left" width="45%"><select name="ploy.ployDetailList['+i+'].priority" style="width:40px">'
+     					  +'<c:forTokens var="num" items="1,2,3,4,5,6,7,8,9" delims=",">'
+     					  +'<option value="${num}" '+('${num}'==detail.priority?'selected':'')+' >${num}</option>'
+                		  +'</c:forTokens></select></td>';
+    				break;
+				case '5':
+					induArray.push(detail.typeValue+"|"+detail.valueName);
+					item+='<td width="45%"><input type="hidden" name="ploy.ployDetailList['+i+'].typeValue"  value="'+detail.typeValue+'"/>'+detail.valueName+'</td>';
+					break;
+				case '6':
+					levArray.push(detail.typeValue+"|"+detail.valueName);
+					item+='<td width="45%"><input type="hidden" name="ploy.ployDetailList['+i+'].typeValue"  value="'+detail.typeValue+'"/>'+detail.valueName+'</td>';
+					break;
 	    		default:
-	    			item+='<td ><input name="ploy.ployDetailList['+i+'].typeValue" type="text"  value="${ploy.ployDetailList[i].typeValue}"/></td>'
-              			+'<td ><input name="ploy.ployDetailList['+i+'].priority" type="text"  value="${ploy.ployDetailList[i].priority}"/></td>';
+	    			item+='<td><input name="ploy.ployDetailList['+i+'].typeValue" type="text"  value="'+detail.typeValue+'"/></td>'
 	    	
 	    	}
 	    	item+='</tr>';
@@ -256,27 +283,47 @@
 		var item ='<tr><td class="dot"><input type="checkbox" name="checkbox'+index+'"/><input type="hidden" name="ploy.ployDetailList['+j+'].ployType" value="'+index+'" /></td>';
 		switch(index){
 		case 1:
-			item+='<td><select id="" name="ploy.ployDetailList['+j+'].typeValue" style="width:80px">'
+			item+='<td><select id="" name="ploy.ployDetailList['+j+'].typeValue" onchange="selectChange('+j+',this);" style="width:80px">'
 	        	+'       <c:forEach items="${areaList}" var="areaVar" >'
 	            +'    		<option value="${areaVar.areaCode}">${areaVar.areaName}</option>'   
 	            +'       </c:forEach>'; 				         					
-	        item+='</select></td>';
+	        item+='</select><input type="hidden" name="ploy.ployDetailList['+j+'].valueName" value="${areaList[0].areaName}"/></td>';
+	        item +='</tr>';
+			tab.append(item);
+			j++;
 	        break;
 		case 2:
-	        item+='<td ><input name="ploy.ployDetailList['+j+'].startTime" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})"/></td>';
-	        item+='<td ><input name="ploy.ployDetailList['+j+'].endTime" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})"/></td>';
+	        item+='<td ><input name="ploy.ployDetailList['+j+'].typeValue" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})"/></td>';
+	        item+='<td ><input name="ploy.ployDetailList['+j+'].valueName" type="text" readonly="readonly" onclick="WdatePicker({dateFmt:\'HH:mm:ss\'})"/></td>';
+	        item +='</tr>';
+			tab.append(item);
+			j++;
 	        break;
 	    case 3:
+	    	chanArray=selectChannelGroup(index,chanArray);
+	    	break;
 	    case 4:
-	    	selectChannelGroup();
+	    	audArray=selectAudGroup(index,audArray);
+	    	break;
+	    case 5:
+	    	induArray=selectUserInfo(index,induArray,"<%=path%>/dploy/queryUserIndustryList.action");
+	    	break;
+	    case 6:
+	    	levArray=selectUserInfo(index,levArray,"<%=path%>/dploy/queryUserRankList.action");
+	    	break;
 	    default:
+	    	item+='<td ><input name="ploy.ployDetailList['+j+'].typeValue" type="text" /></td>';
+        	item +='</tr>';
+			tab.append(item);
+			j++;
 	    	break;
 		}
-		item +='</tr>';
-		tab.append(item);
-		j++;
+		
 	}
-	
+	function selectChange(index, selObj){
+		var text=$(selObj).find("option:selected").html();
+		document.getElementsByName("ploy.ployDetailList["+index+"].valueName")[0].value= text;
+	}
  	/**
  	*删除行元素  
  	*/
@@ -291,16 +338,46 @@
         });
 	}
 
-	function selectChannelGroup()
+	function selectChannelGroup(index,array)
 	{
+		var array=array;
 		var	height = 550;
 		var width=750;
 		
 		var actinUrl = '<%=path%>/page/precise/queryChannelGroup.do';
-		var modelWin = window.showModalDialog(actinUrl,window,"resizable=no;status=no;scroll=no;center=yes;dialogHeight="+height+"px;dialogWidth="+width+"px");
-		if(modelWin){	
+		var modelWin = window.showModalDialog(actinUrl,array,"resizable=no;status=no;scroll=no;center=yes;dialogHeight="+height+"px;dialogWidth="+width+"px");
+		if(modelWin){
+			array = modelWin;
+			var items = '';
+			for(var e=0;e<array.length;e++){
+				items+='<tr><td class="dot"><input type="checkbox" name="checkbox'+index+'" value="checkbox"/><input type="hidden" name="ploy.ployDetailList['+j+'].ployType" value="'+index+'" /><input type="hidden" name="ploy.ployDetailList['+j+'].valueName" value="'+array[e].split("|")[1]+'" /></td>'
+					  +'<td width="45%"><input type="hidden" name="ploy.ployDetailList['+j+'].typeValue"  value="'+array[e].split("|")[0]+'"/><a href="#" onclick="javascript:showChannelGroupRef('+array[e].split("|")[0]+');">'+array[e].split("|")[1]+'</a></td>'
+	                  +'<td align="left" width="45%"><select name="ploy.ployDetailList['+j+'].priority" style="width:40px">'
+ 					  +'<c:forTokens var="num" items="1,2,3,4,5,6,7,8,9" delims=",">'
+ 					  +'<option value="${num}">${num}</option>'
+            		  +'</c:forTokens></select></td>';
+            	j++;
+			}
+			$("#table"+index+" tbody").html(items);
 		} 
 	}
+	
+	function selectUserInfo(type,array,actionUrl){
+		var	height = 550;
+		var width=750;
+		var modelWin = window.showModalDialog(actionUrl,array,"resizable=no;status=no;scroll=no;center=yes;dialogHeight="+height+"px;dialogWidth="+width+"px");
+		if(modelWin){
+			array = modelWin;
+			var items = '';
+			for(var e=0;e<array.length;e++){
+				items+='<tr><td class="dot"><input type="checkbox" name="checkbox'+type+'" value="checkbox"/><input type="hidden" name="ploy.ployDetailList['+j+'].ployType" value="'+type+'" /></td>'
+					  +'<td><input type="hidden" name="ploy.ployDetailList['+j+'].typeValue"  value="'+array[e].split("|")[0]+'"/><input type="hidden" name="ploy.ployDetailList['+j+'].valueName"  value="'+array[e].split("|")[1]+'"/>'+array[e].split("|")[1]+'</td>';
+            	j++;
+			}
+			$("#table"+type+" tbody").html(items);
+			return array;
+		} 
+	 }
 
 </script>
 <body class="mainBody">

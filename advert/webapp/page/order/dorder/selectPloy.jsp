@@ -84,7 +84,7 @@
 							<c:if test="${'1' eq sub.ployType }">
 								
 								<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
-									<td><c:out value="${sub.typeValue}" /></td>
+									<td><c:out value="${sub.valueName}" /></td>
 								</tr>
 							</c:if>
 							</c:forEach>
@@ -95,7 +95,7 @@
 							<c:forEach items="${ploy.ployDetailList}" var="sub" >
 							<c:if test="${'2' eq sub.ployType }">
 								<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
-									<td><c:out value="${sub.typeValue}" /></td>
+									<td><c:out value="${sub.typeValue}~${sub.valueName }" /></td>
 								</tr>
 							</c:if>
 							</c:forEach>
@@ -109,7 +109,7 @@
 							<c:if test="${type eq sub.ployType }">
 								<c:set var="flag" value="1"></c:set>
 								<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
-									<td><c:out value="${sub.typeValue}" /></td>
+									<td><c:out value="${sub.valueName}" /></td>
 								</tr>
 							</c:if>
 							</c:forEach>

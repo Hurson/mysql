@@ -50,7 +50,7 @@
 	var previewValue;
 	function init(time){
 		aheadTime = time;
-		showOrderResource(${order.orderCode});
+		showOrderResource('${order.orderCode}');
 		$("#periodDate").show();
 	}
 

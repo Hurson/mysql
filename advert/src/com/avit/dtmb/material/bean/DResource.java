@@ -1,21 +1,19 @@
 package com.avit.dtmb.material.bean;
 // default package
 
-import java.sql.Timestamp;
 import java.sql.Date;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * DResource entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_resource", catalog = "ads_x")
-public class DResource extends CommonObject implements
+@Table(name = "d_resource")
 public class DResource implements		java.io.Serializable {
 
 	/**
@@ -178,7 +176,7 @@ public class DResource implements		java.io.Serializable {
 	public void setPositionCode(String positionCode) {
 		this.positionCode = positionCode;
 	}
-
+	@Transient
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -186,7 +184,7 @@ public class DResource implements		java.io.Serializable {
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
-
+	@Transient
 	public String getPositionName() {
 		return positionName;
 	}
@@ -194,6 +192,7 @@ public class DResource implements		java.io.Serializable {
 	public void setPositionName(String positionName) {
 		this.positionName = positionName;
 	}
+	@Transient
 	public String getAdvertisersName() {
 		return advertisersName;
 	}
