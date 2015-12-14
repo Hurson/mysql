@@ -26,7 +26,7 @@
 		$("#queryForm").submit();
 	}
 	function delResource(){
-		$("#queryForm").attr("action", "delOrderMateRelTmp.action");
+		$("#queryForm").attr("action", "delDOrderMateRelTmp.action");
 		$("#queryForm").submit();
 	}
 	
@@ -108,6 +108,7 @@
 	<input type="hidden" id="pageSize" name="page.pageSize" value="${page.pageSize}"/>
 	<input type="hidden" id="positionCode" name="order.dposition.positionCode" value="${order.dposition.positionCode}"/>
 	<input type="hidden" id="orderCode" name="omrTmp.orderCode" value="${omrTmp.orderCode}"/>
+	<input type="hidden" id="orderCode" name="omrTmp.resource.id" value="${omrTmp.resource.id}"/>
 	<div class="searchContent">
 		<table cellspacing="1" class="searchList">
             <tr class="title">

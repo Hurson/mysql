@@ -129,7 +129,13 @@
 		$("#startDate2").val("");
 		$("#endDate").val("");
 		$("#selResource").val("");
+		$("[name=order\\.isDefault]:checkbox").attr("checked", false);
+		$("#isDefault").hide();
 		ployId = -1;
+		var positionCode = document.getElementById("positionCode").value;
+		if(positionCode == '2015'){
+			$("#isDefault").show();
+		}
 				
        
     }
@@ -152,6 +158,11 @@
             	ployId = value.split("|")[0];
             	ployName = value.split("|")[1];
             	var count = value.split("|")[2];
+            	if($("[name=order\\.isDefault]:checkbox").is(":checked")){
+            		count = 1;
+            	}else{
+            		$("#isDefault").hide();
+            	}
             	var mainPloy = value.split("|")[3];
 	        	$("#ployId").val(ployId);
 				$("#ployName").val(ployName);
@@ -242,7 +253,7 @@
    			    			$("#saveForm").submit();
    			    			
    			    	   }else if(result =='1'){
-   			    		   alert("订单冲突！");
+   			    		   alert("订单对应区域在日期范围与已有订单冲突，订单创建失败！");
    			    	   }
    		    	   }else{
    			    		alert("系统错误，请联系管理员！");
@@ -446,6 +457,9 @@
 						<option value="${position.positionCode }">${position.positionName }</option>
 					</c:forEach>
 				</select>
+				<span style="display:none" id="isDefault">
+					是否默认:<input type="checkbox" value="1" name="order.isDefault"/>
+				</span>
 			</c:if>
 			<c:if test="${not empty order.id }">
 				<input type="hidden" id="positionCode" name="order.dposition.positionCode" value="${order.dposition.positionCode }"/>

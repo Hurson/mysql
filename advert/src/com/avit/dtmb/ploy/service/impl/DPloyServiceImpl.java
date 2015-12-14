@@ -22,10 +22,23 @@ public class DPloyServiceImpl implements DPloyService {
 	@Resource
 	private DPloyDao dPloyDao;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public PageBeanDB queryDTMBPloyList(DPloy ploy, int pageNo, int pageSize) {
 		
-		return dPloyDao.queryDTMBPloyList(ploy, pageNo, pageSize);
+		PageBeanDB page = dPloyDao.queryDTMBPloyList(ploy, pageNo, pageSize);
+		List<DPloy> dataList = (List<DPloy>)page.getDataList();
+		if(dataList != null && dataList.size() > 0){
+			for(DPloy dploy : dataList){
+				if("2".equals(dploy.getStatus()) && checkOrderRel(dploy.getId())){
+					dploy.setStatus("4");
+				}
+				if("4".equals(dploy.getStatus()) && !checkOrderRel(dploy.getId())){
+					dploy.setStatus("2");
+				}
+			}
+		}
+		return page;
 	}
 
 	@Override
@@ -115,6 +128,10 @@ public class DPloyServiceImpl implements DPloyService {
 	@Override
 	public PageBeanDB queryUserIndustryList(UserIndustryCategory userIndustryCategory, int pageNo, int pageSize) {
 		return dPloyDao.queryUserIndustryList(userIndustryCategory, pageNo, pageSize);
+	}
+	private boolean checkOrderRel(Integer ployId){
+		List<Integer> list = dPloyDao.checkOrderRelPloy(ployId);
+		return (list!= null && list.size() > 0);
 	}
 
 }

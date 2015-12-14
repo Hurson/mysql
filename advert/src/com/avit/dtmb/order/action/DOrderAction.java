@@ -22,6 +22,7 @@ import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.common.BaseAction;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.model.UserLogin;
 
 @ParentPackage("default")
 @Namespace("/dorder")
@@ -126,12 +127,18 @@ public class DOrderAction extends BaseAction {
 			order.setCreateTime(new Date());
 			order.setModifyTime(new Date());
 			order.setState("0");
+			
 		}else{
 			if(!"0".equals(order.getState())){
 				order.setState("1");
 			}
 			order.setModifyTime(new Date());
 		}
+		
+		UserLogin user = getLoginUser();
+		order.getCustomer().setId(user.getCustomerId());
+		order.setOperatorId(user.getUserId());
+		
 		dOrderService.saveDOrder(order);
 		return SUCCESS;
 	}
@@ -174,7 +181,12 @@ public class DOrderAction extends BaseAction {
 		result = dOrderService.checkDOrderRule(order);
 		this.renderText(result);
 	}
-	
+	@Action(value = "delDOrderMateRelTmp",results={@Result(name = "success", type="redirect", location = "queryDOrderMateRelTmp.action",
+			params={"omrTmp.orderCode", "${omrTmp.orderCode}"})})
+	public String delDOrderMateRelTmp(){
+		dOrderService.delDOrderMateRelTmp(ids);
+		return SUCCESS;
+	}
 	public DOrder getOrder() {
 		return order;
 	}

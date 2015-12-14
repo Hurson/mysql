@@ -27,4 +27,5 @@ public interface DOrderService {
 	public String getOrderResourceJson(DOrderMateRelTmp omrTmp);
 	public String auditDTMBPloy(DOrder order, String flag);
 	public String checkDOrderRule(DOrder order);
+	public void delDOrderMateRelTmp(String ids);
 }

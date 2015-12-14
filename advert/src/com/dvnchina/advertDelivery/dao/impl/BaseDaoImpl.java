@@ -317,6 +317,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 			pageNumber = pageBean.getPageNo();
 		}
 		pageBean.setPageNo(pageNumber);
+		pageBean.setTotalPage((rowcount%pageSize==0)?rowcount/pageSize:rowcount/pageSize+1);
 		
 		List list = this.getListForPage(hql, params, pageNumber, pageSize);
 		pageBean.setDataList(list);

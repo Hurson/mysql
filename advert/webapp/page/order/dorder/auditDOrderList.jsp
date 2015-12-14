@@ -65,12 +65,7 @@
 			</c:forEach>
 		</c:if>
      </select>
-      <span style="width: 73px;text-align:right">订单类型：</span>
-      <select name="order.orderType" style="width:  115px">
-          <option value="">请选择</option>
-          <option value="0" <c:if test="${order.orderType==0}">selected</c:if>>投放式</option>
-		  <option value="1" <c:if test="${order.orderType==1}">selected</c:if>>请求式</option>
-      </select>
+     
       <span style="width: 60px;text-align:right">合同名称：</span><input type="text" id="contractName" name="order.contractName" value="${order.contractName}" id="contractName" />
       <span style="width: 80px;text-align:right">广告位名称：</span><input type="text" id="positionName" name="order.positionName" value="${order.positionName}" id="positionName" />
      </td>

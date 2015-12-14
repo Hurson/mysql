@@ -1,8 +1,12 @@
 package com.avit.dtmb.order.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Repository;
 
 import com.avit.dtmb.material.bean.DResource;
@@ -14,13 +18,44 @@ import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.model.UserLogin;
 @Repository
 public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
+	@SuppressWarnings("all")
 	@Override
 	public PageBeanDB queryDTMBOrderList(DOrder order, int pageNo, int pageSize) {
-		String hql = "from DOrder order where order.state < '7'";
-		return this.getPageList2(hql, null, pageNo, pageSize);
+		String hql = "from DOrder dorder where 1=1";
+		List param = new ArrayList();
+			   if(order != null && order.getDposition() != null && StringUtils.isNotBlank(order.getDposition().getPositionName())){
+				   hql += " and dorder.dposition.positionName like '%" + order.getDposition().getPositionName() + "%'";
+			   }
+			   if(order != null && order.getContract() != null && StringUtils.isNotBlank(order.getContract().getContractName())){
+				   hql += " and dorder.contract.contractName like '%" + order.getContract().getContractName() + "%'";
+			   }
+			   if(order != null && order.getDploy() != null && StringUtils.isNotBlank(order.getDploy().getPloyName())){
+				   hql += " and dorder.dploy.ployName like '%" + order.getDploy().getPloyName() + "%'";
+			   }
+			   if(order != null && order.getStartDate() != null){
+				   hql += " and dorder.startDate <= ?";
+				   param.add(order.getStartDate());
+			   }
+			   if(order != null && order.getEndDate() != null){
+				   hql += " and dorder.endDate<= ?";
+				   param.add(order.getEndDate());
+			   }
+			   if(order != null && StringUtils.isNotBlank(order.getState())){
+				   hql += " and dorder.state='" + order.getState() + "'";
+			   }else{
+				   hql += " and dorder.state < '7'";
+			   }
+			   HttpSession session = ServletActionContext.getRequest().getSession();
+			   UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+			   List<Integer> accessUserId = userLogin.getAccessUserIds();
+			   hql +=" and dorder.operatorId in ("+accessUserId.toString().replaceAll("\\[|\\]|\\s", "")+")";
+			   
+			hql+= " ORDER BY dorder.id desc";
+		return this.getPageList2(hql, param.toArray(), pageNo, pageSize);
 	}
 
 	@Override
@@ -32,13 +67,19 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DAdPosition> queryPositionList() {
-		String hql = "from DAdPosition";
+		String hql = "select ad from DAdPosition ad";
 		return (List<DAdPosition>)this.getListForAll(hql, null);
 	}
 
 	@Override
 	public PageBeanDB queryDTMBPloyList(DPloy ploy, int pageNo, int pageSize) {
-		String hql = "from DPloy ploy where ploy.dposition.positionCode ='" + ploy.getDposition().getPositionCode() + "'";
+		String hql = "from DPloy ploy where ploy.dposition.positionCode ='" + ploy.getDposition().getPositionCode() + "' and ploy.status in(2,4)";
+		
+		HttpSession session = ServletActionContext.getRequest().getSession();
+	    UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		List<Integer> accessUserId = userLogin.getAccessUserIds();
+		hql +=" and ploy.operatorId in ("+accessUserId.toString().replaceAll("\\[|\\]|\\s", "")+")";
+		
 		return this.getPageList2(hql, null, pageNo, pageSize);
 	}
 
@@ -82,6 +123,16 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		if(omrTmp.getResource() != null && omrTmp.getResource().getId() != null){
 			hql += " and tmp.resource.id =" + omrTmp.getResource().getId();
 		}
+		if(omrTmp != null && omrTmp.getReleaseArea() != null && StringUtils.isNotBlank(omrTmp.getReleaseArea().getAreaCode())){
+			hql += " and tmp.releaseArea.areaCode = '"+ omrTmp.getReleaseArea().getAreaCode()+"'";
+		}
+		if(omrTmp != null && StringUtils.isNotBlank(omrTmp.getStartTime())){
+			hql += " and tmp.startTime <='" + omrTmp.getStartTime() + "'";
+		}
+		if(omrTmp != null && StringUtils.isNotBlank(omrTmp.getEndTime())){
+			hql += " and tmp.endTime >='" + omrTmp.getEndTime() + "'";
+		}
+		hql += " order by tmp.releaseArea.areaCode, tmp.indexNum";
 		return this.getPageList2(hql, null, pageNo, pageSize);
 	}
 
@@ -140,14 +191,18 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	@Override
 	public int insertPlayList(DOrder order) {
-		String sql = "insert into d_play_list(order_code, position_code, area_code, start_date, end_date,start_time,end_time,ploy_type,type_value,resource_ids,resource_paths,status) "+
+		String sql = "insert into d_play_list(order_code, position_code, area_code, start_date, end_date,start_time,end_time,ploy_type,type_value,resource_ids,resource_paths,index_num,status,user_industrys,user_levels,tvn,is_default) "+
 					 "(select od.order_code,od.position_code,omr.area_code,od.start_date,od.end_date,omr.start_time,omr.end_time,omr.ploy_type,omr.type_value," +
 					 "omr.resource_id,CASE res.resource_type" +
 					 " WHEN 0 THEN (SELECT name from t_image_meta where id=res.resource_id)" +
 					 " WHEN 1 THEN (SELECT name FROM t_video_meta where id=res.resource_id)" +
 					 " WHEN 2 THEN (SELECT content FROM t_text_meta where id=res.resource_id)" +
-					 " ELSE '' END,'0'"+
-				     "from d_order od, d_order_mate_rel omr,d_resource res where od.order_code = omr.order_code and omr.resource_id = res.id and od.id="+order.getId()+")";
+					 " ELSE '' END,omr.index_num,'0',"+
+					 "(SELECT group_concat(type_value) from d_ploy_detail where ploy_type='5' and ploy_id = od.ploy_id group by ploy_id),"+
+					 "(SELECT group_concat(type_value) from d_ploy_detail where ploy_type='6' and ploy_id = od.ploy_id group by ploy_id),"+
+					 "(SELECT group_concat(type_value) from d_ploy_detail where ploy_type='7' and ploy_id = od.ploy_id group by ploy_id),"+
+				     "od.is_default "+
+					 "from d_order od, d_order_mate_rel omr,d_resource res where od.order_code = omr.order_code and omr.resource_id = res.id and od.id="+order.getId()+")";
 		return this.executeBySQL(sql, null);
 	}
 
@@ -160,12 +215,19 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Integer> checkDOrderRule(DOrder order) {
-		String sql = "select od.id from d_order od, d_order_mate_rel_tmp omr1,d_order_mate_rel_tmp omr2 "+
+		String sql = "select od.id from d_order od, d_order_mate_rel omr1,d_order_mate_rel_tmp omr2 "+
 					 "where od.order_code = omr1.order_code and omr1.resource_id is not null "+
 					 "and omr1.area_code = omr2.area_code and omr2.order_code = ? and omr2.resource_id is not null "+
 					 "and od.position_code = ? and od.order_code <> ? and od.start_date < ? and od.end_date > ? and omr1.start_time < omr2.end_time and omr1.end_time > omr2.start_time "+
 					 "and (omr1.ploy_type = \"\" or (omr1.type_value = omr2.type_value or omr1.type_value=0 or omr2.type_value=0))";
 		return (List<Integer>)this.getDataBySql(sql, new Object[]{order.getOrderCode(),order.getDposition().getPositionCode(),order.getOrderCode(),order.getEndDate(),order.getStartDate()});
+	}
+
+	@Override
+	public void delDOrderMateRelTmp(String ids) {
+		String hql = "update d_order_mate_rel_tmp set resource_id = null where id in("+ids+")";
+		this.executeBySQL(hql, null);
+		
 	}
 
 }

@@ -34,6 +34,6 @@ public interface DPloyDao extends BaseDao {
 	
 	public PageBeanDB queryUserIndustryList(UserIndustryCategory userIndustryCategory, int pageNo, int pageSize);
 	
-	
+	public List<Integer> checkOrderRelPloy(Integer ployId);
 
 }

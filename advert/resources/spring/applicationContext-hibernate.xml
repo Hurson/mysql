@@ -243,7 +243,8 @@
 	</bean>
 	
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">    
-	  <tx:attributes>    
+	  <tx:attributes>
+	  	  <tx:method name="query*" read-only="true"/>
 	      <tx:method name="*"/>    
 	  </tx:attributes>    
 	</tx:advice>    

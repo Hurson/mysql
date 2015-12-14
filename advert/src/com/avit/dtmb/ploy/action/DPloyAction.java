@@ -57,7 +57,7 @@ public class DPloyAction extends BaseAction {
 			page = new PageBeanDB();
 		}
 		page = dPloyService.queryDTMBPloyList(ploy, page.getPageNo(), page.getPageSize());
-		if(ploy != null && ploy.getStatus().equals("1")){
+		if(ploy != null && "1".equals(ploy.getStatus())){
 			return "audit";
 		}
 		return SUCCESS;

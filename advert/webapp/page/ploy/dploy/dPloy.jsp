@@ -359,6 +359,7 @@
             	j++;
 			}
 			$("#table"+index+" tbody").html(items);
+			return array;
 		} 
 	}
 	

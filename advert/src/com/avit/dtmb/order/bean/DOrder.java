@@ -49,6 +49,7 @@ public class DOrder  implements java.io.Serializable {
     private Date auditTime;
     private Integer operatorId;
     private String description;
+    private String isDefault;
 
 
 	/** default constructor */
@@ -195,6 +196,14 @@ public class DOrder  implements java.io.Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	@Column(name="IS_DEFAULT")
+	public String getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(String isDefault) {
+		this.isDefault = isDefault;
 	}
 	
 

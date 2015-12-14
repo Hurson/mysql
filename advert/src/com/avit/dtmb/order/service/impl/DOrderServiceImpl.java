@@ -177,4 +177,10 @@ public class DOrderServiceImpl implements DOrderService {
 		return "0";
 	}
 
+	@Override
+	public void delDOrderMateRelTmp(String ids) {
+		dOrderDao.delDOrderMateRelTmp(ids);
+		
+	}
+
 }
