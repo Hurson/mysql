@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <!-- ActiveMQ 的 ResourceAdapter -->
+    <bean id="activeMQResourceAdapter" class="org.apache.activemq.ra.ActiveMQResourceAdapter">
+        <!-- <property name="serverUrl" value="failover:(tcp://localhost:61618)?initialReconnectDelay=100"/> -->
+        <property name="serverUrl" value="vm://localhost:61616"/><!-- tcp://localhost --><!-- http://localhost -->
+    </bean>
+    
+    
+    <!-- Jencks 的 JCA Container jencks2.x中的BootstrapContextFactoryBean要求必须设置transactionManager属性-->
+    <bean id="jencksContainer" class="org.jencks.JCAContainer">
+        <property name="bootstrapContext">
+            <bean class="org.jencks.factory.BootstrapContextFactoryBean">
+                <property name="threadPoolSize" value="50"/>
+            </bean>
+        </property>
+        <!-- 给JCA装上指向ActiveMQ的ResourceAdapter -->
+        <property name="resourceAdapter" ref="activeMQResourceAdapter"/>
+    </bean>
+    
+    <!--监听 Message 的Message Driven POJO-->
+    <bean id="synResourcesMDP" class="com.avit.common.jms.SynResourcesMDP" autowire="byName">
+    	 <property name="readTimeout" value="${syn_resources_readtimeout}"/>
+         <property name="connectTimeout" value="${syn_resources_connectTimeout}" />
+    </bean>
+    
+    <!-- 将MDP与PostData.Queue 消息队列关联-->
+    <bean id="postDataQueueConsumer" class="org.jencks.JCAConnector">
+        <property name="jcaContainer" ref="jencksContainer"/>
+        <property name="activationSpec">
+            <bean class="org.apache.activemq.ra.ActiveMQActivationSpec">
+                <property name="destination" value="TransData.Queue"/>
+                <property name="destinationType" value="javax.jms.Queue"/>
+            </bean>
+        </property>
+        <property name="ref" value="synResourcesMDP"/>
+    </bean>
+    
+    <!--设置jmsFactory-->
+    <bean id="jmsFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <!-- 定义URL -->
+        <!--  <property name="brokerURL" value="failover:(tcp://localhost:61618)?initialReconnectDelay=100"/>-->
+        <property name="brokerURL" value="vm://localhost:61616"/>
+    </bean>
+    
+    <!--异步发布数据-->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="defaultDestinationName" value="TransData.Queue"/>
+        <property name="connectionFactory" ref="jmsFactory"/>
+    </bean>
+
+</beans>

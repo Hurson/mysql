@@ -7,6 +7,7 @@ package com.avit.ads.xml;
 import javax.xml.bind.annotation.XmlRegistry;
 
 import com.avit.ads.util.bean.AdsConfig;
+import com.avit.ads.util.bean.Dtmbftp;
 import com.avit.ads.xml.beans.ServerResponse;
 
 
@@ -24,6 +25,9 @@ public class ObjectFactory {
 	public AdsConfig createAdsConfig()
 	{
 		return new AdsConfig();
+	}
+	public Dtmbftp createDtmbftp(){
+		return new Dtmbftp();
 	}
 	
 	public ServerResponse createServerResponse()
