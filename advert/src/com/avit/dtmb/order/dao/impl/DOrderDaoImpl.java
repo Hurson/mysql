@@ -1,6 +1,5 @@
 package com.avit.dtmb.order.dao.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -57,7 +56,7 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		
 		for(int i = 0; i < count; i ++){
 			String sql = "insert into d_order_mate_rel_tmp(order_code,area_code,start_time, end_time,ploy_type,type_value,value_name,index_num)" +
-					"select "+order.getOrderCode()+",a.type_value,b.type_value,b.value_name,"+mainPloy+","+(StringUtils.isBlank(mainPloy) || num == 0?"0,'全频道'":"c.type_value,c.value_name") +","+i+
+					"select "+order.getOrderCode()+",a.type_value,b.type_value,b.value_name,"+(StringUtils.isBlank(mainPloy)?"\"\"":mainPloy)+","+(StringUtils.isBlank(mainPloy) || num == 0?"0,'全频道'":"c.type_value,c.value_name") +","+i+
 					" from d_ploy_detail a,d_ploy_detail b"+(StringUtils.isBlank(mainPloy) || num == 0?"":",d_ploy_detail c")+
 					" where a.ploy_id = b.ploy_id"+(StringUtils.isBlank(mainPloy) || num == 0?"":" and b.ploy_id= c.ploy_id")+
 	                " and a.ploy_type='1' and  b.ploy_type='2'"+(StringUtils.isBlank(mainPloy) || num == 0?"":" and c.ploy_type='"+mainPloy+"'")+" and a.ploy_id=" + order.getDploy().getId();
@@ -141,21 +140,32 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	@Override
 	public int insertPlayList(DOrder order) {
-		String sql = "insert into d_play_list(order_code, position_code, area_code, start_time, end_time,ploy_type,type_value,resource_ids,resource_paths,status) "+
-					 "(select od.order_code,od.position_code,omr.area_code,concat(od.start_date,' ',omr.start_time),concat(od.end_date,' ',omr.end_time),omr.ploy_type,omr.type_value," +
+		String sql = "insert into d_play_list(order_code, position_code, area_code, start_date, end_date,start_time,end_time,ploy_type,type_value,resource_ids,resource_paths,status) "+
+					 "(select od.order_code,od.position_code,omr.area_code,od.start_date,od.end_date,omr.start_time,omr.end_time,omr.ploy_type,omr.type_value," +
 					 "omr.resource_id,CASE res.resource_type" +
 					 " WHEN 0 THEN (SELECT name from t_image_meta where id=res.resource_id)" +
 					 " WHEN 1 THEN (SELECT name FROM t_video_meta where id=res.resource_id)" +
-					 " WHEN 2 THEN (SELECT content FROM t_text_meta where id = res.resource_id)" +
+					 " WHEN 2 THEN (SELECT content FROM t_text_meta where id=res.resource_id)" +
 					 " ELSE '' END,'0'"+
-				     "from d_order od, d_order_mate_rel omr,d_resource res where od.order_code = omr.order_code and od.id="+order.getId()+")";
+				     "from d_order od, d_order_mate_rel omr,d_resource res where od.order_code = omr.order_code and omr.resource_id = res.id and od.id="+order.getId()+")";
 		return this.executeBySQL(sql, null);
 	}
 
 	@Override
 	public int updatePlayListEndDate(DOrder order) {
-		String sql = "update d_play_list set end_time = concat('"+(new SimpleDateFormat("yyyy-MM-dd").format(order.getEndDate()))+"',right(end_time,9)) where order_code = '" +order.getOrderCode()+"'";
+		String sql = "update d_play_list set end_date =curdate() where order_code = '" +order.getOrderCode()+"'";
 		return this.executeBySQL(sql, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> checkDOrderRule(DOrder order) {
+		String sql = "select od.id from d_order od, d_order_mate_rel_tmp omr1,d_order_mate_rel_tmp omr2 "+
+					 "where od.order_code = omr1.order_code and omr1.resource_id is not null "+
+					 "and omr1.area_code = omr2.area_code and omr2.order_code = ? and omr2.resource_id is not null "+
+					 "and od.position_code = ? and od.order_code <> ? and od.start_date < ? and od.end_date > ? and omr1.start_time < omr2.end_time and omr1.end_time > omr2.start_time "+
+					 "and (omr1.ploy_type = \"\" or (omr1.type_value = omr2.type_value or omr1.type_value=0 or omr2.type_value=0))";
+		return (List<Integer>)this.getDataBySql(sql, new Object[]{order.getOrderCode(),order.getDposition().getPositionCode(),order.getOrderCode(),order.getEndDate(),order.getStartDate()});
 	}
 
 }

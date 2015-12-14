@@ -218,22 +218,19 @@
         	}else{
         		$("#startTime").val($("#startDate2").val())
             }
-    		var startDate = $("#startTime").val();
+    		var startDate = $("#startDate").val();
     		var endDate = $("#endDate").val();
-    		var ployId = $("#ployId").val();
-    		var positionId = $("#positionCode").val();
-    		
+    		var positionCode = $("#positionCode").val();
     		var orderCode = $("#orderCode").val();
     		$.ajax({   
-   		       url:'checkOrderRule2.do',       
+   		       url:'checkDOrderRule.action',       
    		       type: 'POST',    
    		       dataType: 'text',   
    		       data: {
-	   				startDate:startDate,
-	   				endDate:endDate,
-	   				ployId:ployId,
-	   				positionId:positionId,
-	   				orderCode:orderCode
+	   				'order.startDate':startDate,
+	   				'order.endDate':endDate,
+	   				'order.dposition.positionCode':positionCode,
+	   				'order.orderCode':orderCode
    			   },                   
    		       timeout: 1000000000,                              
    		       error: function(){                      
@@ -241,12 +238,12 @@
    		       },    
    		       success: function(result){ 
    		    	   if(result!='-1'){
-   			    	   //if(result=='0'){
+   			    	   if(result=='0'){
    			    			$("#saveForm").submit();
    			    			
-   			    	   /*}else{
-   			    		   alert(result);
-   			    	   }*/
+   			    	   }else if(result =='1'){
+   			    		   alert("订单冲突！");
+   			    	   }
    		    	   }else{
    			    		alert("系统错误，请联系管理员！");
    		    	   }
@@ -411,7 +408,7 @@
 <body class="mainBody" onload='init(${orderOpAheadTime});'>
 <form action="saveDOrder.action" method="post" id="saveForm">
 <input type="hidden" name="order.id" id="selResource" value="${order.id }" />
-<input type="hidden" id="startTime" name="order.startDateStr" />
+<input type="hidden" id="orderState" name="order.state" value="${order.state }" />
 <div class="detail">
 <table cellspacing="1" class="searchList" align="left">
 	<tr class="title">

@@ -30,7 +30,7 @@ public interface DPloyDao extends BaseDao {
 	
 	public DPloy getDPloyByName(String ployName);
 	
-	public List<String> getUserAccessAreaCode(Integer userId);
+	public List<ReleaseArea> getUserAccessArea(Integer userId);
 	
 	public PageBeanDB queryUserIndustryList(UserIndustryCategory userIndustryCategory, int pageNo, int pageSize);
 	

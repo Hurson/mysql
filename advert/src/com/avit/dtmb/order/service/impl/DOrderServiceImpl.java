@@ -168,4 +168,13 @@ public class DOrderServiceImpl implements DOrderService {
 		return result;
 	}
 
+	@Override
+	public String checkDOrderRule(DOrder order) {
+		List<Integer> list = dOrderDao.checkDOrderRule(order);
+		if(list != null && list.size() > 0){
+			return "1";
+		}
+		return "0";
+	}
+
 }

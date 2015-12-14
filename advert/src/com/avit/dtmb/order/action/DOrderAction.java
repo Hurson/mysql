@@ -127,7 +127,9 @@ public class DOrderAction extends BaseAction {
 			order.setModifyTime(new Date());
 			order.setState("0");
 		}else{
-			order.setState("1");
+			if(!"0".equals(order.getState())){
+				order.setState("1");
+			}
 			order.setModifyTime(new Date());
 		}
 		dOrderService.saveDOrder(order);
@@ -164,6 +166,12 @@ public class DOrderAction extends BaseAction {
 	@Action(value = "auditDOrder")
 	public void auditDPloy(){
 		String result = dOrderService.auditDTMBPloy(order, flag);
+		this.renderText(result);
+	}
+	@Action(value = "checkDOrderRule")
+	public void checkDOrderRule(){
+		String result = "";
+		result = dOrderService.checkDOrderRule(order);
 		this.renderText(result);
 	}
 	

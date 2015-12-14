@@ -51,11 +51,12 @@ public class DPloyServiceImpl implements DPloyService {
 			}
 		}
 		if(!areaFlag){
-			List<String> accessAreaCodes = dPloyDao.getUserAccessAreaCode(ploy.getOperatorId());
-			for(String areaCode : accessAreaCodes){
+			List<ReleaseArea> accessAreas = dPloyDao.getUserAccessArea(ploy.getOperatorId());
+			for(ReleaseArea area : accessAreas){
 				DPloyDetail detail = new DPloyDetail();
 				detail.setPloyType("1");
-				detail.setTypeValue(areaCode);
+				detail.setTypeValue(area.getAreaCode());
+				detail.setValueName(area.getAreaName());
 				detailList.add(detail);
 			}
 			

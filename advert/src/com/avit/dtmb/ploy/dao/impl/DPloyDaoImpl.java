@@ -71,9 +71,9 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> getUserAccessAreaCode(Integer userId) {
-		String sql = "select release_areacode from t_user_area where user_id =" + userId;
-		return (List<String>)this.getDataBySql(sql, null);
+	public List<ReleaseArea> getUserAccessArea(Integer userId) {
+		String hql = "select area from ReleaseArea area,UserArea usa where area.areaCode=usa.releaseAreacode and usa.userId=" + userId;
+		return (List<ReleaseArea>)this.getListForAll(hql, null);
 	}
 	@Override
 	public PageBeanDB queryUserIndustryList(UserIndustryCategory userIndustryCategory, int pageNo, int pageSize) {
