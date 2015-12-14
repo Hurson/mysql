@@ -21,6 +21,7 @@ import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.common.BaseAction;
+import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.UserLogin;
 
@@ -41,6 +42,7 @@ public class DOrderAction extends BaseAction {
 	private List<ReleaseArea> releaseAreaList;
 	private DResource resource;
 	private String flag;
+	private List<Customer> customerList;
 	
 	
 	@Resource
@@ -62,6 +64,7 @@ public class DOrderAction extends BaseAction {
 		if(page == null){
 			page = new PageBeanDB();
 		}
+		customerList = dOrderService.getCustomerList();
 		page = dOrderService.queryAuditDOrderList(order, page.getPageNo(), page.getPageSize());
 		return SUCCESS;
 	}
@@ -243,5 +246,14 @@ public class DOrderAction extends BaseAction {
 	public void setFlag(String flag) {
 		this.flag = flag;
 	}
+
+	public List<Customer> getCustomerList() {
+		return customerList;
+	}
+
+	public void setCustomerList(List<Customer> customerList) {
+		this.customerList = customerList;
+	}
+	
 	
 }

@@ -17,6 +17,7 @@ import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
+import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.UserLogin;
 @Repository
@@ -183,10 +184,29 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		
 	}
 
+	@SuppressWarnings("all")
 	@Override
 	public PageBeanDB queryAuditDOrderList(DOrder order, int pageNo, int pageSize) {
+		List param = new ArrayList();
 		String hql = "from DOrder order where order.state < '3'";
-		return this.getPageList2(hql, null, pageNo, pageSize);
+		if(order != null && order.getCustomer() != null && order.getCustomer().getId() != null){
+			hql += " and order.customer.id=" + order.getCustomer().getId();
+		}
+		if(order != null && order.getContract() != null && StringUtils.isNotBlank(order.getContract().getContractName())){
+			hql += " and order.contract.contractName like '%" + order.getContract().getContractName() + "%'";
+		}
+		if(order != null && order.getDposition() != null && StringUtils.isNotBlank(order.getDposition().getPositionName())){
+			hql += " and order.dposition.positionName like '%" + order.getDposition().getPositionName() + "%'";
+		}
+		if(order != null && order.getStartDate() != null){
+			hql += " and order.startDate= ?";
+			param.add(order.getStartDate());
+		}
+		if(order != null && order.getEndDate() != null){
+			hql += " and order.endDate = ?";
+			param.add(order.getEndDate());
+		}
+		return this.getPageList2(hql, param.toArray(), pageNo, pageSize);
 	}
 
 	@Override
@@ -228,6 +248,13 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		String hql = "update d_order_mate_rel_tmp set resource_id = null where id in("+ids+")";
 		this.executeBySQL(hql, null);
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Customer> getCustomerList() {
+		String hql = "from Customer";
+		return (List<Customer>)this.getListForAll(hql, null);
 	}
 
 }

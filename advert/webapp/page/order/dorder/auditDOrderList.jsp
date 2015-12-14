@@ -43,7 +43,7 @@
 </head>
 
 <body class="mainBody">
-<form action="queryOrderAuditList.do" method="post" id="queryForm">
+<form action="queryAuditDOrderList.action" method="post" id="queryForm">
 <input type="hidden" id="pageNo" name="page.pageNo" value="${page.pageNo}"/>
 <input type="hidden" id="pageSize" name="page.pageSize" value="${page.pageSize}"/>
 <div class="search">
@@ -57,17 +57,17 @@
   <tr>
     <td class="searchCriteria">
       <span style="width: 60px;text-align:right;">广告商：</span>
-      <select name="order.customerId" style="width: 115px">
+      <select name="order.customer.id" style="width: 115px">
       	<option value="">请选择</option>
    		<c:if test="${customerList != null }">
      		<c:forEach items="${customerList}" var="customer">
-				<option value="${customer.id}" <c:if test="${customer.id == order.customerId}">selected</c:if>>${customer.advertisersName}</option>
+				<option value="${customer.id}" <c:if test="${customer.id == order.customer.id}">selected</c:if>>${customer.advertisersName}</option>
 			</c:forEach>
 		</c:if>
      </select>
      
-      <span style="width: 60px;text-align:right">合同名称：</span><input type="text" id="contractName" name="order.contractName" value="${order.contractName}" id="contractName" />
-      <span style="width: 80px;text-align:right">广告位名称：</span><input type="text" id="positionName" name="order.positionName" value="${order.positionName}" id="positionName" />
+      <span style="width: 60px;text-align:right">合同名称：</span><input type="text" id="contractName" name="order.contract.contractName" value="${order.contract.contractName}" id="contractName" />
+      <span style="width: 80px;text-align:right">广告位名称：</span><input type="text" id="positionName" name="order.dposition.positionName" value="${order.dposition.positionName}" id="positionName" />
      </td>
   </tr>
   <tr>
@@ -76,7 +76,7 @@
 	   	<input id="startDateStr" name="order.startDate" value="${order.startDate}" type="text" readonly="readonly" style="width:  100px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 	   	<img onclick="showDate('startDateStr')" src="<%=path %>/js/new/My97DatePicker/skin/datePicker.gif" width="16" height="22" align="left"/>
 	  <span style="width: 60px;text-align:right">结束日期：</span>
-	    <input id="endDateStr" name="order.endDateStr" value="${order.endDateStr}" type="text" readonly="readonly" style="width:  100px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+	    <input id="endDateStr" name="order.endDate" value="${order.endDate}" type="text" readonly="readonly" style="width:  100px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 	   	<img onclick="showDate('endDateStr')" src="<%=path %>/js/new/My97DatePicker/skin/datePicker.gif" width="16" height="22" align="absmiddle"/>
       &nbsp;&nbsp;<input type="button" value="查询" onclick="javascript:query();" class="btn"/>
      </td>
@@ -99,7 +99,7 @@
 			onmouseout="this.style.backgroundColor=''" onmouseover="this.style.backgroundColor='#fffed9'" align="center">
 			<td><a href="getDOrder.action?operType=audit&order.id=<s:property value='#order.id' />"><s:property value="#order.orderCode" /></a></td>
 			<td><s:property value="#order.customer.advertisersName" /></td>
-			<td><s:property value="#order.contract.contractName" /></td>
+			<td><s:if test="#order.contract==null">无合同</s:if><s:property value="#order.contract.contractName" /></td>
 			<td><s:property value="#order.dposition.positionName" /></td>
 			<td><s:property value="#order.dploy.ployName" /></td>
 			<td><s:date name="#order.startDate" format="yyyy-MM-dd" />~<s:date name="#order.endDate" format="yyyy-MM-dd" /></td>

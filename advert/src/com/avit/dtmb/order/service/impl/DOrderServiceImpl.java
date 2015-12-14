@@ -15,6 +15,7 @@ import com.avit.dtmb.order.service.DOrderService;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.google.gson.Gson;
 @Service
@@ -181,6 +182,12 @@ public class DOrderServiceImpl implements DOrderService {
 	public void delDOrderMateRelTmp(String ids) {
 		dOrderDao.delDOrderMateRelTmp(ids);
 		
+	}
+
+	@Override
+	public List<Customer> getCustomerList() {
+		
+		return dOrderDao.getCustomerList();
 	}
 
 }

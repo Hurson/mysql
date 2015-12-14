@@ -9,6 +9,7 @@ import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.BaseDao;
+import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 
 public interface DOrderDao extends BaseDao {
@@ -32,4 +33,5 @@ public interface DOrderDao extends BaseDao {
 	public int updatePlayListEndDate(DOrder order);
 	public List<Integer> checkDOrderRule(DOrder order);
 	public void delDOrderMateRelTmp(String ids);
+	public List<Customer> getCustomerList();
 }

@@ -420,6 +420,7 @@
 <form action="saveDOrder.action" method="post" id="saveForm">
 <input type="hidden" name="order.id" id="selResource" value="${order.id }" />
 <input type="hidden" id="orderState" name="order.state" value="${order.state }" />
+<input type="hidden" id="customerId" name="order.customer.id" value="${order.customer.id }" />
 <div class="detail">
 <table cellspacing="1" class="searchList" align="left">
 	<tr class="title">
