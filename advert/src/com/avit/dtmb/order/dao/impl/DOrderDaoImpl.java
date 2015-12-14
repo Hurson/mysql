@@ -206,6 +206,10 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 			hql += " and order.endDate = ?";
 			param.add(order.getEndDate());
 		}
+		HttpSession session = ServletActionContext.getRequest().getSession();
+	    UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		List<Integer> accessUserId = userLogin.getAccessUserIds();
+		hql +=" and order.operatorId in ("+accessUserId.toString().replaceAll("\\[|\\]|\\s", "")+")";
 		return this.getPageList2(hql, param.toArray(), pageNo, pageSize);
 	}
 
