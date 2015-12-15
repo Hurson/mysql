@@ -22,6 +22,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.stereotype.Service;
 
 import com.avit.ads.util.ConstantsHelper;
+import com.avit.ads.util.DateUtil;
 import com.avit.ads.util.InitConfig;
 import com.avit.common.ftp.service.FtpService;
 
@@ -407,11 +408,39 @@ public class FtpServiceImpl extends FtpBase implements FtpService{
 		}
 	}
 	
+	public List<String> getNvodFiles(String remoteDirectory){
+		
+		try{
+			//切换FTP目录
+			if(StringUtils.isNotBlank(remoteDirectory) && !FtpClient.changeWorkingDirectory(remoteDirectory)){
+				logger.error("切换目录失败：FTP不存在目录 " + remoteDirectory);
+				return null;
+			}
+			
+			FTPFile[] ftpFiles = FtpClient.listFiles();
+			
+
+			List<String> resultList = new ArrayList<String>();  
+			
+			for(int i = 0; i < ftpFiles.length; i++){
+				FTPFile ftpFile = ftpFiles[i];
+				if(ftpFile.getName().endsWith(".txt") && DateUtil.formatDate(ftpFile.getTimestamp().getTime()).equals(DateUtil.getCurrentDateStr1())){
+					resultList.add(ftpFile.getName());
+				}
+			}
+			return resultList;
+			
+		} catch (IOException e) {
+			logger.error("获取FTP文件名称时出现异常：", e);
+			return null;
+		}
+	}
+	
 	private boolean validateDate(String fileName){
 		Date today = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(today);
-		cal.add(Calendar.DAY_OF_MONTH, -1);
+		cal.add(Calendar.DAY_OF_MONTH, -8);
 		Date yesterday = cal.getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		

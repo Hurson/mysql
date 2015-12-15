@@ -22,8 +22,10 @@
 	<RealTimeAds adsConfigFile="adConfig.js" adsTempConfigPath="D:\ads\temp\realtimeconfig" 
 		adsTargetConfigPath="/OC/unt/adConfig/" adsTempPath="D:\ads\temp\realtime" 
 		adsTargetPath="/OC/unt/adPic/" untUrl="http://192.168.16.100:8888/UNT/" 
-		epgChannelInfoPath="." epgTempPath="e:\ads\temp\epgChannelInfo"
+		epgChannelInfoPath="/epg/epgChannelInfo" epgTempPath="E:\\epg"
+		nvodRefServiceInfoPath="/opt/nvod/AdverConfig" nvodRefServiceTemPath="/ads/temp/nvod">
 		dtmbChannelInfoPath="/epg/dtmbChannelInfo" dtmbTempPath="E:\adp">
+
 		<Ads adsCode="02011" position="4" defaultRes="/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png" />
 		<Ads adsCode="02012" position="4" defaultRes="/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png,/root/advertres/temp/wfReal/show_ad_5.png"/>
 		<Ads adsCode="02021" position="1" defaultRes="/root/advertres/temp/wfReal/miniepg_ad_5_HD.png"/>
@@ -62,10 +64,20 @@
 	<Epgftp ip="192.168.2.224" port="21" user="root" pwd="111111">
 	</Epgftp>
 	
+<<<<<<< .mine
+	<!-- 获取EPG频道信息FTP地址-->
+	<NvodEpgftp ip="192.168.2.51" port="21" user="root" pwd="111111">
+	</NvodEpgftp>
 	
 	<Dtmbftp ip="192.168.2.224" port="21" user = "root" pwd = "111111">
 	</Dtmbftp>
 	
+=======
+	
+	<Dtmbftp ip="192.168.2.224" port="21" user = "root" pwd = "111111">
+	</Dtmbftp>
+	
+>>>>>>> .r24875
 	<!-- CPS投放FTP地址-->
 	<Cps ip="10.63.64.72" port="21" user="posterftp" pwd="posterftp" >
 	</Cps>

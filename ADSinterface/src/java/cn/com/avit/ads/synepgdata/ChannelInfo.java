@@ -69,6 +69,8 @@ public class ChannelInfo {
 			channleType = "音频直播类业务";
 		}else if("1".equals(channleType)){
 			channleType = "视频直播类业务";
+		}else if("3".equals(channleType)){
+			channleType = "NVOD业务";
 		}
 		this.channleType = channleType;
 	}	

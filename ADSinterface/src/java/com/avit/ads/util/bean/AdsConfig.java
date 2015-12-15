@@ -33,9 +33,13 @@ public class AdsConfig{
 	@XmlElement(name="Epgftp")
 	private Epgftp epgftp;
 	
+	//从EPG获取频道信息FTP地址
+	@XmlElement(name="NvodEpgftp")
+	private NvodEpgftp nvodEpgftp;
+	
 	@XmlElement(name="Dtmbftp")
 	private Dtmbftp dtmbFtp;
-	
+
 	//单向非实时广告配置    回放菜单，
 	@XmlElement(name="NpvrAds")
 	private NpvrAds npvrAds;
@@ -137,12 +141,19 @@ public class AdsConfig{
 	public void setEpgftp(Epgftp epgftp) {
 		this.epgftp = epgftp;
 	}
+
+	public NvodEpgftp getNvodEpgftp() {
+		return nvodEpgftp;
+	}
+	public void setNvodEpgftp(NvodEpgftp nvodEpgftp) {
+		this.nvodEpgftp = nvodEpgftp;
+	}
 	public Dtmbftp getDtmbFtp() {
 		return dtmbFtp;
 	}
 	public void setDtmbFtp(Dtmbftp dtmbFtp) {
 		this.dtmbFtp = dtmbFtp;
 	}
-	
+
 	
 }

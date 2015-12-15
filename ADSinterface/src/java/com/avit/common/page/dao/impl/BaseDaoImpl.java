@@ -395,5 +395,19 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 		return value;
 	}
 	
-	
+	public int getMaxStreamId(final String hql, final Object[] params) {
+		return this.getHibernateTemplate().execute(new HibernateCallback<Integer>() {
+			public Integer doInHibernate(Session session) throws HibernateException,
+					SQLException {
+				Query query = session.createQuery(hql);
+				if(params != null){
+					for(int i = 0; i < params.length; i ++){
+						query.setParameter(i, params[i]);
+					}
+				}
+				
+				return (Integer)query.uniqueResult();
+			}
+		});
+	}
 }

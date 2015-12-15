@@ -82,4 +82,10 @@ public interface BaseDao {
 	 * 获取总页码数
 	 */
 	public int getTotalCountHQL(final String hql, final Object[] values) ;
+	/**
+	 * 获取streamId最大值
+	 * @return
+	 */
+	public int getMaxStreamId(final String hql, final Object[] params);
+	
 }

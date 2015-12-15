@@ -22,11 +22,33 @@
             </property>
             <!-- cron表达式 -->
             <property name="cronExpression">
-                <value>0 23 10 * * ? </value>
+                <value>0 00 14 * * ? </value>
             </property>
         </bean>
         
-        <!-- 要调用的工作类 -->
+        <!-- 定义调用对象和调用对象的方法 -->
+        <bean id="nvodtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/>
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>synNvodEpgData</value>
+            </property>
+        </bean>
+        <!-- 定义触发时间 -->
+        <bean id="nvodTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="nvodtask"/>
+            </property>
+            <!-- cron表达式 -->
+            <property name="cronExpression">
+                <value>00 0/1 10 * * ? </value>
+            </property>
+        </bean>
+        
+         <!-- 要调用的工作类 -->
         <bean id="dtmbJob" class="cn.com.avit.ads.synepgdata.DSynEpgDataJob"></bean>
         <!-- 定义调用对象和调用对象的方法 -->
         <bean id="dtmbjobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -49,7 +71,6 @@
                 <value>0 0/2 * * * ? </value>
             </property>
         </bean>
-        
         
         
         <!-- 要调用的工作类 -->
@@ -107,6 +128,7 @@
             <property name="triggers">
                 <list>
                     <ref bean="dtmbdoTime"/>
+                    <ref bean="nvodTime"/>
                 </list>
             </property>
         </bean>

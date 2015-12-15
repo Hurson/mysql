@@ -66,5 +66,7 @@ public interface FtpService {
 	
 	public boolean downloadFile(String remoteAbsoluteFilePath, String localFileName, String localDirectory);
 	
+	public List<String> getNvodFiles(String remoteDirectory);
+	
 	
 }

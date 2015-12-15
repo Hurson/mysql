@@ -35,6 +35,12 @@ public class RealTimeAds {
 	private String epgChannelInfoPath;
 	@XmlAttribute(name="epgTempPath")
 	private String epgTempPath;
+	
+	@XmlAttribute(name="nvodRefServiceInfoPath")
+	private String nvodRefServiceInfoPath;
+	@XmlAttribute(name="nvodRefServiceTemPath")
+	private String nvodRefServiceTemPath;
+
 	@XmlAttribute(name = "dtmbChannelInfoPath")
 	private String dtmbChannelInfoPath;
 	@XmlAttribute(name = "dtmbTempPath")
@@ -123,6 +129,19 @@ public class RealTimeAds {
 	public void setEpgTempPath(String epgTempPath) {
 		this.epgTempPath = epgTempPath;
 	}
+
+	public String getNvodRefServiceInfoPath() {
+		return nvodRefServiceInfoPath;
+	}
+	public void setNvodRefServiceInfoPath(String nvodRefServiceInfoPath) {
+		this.nvodRefServiceInfoPath = nvodRefServiceInfoPath;
+	}
+	public String getNvodRefServiceTemPath() {
+		return nvodRefServiceTemPath;
+	}
+	public void setNvodRefServiceTemPath(String nvodRefServiceTemPath) {
+		this.nvodRefServiceTemPath = nvodRefServiceTemPath;
+	}
 	public String getDtmbChannelInfoPath() {
 		return dtmbChannelInfoPath;
 	}
@@ -135,7 +154,5 @@ public class RealTimeAds {
 	public void setDtmbTempPath(String dtmbTempPath) {
 		this.dtmbTempPath = dtmbTempPath;
 	}
-	
-	
 	
 }
