@@ -23,6 +23,8 @@ public class MessageMeta implements java.io.Serializable{
 	
 	private String priority;
 	
+	private String industry;
+	
 	/**
 	 * URL
 	 */
@@ -172,8 +174,14 @@ public class MessageMeta implements java.io.Serializable{
 	public void setPwList(List<PriorityWordBean> pwList) {
 		this.pwList = pwList;
 	}
-	
-	
+
+	public String getIndustry() {
+		return industry;
+	}
+
+	public void setIndustry(String industry) {
+		this.industry = industry;
+	}
 
 }
 

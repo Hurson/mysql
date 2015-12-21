@@ -1,7 +1,8 @@
 package com.avit.dtmb.order.bean;
 // default package
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import javax.persistence.Table;
  * PlayList entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_play_list", catalog = "ads_x")
+@Table(name = "d_play_list")
 public class PlayList implements java.io.Serializable {
 
 	/**
@@ -26,12 +27,19 @@ public class PlayList implements java.io.Serializable {
 	private String orderCode;
 	private String positionCode;
 	private String areaCode;
-	private Date startTime;
-	private Date endTime;
+	private Date startDate;
+	private Date endDate;
+	private String startTime;
+	private String endTime;
 	private String ployType;
 	private String typeValue;
-	private String resourceId;
+	private Integer resourceId;
 	private String resourcePath;
+	private String userIndustries;
+	private String userLevels;
+	private String tvn;
+	private Integer indexNum;
+	private String isDefault;
 	private String status;
 
 	@Id
@@ -72,21 +80,21 @@ public class PlayList implements java.io.Serializable {
 		this.areaCode = areaCode;
 	}
 
-	@Column(name = "START_TIME", length = 19)
-	public Date getStartTime() {
+	@Column(name = "START_TIME")
+	public String getStartTime() {
 		return this.startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	@Column(name = "END_TIME", length = 19)
-	public Date getEndTime() {
+	@Column(name = "END_TIME")
+	public String getEndTime() {
 		return this.endTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
@@ -109,11 +117,11 @@ public class PlayList implements java.io.Serializable {
 	}
 
 	@Column(name = "RESOURCE_ID")
-	public String getResourceId() {
+	public Integer getResourceId() {
 		return this.resourceId;
 	}
 
-	public void setResourceId(String resourceId) {
+	public void setResourceId(Integer resourceId) {
 		this.resourceId = resourceId;
 	}
 
@@ -126,13 +134,69 @@ public class PlayList implements java.io.Serializable {
 		this.resourcePath = resourcePath;
 	}
 
-	@Column(name = "STATUS", length = 2)
+	@Column(name = "STATUS")
 	public String getStatus() {
 		return this.status;
 	}
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	@Column(name = "START_DATE")
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	@Column(name = "END_DATE")
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	@Column(name = "USER_INDUSTRIES")
+	public String getUserIndustries() {
+		return userIndustries;
+	}
+
+	public void setUserIndustries(String userIndustries) {
+		this.userIndustries = userIndustries;
+	}
+	@Column(name = "USER_LEVELS")
+	public String getUserLevels() {
+		return userLevels;
+	}
+
+	public void setUserLevels(String userLevels) {
+		this.userLevels = userLevels;
+	}
+	@Column(name = "TVN")
+	public String getTvn() {
+		return tvn;
+	}
+
+	public void setTvn(String tvn) {
+		this.tvn = tvn;
+	}
+	@Column(name = "INDEX_NUM")
+	public Integer getIndexNum() {
+		return indexNum;
+	}
+
+	public void setIndexNum(Integer indexNum) {
+		this.indexNum = indexNum;
+	}
+	@Column(name = "IS_DEFAULT")
+	public String getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(String isDefault) {
+		this.isDefault = isDefault;
 	}
 
 }

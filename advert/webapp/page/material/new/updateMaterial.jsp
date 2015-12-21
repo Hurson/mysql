@@ -699,7 +699,8 @@ function closeSavePane() {
 		
 		var msgArray =  document.getElementsByName("textMeta.contentMsg");
 		var priArray = document.getElementsByName("textMeta.priority");
-		var validateArray = [];
+		var induArray = document.getElementsByName("textMeta.industry");
+		var validateArray = [];	
 		var length = msgArray.length;
 		if(length == 0){
 			alert("字幕条数必须大于0！");
@@ -737,6 +738,16 @@ function closeSavePane() {
 		    		return true;
 				}else{
 					validateArray[priority] = 1;
+				}
+			}
+			if(induArray.length != 0){
+				var industry = induArray[i].value;
+				if(isEmpty(industry)){
+					alert("文字行业类别不能为空！");
+		    		return true;
+				}else if(!isNumber(industry)){
+					alert("文字行业类别只能为数字！");
+		    		return true;
 				}
 			}
 		}
@@ -912,6 +923,11 @@ function closeSavePane() {
 		var table = $$('text_content_tbody');
 		var row = document.createElement("tr"); 
 		row.setAttribute("id", 'text_content_row' + index);
+		if(${fn:contains(areaCodes,'20547') ||fn:contains(areaCodes,'20720')}){
+			var td0 = document.createElement("td");	
+			td0.innerHTML = '<input name="textMeta.industry" type="text" maxlength="2" style="width:30px"/>';
+			row.appendChild(td0);
+		}
 		var td1 = document.createElement("td");	
 		td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,160)" cols="80" rows="2" ></textarea>';
 		td1.innerHTML += '&nbsp;<span>剩余字数:<span><input name="remain_word" type="text" id= "remain_word' + index + '" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="160" size="3" readonly></input>';	
@@ -1102,6 +1118,9 @@ function closeSavePane() {
                           	<table id="text_content_table" cellspacing="1" class="content" style="margin-bottom: 0px;">
 		                	      	<thead>
 			                	      	<tr class="title">
+			                	      		<c:if test="${fn:contains(areaCodes,'20547')||fn:contains(areaCodes,'20720') }">
+			                	      				<td>行业</td>
+		                	      			</c:if>
 			                	      		<td width="87%">
 			                	      			文字内容
 			                	      		</td>
@@ -1116,6 +1135,9 @@ function closeSavePane() {
 		                	      	<tbody id="text_content_tbody">
 			                	      	<c:forEach items="${textMeta.pwList}" var="pwBean" varStatus="pl">
 			                	      		<tr id="text_content_row${pl.index}">
+			                	      			<c:if test="${fn:contains(areaCodes,'20547') ||fn:contains(areaCodes,'20720')}">
+			                	      				<td><input name="textMeta.industry" type="text" maxlength="2" style="width:30px" value="${pwBean.industry}"/></td>
+			                	      			</c:if>
 			                	      			<td>
 			                	      				<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,160)" cols="80" rows="2" >${pwBean.word}</textarea>
 			                	      				<span>剩余字数:</span><input name="remain_word" type="text" id= "remain_word${pl.index}" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="${160-fn:length(pwBean.word)}" size="3" readonly></input>

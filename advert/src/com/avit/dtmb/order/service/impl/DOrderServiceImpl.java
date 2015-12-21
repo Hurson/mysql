@@ -1,22 +1,31 @@
 package com.avit.dtmb.order.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import com.avit.dtmb.material.bean.DResource;
 import com.avit.dtmb.order.bean.DOrder;
+import com.avit.dtmb.order.bean.DOrderMateRel;
 import com.avit.dtmb.order.bean.DOrderMateRelTmp;
+import com.avit.dtmb.order.bean.PlayList;
 import com.avit.dtmb.order.dao.DOrderDao;
 import com.avit.dtmb.order.service.DOrderService;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
+import com.avit.dtmb.type.PloyType;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.model.Customer;
+import com.dvnchina.advertDelivery.model.ImageMeta;
+import com.dvnchina.advertDelivery.model.MessageMeta;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
+import com.dvnchina.advertDelivery.model.VideoMeta;
+import com.dvnchina.advertDelivery.order.bean.playlist.TextMate;
 import com.google.gson.Gson;
 @Service
 public class DOrderServiceImpl implements DOrderService {
@@ -161,8 +170,89 @@ public class DOrderServiceImpl implements DOrderService {
 		return dOrderDao.queryAuditDOrderList(order, pageNo, pageSize);
 	}
 	private int insertPlayList(DOrder order){
-		int result = dOrderDao.insertPlayList(order);
+		List<DOrderMateRel> orderMateRelList = dOrderDao.getOrderMateRelList(order.getOrderCode());
+		List<PlayList> playList = new ArrayList<PlayList>();
+		for(DOrderMateRel omr : orderMateRelList){
+			PlayList play = new PlayList();
+			
+			play.setAreaCode(omr.getAreaCode());
+			play.setOrderCode(order.getOrderCode());
+			play.setPositionCode(order.getDposition().getPositionCode());
+			play.setStartDate(order.getStartDate());
+			play.setEndDate(order.getEndDate());
+			play.setStartTime(omr.getStartTime());
+			play.setEndTime(omr.getEndTime());
+			play.setIndexNum(omr.getIndexNum());
+			play.setIsDefault(order.getIsDefault());
+			play.setPloyType(omr.getPloyType());
+			play.setTypeValue(getTypeValue(omr.getPloyType(), omr.getTypeValue()));
+			play.setUserIndustries(getUserData(order.getDploy().getId(),PloyType.UserIndustry.getKey()));
+			play.setUserLevels(getUserData(order.getDploy().getId(),PloyType.UserLevel.getKey()));
+			play.setTvn(getUserData(order.getDploy().getId(),PloyType.UserTVNNO.getKey()));
+			play.setResourceId(omr.getResource().getId());
+			play.setResourcePath(getResourcePath(omr.getResource()));
+			
+			playList.add(play);
+			
+		}
+		int result = dOrderDao.saveAll(playList).size();
 		return result;
+	}
+	private String getTypeValue(String type, String value){
+		String values = "";
+		if("3".equals(type) || "4".equals(type)){
+			List<String> serviceIdList = dOrderDao.getChannelGroupServiceIds(Integer.valueOf(value));
+			if(serviceIdList == null){
+				return values;
+			}
+			for(String serviceId : serviceIdList){
+				values += serviceId + ",";
+			}
+		}
+		return values;
+	}
+	private String getUserData(Integer ployId, String type){
+		String datas = "";
+		List<String> dataList = dOrderDao.getPloyValueByType(ployId,type);
+		if(dataList == null){
+			return datas;
+		}
+		for(String data : dataList){
+			datas += data + ",";
+		}
+		return datas;
+	}
+	
+	private String getResourcePath(DResource resource){
+		if(resource == null){
+			return "";
+		}
+		String resourcePath = "";
+		Integer resourceType = resource.getResourceType();
+		switch(resourceType){
+		case 0:
+			ImageMeta image = (ImageMeta)dOrderDao.get(ImageMeta.class, resource.getResourceId());
+			resourcePath = "" + image.getName();
+			break;
+		case 1:
+			VideoMeta video = (VideoMeta)dOrderDao.get(VideoMeta.class, resource.getResourceId());
+			resourcePath = "" + video.getName();
+			break;
+		case 2:
+			MessageMeta message = (MessageMeta)dOrderDao.get(MessageMeta.class, resource.getResourceId());
+			TextMate textMate = new TextMate();
+             if(message.getContent()!=null){
+            	 try{
+            		BeanUtils.copyProperties(textMate, message);
+            		textMate.setContent(message.getContent());
+            	 }catch(Exception e){
+            		 e.printStackTrace();
+            	 }
+            	 Gson gson = new Gson();
+            	 resourcePath = gson.toJson(textMate);
+             }
+		}
+		return resourcePath;
 	}
 	private int updatePlayListEndDate(DOrder order){
 		int result = dOrderDao.updatePlayListEndDate(order);
@@ -200,5 +290,5 @@ public class DOrderServiceImpl implements DOrderService {
 		
 		return "-1";
 	}
-
+	
 }

@@ -3,8 +3,12 @@ package com.dvnchina.advertDelivery.sysconfig.action;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.convention.annotation.Action;
+
+import com.avit.dtmb.position.service.DPositionService;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.common.BaseAction;
 import com.dvnchina.advertDelivery.constant.Constant;
@@ -36,6 +40,9 @@ public class UserAction extends BaseAction{
 	private List<Customer> customerList;
 	private OperateLog operLog = null;
 	private PositionService positionService;
+	
+	@Resource
+	private DPositionService dpositionService;
 	
 	private String newPassword;
 	private String newPasswordCheck;
@@ -245,6 +252,13 @@ public class UserAction extends BaseAction{
 		String user_positions_ids = getRequest().getParameter("user_positions");
 		List<Integer> positionsIdList= StringUtil.getIntegerList(user_positions_ids, PurviewConstant.SIGN_COMMA);
 		page = positionService.queryPositionPackageList(page.getPageNo(), 100);
+		getRequest().setAttribute("positionsIdList", positionsIdList);
+		return SUCCESS;
+	}
+	public String getDtmbAdPosition(){
+		String dtmb_positions_ids = getRequest().getParameter("dtmb_positions");
+		List<Integer> positionsIdList= StringUtil.getIntegerList(dtmb_positions_ids, PurviewConstant.SIGN_COMMA);
+		page = dpositionService.queryDPositionList(page.getPageNo(), 100);
 		getRequest().setAttribute("positionsIdList", positionsIdList);
 		return SUCCESS;
 	}

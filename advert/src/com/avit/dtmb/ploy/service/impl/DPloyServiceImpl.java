@@ -7,13 +7,13 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.avit.dtmb.channelGroup.bean.DChannelGroup;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.ploy.bean.DPloyDetail;
 import com.avit.dtmb.ploy.dao.DPloyDao;
 import com.avit.dtmb.ploy.service.DPloyService;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
-import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
 
@@ -136,7 +136,7 @@ public class DPloyServiceImpl implements DPloyService {
 	}
 
 	@Override
-	public PageBeanDB queryChanelGroupList(TChannelGroup channelGroup, int pageNo, int pageSize) {
+	public PageBeanDB queryChanelGroupList(DChannelGroup channelGroup, int pageNo, int pageSize) {
 		return dPloyDao.queryChanelGroupList(channelGroup, pageNo, pageSize);
 	}
 

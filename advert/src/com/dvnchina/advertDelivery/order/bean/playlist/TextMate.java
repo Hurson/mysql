@@ -72,10 +72,35 @@ public class TextMate implements Serializable{
 	        });
 			String words = "";
 			for(PriorityWordBean entity : list){
-				words += entity.getWord() + "  @_@   ";
+				Integer industry = entity.getIndustry();
+				
+				words += (industry==null?"":"i"+ industry +":") +entity.getWord() + "  @_@   ";
 			}
 			this.content = words;
 			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+	}
+	public void setContent(byte[] content) {
+		try {
+			
+			String jsonContent = new String(content,"gbk");
+			Gson gson = new Gson();
+			List<PriorityWordBean> list = gson.fromJson(jsonContent, new TypeToken<List<PriorityWordBean>>(){ }.getType());
+			Collections.sort(list, new Comparator<PriorityWordBean>(){
+	            public int compare(PriorityWordBean arg0, PriorityWordBean arg1) {
+	                return arg0.getPriority().compareTo(arg1.getPriority());
+	            }
+	        });
+			String words = "";
+			for(PriorityWordBean entity : list){
+				Integer industry = entity.getIndustry();
+				
+				words += (industry==null?"":"i"+ industry +":") +entity.getWord() + "  @_@   ";
+			}
+			this.content = words;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

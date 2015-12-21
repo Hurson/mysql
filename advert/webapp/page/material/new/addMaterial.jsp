@@ -6,7 +6,7 @@
 			+ path + "/";
 %>
 <%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="/WEB-INF/tags/fn.tld" %>
 <%@ taglib prefix="fmt" uri="/WEB-INF/tags/fmt.tld"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -1681,6 +1681,7 @@ function IsAlpha(cCheck) {
 		
 		var msgArray =  document.getElementsByName("textMeta.contentMsg");
 		var priArray = document.getElementsByName("textMeta.priority");
+		var induArray = document.getElementsByName("textMeta.industry");
 		var validateArray = [];
 		var length = msgArray.length;
 		if(length == 0){
@@ -1723,6 +1724,16 @@ function IsAlpha(cCheck) {
 		    		return true;
 				}else{
 					validateArray[priority] = 1;
+				}
+			}
+			if(induArray.length != 0){
+				var industry = induArray[i].value;
+				if(isEmpty(industry)){
+					alert("文字行业类别不能为空！");
+		    		return true;
+				}else if(!isNumber(industry)){
+					alert("文字行业类别只能为数字！");
+		    		return true;
 				}
 			}
 		}
@@ -1875,6 +1886,12 @@ function IsAlpha(cCheck) {
 		var table = $$('text_content_tbody');
 		var row = document.createElement("tr"); 
 		row.setAttribute("id", 'text_content_row' + index);
+		if(${fn:contains(areaCodes,'20547')||fn:contains(areaCodes,'20720')}){
+			var td0 = document.createElement("td");
+			td0.innerHTML = '<input type="text" name="textMeta.industry" maxlength="1" style="width:30px;"/>';
+			row.appendChild(td0);
+		}
+		
 		var td1 = document.createElement("td");	
 		td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,160)" cols="80" rows="2" ></textarea>';
 		td1.innerHTML += '<span>剩余字数:</span> <input name="remain_word" type="text" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="160" size="3" readonly></input>';	
@@ -2051,6 +2068,9 @@ function IsAlpha(cCheck) {
 			                	      <table id="text_content_table" cellspacing="1" class="content" style="margin-bottom: 0px;">
 				                	      	<thead>
 					                	      	<tr class="title">
+					                	      		<c:if test="${fn:contains(areaCodes,'20547')||fn:contains(areaCodes,'20720')}">
+					                	      			<td>行业</td>
+					                	      		</c:if>
 					                	      		<td width="87%">
 					                	      			文字内容
 					                	      		</td>

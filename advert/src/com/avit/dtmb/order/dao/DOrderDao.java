@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.avit.dtmb.material.bean.DResource;
 import com.avit.dtmb.order.bean.DOrder;
+import com.avit.dtmb.order.bean.DOrderMateRel;
 import com.avit.dtmb.order.bean.DOrderMateRelTmp;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
@@ -36,4 +37,7 @@ public interface DOrderDao extends BaseDao {
 	public List<Customer> getCustomerList();
 	public int updatePlayListState(String orderCode);
 	public int updateOrderState(String orderCode);
+	public List<DOrderMateRel> getOrderMateRelList(String orderCode);
+	public List<String> getChannelGroupServiceIds(Integer groupId);
+	public List<String> getPloyValueByType(Integer ployId, String ployType);
 }

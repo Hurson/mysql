@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.avit.dtmb.material.bean.DResource;
 import com.avit.dtmb.order.bean.DOrder;
+import com.avit.dtmb.order.bean.DOrderMateRel;
 import com.avit.dtmb.order.bean.DOrderMateRelTmp;
 import com.avit.dtmb.order.dao.DOrderDao;
 import com.avit.dtmb.ploy.bean.DPloy;
@@ -272,6 +273,27 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	public int updateOrderState(String orderCode) {
 		String hql = "update DOrder od set od.state='6' where od.orderCode = ?";
 		return this.executeByHQL(hql, new Object[]{orderCode});
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DOrderMateRel> getOrderMateRelList(String orderCode) {
+		String hql = "from DOrderMateRel omr where omr.orderCode = ? and omr.resource is not null";
+		return this.getListForAll(hql, new Object[]{orderCode});
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getChannelGroupServiceIds(Integer groupId) {
+		String hql = "select ref.serviceId from DChannelGroupRef ref where ref.groupId = ?";
+		return this.getListForAll(hql, new Object[]{groupId.longValue()});
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getPloyValueByType(Integer ployId, String ployType) {
+		String hql = "select detail.typeValue from DPloyDetail detail where detail.ployId=? and detail.ployType = ?";
+		return this.getListForAll(hql, new Object[]{ployId, ployType});
 	}
 
 }

@@ -13,11 +13,11 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.avit.dtmb.channelGroup.bean.DChannelGroup;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.ploy.service.DPloyService;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
-import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.common.BaseAction;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.UserLogin;
@@ -40,7 +40,7 @@ public class DPloyAction extends BaseAction {
 	private List<ReleaseArea> areaList;
 	private UserRank userRank;
 	private  UserIndustryCategory userIndustryCategory;
-	private TChannelGroup channelGroup;
+	private DChannelGroup channelGroup;
 	
 	
    	@Resource
@@ -202,10 +202,10 @@ public class DPloyAction extends BaseAction {
 	public void setUserIndustryCategory(UserIndustryCategory userIndustryCategory) {
 		this.userIndustryCategory = userIndustryCategory;
 	}
-	public TChannelGroup getChannelGroup() {
+	public DChannelGroup getChannelGroup() {
 		return channelGroup;
 	}
-	public void setChannelGroup(TChannelGroup channelGroup) {
+	public void setChannelGroup(DChannelGroup channelGroup) {
 		this.channelGroup = channelGroup;
 	}
 		

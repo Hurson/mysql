@@ -338,7 +338,7 @@
 </head>
 <body class="mainBody" onload="init()">
 <form action="<%=path %>/page/meterial/saveMaterialBackup.do" method="post" id="saveForm">	
-<div class="path">首页 >> 素材管理 >> 审核素材</div>
+<div class="path">页 &gt;&gt; 素材管理 &gt;&gt; 审核素材</div>
 <div class="searchContent" >
 <div class="listDetail">
 <div style="position: relative">	
@@ -496,6 +496,9 @@
 		                	      		<table id="text_content_table" cellspacing="1" class="content" style="margin-bottom: 0px;">
 				                	      	<tbody>
 					                	      	<tr class="title">
+					                	      		<c:if test="${fn:contains(areaCodes,'20547') ||fn:contains(areaCodes,'20720')}">
+			                	      					<td>行业</td>
+		                	      					</c:if>
 					                	      		<td width="90%">
 					                	      			文字内容
 					                	      		</td>
@@ -507,6 +510,9 @@
 				                	      	
 				                	      	<c:forEach items="${textMeta.pwList}" var="pwBean" varStatus="pl">
 				                	      		<tr id="text_content_row${pl.index}">
+				                	      			<c:if test="${fn:contains(areaCodes,'20547') ||fn:contains(areaCodes,'20720')}">
+			                	      					<td>${pwBean.industry}<input name="textMeta.industry" type="hidden"  value="${pwBean.industry}"/></td>
+		                	      					</c:if>
 				                	      			<td>
 				                	      				<textarea name="textMeta.contentMsg" cols="80" rows="2" disabled="disabled" >${pwBean.word}</textarea>
 				                	      			</td>

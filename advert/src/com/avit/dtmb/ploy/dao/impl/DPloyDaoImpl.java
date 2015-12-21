@@ -8,11 +8,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Repository;
 
+import com.avit.dtmb.channelGroup.bean.DChannelGroup;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.ploy.dao.DPloyDao;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
-import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.UserLogin;
@@ -101,8 +101,8 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 		return (List<Integer>)this.getDataBySql(sql, new Object[]{ployId});
 	}
 	@Override
-	public PageBeanDB queryChanelGroupList(TChannelGroup channelGroup,int pageNo, int pageSize) {
-		String hql = "from TChannelGroup chgr where 1= 1";
+	public PageBeanDB queryChanelGroupList(DChannelGroup channelGroup,int pageNo, int pageSize) {
+		String hql = "from DChannelGroup chgr where 1= 1";
 		if(channelGroup != null && StringUtils.isNotBlank(channelGroup.getName())){
 			hql += " and chgr.name like '%" + channelGroup.getName() + "%'";
 		}

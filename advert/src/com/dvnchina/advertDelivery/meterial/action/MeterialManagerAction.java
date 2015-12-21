@@ -391,6 +391,9 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 	public String intoAddMaterial(){
 	  
 	    positionPackIds = StringUtil.objListToString(getLoginUser().getPositionIds(), ",", "-1") ;
+	   
+	    String areaCodes = getLoginUser().getAreaCodes();
+	    this.getRequest().setAttribute("areaCodes", areaCodes);
 
 	    materialCategoryList=meterialManagerService.getMaterialCategoryList();
 	    
@@ -586,6 +589,8 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 
         try{
         	materialCategoryList=meterialManagerService.getMaterialCategoryList();
+        	String areaCodes = getLoginUser().getAreaCodes();
+        	this.getRequest().setAttribute("areaCodes", areaCodes);
             
             int materialId = Integer.valueOf(request.getParameter("materialId"));      
             material = meterialManagerService.getMaterialByID(materialId);
@@ -1155,11 +1160,16 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 		    	
 		    	String[] words = textMeta.getContentMsg().replace("－", "-").replace("—", "-").split(",");
 		    	String[] priorities = textMeta.getPriority().replace(" ", "").split(",");
+		    	String[] industrys = textMeta.getIndustry()== null?new String[words.length]:textMeta.getIndustry().replace(" ", "").split(",");
+		    	if(industrys == null || industrys.length == 0){
+		    		industrys = new String[words.length];
+		    	}
 		    	List<PriorityWordBean> list = new ArrayList<PriorityWordBean>();
 		    	for(int i = 0; i < words.length; i++){
 		    		PriorityWordBean entity = new PriorityWordBean();
 		    		entity.setWord(words[i].trim());
 		    		entity.setPriority(Integer.valueOf(priorities[i]));
+		    		entity.setIndustry(industrys[i] == null ?null:Integer.valueOf(industrys[i]));
 		    		list.add(entity);
 		    	}
 		    	Gson gson = new Gson();
