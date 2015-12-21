@@ -3,7 +3,7 @@
 	String path = request.getContextPath();
 %>
 <%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="/WEB-INF/tags/fn.tld" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -11,23 +11,18 @@
 
 <link id="maincss"  rel="stylesheet" type="text/css" href="<%=path %>/css/new/main.css" media="all"/>
 <script language="javascript" type="text/javascript" src="<%=path%>/js/jquery/jquery-1.9.0.js"></script>
-<link rel="stylesheet" href="<%=path %>/css/jquery/jquery.ui.all.css" type="text/css" />
-<script language="javascript" type="text/javascript" src="<%=path %>/js/jquery/ui/jquery-ui-1.10.0.custom.js"></script>
 	
-<script type="text/javascript" src="<%=path %>/js/easydialog/easydialog.min.js"></script>
 <script type='text/javascript' src='<%=path %>/js/new/avit.js'></script>
 <script type="text/javascript" src="<%=path %>/js/new/My97DatePicker/WdatePicker.js"></script>
-<script type="text/javascript" src="<%=path%>/js/util/util.js"></script>
 <title>无标题文档</title>
 </head>
 <script type="text/javascript">
 
-	var j ='${fn:length(ploy.ployDetailList)}';
+	var j='${fn:length(ploy.ployDetailList)}';
 	var chanArray=new Array();
 	var audArray=new Array();
 	var induArray=new Array();
 	var levArray=new Array();
-
 	window.onload = function() {
 		
 		changePosition('${ploy.dposition.positionCode}');
@@ -171,6 +166,9 @@
  	
 	 //更改广告位
 	 function changePosition(positionCode){
+	 	if(positionCode == '' || positionCode == '0'){
+	 		return;
+	 	}
 		 var ployType ;
 		  $.ajax({
                 type:"get",
@@ -225,7 +223,12 @@
 	 
 	 }
 	 function initItem(){
+	 
+	 	 if('${ploy.ployDetailJson}' == ''){
+	 	 	return;
+	 	 }
 	    var detailJson = eval('${ploy.ployDetailJson}');
+	   
 	   	$.each(detailJson, function(i, detail){
 	   		var type= detail.ployType;
 	   		var item = '<tr><td class="dot"><input type="checkbox" name="checkbox'+type+'" value="checkbox" />'
@@ -303,7 +306,7 @@
 	    	chanArray=selectChannelGroup(index,chanArray);
 	    	break;
 	    case 4:
-	    	audArray=selectAudGroup(index,audArray);
+	    	audArray=selectChannelGroup(index,audArray);
 	    	break;
 	    case 5:
 	    	induArray=selectUserInfo(index,induArray,"<%=path%>/dploy/queryUserIndustryList.action");

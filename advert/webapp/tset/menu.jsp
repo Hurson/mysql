@@ -220,10 +220,10 @@ var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl'
 	                    	<li id="jzppgl" style="display: none;"><a href="#"  onclick="openPage('/page/precise/listPrecise.do?method=getAllPreciseList&ployId=2', '71', '精准匹配管理', '精准匹配管理')">&gt;&gt;&nbsp;精准匹配管理</a></li>
 						
 							<li id="tfclwh" style="display: none;"><a href="#"  onclick="openPage('/page/ploy/initPloy.do?method=initPloy&ployId=1', '72', '投放策略维护', '投放策略维护')">&gt;&gt;&nbsp;投放策略维护</a></li>
-						 --><li id="dtfclwh" style="display: none;" ><a href="#"  onclick="openPage('/<%=path%>/dploy/queryDPloyList.action', '75', '无线策略维护', '无线策略维护')">&gt;&gt;&nbsp;无线策略维护</a></li> 	
-					 		<li id="tfclwh" style="display: none;" ><a href="#"  onclick="openPage('/page/ploy/queryPloyList.do', '72', '策略维护', '策略维护')">&gt;&gt;&nbsp;策略维护</a></li>
-					 		<li id="wxtfclsh" style="display: none;" ><a href="#"  onclick="openPage('/<%=path%>/dploy/queryDPloyList.action?ploy.status=1', '76', '无线策略审核', '无线策略审核')">&gt;&gt;&nbsp;无线策略审核</a></li>
+					 		--><li id="tfclwh" style="display: none;" ><a href="#"  onclick="openPage('/page/ploy/queryPloyList.do', '72', '策略维护', '策略维护')">&gt;&gt;&nbsp;策略维护</a></li>
 					 		<li id="tfclsh" style="display: none;" ><a href="#"  onclick="openPage('/page/ploy/queryCheckPloyList.do', '73', '策略审核', '策略审核')">&gt;&gt;&nbsp;策略审核</a></li>
+						 	<li id="dtfclwh" style="display: none;" ><a href="#"  onclick="openPage('/<%=path%>/dploy/queryDPloyList.action', '75', '无线策略维护', '无线策略维护')">&gt;&gt;&nbsp;无线策略维护</a></li> 	
+					 		<li id="wxtfclsh" style="display: none;" ><a href="#"  onclick="openPage('/<%=path%>/dploy/queryDPloyList.action?ploy.status=1', '76', '无线策略审核', '无线策略审核')">&gt;&gt;&nbsp;无线策略审核</a></li>
 					 		<li id="tfclzdy" style="display: none;" ><a href="#"  onclick="openPage('/page/ploy/queryNoAdPloyList.do', '74', '禁播策略维护', '禁播策略维护')">&gt;&gt;&nbsp;禁播策略维护</a></li>
 					 		
 			      	

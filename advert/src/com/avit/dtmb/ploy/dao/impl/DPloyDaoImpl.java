@@ -12,6 +12,7 @@ import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.ploy.dao.DPloyDao;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.UserLogin;
@@ -98,6 +99,15 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 	public List<Integer> checkOrderRelPloy(Integer ployId) {
 		String sql = "select od.id from d_order od where od.ploy_id = ? and od.state<>'7'";
 		return (List<Integer>)this.getDataBySql(sql, new Object[]{ployId});
+	}
+	@Override
+	public PageBeanDB queryChanelGroupList(TChannelGroup channelGroup,int pageNo, int pageSize) {
+		String hql = "from TChannelGroup chgr where 1= 1";
+		if(channelGroup != null && StringUtils.isNotBlank(channelGroup.getName())){
+			hql += " and chgr.name like '%" + channelGroup.getName() + "%'";
+		}
+		hql += " order by chgr.id desc";
+		return this.getPageList2(hql, null, pageNo, pageSize);
 	}
 
 }

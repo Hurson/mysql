@@ -13,6 +13,7 @@ import com.avit.dtmb.ploy.dao.DPloyDao;
 import com.avit.dtmb.ploy.service.DPloyService;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
 
@@ -132,6 +133,11 @@ public class DPloyServiceImpl implements DPloyService {
 	private boolean checkOrderRel(Integer ployId){
 		List<Integer> list = dPloyDao.checkOrderRelPloy(ployId);
 		return (list!= null && list.size() > 0);
+	}
+
+	@Override
+	public PageBeanDB queryChanelGroupList(TChannelGroup channelGroup, int pageNo, int pageSize) {
+		return dPloyDao.queryChanelGroupList(channelGroup, pageNo, pageSize);
 	}
 
 }

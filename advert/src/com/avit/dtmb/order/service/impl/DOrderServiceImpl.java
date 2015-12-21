@@ -190,4 +190,15 @@ public class DOrderServiceImpl implements DOrderService {
 		return dOrderDao.getCustomerList();
 	}
 
+	@Override
+	public String repushOrder(String orderCode) {
+		if(dOrderDao.updatePlayListState(orderCode) > 0){
+			if(dOrderDao.updateOrderState(orderCode) > 0){
+				return "0";
+			}
+		}
+		
+		return "-1";
+	}
+
 }

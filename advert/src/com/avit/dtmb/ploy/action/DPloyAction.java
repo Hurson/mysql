@@ -18,7 +18,6 @@ import com.avit.dtmb.ploy.service.DPloyService;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
-import com.dvnchina.advertDelivery.channelGroup.service.ChannelGroupManagerService;
 import com.dvnchina.advertDelivery.common.BaseAction;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.UserLogin;
@@ -47,7 +46,6 @@ public class DPloyAction extends BaseAction {
    	@Resource
 	private DPloyService dPloyService;
 	private UserRankService userRankService;
-	private ChannelGroupManagerService channelGroupManagerService;
 	
 	@Action(value = "queryDPloyList", results = {
 			@Result(name = "success", location = "/page/ploy/dploy/dPloyList.jsp"),
@@ -121,7 +119,7 @@ public class DPloyAction extends BaseAction {
 		if(page == null){
 			page = new PageBeanDB();
 		}
-		page = channelGroupManagerService.queryChanelGroupList(channelGroup, page.getPageSize(), page.getPageNo());
+		page = dPloyService.queryChanelGroupList(channelGroup, page.getPageNo(), page.getPageSize());
 		return SUCCESS;
 	}
 	@Action(value = "queryUserRankList", results = { @Result(name = "success", location = "/page/ploy/dploy/bindingUserRank.jsp")})
@@ -209,13 +207,6 @@ public class DPloyAction extends BaseAction {
 	}
 	public void setChannelGroup(TChannelGroup channelGroup) {
 		this.channelGroup = channelGroup;
-	}
-	public ChannelGroupManagerService getChannelGroupManagerService() {
-		return channelGroupManagerService;
-	}
-	public void setChannelGroupManagerService(
-			ChannelGroupManagerService channelGroupManagerService) {
-		this.channelGroupManagerService = channelGroupManagerService;
 	}
 		
 }

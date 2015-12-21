@@ -77,6 +77,7 @@ public class DAdPosition implements Serializable {
 	private String domain;
 	
 	private String ployTypeJson;
+	
 	private Integer position;
 	
 	private Map<String, String> mainPloyMap;
@@ -182,10 +183,10 @@ public class DAdPosition implements Serializable {
 		this.domain = domain;
 	}
 	@Column(name = "POSITION")
-	public Integer getPositin(){
+	public Integer getPosition(){
 		return position;
 	}
-	public void setPositon(Integer position){
+	public void setPosition(Integer position){
 		this.position = position;
 	}
 	@Transient

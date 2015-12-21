@@ -5,6 +5,7 @@ import java.util.List;
 import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.dao.BaseDao;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
@@ -35,5 +36,7 @@ public interface DPloyDao extends BaseDao {
 	public PageBeanDB queryUserIndustryList(UserIndustryCategory userIndustryCategory, int pageNo, int pageSize);
 	
 	public List<Integer> checkOrderRelPloy(Integer ployId);
+	
+	public PageBeanDB queryChanelGroupList(TChannelGroup channelGroup, int pageNo, int pageSize);
 
 }

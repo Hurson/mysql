@@ -264,6 +264,30 @@
     		
     	}
 	}
+	function repush(orderCode){
+	$.ajax({   
+		       url:'repushOrder.action',       
+		       type: 'POST',    
+		       dataType: 'text',   
+		       data: {
+				'order.orderCode':orderCode,				
+				},                   
+		       timeout: 1000000000,                              
+		       error: function(){                      
+		    		alert("系统错误，请联系管理员！");
+		       },    
+		       success: function(result){ 
+		    	   if(result=='0'){
+		    		   alert('重新投放成功！');
+		    		  window.location.href='queryDOrderList.action';
+		    	   }else if(result=="-1"){
+		    		   alert("系统错误，请联系管理员！");   		   
+		    	   }else{
+		    		   alert(result);
+		    	   }
+			   }  
+		   }); 
+	}
 
     /**
      * 检查输入项是否符合要求
@@ -492,7 +516,16 @@
 		</c:choose>
 		</td>
 		<td align="right"><span class="required">*</span>结束日期：</td>
-		<td><input type="text" name="order.endDate" readonly="readonly" class="e_input_time" id="endDate" value='<fmt:formatDate type="date" value="${order.endDate }"/>' onclick="selectDate();"/></td>
+		<td>
+		<c:choose>
+			<c:when test="${order.state eq '7' or order.state eq '9'}">
+				<input type="hidden" name="order.endDate" id="endDate"	value='<fmt:formatDate type="date" value="${order.endDate }"/>'"/><fmt:formatDate type="date" value="${order.startDate }"/>
+			</c:when>
+			<c:otherwise>
+				<input type="text" name="order.endDate" readonly="readonly" class="e_input_time" id="endDate" value='<fmt:formatDate type="date" value="${order.endDate }"/>' onclick="selectDate();"/>	
+			</c:otherwise>
+		</c:choose>
+		</td>
 	</tr>
 	
 	<tr id="onceDate" style="display: none">
@@ -532,6 +565,9 @@
 				<c:if test="${empty order.state || order.state=='0' || order.state =='3' }">
 					<input type="button" onclick="addResouce();" class="btn" value="新增绑定" />
 				</c:if>
+				<c:if test="${order.state eq '9' }">
+					<input type="button" onclick="repush(${order.orderCode});" class="btn" value="重新投放" />
+				</c:if>
 			</td>
 	   </tr>
 	        <table name="sucai" id="sucai"  width="100%" cellspacing="1" class="searchList">
@@ -539,7 +575,9 @@
 	        </table>
 </table>
 <div style="margin-left:50px;">
-	<input type="button" onclick="saveOrder();" class="btn" value="确认" /> &nbsp;&nbsp; 
+	<c:if test="${order.state ne '7'and order.state ne '9' }">
+		<input type="button" onclick="saveOrder();" class="btn" value="确认" />
+	</c:if> &nbsp;&nbsp; 
 	<input type="button" onclick="javascript:history.back(-1);" class="btn" value="取消" />
 </div>
 </div>

@@ -30,8 +30,8 @@ public class PlayList implements java.io.Serializable {
 	private Date endTime;
 	private String ployType;
 	private String typeValue;
-	private String resourceIds;
-	private String resourcePaths;
+	private String resourceId;
+	private String resourcePath;
 	private String status;
 
 	@Id
@@ -108,22 +108,22 @@ public class PlayList implements java.io.Serializable {
 		this.typeValue = typeValue;
 	}
 
-	@Column(name = "RESOURCE_IDS")
-	public String getResourceIds() {
-		return this.resourceIds;
+	@Column(name = "RESOURCE_ID")
+	public String getResourceId() {
+		return this.resourceId;
 	}
 
-	public void setResourceIds(String resourceIds) {
-		this.resourceIds = resourceIds;
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
 	}
 
-	@Column(name = "RESOURCE_PATHS")
-	public String getResourcePaths() {
-		return this.resourcePaths;
+	@Column(name = "RESOURCE_PATH")
+	public String getResourcePath() {
+		return this.resourcePath;
 	}
 
-	public void setResourcePaths(String resourcePaths) {
-		this.resourcePaths = resourcePaths;
+	public void setResourcePath(String resourcePath) {
+		this.resourcePath = resourcePath;
 	}
 
 	@Column(name = "STATUS", length = 2)

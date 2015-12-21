@@ -190,6 +190,11 @@ public class DOrderAction extends BaseAction {
 		dOrderService.delDOrderMateRelTmp(ids);
 		return SUCCESS;
 	}
+	@Action(value = "repushOrder")
+	public void repushOrder(){
+		String result = dOrderService.repushOrder(order.getOrderCode());
+		this.renderText(result);
+	}
 	public DOrder getOrder() {
 		return order;
 	}

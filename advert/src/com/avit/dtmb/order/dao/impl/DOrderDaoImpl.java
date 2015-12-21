@@ -48,7 +48,7 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 			   if(order != null && StringUtils.isNotBlank(order.getState())){
 				   hql += " and dorder.state='" + order.getState() + "'";
 			   }else{
-				   hql += " and dorder.state < '7'";
+				   hql += " and dorder.state <> '7'";
 			   }
 			   HttpSession session = ServletActionContext.getRequest().getSession();
 			   UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
@@ -215,8 +215,9 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	@Override
 	public int insertPlayList(DOrder order) {
-		String sql = "insert into d_play_list(order_code, position_code, area_code, start_date, end_date,start_time,end_time,ploy_type,type_value,resource_ids,resource_paths,index_num,status,user_industrys,user_levels,tvn,is_default) "+
-					 "(select od.order_code,od.position_code,omr.area_code,od.start_date,od.end_date,omr.start_time,omr.end_time,omr.ploy_type,omr.type_value," +
+		String sql = "insert into d_play_list(order_code, position_code, area_code, start_date, end_date,start_time,end_time,ploy_type,type_value,resource_id,resource_path,index_num,status,user_industrys,user_levels,tvn,is_default) "+
+					 "(select od.order_code,od.position_code,omr.area_code,od.start_date,od.end_date,omr.start_time,omr.end_time,omr.ploy_type," +
+					 "(SELECT group_concat(ch.service_id) FROM d_channel_group_ref gr,d_channelinfo_sync ch WHERE gr.channel_id = ch.channel_id AND gr.group_id = omr.type_value)," +
 					 "omr.resource_id,CASE res.resource_type" +
 					 " WHEN 0 THEN (SELECT name from t_image_meta where id=res.resource_id)" +
 					 " WHEN 1 THEN (SELECT name FROM t_video_meta where id=res.resource_id)" +
@@ -232,8 +233,8 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	@Override
 	public int updatePlayListEndDate(DOrder order) {
-		String sql = "update d_play_list set end_date =curdate() where order_code = '" +order.getOrderCode()+"'";
-		return this.executeBySQL(sql, null);
+		String sql = "update d_play_list set end_date =? where order_code = '" +order.getOrderCode()+"'";
+		return this.executeBySQL(sql, new Object[]{order.getEndDate()});
 	}
 
 	@SuppressWarnings("unchecked")
@@ -259,6 +260,18 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	public List<Customer> getCustomerList() {
 		String hql = "from Customer";
 		return (List<Customer>)this.getListForAll(hql, null);
+	}
+
+	@Override
+	public int updatePlayListState(String orderCode) {
+		String sql = "update d_play_list set status = '0' where order_code = ?";
+		return this.executeBySQL(sql, new Object[]{orderCode});
+	}
+
+	@Override
+	public int updateOrderState(String orderCode) {
+		String hql = "update DOrder od set od.state='6' where od.orderCode = ?";
+		return this.executeByHQL(hql, new Object[]{orderCode});
 	}
 
 }

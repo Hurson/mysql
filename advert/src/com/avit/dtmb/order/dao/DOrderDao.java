@@ -34,4 +34,6 @@ public interface DOrderDao extends BaseDao {
 	public List<Integer> checkDOrderRule(DOrder order);
 	public void delDOrderMateRelTmp(String ids);
 	public List<Customer> getCustomerList();
+	public int updatePlayListState(String orderCode);
+	public int updateOrderState(String orderCode);
 }
