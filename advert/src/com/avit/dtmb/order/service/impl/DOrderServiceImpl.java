@@ -2,7 +2,9 @@ package com.avit.dtmb.order.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -292,6 +294,20 @@ public class DOrderServiceImpl implements DOrderService {
 		}
 		
 		return "-1";
+	}
+
+	@Override
+	public String previewResource(DResource resource) {
+		DResource res = (DResource)dOrderDao.get(DResource.class, resource.getId());
+		String matePath = this.getResourcePath(res);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("type", res.getResourceType().toString());
+		map.put("res", matePath);
+		DAdPosition position = dOrderDao.getDPostionByPositionCode(resource.getPositionCode());
+		Gson gson = new Gson();
+		map.put("position", gson.toJson(position));
+		
+		return gson.toJson(map);
 	}
 	
 }

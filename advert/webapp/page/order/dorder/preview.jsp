@@ -24,15 +24,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
 	<script type="text/javascript">
-	var previewValue='${previewValue}';
-	var resourceValue='${resourceValue}';
-	var pollIndex = '${pollIndex}';
+	var dd = "{'position':'2343434','res':{'1':'2322222'},'type':'2'}";
+	alert(dd);
+	var data = eval('('+dd+')');
+	alert(data.type);
+	
 	//alert(pollIndex);
 
 	window.onload = function(){	
 		
-		previewMaterial(previewValue,pollIndex);
- 		viewMaterial(resourceValue);		 
 	} 
 	function viewDtmbMaterial(){
 		

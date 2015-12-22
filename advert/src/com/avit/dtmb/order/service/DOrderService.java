@@ -31,4 +31,5 @@ public interface DOrderService {
 	public void delDOrderMateRelTmp(String ids);
 	public List<Customer> getCustomerList();
 	public String repushOrder(String orderCode);
+	public String previewResource(DResource resource);
 }

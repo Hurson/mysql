@@ -40,4 +40,5 @@ public interface DOrderDao extends BaseDao {
 	public List<DOrderMateRel> getOrderMateRelList(String orderCode);
 	public List<String> getChannelGroupServiceIds(Integer groupId);
 	public List<String> getPloyValueByType(Integer ployId, String ployType);
+	public DAdPosition getDPostionByPositionCode(String positionCode);
 }

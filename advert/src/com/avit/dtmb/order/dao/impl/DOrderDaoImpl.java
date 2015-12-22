@@ -306,4 +306,10 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 		return this.getListForAll(hql, new Object[]{ployId, ployType});
 	}
 
+	@Override
+	public DAdPosition getDPostionByPositionCode(String positionCode) {
+		String hql = "from DAdPosition ap where ap.positionCode = ?";
+		return (DAdPosition)this.get(hql, positionCode);
+	}
+
 }

@@ -384,7 +384,7 @@
 					        var obj = json[i];
 						    str+="<tr><td><a style='diplay:block;float:left' href=javascript:showOrderResourceDetail("+orderCode+","+obj.id+")>详情</a></td>"+
 							 	 "<td>"+obj.resourceName+"</td>"+
-						   		 "<td><a style='diplay:block;float:left' href=javascript:showSource('resource',"+obj.id+",1)>预览</a></td></tr>";
+						   		 "<td><a style='diplay:block;float:left' href=javascript:showDtmbSource('"+positionCode+"',"+obj.id+")>预览</a></td></tr>";
 						   		 
 					   }
 					   $("#sucai").html(str);
@@ -400,8 +400,9 @@
     	var url = "queryDOrderMateRelTmp.action?omrTmp.orderCode="+orderCode+"&omrTmp.resource.id="+resourceId;
     	window.showModalDialog(url, window, "dialogHeight=580px;dialogWidth=820px;center=1;resizable=0;status=0;");
     }
-    function previewResource(positionCode,resourceId){
-    	//TODO
+    function showDtmbSource(positionCode,resourceId){
+    	var url = "previewResource.action?resource.positionCode="+positionCode+"&resource.id="+resourceId;
+    	window.showModalDialog(url, window, "dialogHeight=580px;dialogWidth=820px;center=1;resizable=0;status=0;");
     }
     
     /**
@@ -519,7 +520,7 @@
 		<td>
 		<c:choose>
 			<c:when test="${order.state eq '7' or order.state eq '9'}">
-				<input type="hidden" name="order.endDate" id="endDate"	value='<fmt:formatDate type="date" value="${order.endDate }"/>'"/><fmt:formatDate type="date" value="${order.startDate }"/>
+				<input type="hidden" name="order.endDate" id="endDate"	value='<fmt:formatDate type="date" value="${order.endDate }"/>'"/><fmt:formatDate type="date" value="${order.endDate }"/>
 			</c:when>
 			<c:otherwise>
 				<input type="text" name="order.endDate" readonly="readonly" class="e_input_time" id="endDate" value='<fmt:formatDate type="date" value="${order.endDate }"/>' onclick="selectDate();"/>	

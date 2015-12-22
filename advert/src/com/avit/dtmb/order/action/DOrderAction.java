@@ -195,6 +195,13 @@ public class DOrderAction extends BaseAction {
 		String result = dOrderService.repushOrder(order.getOrderCode());
 		this.renderText(result);
 	}
+	@Action(value = "previewResource", results = { 
+			@Result(name = "success", location = "/page/order/dorder/preview.jsp")})
+	public String previewResource(){
+		String data = dOrderService.previewResource(resource);
+		this.getRequest().setAttribute("data", data);
+		return SUCCESS;
+	}
 	public DOrder getOrder() {
 		return order;
 	}
