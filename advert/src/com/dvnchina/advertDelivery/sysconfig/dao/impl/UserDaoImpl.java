@@ -183,6 +183,10 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao{
 		List areaList = this.getDataBySql(sql4, new Object[]{userId});
 		setAreaCodes(areaList, user);
 		
+		String sql5 = "select ap.id,ap.position_name from d_advertposition ap, d_user_position up where ap.id= up.position_id and up.user_id = ?";
+		List dUpList = this.getDataBySql(sql5, new Object[]{userId});
+		setDUserPosition(dUpList, user);
+		
 		String packageIds = "";
 		String packageNames = "";
 		for (int i = 0; i < list.size(); i++) {
@@ -199,6 +203,23 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao{
 		user.setPositionNames(packageNames);
 		return user;
 
+	}
+	
+	private void setDUserPosition(List list, User user){
+		String positionIds = "";
+		String positionNames = "";
+		for (int i = 0; i < list.size(); i++) {
+			Object[] obj = (Object[])list.get(i);
+			if(i== list.size()-1){
+				positionIds += toInteger(obj[0]);
+				positionNames += (String)obj[1];
+			}else{
+				positionIds += toInteger(obj[0])+",";
+				positionNames += (String)obj[1]+",";
+			}
+		}
+		user.setDtmbPositionIds(positionIds);
+		user.setDtmbPositionNames(positionNames);
 	}
 	
 	private void setAreaCodes(List list, User user){

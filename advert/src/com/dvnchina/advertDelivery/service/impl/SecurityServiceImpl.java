@@ -122,7 +122,23 @@ public class SecurityServiceImpl implements SecurityService{
 	public List<Location> getUserOwnLocation(Integer userId) {
 		return userLocationDao.getUserOwnLocation(userId);
 	}
-
+	@Override
+	public String getAccessDtmbPositionIds(Integer userId, Integer roleType) {
+		StringBuffer sb = new StringBuffer();
+		List<Integer> positionIdList = new ArrayList<Integer>();
+		if(roleType == 2){
+			positionIdList = userLocationDao.getUserDtmbPositionIdList(userId);
+		}	 
+		
+		for(Integer positionId : positionIdList){
+			sb.append("," + positionId);
+		}
+		if(sb.length() > 0){
+			return sb.toString().substring(1);
+		}
+		return "-1";
+	}
+	
 	@Override
 	public String getUserOwnLocationCodes(Integer userId, Integer roleType){
 		

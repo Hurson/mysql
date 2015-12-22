@@ -26,6 +26,7 @@ import com.dvnchina.advertDelivery.model.MessageMeta;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.VideoMeta;
 import com.dvnchina.advertDelivery.order.bean.playlist.TextMate;
+import com.dvnchina.advertDelivery.utils.config.ConfigureProperties;
 import com.google.gson.Gson;
 @Service
 public class DOrderServiceImpl implements DOrderService {
@@ -191,6 +192,7 @@ public class DOrderServiceImpl implements DOrderService {
 			play.setTvn(getUserData(order.getDploy().getId(),PloyType.UserTVNNO.getKey()));
 			play.setResourceId(omr.getResource().getId());
 			play.setResourcePath(getResourcePath(omr.getResource()));
+			play.setStatus("0");
 			
 			playList.add(play);
 			
@@ -224,6 +226,7 @@ public class DOrderServiceImpl implements DOrderService {
 	}
 	
 	private String getResourcePath(DResource resource){
+		String matePath = ConfigureProperties.getInstance().get("materila.ftp.realPath");
 		if(resource == null){
 			return "";
 		}
@@ -232,11 +235,11 @@ public class DOrderServiceImpl implements DOrderService {
 		switch(resourceType){
 		case 0:
 			ImageMeta image = (ImageMeta)dOrderDao.get(ImageMeta.class, resource.getResourceId());
-			resourcePath = "" + image.getName();
+			resourcePath =matePath+ "/" + image.getName();
 			break;
 		case 1:
 			VideoMeta video = (VideoMeta)dOrderDao.get(VideoMeta.class, resource.getResourceId());
-			resourcePath = "" + video.getName();
+			resourcePath = matePath + "/" + video.getName();
 			break;
 		case 2:
 			MessageMeta message = (MessageMeta)dOrderDao.get(MessageMeta.class, resource.getResourceId());

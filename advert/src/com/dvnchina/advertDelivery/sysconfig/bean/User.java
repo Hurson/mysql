@@ -72,6 +72,10 @@ public class User implements Serializable{
 	private String areaCodes;
 	/**选择区域名称areaName*/
 	private String areaNames;
+	/** 指定无线广告位id*/
+	private String dtmbPositionIds;
+	/** 指定无线广告位名*/
+	private String dtmbPositionNames;
 	
 
 	public String getPositionIds() {
@@ -218,6 +222,23 @@ public class User implements Serializable{
 		this.delFlag = delFlag;
 	}
 	
+	
+	public String getDtmbPositionIds() {
+		return dtmbPositionIds;
+	}
+
+	public void setDtmbPositionIds(String dtmbPositionIds) {
+		this.dtmbPositionIds = dtmbPositionIds;
+	}
+
+	public String getDtmbPositionNames() {
+		return dtmbPositionNames;
+	}
+
+	public void setDtmbPositionNames(String dtmbPositionNames) {
+		this.dtmbPositionNames = dtmbPositionNames;
+	}
+
 	/**
 	 * 操作日志详情描述
 	 */

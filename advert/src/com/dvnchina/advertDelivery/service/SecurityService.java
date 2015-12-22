@@ -72,6 +72,8 @@ public interface SecurityService {
 	
 	public String getUserOwnLocationCodes(Integer userId, Integer roleType);
 	
+	public String getAccessDtmbPositionIds(Integer userId, Integer roleType);
+	
 	
 	public List<Integer> getAccessUserIdList(List<Integer> lstPositionPackageIds,String locationCodes,Integer userId, Integer roleType, Integer customerId);
 	/**

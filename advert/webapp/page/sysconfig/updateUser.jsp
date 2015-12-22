@@ -41,21 +41,26 @@
 		       	   roleType = result;
 		    	   if(result=='2'){
 						$('#customer_div_id').show();
+						$('#user_dtmb_position_div').show();
 						$('#customer_div_id_single').hide();
 						//清空广告位和区域码
 						$('#user_position_ids').val("");
+						$('#dtmb_position_ids').val("");
 						$('#user_area_codes').val("");
 					}else if(result=='1'){
 						$('#customer_div_id').hide();
+						$('#user_dtmb_position_div').hide();
 						$('#customer_div_id_single').show();
 						//清空广告商
 						$('#user_customer_ids').val("");
 					}else{
 						$('#customer_div_id').hide();
+						$('#user_dtmb_position_div').hide();
 						$('#customer_div_id_single').hide();
 						//清空广告位和区域码
 						$('#user_position_ids').val("");
 						$('#user_area_codes').val("");
+						$('#dtmb_position_ids').val("");
 					}
 			   }  
 		   }); 
@@ -220,6 +225,7 @@
 		}else if(roleType == 2){
 			$("#user_positions").val(positionNames);
 			$("#customer_div_id").show();
+			$("#user_dtmb_position_div").show();
 		}
 	}
 	
@@ -243,6 +249,28 @@
 			}
 			$("#user_position_ids").val(postionIds);
 			$("#user_positions").val(postionNames);
+		}
+	}
+	function showDtmbPostions(){
+		var dtmb_positions = $('#dtmb_position_ids').val();
+		var url = "getDtmbAdPosition.do?dtmb_positions="+dtmb_positions;
+		var custValue = window.showModalDialog(url, window, "dialogHeight=480px;dialogWidth=820px;center=1;resizable=0;status=0;");
+		if(custValue){
+			var positions = custValue.split(",");
+			var postionIds = "";
+			var postionNames = "";
+			for ( var i = 0; i < positions.length; i++) {
+				var tt = positions[i].split("_");
+				if(i == positions.length -1){
+					postionIds += tt[0];
+					postionNames += tt[1];
+				}else{
+					postionIds += tt[0]+",";
+					postionNames += tt[1]+",";
+				}
+			}
+			$("#dtmb_position_ids").val(postionIds);
+			$("#dtmb_positions").val(postionNames);
 		}
 	}
 </script>
@@ -308,18 +336,25 @@
 	<input id="user_customer_ids" name="user.customerIds" type="hidden" value="${user.customerIds}" /> 
 	<input id="user_position_ids" name="user.positionIds" type="hidden" value="${user.positionIds}" />
 	<input id="user_area_codes" name="user.areaCodes" type="hidden" value="${user.areaCodes}" />
+	<input id="dtmb_position_ids" name="user.dtmbPositionIds" type="hidden" value="${user.dtmbPositionIds}" />
 	
 	<tr id="customer_div_id" style="display:none;" class="sec">
 		
 		<td align="right"><span class="required">*</span>指定广告位：</td>
 		<td>
-			<textarea rows="14" cols="24" id="user_positions" readonly="readonly" onclick="showPostions();">${user.positionNames}</textarea>
+			<textarea rows="8" cols="40" id="user_positions" readonly="readonly" onclick="showPostions();">${user.positionNames}</textarea>
 		</td>
 		<td align="right"><span class="required">*</span>选择区域信息：</td>
 		<td>
-			<textarea rows="14" cols="24" id="user_area_names" readonly="readonly" onclick="showAreas();">${user.areaNames}</textarea>
+			<textarea rows="8" cols="40" id="user_area_names" readonly="readonly" onclick="showAreas();">${user.areaNames}</textarea>
 		</td>
 	</tr>
+	<tr id="user_dtmb_position_div" style="display:none;">
+		<td align="right"><span class="required">*</span>指定广告位：</td>
+		<td colspan="3">
+			<textarea rows="5" cols="50" id="dtmb_positions" readonly="readonly" onclick="showDtmbPostions();">${user.dtmbPositionNames}</textarea>
+		</td>
+	</tr>	
 	<tr id="customer_div_id_single" style="display:none;" class="sec">
 		<td align="right" >绑定广告商：</td>
 		<td colspan="3">

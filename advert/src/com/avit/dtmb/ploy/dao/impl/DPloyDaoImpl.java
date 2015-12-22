@@ -36,7 +36,9 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
 		List<Integer> accessUserId = userLogin.getAccessUserIds();
+		
 		hql +=" and ploy.operatorId in ("+accessUserId.toString().replaceAll("\\[|\\]|\\s", "")+")";
+		hql +=" and ploy.dposition.id in (" + userLogin.getDtmbPositionIds()+")";
 		
 		hql += " order by ploy.id desc";
 		return this.getPageList2(hql, null, pageNo, pageSize);
@@ -60,7 +62,11 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DAdPosition> queryPositionList() {
-		String hql = "from DAdPosition";
+		
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		
+		String hql = "from DAdPosition dp where dp.id in ("+userLogin.getDtmbPositionIds()+")";
 		return (List<DAdPosition>)this.getListForAll(hql, null);
 	}
 	@Override
@@ -71,8 +77,12 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ReleaseArea> listReleaseArea() {
-		String hql = "from ReleaseArea";
-		return (List<ReleaseArea>)this.getListForAll(hql, null);
+		
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		
+		String hql = "select area from ReleaseArea area,UserArea usa where area.areaCode=usa.releaseAreacode and usa.userId=?";
+		return (List<ReleaseArea>)this.getListForAll(hql, new Object[]{userLogin.getUserId()});
 	}
 	@Override
 	public DPloy getDPloyByName(String ployName) {

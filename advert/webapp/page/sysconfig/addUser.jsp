@@ -197,7 +197,7 @@
 	}
 	
 	function showPostions(){
-		var dtmb_positions = $('#user_position_ids').val();
+		var user_positions = $('#user_position_ids').val();
 		var url = "getUserAdvertPackage.do?user_positions="+user_positions;
 		var custValue = window.showModalDialog(url, window, "dialogHeight=480px;dialogWidth=820px;center=1;resizable=0;status=0;");
 		if(custValue){
@@ -215,7 +215,7 @@
 				}
 			}
 			$("#user_position_ids").val(postionIds);
-			$("#dtmb_positions").val(postionNames);
+			$("#user_positions").val(postionNames);
 		}
 	}
 	function showDtmbPostions(){
@@ -237,7 +237,7 @@
 				}
 			}
 			$("#dtmb_position_ids").val(postionIds);
-			$("#user_positions").val(postionNames);
+			$("#dtmb_positions").val(postionNames);
 		}
 	}
 	function showAreas(){
@@ -322,17 +322,17 @@
 	<tr id="customer_div_id" style=display:none;" class="sec">
 		<td align="right"><span class="required">*</span>指定广告位：</td>
 		<td>
-			<textarea rows="14" cols="24" id="user_positions" readonly="readonly" onclick="showPostions();"></textarea>
+			<textarea rows="8" cols="40" id="user_positions" readonly="readonly" onclick="showPostions();"></textarea>
 		</td>
 		<td align="right"><span class="required">*</span>选择区域信息：</td>
 		<td>
-			<textarea rows="14" cols="24" id="user_area_names" readonly="readonly" onclick="showAreas();">${user.areaNames}</textarea>
+			<textarea rows="8" cols="40" id="user_area_names" readonly="readonly" onclick="showAreas();">${user.areaNames}</textarea>
 		</td>
 	</tr>
 	<tr id="user_dtmb_position_div" style="display:none;">
 		<td align="right"><span class="required">*</span>指定广告位：</td>
 		<td colspan="3">
-			<textarea rows="7" cols="35" id="dtmb_positions" readonly="readonly" onclick="showDtmbPostions();"></textarea>
+			<textarea rows="5" cols="50" id="dtmb_positions" readonly="readonly" onclick="showDtmbPostions();"></textarea>
 		</td>
 	</tr>	
 </table>

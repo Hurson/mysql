@@ -173,6 +173,7 @@ public class LoginAction extends BaseActionSupport<Object>  {
 			//登陆用户具有访问权限的用户id
 			List<Integer> accessUserId = securityService.getAccessUserIdList(lstPositionPackageIds,locationCodes,id,roleType, customerId);
 			
+			String dtmbPositionIds = securityService.getAccessDtmbPositionIds(id,roleType);
 			
 			UserLogin userLogin = (UserLogin) this.getRequest().getSession().getAttribute("USER_LOGIN_INFO");
 			if(userLogin != null){
@@ -181,6 +182,7 @@ public class LoginAction extends BaseActionSupport<Object>  {
 				userLogin.setPositionIds(lstPositionPackageIds);
 				userLogin.setAreaCodes(locationCodes);
 				userLogin.setAccessUserIds(accessUserId);
+				userLogin.setDtmbPositionIds(dtmbPositionIds);
 			}
 			
 			request.setAttribute("flag", "test");

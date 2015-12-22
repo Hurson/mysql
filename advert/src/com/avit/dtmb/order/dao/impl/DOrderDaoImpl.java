@@ -55,6 +55,7 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 			   UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
 			   List<Integer> accessUserId = userLogin.getAccessUserIds();
 			   hql +=" and dorder.operatorId in ("+accessUserId.toString().replaceAll("\\[|\\]|\\s", "")+")";
+			   hql +=" and dorder.dposition.id in ("+userLogin.getDtmbPositionIds()+")";
 			   
 			hql+= " ORDER BY dorder.id desc";
 		return this.getPageList2(hql, param.toArray(), pageNo, pageSize);
@@ -69,7 +70,11 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DAdPosition> queryPositionList() {
-		String hql = "select ad from DAdPosition ad";
+		
+		 HttpSession session = ServletActionContext.getRequest().getSession();
+		 UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		
+		String hql = "select ad from DAdPosition ad where ad.id in ("+ userLogin.getDtmbPositionIds()+")";
 		return (List<DAdPosition>)this.getListForAll(hql, null);
 	}
 
@@ -141,8 +146,12 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ReleaseArea> queryReleaseAreaList() {
-		String hql = "from ReleaseArea";
-		return (List<ReleaseArea>)this.getListForAll(hql, null);
+		
+		 HttpSession session = ServletActionContext.getRequest().getSession();
+		 UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		
+		String hql = "select area from ReleaseArea area,UserArea ua where area.areaCode = ua.releaseAreacode and ua.userId = ?";
+		return (List<ReleaseArea>)this.getListForAll(hql, new Object[]{userLogin.getUserId()});
 	}
 
 	@Override
@@ -211,6 +220,7 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	    UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
 		List<Integer> accessUserId = userLogin.getAccessUserIds();
 		hql +=" and order.operatorId in ("+accessUserId.toString().replaceAll("\\[|\\]|\\s", "")+")";
+		hql +=" and order.dposition.id in ("+userLogin.getDtmbPositionIds()+")";
 		return this.getPageList2(hql, param.toArray(), pageNo, pageSize);
 	}
 

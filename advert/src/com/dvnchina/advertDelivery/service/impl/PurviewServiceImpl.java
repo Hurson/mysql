@@ -13,6 +13,7 @@ import com.dvnchina.advertDelivery.dao.UserLocationDao;
 import com.dvnchina.advertDelivery.dao.UserRoleDao;
 import com.dvnchina.advertDelivery.model.Column;
 import com.dvnchina.advertDelivery.model.Customer;
+import com.dvnchina.advertDelivery.model.DUserPosition;
 import com.dvnchina.advertDelivery.model.Location;
 import com.dvnchina.advertDelivery.model.RoleColumn;
 import com.dvnchina.advertDelivery.model.UserCustomer;
@@ -299,6 +300,26 @@ public class PurviewServiceImpl implements PurviewService{
 		this.addUserAdvertPositionPackageBinding(user.getUserId(), advertpositionPackages);
 		String[] areaCodes = user.getAreaCodes().split(PurviewConstant.SIGN_COMMA);
 		this.addUserLocationBatchBinding(user.getUserId(),areaCodes);
+		
+		List<Integer> dtmbPosition = StringUtil.getIntegerList(user.getDtmbPositionIds(), PurviewConstant.SIGN_COMMA);
+		this.addUserdtmbPositionBinding(user.getUserId(), dtmbPosition);
+	}
+	
+	/**
+	 * 保存用户和无线广告位关联表
+	 * @param userId
+	 * @param advertpositionPackages
+	 */
+	private void addUserdtmbPositionBinding(Integer userId,	List<Integer> dtmbPosition) {
+		List<DUserPosition> list = new ArrayList<DUserPosition>();
+		for (Integer positionId : dtmbPosition) {
+			DUserPosition obj = new DUserPosition();
+			obj.setUserId(userId);
+			obj.setPositionId(positionId);
+			list.add(obj);
+		}
+		userCustomerDao.saveAll(list);
+		
 	}
 
 	/**
@@ -322,6 +343,11 @@ public class PurviewServiceImpl implements PurviewService{
 	@Override
 	public void deleteUserAdvertPackageBinding(Integer userId) {
 		userCustomerDao.deleteUserAdvertPackageBinding(userId);
+		
+	}
+	@Override
+	public void deleteUserDtmbPositionBanding(Integer userId) {
+		userCustomerDao.deleteUserDtmbPositionBanding(userId);
 		
 	}
 	

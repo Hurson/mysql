@@ -77,8 +77,8 @@
 		<property name="packagesToScan">
             <list>
                 <value>com.avit.dtmb.*.bean</value>
-                <value>com.avit.*.*.bean</value>
-                <value>com.avit.*.*.model</value>
+                <value>com.*.*.bean</value>
+                <value>com.dvnchina.advertDelivery.model</value>
             </list>
         </property>
 		<property name="mappingResources">

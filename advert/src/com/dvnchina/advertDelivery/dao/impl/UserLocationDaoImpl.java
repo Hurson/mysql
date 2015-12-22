@@ -105,4 +105,12 @@ public class UserLocationDaoImpl extends BaseDaoImpl implements UserLocationDao{
 		return page;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> getUserDtmbPositionIdList(Integer userId) {
+		String sql = "select up.position_id from d_user_position up where up.user_id ="+userId;
+		Query query = this.getSession().createSQLQuery(sql).addScalar("position_id",Hibernate.INTEGER);
+		return query.list();
+	}
+
 }

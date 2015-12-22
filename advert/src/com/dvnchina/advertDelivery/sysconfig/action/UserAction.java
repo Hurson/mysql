@@ -196,6 +196,7 @@ public class UserAction extends BaseAction{
 			purviewService.deleteUserCustomerBatchBinding(user.getUserId());
 			purviewService.deleteUserAdvertPackageBinding(user.getUserId());
 			purviewService.deleteUserLocationBanding(user.getUserId());
+			purviewService.deleteUserDtmbPositionBanding(user.getUserId());
 			//插入和用户相关的数据
 			purviewService.insertUserBandingData(user);
 			message = "common.update.success";//修改成功

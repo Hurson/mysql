@@ -90,7 +90,7 @@
 		</action>
 		
 		<action name="getDtmbAdPosition" class="userAction" method="getDtmbAdPosition">
-			<result name="success" >/page/sysconfig/showAdvertpositionPackage.jsp</result>
+			<result name="success" >/page/sysconfig/showDtmbAdPosition.jsp</result>
 		</action>
 		
 		<action name="checkLoginName" class="userAction" method="checkLoginName"></action>

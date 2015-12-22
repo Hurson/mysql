@@ -217,4 +217,6 @@ public interface PurviewService {
 
 	public void deleteUserAdvertPackageBinding(Integer userId);
 	public PageBeanDB queryAreasList(int pageNo, int pageSize);
+	
+	public void deleteUserDtmbPositionBanding(Integer userId);
 }

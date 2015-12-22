@@ -17,6 +17,8 @@ public class UserLogin {
 	private String areaCodes;
 	/**登陆用户具有访问权限的用户id*/
 	private List<Integer> accessUserIds;
+	/**登陆用户具有访问权限的无线广告位*/
+	private String dtmbPositionIds;
 	
 	public Integer getUserId() {
 		return userId;
@@ -60,5 +62,12 @@ public class UserLogin {
 	public void setAccessUserIds(List<Integer> accessUserIds) {
 		this.accessUserIds = accessUserIds;
 	}
+	public String getDtmbPositionIds() {
+		return dtmbPositionIds;
+	}
+	public void setDtmbPositionIds(String dtmbPositionIds) {
+		this.dtmbPositionIds = dtmbPositionIds;
+	}
+	
 	
 }

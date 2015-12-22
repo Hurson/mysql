@@ -95,4 +95,11 @@ public class UserCustomerDaoImpl  extends BaseDaoImpl implements UserCustomerDao
 		}
 		return roleType;
 	}
+
+	@Override
+	public void deleteUserDtmbPositionBanding(Integer userId) {
+		String hql = "delete from DUserPosition up where up.userId = ?";
+		this.executeByHQL(hql, new Object[]{userId});
+		
+	}
 }

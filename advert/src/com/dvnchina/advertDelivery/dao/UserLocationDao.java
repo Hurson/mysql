@@ -3,6 +3,7 @@ package com.dvnchina.advertDelivery.dao;
 import java.util.List;
 
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.model.DUserPosition;
 import com.dvnchina.advertDelivery.model.Location;
 
 
@@ -28,6 +29,8 @@ public interface UserLocationDao  extends BaseDao{
 	 * @return
 	 */
 	public List<Location> getUserOwnLocation(Integer userId);
+	
+	public List<Integer> getUserDtmbPositionIdList(Integer userId);
 	
 	/**
 	 * 运营商获取用户拥有的地区码

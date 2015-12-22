@@ -36,4 +36,6 @@ public interface UserCustomerDao  extends BaseDao{
 	public void deleteUserAdvertPackageBinding(Integer userId);
 
 	public int getRoleTypeByUserId(Integer id);
+	
+	public void deleteUserDtmbPositionBanding(Integer userId);
 }
