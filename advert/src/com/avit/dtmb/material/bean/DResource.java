@@ -66,7 +66,7 @@ public class DResource  implements
 	/**
 	 * 广告位ID
 	 */
-	private Integer   advertPositionId;
+	private String   advertPositionId;
 	/**
 	 * 操作人员ID
 	 */
@@ -89,7 +89,7 @@ public class DResource  implements
 		
 	}
 	public DResource(Integer id,Integer resourceId,String resourceName,Integer resourceType,Integer categoryId,char status,
-			Date createTime,Integer advertPositionId,String positionName,Integer isDefault,Integer customerId,
+			Date createTime,String advertPositionId,String positionName,Integer isDefault,Integer customerId,
 			Integer operationId,Date modifyTime,String advertisersName,Date endTime,Date startTime,String examinationOpintions,String keyWords,Integer contractId,String description
 			,String backgroundPath){
 		this.id = id;
@@ -265,10 +265,10 @@ public class DResource  implements
 		this.advertisersName = advertisersName;
 	}
 	@Transient
-	public Integer getAdvertPositionId() {
+	public String getAdvertPositionId() {
 		return advertPositionId;
 	}
-	public void setAdvertPositionId(Integer advertPositionId) {
+	public void setAdvertPositionId(String advertPositionId) {
 		this.advertPositionId = advertPositionId;
 	}
 	@Transient

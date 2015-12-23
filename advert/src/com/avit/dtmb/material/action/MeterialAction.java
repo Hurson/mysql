@@ -436,7 +436,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                             //复制公共属性
                             materialTemp.setResourceType(material.getResourceType());
                             materialTemp.setCategoryId(material.getCategoryId());
-                            materialTemp.setAdvertPositionId(material.getAdvertPositionId());
+                            materialTemp.setPositionCode(material.getAdvertPositionId());
                             materialTemp.setIsDefault(0);
                             materialTemp.setOperationId(userLogin.getUserId());
                             materialService.saveDResource(materialTemp);

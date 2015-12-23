@@ -28,8 +28,8 @@
     }
 
    
-	function selectPositin(positionId,type,positionName,widthHeight,coordinate,backgroundPath,positionType){
-		parent.document.getElementById("material.advertPositionId").value=positionId;
+	function selectPositin(positionCode,type,positionName,widthHeight,coordinate,backgroundPath,positionType){
+		parent.document.getElementById("material.positionCode").value=positionCode;
     	parent.document.getElementById("material.advertPositionName").value=positionName;
     	if(positionType == 0 || positionType == 1 || positionType == 2){
     		parent.document.getElementById("upload11").style.display = "none";
@@ -51,7 +51,7 @@
                 type:"post",
                 async : false,
                 url:"<%=request.getContextPath()%>/dmaterial/getVideo.do",
-                data:{"advertPositionId":positionId},//Ajax传递的参数
+                data:{"advertPositionId":positionCode},//Ajax传递的参数
                 success:function(mess)
                 {
                     var json = eval('(' + mess + ')');
@@ -75,7 +75,7 @@
                 type:"post",
                 async : false,
                 url:"<%=request.getContextPath()%>/dmaterial/getImg.do",
-                data:{"advertPositionId":positionId},//Ajax传递的参数
+                data:{"advertPositionId":positionCode},//Ajax传递的参数
                 success:function(mess)
                 {
                     var json = eval('(' + mess + ')');
@@ -219,7 +219,7 @@
                     <c:forEach items="${adPositionPage.dataList}" var="adPositionPageInfo" varStatus="pc">
                <tr <c:if test="${pc.index%2==1}">class="sec"</c:if>>
                    <td>
-                       <input type="radio" value="${adPositionPageInfo.id}"  id="adPositionPageInfo.locationId" onclick="selectPositin('${adPositionPageInfo.id}','${adPositionPageInfo.resourceType}','${adPositionPageInfo.positionName}','${adPositionPageInfo.domain}','${adPositionPageInfo.coordinate}','${adPositionPageInfo.backgroundPath}','${adPositionPageInfo.specificationId}')"/>
+                       <input type="radio" value="${adPositionPageInfo.positionCode}"  id="adPositionPageInfo.locationId" onclick="selectPositin('${adPositionPageInfo.positionCode}','${adPositionPageInfo.resourceType}','${adPositionPageInfo.positionName}','${adPositionPageInfo.domain}','${adPositionPageInfo.coordinate}','${adPositionPageInfo.backgroundPath}','${adPositionPageInfo.specificationId}')"/>
                    </td>
                    <td>
                        <input id="name_${adPositionPageInfo.id}"  type="hidden" value="${adPositionPageInfo.positionName}"/>
