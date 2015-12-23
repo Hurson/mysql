@@ -19,6 +19,7 @@ import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.hql.classic.QueryTranslatorImpl;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import com.avit.dtmb.material.bean.DResource;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.bean.contract.ContractQueryBean;
 import com.dvnchina.advertDelivery.meterial.bean.MaterialCategory;
@@ -1489,6 +1490,12 @@ public class MeterialManagerDaoImpl extends HibernateSQLTemplete implements Mete
 		{	
 			return 0;
 		}
+	}
+
+
+	@Override
+	public void saveDResource(DResource materialTemp) {
+		 getHibernateTemplate().saveOrUpdate(materialTemp);		
 	}
 	
 	

@@ -2,6 +2,7 @@ package com.dvnchina.advertDelivery.meterial.service;
 
 import java.util.List;
 
+import com.avit.dtmb.material.bean.DResource;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.bean.contract.ContractQueryBean;
 import com.dvnchina.advertDelivery.contract.bean.AdvertPositionPackage;
@@ -531,5 +532,7 @@ public interface MeterialManagerService {
 	 * @return
 	 */
 	public int checkQuestionTemplateExist(String templateName);
+
+	public void saveDResource(DResource materialTemp);
 	
 }

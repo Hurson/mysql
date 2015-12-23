@@ -43,14 +43,14 @@
     	}
     	//{0,1,2,3,0};
     	parent.document.getElementById("sel_material_type").options.length = 0;
-    	if (type==2)
+    	if (type==1)
     	{
     	   parent.document.getElementById("sel_material_type").options.add(new Option("视频","1"));
     	   
     	   $.ajax({
                 type:"post",
                 async : false,
-                url:"<%=request.getContextPath()%>/page/meterial/getVideoMateSpeci.do",
+                url:"<%=request.getContextPath()%>/dmaterial/getVideo.do",
                 data:{"advertPositionId":positionId},//Ajax传递的参数
                 success:function(mess)
                 {
@@ -67,43 +67,14 @@
             });
     	   
     	}
-    	if (type == 1)
+    	if (type == 0)
     	{
-    		if(positionType == 4){
-    			 parent.document.getElementById("sel_material_type").options.add(new Option("Zip","4"));
+    		 parent.document.getElementById("sel_material_type").options.add(new Option("图片","0"));
     	   
     	   $.ajax({
                 type:"post",
                 async : false,
-                url:"<%=request.getContextPath()%>/page/meterial/getImageMateSpeci.do",
-                data:{"advertPositionId":positionId},//Ajax传递的参数
-                success:function(mess)
-                {
-                    var json = eval('(' + mess + ')');
-                	if(json!=null){
-                	    parent.document.getElementById("zipFileSize").value=json.imageFileSize;
-                	    //parent.document.getElementById("imageFileHigh").value=json.imageFileHigh;
-                	    //parent.document.getElementById("imageFileWidth").value=json.imageFileWidth;
-                	    if(window.name=="defaultSelectAdPositionFrame"){
-                	    	var mars = parent.document.getElementById("zipmars");
-                	    	mars.innerHTML = "大小："+json.imageFileSize;
-                	    }
-                	}
-                   
-                },
-                error:function(mess)
-                {
-                	alert("根据广告位获取ZIP规格失败");
-                }
-            });
-    			
-    		}else{
-    			 parent.document.getElementById("sel_material_type").options.add(new Option("图片","0"));
-    	   
-    	   $.ajax({
-                type:"post",
-                async : false,
-                url:"<%=request.getContextPath()%>/page/meterial/getImageMateSpeci.do",
+                url:"<%=request.getContextPath()%>/dmaterial/getImg.do",
                 data:{"advertPositionId":positionId},//Ajax传递的参数
                 success:function(mess)
                 {
@@ -124,12 +95,11 @@
                 	alert("根据广告位获取图片规格失败");
                 }
             });
-    		}
     	  
             
     	}
     	
-    	if (type == 3)
+    	if (type == 2)
     	{
     	   parent.document.getElementById("sel_material_type").options.add(new Option("文字","2"));
     	}
@@ -216,7 +186,7 @@
 </head>
 
 <body class="mainBody" >
-<form action="<%=path %>/page/meterial/selectAdPosition.do" method="post" id="queryForm">
+<form action="<%=path %>/page/material/selectAdPosition.do" method="post" id="queryForm">
          <s:set name="page" value="%{adPositionPage}" />
 		 <input type="hidden" id="pageNo" name="adPositionPage.pageNo" value="${page.pageNo}"/>
 		 <input type="hidden" id="pageSize" name="adPositionPage.pageSize" value="${page.pageSize}"/>
@@ -249,7 +219,7 @@
                     <c:forEach items="${adPositionPage.dataList}" var="adPositionPageInfo" varStatus="pc">
                <tr <c:if test="${pc.index%2==1}">class="sec"</c:if>>
                    <td>
-                       <input type="radio" value="${adPositionPageInfo.id}"  id="adPositionPageInfo.locationId" onclick="selectPositin('${adPositionPageInfo.id}','${adPositionPageInfo.resourceType}','${adPositionPageInfo.positionName}','${adPositionPageInfo.domain}','${adPositionPageInfo.coordinate}','${adPositionPageInfo.bgImagePath}','${adPositionPageInfo.specificationId}')"/>
+                       <input type="radio" value="${adPositionPageInfo.id}"  id="adPositionPageInfo.locationId" onclick="selectPositin('${adPositionPageInfo.id}','${adPositionPageInfo.resourceType}','${adPositionPageInfo.positionName}','${adPositionPageInfo.domain}','${adPositionPageInfo.coordinate}','${adPositionPageInfo.backgroundPath}','${adPositionPageInfo.specificationId}')"/>
                    </td>
                    <td>
                        <input id="name_${adPositionPageInfo.id}"  type="hidden" value="${adPositionPageInfo.positionName}"/>

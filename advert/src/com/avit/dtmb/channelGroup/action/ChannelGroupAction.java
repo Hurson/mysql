@@ -20,11 +20,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.avit.dtmb.channelGroup.bean.DChannelGroup;
+import com.avit.dtmb.channelGroup.bean.DChannelGroupRef;
 import com.avit.dtmb.channelGroup.bean.DChannelInfoSync;
 import com.avit.dtmb.channelGroup.service.ChannelGroupService;
 import com.dvnchina.advertDelivery.action.BaseActionSupport;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.channelGroup.action.ChannelGroupManagerAction;
+import com.dvnchina.advertDelivery.channelGroup.bean.ChannelGroupRef;
 import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.common.BaseAction;
 import com.dvnchina.advertDelivery.constant.Constant;
@@ -64,6 +66,7 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	private String selChannelIds;
 	private List selChannelIdList;
 	private String channelGroupIdTemp;
+	private String serviceIds;
 	
 	@Action(value = "queryChanelGroupList",results={@Result(name="success",location="/page/channelGroup/dtmbChannelGroup/channelGroupList.jsp")})
 	public String queryChanelGroupList(){
@@ -233,8 +236,50 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	       
 	       return SUCCESS;
 	   }
-	
-	
+	 @Action(value = "saveChannelGroupRef",results={@Result(name = "success",location = "/page/channelGroup/dtmbChannelGroup/channelGroupRefList.jsp")})
+	 public void saveChannelGroupRef() {	   
+		    try{
+		    	List<DChannelGroupRef> channelGroupRefList = new ArrayList<DChannelGroupRef>();
+			    String[] ids = serviceIds.split(",");
+			    for(int i=0;i<ids.length;i++){
+			    	DChannelGroupRef temp =new DChannelGroupRef();
+			    	if(channelGroupIdTemp!=null&&!channelGroupIdTemp.equals("")){
+			    		temp.setGroupId(Long.valueOf(channelGroupIdTemp));
+			    	}
+			    	
+			    	temp.setServiceId(Long.valueOf(ids[i].trim()));
+			    	
+			    	channelGroupRefList.add(temp);
+			    }
+			    
+			    if(channelGroupRefList!=null&&channelGroupRefList.size()>0){
+			    	channelGroupService.saveChannelGroupRefList(channelGroupRefList);
+
+		        }
+		    }catch(Exception e){
+		    	e.printStackTrace();
+		    	logger.error("保存频道组频道关联关系异常", e);
+		    }
+	   }
+	 
+	 
+	 /*public String selectChannelIds(){
+		   
+		   if(selChannelIds!=null&&!selChannelIds.equals("")){
+				if(selChannelIdList==null){
+					selChannelIdList=new ArrayList(){};			
+				}
+				
+				String[] ids=selChannelIds.split(",");
+				for (int i=0;i<ids.length;i++) {
+					selChannelIdList.add(ids[i]);
+				}
+				HashSet h = new HashSet(selChannelIdList);
+				selChannelIdList.clear();
+				selChannelIdList.addAll(h);
+
+			}*/
+		   
 	
 	
 	
@@ -357,6 +402,27 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	}
 	public void setChannelGroupIdTemp(String channelGroupIdTemp) {
 		this.channelGroupIdTemp = channelGroupIdTemp;
+	}
+	public ChannelGroupService getChannelGroupService() {
+		return channelGroupService;
+	}
+	public void setChannelGroupService(ChannelGroupService channelGroupService) {
+		this.channelGroupService = channelGroupService;
+	}
+	public OperateLogService getOperateLogService() {
+		return operateLogService;
+	}
+	public void setOperateLogService(OperateLogService operateLogService) {
+		this.operateLogService = operateLogService;
+	}
+	public String getServiceIds() {
+		return serviceIds;
+	}
+	public void setServiceId(String serviceIds) {
+		this.serviceIds = serviceIds;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 	

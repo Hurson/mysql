@@ -16,4 +16,5 @@ public interface DPositionService {
 	public VideoSpecification getVideoSpeById(Integer id);
 	public void saveVideoSpecification(VideoSpecification videoSpe);
 	public void saveTextSpecification(TextSpecification textSpe);
+	public DAdPosition getAdvertPosition(Integer advertPositionId);
 }

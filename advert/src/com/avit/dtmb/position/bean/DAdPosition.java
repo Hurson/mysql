@@ -66,7 +66,7 @@ public class DAdPosition implements Serializable {
 	/**
 	 * 预览背景图片路径
 	 */
-	private String bgImagePath;
+	private String backgroundPath;
 	/**
 	 * 预览起始坐标
 	 */
@@ -77,7 +77,6 @@ public class DAdPosition implements Serializable {
 	private String domain;
 	
 	private String ployTypeJson;
-	
 	private Integer position;
 	
 	private Map<String, String> mainPloyMap;
@@ -162,11 +161,11 @@ public class DAdPosition implements Serializable {
 		this.description = description;
 	}
 	@Column(name="BG_IMAGE_PATH")
-	public String getBgImagePath() {
-		return bgImagePath;
+	public String getBackgroundPath() {
+		return backgroundPath;
 	}
-	public void setBgImagePath(String bgImagePath) {
-		this.bgImagePath = bgImagePath;
+	public void setBackgroundPath(String backgroundPath) {
+		this.backgroundPath = backgroundPath;
 	}
 	@Column(name="COORDINATE")
 	public String getCoordinate() {

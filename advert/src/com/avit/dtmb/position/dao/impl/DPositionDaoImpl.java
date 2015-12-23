@@ -60,7 +60,7 @@ public class DPositionDaoImpl extends BaseDaoImpl implements DPositionDao {
 			return;
 		}
 		String sql = "update d_advertposition set bg_image_path=?,coordinate=?,domain=?,description=? where id=?";
-		this.executeBySQL(sql, new Object[]{ad.getBgImagePath(),ad.getCoordinate(),ad.getDomain(),ad.getDescription(),ad.getId()});		
+		this.executeBySQL(sql, new Object[]{ad.getBackgroundPath(),ad.getCoordinate(),ad.getDomain(),ad.getDescription(),ad.getId()});		
 	}
 	@Override
 	public ImageSpecification getImageSpeById(Integer id) {
@@ -75,6 +75,10 @@ public class DPositionDaoImpl extends BaseDaoImpl implements DPositionDao {
 	@Override
 	public VideoSpecification getVideoSpeById(Integer id) {
 		return this.getHibernateTemplate().get(VideoSpecification.class, id);
+	}
+
+	public DAdPosition getAdvertPosition(Integer advertPositionId) {
+		return this.getHibernateTemplate().get(DAdPosition.class, advertPositionId);
 	}
 
 

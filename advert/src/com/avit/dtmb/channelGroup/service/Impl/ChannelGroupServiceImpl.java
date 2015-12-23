@@ -1,15 +1,19 @@
 package com.avit.dtmb.channelGroup.service.Impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
 import com.avit.dtmb.channelGroup.bean.DChannelGroup;
+import com.avit.dtmb.channelGroup.bean.DChannelGroupRef;
 import com.avit.dtmb.channelGroup.bean.DChannelInfoSync;
 import com.avit.dtmb.channelGroup.dao.ChannelGroupDao;
 import com.avit.dtmb.channelGroup.service.ChannelGroupService;
 import com.avit.dtmb.material.dao.MaterialDao;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.channelGroup.bean.ChannelGroupRef;
 @Service("ChannelGroupService")
 public class ChannelGroupServiceImpl implements ChannelGroupService {
 	@Resource
@@ -46,6 +50,11 @@ public class ChannelGroupServiceImpl implements ChannelGroupService {
 	public PageBeanDB selectChannelList(DChannelInfoSync selectChannelQuery,
 			int pageSize, int pageNo, String channelGroupType) {
 		return channelGroupDao.selectChannelList(selectChannelQuery, pageSize, pageNo,channelGroupType);
+	}
+	@Override
+	public boolean saveChannelGroupRefList(
+			List<DChannelGroupRef> channelGroupRefList) {
+		return channelGroupDao.saveChannelGroupRefList(channelGroupRefList);
 	}
 
 }

@@ -3,6 +3,7 @@ package com.dvnchina.advertDelivery.meterial.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.avit.dtmb.material.bean.DResource;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.bean.contract.ContractQueryBean;
 import com.dvnchina.advertDelivery.dao.AdvertPositionDao;
@@ -783,6 +784,13 @@ public class MeterialManagerServiceImpl implements MeterialManagerService{
 	 */
 	public int checkQuestionTemplateExist(String templateName){
 		return meterialManagerDao.checkQuestionTemplateExist(templateName);
+	}
+
+
+	@Override
+	public void saveDResource(DResource materialTemp) {
+		 meterialManagerDao.saveDResource(materialTemp);
+		
 	}
 	
 }

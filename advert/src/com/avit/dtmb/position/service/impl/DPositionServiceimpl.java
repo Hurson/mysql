@@ -8,7 +8,9 @@ import com.avit.dtmb.position.bean.DAdPosition;
 import com.avit.dtmb.position.dao.DPositionDao;
 import com.avit.dtmb.position.service.DPositionService;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.position.bean.ImageSpecification;
+import com.dvnchina.advertDelivery.position.bean.PositionPackage;
 import com.dvnchina.advertDelivery.position.bean.TextSpecification;
 import com.dvnchina.advertDelivery.position.bean.VideoSpecification;
 @Service("dPositionService")
@@ -56,6 +58,11 @@ public class DPositionServiceimpl implements DPositionService {
 	public void saveTextSpecification(TextSpecification textSpe) {
 		dPositionDao.update(textSpe);
 		
+	}
+	@Override
+	public DAdPosition getAdvertPosition(Integer advertPositionId) {
+		DAdPosition dAdPosition = dPositionDao.getAdvertPosition(advertPositionId);
+		return dAdPosition;		
 	}
 
 }

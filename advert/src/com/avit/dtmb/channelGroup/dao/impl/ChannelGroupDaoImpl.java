@@ -20,9 +20,11 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.stereotype.Repository;
 
 import com.avit.dtmb.channelGroup.bean.DChannelGroup;
+import com.avit.dtmb.channelGroup.bean.DChannelGroupRef;
 import com.avit.dtmb.channelGroup.bean.DChannelInfoSync;
 import com.avit.dtmb.channelGroup.dao.ChannelGroupDao;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.channelGroup.bean.ChannelGroupRef;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 import com.dvnchina.advertDelivery.model.UserLogin;
 import com.dvnchina.advertDelivery.utils.HibernateSQLTemplete;
@@ -264,6 +266,15 @@ public class ChannelGroupDaoImpl extends HibernateSQLTemplete implements Channel
 	      //分页查询 
 	      List params = null;
 	      return this.getPageList(sql, params, pageNo, pageSize); 
+	}
+
+
+
+	@Override
+	public boolean saveChannelGroupRefList(
+			List<DChannelGroupRef> channelGroupRefList) {
+		this.getHibernateTemplate().saveOrUpdateAll(channelGroupRefList);
+        return true;
 	}
 }
 

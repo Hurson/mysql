@@ -49,8 +49,7 @@ function  showColumn(){
 	var menu_first = ['ggzcgl','ggstfgl','bpgl','xtgl','ggwgl','ggsgl','htgl','tfclgl','yxgzgl','ddgl','flsjtbgl','xtcx','rzgl']; 
 	
 
-var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','dggwbgl','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','ddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','dtfclwh','tfclwh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
-	var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','dggwbgl','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','wxddwh','ddsh','wxddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','dtfclwh','tfclwh','wxtfclsh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
+var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','dggwbgl','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','wxscwh','wxscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','wxddwh','ddsh','wxddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','dtfclwh','tfclwh','wxtfclsh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','wxpdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
 
 	
 	var columns = $('#columns').val();//
@@ -129,6 +128,7 @@ var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl'
 							<li id="hylxsjpz" style="display: none;"><a href="#" onclick="openPage('/page/sysconfig/queryUserTradeList.do', '15', '行业类型数据配置', '行业类型数据配置')">&gt;&gt;&nbsp;行业类型数据配置</a></li>
 	                    	<li id="xtcspz" style="display: none;"><a href="#" onclick="openPage('/page/sysconfig/allConfigList.do', '16', '系统参数配置', '系统参数配置')">&gt;&gt;&nbsp;系统参数配置</a></li>
 	                    	<li id="pdzgl" style="display: none;"><a href="#" onclick="openPage('/page/channelGroup/queryChannelGroupList.do', '17', '频道组管理', '频道组管理')">&gt;&gt;&nbsp;频道组管理</a></li>
+	                    	<li id="wxpdzgl" style="display: none;"><a href="#" onclick="openPage('/<%=path%>/dchannelGroup/queryChanelGroupList.action', '22', '无线频道组管理', '无线频道组管理')">&gt;&gt;&nbsp;无线频道组管理</a></li>
 	                    	<li id="hkpdzgl" style="display: none;"><a href="#" onclick="openPage('/page/npvrChannelGroup/queryChannelGroupListNpvr.do', '19', '回放频道组管理', '回放频道组管理')">&gt;&gt;&nbsp;回放频道组管理</a></li>
 	                    	<li id="uimsf" style="display: none;"><a href="#" onclick="openPage('/page/sysconfig/intoUpdateUI.do', '18', '更新UI描述符', '更新UI描述符')">&gt;&gt;&nbsp;更新UI描述符</a></li>
 	                    	<li id="scsjb" style="display: none;"><a href="#" onclick="openPage('/page/sysconfig/initPage.do', '20', '上传升级包', '上传升级包')">&gt;&gt;&nbsp;上传升级包</a></li>
@@ -245,6 +245,7 @@ var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl'
 	                        <li id="mrscwh" style="display: none;"><a href="#"  onclick="openPage('/page/meterial/queryDefaultMeterialList.do', '82', '默认素材维护', '默认素材维护')">&gt;&gt;&nbsp;默认素材维护</a></li>
 							<li id="yysscsh" style="display: none;"><a href="#"  onclick="openPage('/page/meterial/auditMaterialList.do', '84', '素材审核', '素材审核')">&gt;&gt;&nbsp;素材审核</a></li>
 							<li id="wxscwh" style="display: none;"><a href="#"  onclick="openPage('/<%=path%>/dmaterial/queryMaterialList.do', '85', '无线素材维护', '无线素材维护')">&gt;&gt;&nbsp;无线素材维护</a></li>
+							<li id="wxscsh" style="display: none;"><a href="#"  onclick="openPage('/<%=path%>/dmaterial/auditMaterialList.do', '86', '无线素材审核', '无线素材审核')">&gt;&gt;&nbsp;无线素材审核</a></li>
 						<!-- 
 							<li id="zcsxxgl" style="display: none;" ><a href="#"  onclick="openPage('/page/meterial/queryUponLineList.do','86','资产上下线管理','资产上下线管理')">&gt;&gt;&nbsp;资产上下线</a></li>
 						 -->

@@ -15,6 +15,9 @@ import com.avit.dtmb.position.bean.DAdPosition;
 import com.avit.dtmb.material.dao.MaterialDao;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
+import com.dvnchina.advertDelivery.model.ImageMeta;
+import com.dvnchina.advertDelivery.model.Resource;
+import com.dvnchina.advertDelivery.model.VideoMeta;
 import com.dvnchina.advertDelivery.position.bean.ImageSpecification;
 import com.dvnchina.advertDelivery.position.bean.VideoSpecification;
 @Repository("MaterialDao")
@@ -123,6 +126,67 @@ public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
         }
 
         return imageSpecification;
+	}
+
+	@Override
+	public void saveDResource(DResource materialTemp) {
+		getHibernateTemplate().saveOrUpdate(materialTemp);
+	}
+
+	@Override
+	public VideoMeta getVideoMetaByID(Integer id) {
+		String hql =  " from VideoMeta t where t.id="+id;
+
+        List list = this.getList(hql,null);
+        VideoMeta videoMeta =null;
+        if (list!=null && list.size()>0)
+        {
+            videoMeta = (VideoMeta)(list.get(0));
+        }
+
+        return videoMeta;
+	}
+
+	@Override
+	public DResource getMaterialByID(int materialId) {
+		String hql = "select distinct new com.avit.dtmb.material.bean.DResource(" +
+		        "r.id,r.resourceId,r.resourceName,r.resourceType,r.categoryId,"
+		        + "r.status,r.createTime," +
+		        "a.id,a.positionName,r.isDefault,r.customerId,r.operationId,r.modifyTime,b.advertisersName,"
+		        + "r.startTime,r.endTime,r.examinationOpintions,r.keyWords,r.contractId,r.description,a.backgroundPath )" +      
+		        " from DResource r,DAdPosition a,Customer b "+
+		        "where r.positionCode = a.positionCode and r.customerId=b.id and r.id="+materialId;
+				System.out.println(hql);
+		        List list = this.getList(hql,null);
+		        DResource material =null;
+		        if (list!=null && list.size()>0)
+		        {
+		            material = (DResource)(list.get(0));
+		            
+		            int mid=material.getId();
+			    	 String sql1="SELECT COUNT(1) FROM t_order_mate_rel rel, t_order o WHERE rel.MATE_ID ="+mid+"  AND rel.ORDER_ID = o.ID AND o.STATE <> '7'";
+			    	 Query query = getSession().createSQLQuery(sql1);
+			    	 List a=query.list();	    	 
+			    	 /*if(a.get(0).toString()!="0"){
+			    		 material.setStateStr("7");
+			    	 }*/
+		        }
+		        
+		        return material;
+	}
+
+	@Override
+	public ImageMeta getImageMetaByID(Integer resourceId) {
+		String hql =  " from ImageMeta t where t.id="+resourceId;
+
+        List list = this.getList(hql,null);
+        ImageMeta imageMeta =null;
+        if (list!=null && list.size()>0)
+        {
+            imageMeta = (ImageMeta)(list.get(0));
+        }
+
+        return imageMeta;
 	}
 	
 

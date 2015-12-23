@@ -28,27 +28,13 @@
 <script type='text/javascript' src='<%=path %>/js/new/avit.js'></script>
 <script type="text/javascript" src="<%=path %>/js/new/My97DatePicker/WdatePicker.js"></script>
 
-<script type="text/javascript" src="<%=path %>/js/jquery/jquery-1.9.0.js"></script>
-<script type="text/javascript" src="<%=path %>/js/jquery/upload/js/jquery.uploadify.v2.1.4.js"></script>
-<script type="text/javascript" src="<%=path%>/js/material/uploadMaterial.js"></script>
-<script type="text/javascript" src="<%=path%>/js/new/My97DatePicker/WdatePicker.js"></script>
-<script type="text/javascript" src="<%=path %>/js/easydialog/easydialog.min.js"></script>
 
-
-<script type="text/javascript" src="<%=path %>/js/jquery/jquery.form.js"></script>
-<script type="text/javascript" src="<%=path %>/js/jquery/ui/jquery.ui.core.js"></script>
-<script src="<%=path%>/js/jquery/ui/jquery.ui.core.js"></script>
-<script src="<%=path%>/js/jquery/ui/jquery.ui.widget.js"></script>
-<script type="text/javascript" src="<%=path%>/js/order/addOrUpdate.js"></script>
-<script type="text/javascript" src="<%=path %>/js/jquery/upload/js/swfobject.js"></script>
-<link rel="stylesheet" href="<%=path %>/css/easydialog/easydialog.css" type="text/css" />
-<script type='text/javascript' src='<%=path %>/js/new/avit.js'></script>
 <title>素材管理</title>
 <script>
 
 function query() {
-        
-       if(validateSpecialCharacterAfter(document.getElementById("meterialQuery.resourceName").value)){
+
+        if(validateSpecialCharacterAfter(document.getElementById("meterialQuery.resourceName").value)){
 			alert("素材名称不能包括特殊字符！");
 			return ;
 		}
@@ -68,52 +54,32 @@ function query() {
        document.forms[0].submit();
     }
  function addData() {
-      window.location.href="<%=path%>/dmaterial/initAdd.do";
+      window.location.href="<%=path%>/page/meterial/intoAddMaterial.do";
     }
  function deleteData() {
 	 if (getCheckCount("dataIds") <= 0) {
                 alert("请勾选需删除的记录！");
                 return;
      }
-     var dataIds = getCheckValue("dataIds");	 
-	 $.ajax({
-                type:"post",
-                async : false,
-                url:"<%=request.getContextPath()%>/page/meterial/checkDelMeterial.do?",
-                data:{"dataIds":dataIds},//Ajax传递的参数
-                success:function(mess)
-                {
-                	if(mess=="0")// 如果获取的数据不为空
-                    {
-                		var ret = window.confirm("您确定要删除吗？");
-						 if (ret==1)
-					     {
-							//alert("可删");
-							 document.forms[0].action="<%=path %>/page/meterial/deleteMaterial.do";
-                             document.forms[0].submit();
-					     }
-                    }
-                    else
-                    {
-						alert("您要删除的素材还有订单未执行完毕，请确认后，再操作！");
-						return;
-                    }
-                   
-                },
-                error:function(mess)
-                {
-                	alert("未知错误");
-                }
-            });
-     
+	 var ret = window.confirm("您确定要删除吗？");
+	 if (ret==1)
+     {
+		 document.forms[0].action="<%=path %>/page/meterial/deleteMaterial.do";
+         document.forms[0].submit();
+     }
     }
   function modifyData(materialId) {
       window.location.href="<%=path %>/dmaterial/initMaterial.do?materialId="+materialId;
     }
-
+    function modifyDataPrecise(ployid) {
+      //window.location.href="<%=path %>/page/ploy/initPloy.do?ployId="+ployid;
+      window.location.href="<%=path %>/page/precise/listPrecise.do?method=getAllPreciseList&ployId="+ployid;
+      //initPloy.do?method=initPloy&ployId=1
+    }
 
  	function selectAdPosition() {
           	var structInfo = '';
+			var contractname = document.getElementById("contract.contractName").value;
 			var contractid= document.getElementById("ploy.contractId").value;
 			
           	//$("#content").html('请单击【绑定广告商】文本框进行广告商绑定');
@@ -148,12 +114,12 @@ function query() {
 
 </head>
 <body class="mainBody">
- <form action="<%=path %>/page/meterial/queryMeterialList.do" method="post" id="queryForm">
+ <form action="<%=path %>/page/meterial/auditMaterialList.do" method="post" id="queryForm">
  <input type="hidden" id="pageNo" name="page.pageNo" value="${page.pageNo}"/>
  <input type="hidden" id="pageSize" name="page.pageSize" value="${page.pageSize}"/>
 
 <div class="search">
-<div class="path">首页 >> 素材管理 >> 素材维护</div>
+<div class="path">首页 >> 素材管理 >> 素材审核</div>
 <div class="searchContent" >
 <table cellspacing="1" class="searchList">
   <tr class="title">
@@ -165,7 +131,6 @@ function query() {
                   <input type="text" name="meterialQuery.resourceName" id="meterialQuery.resourceName" value="${meterialQuery.resourceName}"/>
                   <span>广告位名称：</span>
                   <input type="text" name="meterialQuery.positionName" id="meterialQuery.positionName" value="${meterialQuery.positionName}"/>
-                  
                   <span>广告商：</span>
                   <input type="text" name="meterialQuery.customerName" id="meterialQuery.customerName" value="${meterialQuery.customerName}"/>
                   <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -174,9 +139,9 @@ function query() {
 </table>
 <div id="messageDiv" style="margin-top: 15px;color: red;font-size: 14px;font-weight: bold;"></div>
 <table cellspacing="1" class="searchList">
-    <tr class="title" align="center">
-        <td height="5" class="dot"><input type="checkbox" name="selectAllBox" onclick="selectAll(this, 'dataIds');"/ ></td>
-        <td width="15%" align="center">素材名称</td>
+    <tr class="title">
+		
+		<td width="15%" align="center">素材名称</td>
         <td width="10%" align="center">素材类型</td>
         <td width="15%" align="center">广告商</td>
         <td width="8%" align="center">素材分类</td>
@@ -188,13 +153,10 @@ function query() {
                     <c:forEach items="${page.dataList}" var="meterialInfo" varStatus="pl">
                         <tr <c:if test="${pl.index%2==1}">class="sec"</c:if> align="center">
                             <td>
-                                <input type="checkbox" value="1" name="dataIds"/>
-                             </td>
-                            <td>
-                                 <a href="javascript:modifyData('${meterialInfo.id}');">${meterialInfo.resourceName}</a> 
+                                <a href="javascript:modifyData('${meterialInfo.id}');">${meterialInfo.resourceName}</a>
                             </td>
                             <td>
-                                 <c:choose>
+                                <c:choose>
 											<c:when test="${meterialInfo.resourceType==0}">
 												图片
 											</c:when>
@@ -204,38 +166,38 @@ function query() {
 											<c:when test="${meterialInfo.resourceType==2}">
 												文字
 											</c:when>
+											<c:when test="${meterialInfo.resourceType==3}">
+												调查问卷
+											</c:when>
 											<c:otherwise>
 												ZIP
 											</c:otherwise>
-								</c:choose> 
+								</c:choose>
                             </td>
                             <td>
-                                 ${meterialInfo.advertisersName} 
+                                ${meterialInfo.customerName}
                             </td>
                             <td>								
-								 <c:forEach items="${materialCategoryList}" var="cp" >
+								<c:forEach items="${materialCategoryList}" var="cp" >
                             	    <c:if test="${cp.id==meterialInfo.categoryId}">
                             	          ${cp.categoryName}
                             	    </c:if>
-                                </c:forEach> 
+                                </c:forEach>
                             </td>
                             <td>
                                 ${meterialInfo.positionName}
                             </td>
-                                                       
+                                                      
                             <td>
                                 <c:choose>
-											<c:when test="${fn:escapeXml(meterialInfo.status) eq '0'}">
+											<c:when test="${meterialInfo.status=='0'}">
 												待审核
 											</c:when>
-											<c:when test="${fn:escapeXml(meterialInfo.status) eq '1'}">
+											<c:when test="${meterialInfo.status=='1'}">
 												审核不通过
 											</c:when>
-											<c:when test="${fn:escapeXml(meterialInfo.status) eq '2'&&meterialInfo.status==null}">
+											<c:when test="${meterialInfo.status=='2'}">
 												上线
-											</c:when>
-											<c:when test="${meterialInfo.status!=null}">
-												已关联
 											</c:when>
 											<c:otherwise>
 												下线
@@ -253,11 +215,10 @@ function query() {
 
 
   <tr>
-    <td colspan="8">
-		<input type="button" value="删除" class="btn" onclick="javascript:deleteData();"/>
-        <input type="button" value="添加" class="btn" onclick="javascript:addData();"/>
+    <td colspan="7">
+
         
-         <jsp:include page="../../../common/page.jsp" flush="true" />  
+       <jsp:include page="../../../common/page.jsp" flush="true" />
     </td>
   </tr>
 </table>

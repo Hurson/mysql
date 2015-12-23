@@ -26,16 +26,15 @@
 var selectData="";
 	function selectChannel(){
     	
-    	if (getCheckCount("channelIds")==0)
+    	if (getCheckCount("serviceIds")==0)
     	{
     		alert("请选择频道");
     		return ;
     	}
-    	var selectData=document.getElementById("selChannelIds").value;//getCheckValue("channelIds");
     	if(selectData==""){
-    	    selectData=getCheckValue("channelIds");
+    	    selectData=getCheckValue("serviceIds");
     	}
-    	document.forms[0].action="<%=path %>/page/channelGroup/saveChannelGroupRef.do";
+    <%-- 	//document.forms[0].action="<%=path %>/dchannelGroup/saveChannelGroupRef.do"; --%>
     	document.forms[0].submit(); 
     	parent.refreshChannelList();
         parent.easyDialog.close();
@@ -55,7 +54,7 @@ var selectData="";
     }
 
 function addIds(id){
-    	selectData = document.getElementById("selChannelIds").value
+    	selectData = document.getElementById("selServiceIds").value
     	if(id.checked){
     	//选中
     	if(selectData==""){
@@ -63,7 +62,7 @@ function addIds(id){
         }else{
            selectData=selectData+","+id.value;
         }
-        document.getElementById("selChannelIds").value=selectData;
+        document.getElementById("selServiceIds").value=selectData;
         
     	}else{
     	//撤销
@@ -83,7 +82,7 @@ function addIds(id){
                  }
               }
               selectData=newdate;
-              document.getElementById("selChannelIds").value=selectData;
+              document.getElementById("selServiceIds").value=selectData;
 
            }
     	}
@@ -94,7 +93,7 @@ function addIds(id){
 
 //列表全选
 function selectAll2(checkBoxObject, elementName){
-selectData = document.getElementById("selChannelIds").value
+selectData = document.getElementById("selServiceIds").value
     var idss = document.getElementsByName(elementName);
     var idss2 = document.getElementsByName(elementName).value;
     var ifChecked = checkBoxObject.checked;
@@ -120,7 +119,7 @@ selectData = document.getElementById("selChannelIds").value
                  }
               }
               selectData=newdate;
-              document.getElementById("selChannelIds").value=selectData;
+              document.getElementById("selServiceIds").value=selectData;
 
            }
         	continue ;
@@ -132,14 +131,14 @@ selectData = document.getElementById("selChannelIds").value
         }else{
            selectData=selectData+","+idss[i].value;
         }
-        document.getElementById("selChannelIds").value=selectData;
+        document.getElementById("selServiceIds").value=selectData;
     }
 }
     </script>
 </head>
 
 <body class="mainBody">
-<form action="<%=path %>/page/channelGroup/selectChannel.do" method="post" id="queryForm">
+<form action="<%=path %>/dchannelGroup/saveChannelGroupRef.do" method="post" id="queryForm">
 <s:set name="page" value="selectchannelPage" />
  <input type="hidden" id="pageNo" name="selectchannelPage.pageNo" value="${selectchannelPage.pageNo}"/>
  <input type="hidden" id="pageSize" name="selectchannelPage.pageSize" value="${selectchannelPage.pageSize}"/>
@@ -167,14 +166,14 @@ selectData = document.getElementById("selChannelIds").value
         <div id="messageDiv" style="margin-top: 15px;color: red;font-size: 14px;font-weight: bold;"></div>
         <table width="100%" cellspacing="1" class="searchList" id="bm">
             <tr class="title">            	
-              <td height="28" class="dot"><input type="checkbox" name="selectAllBox" onclick="selectAll2(this, 'channelIds');"/></td>		
+              <td height="28" class="dot"><input type="checkbox" name="selectAllBox" onclick="selectAll2(this, 'serviceIds');"/></td>		
 				<td width="15%" align="center">频道名称</td>
                 <td width="15%" align="center">类型</td>
                 <td width="10%" align="center">SERVICE_ID</td>
                 <td width="10%" align="center">TS_ID</td>
                 <td width="10%" align="center">NETWORK_ID</td>
                 <td width="15%" align="center">是否回放频道</td>
-                <input id="selChannelIds" name="selChannelIds" type="hidden"  value="${selChannelIds}"/>
+                <input id="selServiceIds" name="selServiceIds" type="hidden"  value="${selServiceIds}"/>
             </tr>
 
 						<c:if test="${selectchannelPage.dataList != null && fn:length(selectchannelPage.dataList) > 0}">
@@ -184,7 +183,7 @@ selectData = document.getElementById("selChannelIds").value
                    <c:if test="${ws2==channelInfo.channelId}">
                     checked
                    </c:if>
-                   </c:forEach> type="checkbox" id="channelIds"  name="channelIds"  value="${channelInfo.channelId}" /></td>									 
+                   </c:forEach> type="checkbox"  name="serviceIds"  value="${channelInfo.serviceId}" /></td>									 
 									<td>${channelInfo.channelName}</td>
 									<td>${channelInfo.channelType}</td>
 									<td>${channelInfo.serviceId}</td>

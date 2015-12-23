@@ -1,6 +1,8 @@
 package com.dvnchina.advertDelivery.meterial.dao;
 
 import java.util.List;
+
+import com.avit.dtmb.material.bean.DResource;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.bean.contract.ContractQueryBean;
 import com.dvnchina.advertDelivery.meterial.bean.MaterialCategory;
@@ -510,5 +512,7 @@ public interface MeterialManagerDao {
 	 * @return
 	 */
 	public int checkQuestionTemplateExist(String templateName);
+
+	public void saveDResource(DResource materialTemp);
     
 }

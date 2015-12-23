@@ -1,8 +1,12 @@
 package com.avit.dtmb.channelGroup.service;
 
+import java.util.List;
+
 import com.avit.dtmb.channelGroup.bean.DChannelGroup;
+import com.avit.dtmb.channelGroup.bean.DChannelGroupRef;
 import com.avit.dtmb.channelGroup.bean.DChannelInfoSync;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
+import com.dvnchina.advertDelivery.channelGroup.bean.ChannelGroupRef;
 import com.dvnchina.advertDelivery.sysconfig.bean.ChannelInfo;
 
 public interface ChannelGroupService {
@@ -28,5 +32,8 @@ public interface ChannelGroupService {
 
 	public PageBeanDB selectChannelList(DChannelInfoSync selectChannelQuery,
 			int pageSize, int pageNo, String channelGroupType);
+
+	public boolean saveChannelGroupRefList(
+			List<DChannelGroupRef> channelGroupRefList);
 
 }
