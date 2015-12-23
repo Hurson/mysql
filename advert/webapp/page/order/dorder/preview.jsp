@@ -24,19 +24,88 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
 	<script type="text/javascript">
-	var dd = "{'position':'2343434','res':{'1':'2322222'},'type':'2'}";
-	alert(dd);
-	var data = eval('('+dd+')');
-	alert(data.type);
-	
-	//alert(pollIndex);
-
-	window.onload = function(){	
+	var position = ${map.position};
+	var type = ${map.type};
+	var mate= type==2?JSON.parse('${map.res}'):'${map.res}';
 		
+	window.onload = function(){
+		preMaterial();
+		viewDtmbMaterial();
 	} 
 	function viewDtmbMaterial(){
-		
+		switch(type){
+			case 0:showImage(mate);break;
+			case 1:showVideo(mate);break;
+			case 2:showDText(mate);break;
+			case 4:showZip(mate);break;
+		}
 	}
+	function preMaterial(){
+		var backgroundPath = (typeof(position.bgImagePath)=='undefined'?"":position.bgImagePath);
+		var widthHeight = (typeof(position.domain)=='undefined'?"":position.domain);
+		var coordinate = (typeof(position.coordinate)=='undefined'?"":position.coordinate);
+		
+		/**为页面预览区域赋值*/
+		//alert("come");
+		var size = widthHeight.split('*');
+		width = size[0];
+		height = size[1];
+		$("#pImage").attr("width",426).attr("height",240);
+		$("#pImage").attr("src",getContextPath()+"/"+backgroundPath);
+		$("#mImage").attr("width",width).attr("height",height);
+		$("#mImage,#video").css({
+			width:width+"px",
+			height:height+"px",
+			position:'absolute',
+			left: coordinate[0]+"px", 
+			top: coordinate[1]+"px" 
+		});
+		$("#video").hide();
+		
+		$("#text").css({
+			position:'absolute',
+			width:width+"px",
+			height:height+"px",
+			left:coordinate[0]+"px",
+			top:coordinate[1]+"px",
+			'z-index':1
+		});
+	}
+	/**显示文字*/
+function showDText(material){
+	$("#video").hide();
+	$("#mImage").hide();
+	$("#textContent").css({
+		'color':material.fontColor,
+		'font-size':material.fontSize+"px"
+	});
+	if(material.rollSpeed!=''){
+		$("#textContent").attr({"scrollamount":material.rollSpeed});
+	}
+	
+	var coordinates = material.positionVertexCoordinates.split("*");
+	var size = material.positionWidthHeight.split("*");
+	
+	var left = coordinates[0]/1280*426+"px";
+	var bottom = coordinates[1]/720*240+"px";					 				  
+	var width = size[0]/1280*426+"px";
+	var height = size[1]/720*240+"px";
+	
+	$('#text').css('width',width);
+	$('#text').css('height',height*3);
+	$('#text').css('left',left);
+	$('#text').css('top',bottom);
+	$('#text').css('bgcolor',material.bkgColor);
+	
+	$("#text").show();
+	var content = material.content.split("@_@");
+	var words = "";
+	for(var i = 0; i < content.length; i++){
+		words += content[i];
+	}
+	
+	$("#textContent").html(words);
+}
 	
 	</script>
 

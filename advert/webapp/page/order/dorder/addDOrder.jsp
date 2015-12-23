@@ -402,7 +402,7 @@
     }
     function showDtmbSource(positionCode,resourceId){
     	var url = "previewResource.action?resource.positionCode="+positionCode+"&resource.id="+resourceId;
-    	window.showModalDialog(url, window, "dialogHeight=580px;dialogWidth=820px;center=1;resizable=0;status=0;");
+    	window.showModalDialog(url, window, "dialogHeight=245px;dialogWidth=428px;center=1;resizable=0;status=0;");
     }
     
     /**

@@ -297,9 +297,16 @@ public class DOrderServiceImpl implements DOrderService {
 	}
 
 	@Override
-	public String previewResource(DResource resource) {
+	public Map<String, String> previewResource(DResource resource) {
+		ConfigureProperties config = ConfigureProperties.getInstance();
 		DResource res = (DResource)dOrderDao.get(DResource.class, resource.getId());
 		String matePath = this.getResourcePath(res);
+		if(res.getResourceType() != 2){
+			String ip=config.getValueByKey("ftp.ip");
+			matePath=matePath.substring(5);
+	        matePath="http://"+ip+matePath;
+		}
+		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("type", res.getResourceType().toString());
 		map.put("res", matePath);
@@ -307,7 +314,7 @@ public class DOrderServiceImpl implements DOrderService {
 		Gson gson = new Gson();
 		map.put("position", gson.toJson(position));
 		
-		return gson.toJson(map);
+		return map;
 	}
 	
 }

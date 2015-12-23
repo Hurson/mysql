@@ -3,6 +3,7 @@ package com.avit.dtmb.order.action;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -198,8 +199,8 @@ public class DOrderAction extends BaseAction {
 	@Action(value = "previewResource", results = { 
 			@Result(name = "success", location = "/page/order/dorder/preview.jsp")})
 	public String previewResource(){
-		String data = dOrderService.previewResource(resource);
-		this.getRequest().setAttribute("data", data);
+		Map<String, String> map = dOrderService.previewResource(resource);
+		this.getRequest().setAttribute("map", map);
 		return SUCCESS;
 	}
 	public DOrder getOrder() {

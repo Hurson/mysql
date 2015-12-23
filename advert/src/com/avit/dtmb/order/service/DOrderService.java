@@ -1,6 +1,7 @@
 package com.avit.dtmb.order.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.avit.dtmb.material.bean.DResource;
 import com.avit.dtmb.order.bean.DOrder;
@@ -31,5 +32,5 @@ public interface DOrderService {
 	public void delDOrderMateRelTmp(String ids);
 	public List<Customer> getCustomerList();
 	public String repushOrder(String orderCode);
-	public String previewResource(DResource resource);
+	public Map<String, String> previewResource(DResource resource);
 }

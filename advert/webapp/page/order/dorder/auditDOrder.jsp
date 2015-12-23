@@ -37,10 +37,10 @@
 <script type="text/javascript">
 	var op = 0;// 提交表单计数器，防止重复提交表单
 	function init(){
-		showOrderResource(${order.orderCode});
+		showOrderResource('${order.dposition.positionCode}','${order.orderCode}');
 	}
 	
-	function showOrderResource(orderCode){
+	function showOrderResource(positionCode,orderCode){
     	$.ajax({   
    		       url:'getOrderResourceJson.action',       
    		       type: 'POST',    
@@ -63,7 +63,7 @@
 					        var obj = json[i];
 						    str+="<tr><td><a style='diplay:block;float:left' href=javascript:showOrderResourceDetail("+orderCode+","+obj.id+")>详情</a></td>"+
 							 	 "<td>"+obj.resourceName+"</td>"+
-						   		 "<td><a style='diplay:block;float:left' href=javascript:previewResource("+obj.id+")>预览</a></td></tr>";
+						   		 "<td><a style='diplay:block;float:left' href=javascript:showDtmbSource('"+positionCode+"',"+obj.id+")>预览</a></td></tr>";
 						   		 
 					   }
 					   $("#sucai").html(str);
@@ -79,8 +79,9 @@
     	var url = "queryDOrderMateRelTmp.action?omrTmp.orderCode="+orderCode+"&omrTmp.resource.id="+resourceId;
     	window.showModalDialog(url, window, "dialogHeight=580px;dialogWidth=820px;center=1;resizable=0;status=0;");
     }
-    function previewResource(resourceId){
-    	//TODO
+    function showDtmbSource(positionCode,resourceId){
+    	var url = "previewResource.action?resource.positionCode="+positionCode+"&resource.id="+resourceId;
+    	window.showModalDialog(url, window, "dialogHeight=245px;dialogWidth=428px;center=1;resizable=0;status=0;");
     }
     function save(flag){
     	if(op==0){
