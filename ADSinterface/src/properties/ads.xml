@@ -64,20 +64,13 @@
 	<Epgftp ip="192.168.2.224" port="21" user="root" pwd="111111">
 	</Epgftp>
 	
-<<<<<<< .mine
 	<!-- 获取EPG频道信息FTP地址-->
 	<NvodEpgftp ip="192.168.2.51" port="21" user="root" pwd="111111">
 	</NvodEpgftp>
 	
 	<Dtmbftp ip="192.168.2.224" port="21" user = "root" pwd = "111111">
 	</Dtmbftp>
-	
-=======
-	
-	<Dtmbftp ip="192.168.2.224" port="21" user = "root" pwd = "111111">
-	</Dtmbftp>
-	
->>>>>>> .r24875
+
 	<!-- CPS投放FTP地址-->
 	<Cps ip="10.63.64.72" port="21" user="posterftp" pwd="posterftp" >
 	</Cps>
