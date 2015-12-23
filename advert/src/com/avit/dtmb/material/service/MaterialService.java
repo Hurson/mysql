@@ -1,6 +1,7 @@
 package com.avit.dtmb.material.service;
 
 import com.avit.dtmb.material.bean.DResource;
+import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.model.ImageMeta;
 import com.dvnchina.advertDelivery.model.VideoMeta;
@@ -16,4 +17,5 @@ public interface MaterialService {
 	public VideoMeta getVideoMetaByID(Integer id);
 	public DResource getMaterialByID(int materialId);
 	public ImageMeta getImageMetaByID(Integer resourceId);
+	public String getMaterialSpecification(DAdPosition position);
 }

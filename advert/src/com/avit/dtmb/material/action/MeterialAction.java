@@ -131,6 +131,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	private ImageMeta imageMeta;
 	private ImageMeta zipMeta;
 	private DAdPosition adPositionQuery; //子广告位查询条件
+	private DAdPosition position; //子广告位查询条件
 	private VideoSpecification videoSpecification;
 	
 	private ImageSpecification imageSpecification;
@@ -221,50 +222,10 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                     Gson gson = new Gson();
                     List<PriorityWordBean> list = gson.fromJson(jsonWord, new TypeToken<List<PriorityWordBean>>(){ }.getType());
                     textMeta.setPwList(list);
-                 
-                    
-//                    logger.info("convert before:"+textMeta.getContentMsg());
-//                    contentBlob =textMeta.getContentMsg().getBytes("gbk");
-                  //  textMeta.setContentMsg(new String(contentBlob)); 
-                 //   logger.info("convert end:"+textMeta.getContentMsg());
                   
                 }
                 
             }
-           /* if(material.getResourceType()==3){
-               //问卷    
-                questionSubject = meterialManagerService.getQueMetaByID(material.getResourceId());
-                templateList = meterialManagerService.getQuestionTemplateList();
-                
-                if(questionTypeList==null){
-                    questionTypeList = new ArrayList<QuestionType>();
-                }
-                QuestionType questionType0= new QuestionType();
-                QuestionType questionType1= new QuestionType();
-                questionType0.setId("0".charAt(0));
-                questionType0.setTypeName("调查");
-                questionType1.setId("1".charAt(0));
-                questionType1.setTypeName("抽奖");
-                questionTypeList.add(questionType0);
-                questionTypeList.add(questionType1);
-                //获取问卷信息
-                List<Question> questionList = meterialManagerService.getQuestionList(material.getResourceId());
-                //去掉重复项
-//                HashSet h = new HashSet(questionList);
-//                questionList.clear();
-//                questionList.addAll(h);
-                if(questionInfoList==null){
-                	questionInfoList = new ArrayList<QuestionInfo>();
-                }
-                for (int i = 0, j=questionList.size(); i < j; i++){
-                	List<Question> answerList = meterialManagerService.getAnswerList(questionList.get(i).getQuestion(),material.getResourceId());
-                	QuestionInfo questionInfo =new QuestionInfo();
-                	questionInfo.setQuestion(questionList.get(i).getQuestion());
-                	questionInfo.setAnswerList(answerList);
-                	questionInfoList.add(questionInfo);
-                }
-            }*/
-
             if(material.getResourceType()==4){
                 //ZIP
             	zipMeta=meterialManagerService.getImageMetaByID(material.getResourceId());
@@ -291,8 +252,11 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
         
         return SUCCESS;
     }
-	
-	
+	@Action(value = "getMateSpec")
+	public void getMateSpec(){
+		String result = materialService.getMaterialSpecification(position);
+		this.renderJson(result);
+	}
 	
 	/**
 	 * 进入添加页面
@@ -1469,6 +1433,11 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	public void setPositionJson(Object positionJson) {
 		this.positionJson = positionJson;
 	}
-	
+	public DAdPosition getPosition() {
+		return position;
+	}
+	public void setPosition(DAdPosition position) {
+		this.position = position;
+	}
 	
 }

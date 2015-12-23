@@ -92,7 +92,7 @@
 		<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
 			<td><input type="checkbox"  id="packageid" name="packageid" onclick="changeArray(this)" value="${package.id}_${package.positionPackageName}"
 			<c:forEach items="${positionsIdList}" var="pid">
-						<c:if test="${pid == package.id}">checked="checked" </c:if>
+						<c:if test="${pid eq package.id}">checked="checked" </c:if>
 					</c:forEach>
     			 /></td>
 			</td>

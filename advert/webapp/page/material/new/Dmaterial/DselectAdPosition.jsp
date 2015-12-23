@@ -28,85 +28,54 @@
     }
 
    
-	function selectPositin(positionCode,type,positionName,widthHeight,coordinate,backgroundPath,positionType){
+	function selectPositin(positionCode,type,positionName,widthHeight,coordinate,backgroundPath,speId){
 		parent.document.getElementById("material.positionCode").value=positionCode;
     	parent.document.getElementById("material.advertPositionName").value=positionName;
-    	if(positionType == 0 || positionType == 1 || positionType == 2){
-    		parent.document.getElementById("upload11").style.display = "none";
-    		parent.document.getElementById("upload13").style.display = "";
-    	}else if(positionType == 3){
-    		parent.document.getElementById("upload11").style.display = "";
-    		parent.document.getElementById("upload13").style.display = "none";
-    	}else if(positionType == 4){
-    		parent.document.getElementById("zipupload11").style.display = "";
-    		parent.document.getElementById("zipupload13").style.display = "none";
-    	}
-    	//{0,1,2,3,0};
+    	
     	parent.document.getElementById("sel_material_type").options.length = 0;
-    	if (type==1)
-    	{
-    	   parent.document.getElementById("sel_material_type").options.add(new Option("视频","1"));
-    	   
-    	   $.ajax({
-                type:"post",
-                async : false,
-                url:"<%=request.getContextPath()%>/dmaterial/getVideo.do",
-                data:{"advertPositionId":positionCode},//Ajax传递的参数
-                success:function(mess)
-                {
-                    var json = eval('(' + mess + ')');
-                	if(json!=null){
-                	    parent.document.getElementById("videoFileDuration").value=json.videoFileDuration;
-                	}
-                   
-                },
-                error:function(mess)
-                {
-                	alert("根据广告位获取视频规格失败");
-                }
-            });
-    	   
-    	}
+    	var json='';
+    	$.ajax({
+             type:"post",
+             async : false,
+             url:"<%=request.getContextPath()%>/dmaterial/getMateSpec.action",
+             data:{'position.resourceType':type,
+            	   'position.specificationId':speId
+             },//Ajax传递的参数
+             success:function(mess)
+             {
+                 json = eval('(' + mess + ')');
+                
+             },
+             error:function(mess)
+             {
+             	alert("根据广告位获取视频规格失败");
+             }
+         });
+    	
     	if (type == 0)
     	{
     		 parent.document.getElementById("sel_material_type").options.add(new Option("图片","0"));
-    	   
-    	   $.ajax({
-                type:"post",
-                async : false,
-                url:"<%=request.getContextPath()%>/dmaterial/getImg.do",
-                data:{"advertPositionId":positionCode},//Ajax传递的参数
-                success:function(mess)
-                {
-                    var json = eval('(' + mess + ')');
-                	if(json!=null){
-                	    parent.document.getElementById("imageFileSize").value=json.imageFileSize;
-                	    parent.document.getElementById("imageFileHigh").value=json.imageFileHigh;
-                	    parent.document.getElementById("imageFileWidth").value=json.imageFileWidth;
-                	    if(window.name=="defaultSelectAdPositionFrame"){
-                	    	var mars = parent.document.getElementById("mars");
-                	    	mars.innerHTML = "大小："+json.imageFileSize+"， 宽度："+json.imageFileWidth+" px，高度："+json.imageFileHigh+" px";
-                	    }
-                	}
-                   
-                },
-                error:function(mess)
-                {
-                	alert("根据广告位获取图片规格失败");
-                }
-            });
-    	  
-            
+           	if(json!=null){
+           	    parent.document.getElementById("imageFileSize").value=json.fileSize;
+           	    parent.document.getElementById("imageFileHigh").value=json.imageHeight;
+           	    parent.document.getElementById("imageFileWidth").value=json.imageWidth;
+           	    if(window.name=="defaultSelectAdPositionFrame"){
+           	    	var mars = parent.document.getElementById("mars");
+           	    	mars.innerHTML = "大小："+json.imageFileSize+"， 宽度："+json.imageFileWidth+" px，高度："+json.imageFileHigh+" px";
+           	    }
+           	}
     	}
     	
-    	if (type == 2)
+    	else if (type==1)
     	{
-    	   parent.document.getElementById("sel_material_type").options.add(new Option("文字","2"));
+    	   parent.document.getElementById("sel_material_type").options.add(new Option("视频","1"));
+    	   if(json!=null){
+        	    parent.document.getElementById("videoFileDuration").value=json.duration;
+        	}
+    	}else if(type == 2){
+    		parent.document.getElementById("sel_material_type").options.add(new Option("文字","2"));
     	}
-    	if (type == 5)
-    	{
-    	  parent.document.getElementById("sel_material_type").options.add(new Option("问卷","3"));
-    	}
+    	
     	parent.window.changeType2();
 		// 设置默认素材背景图片
 		if(window.name=="defaultSelectAdPositionFrame"){
@@ -211,8 +180,10 @@
     <tr class="title">
         <td height="10" class="dot">选项</td>
         <td width="20%" align="center">广告位名称</td>
-        <td width="10%" align="center">广告位编码</td>
-        <td width="10%" align="center">高标清</td>
+        <td width="15%" align="center">广告位编码</td>
+        <td width="20%" align="center">广告位类型</td>
+        <td width="20%" align="center">素材类型</td>
+        <td width="20%" align="center">高标清</td>
     </tr>
        
            <c:if test="${adPositionPage.dataList != null && fn:length(adPositionPage.dataList) > 0}">
@@ -222,15 +193,44 @@
                        <input type="radio" value="${adPositionPageInfo.positionCode}"  id="adPositionPageInfo.locationId" onclick="selectPositin('${adPositionPageInfo.positionCode}','${adPositionPageInfo.resourceType}','${adPositionPageInfo.positionName}','${adPositionPageInfo.domain}','${adPositionPageInfo.coordinate}','${adPositionPageInfo.backgroundPath}','${adPositionPageInfo.specificationId}')"/>
                    </td>
                    <td>
-                       <input id="name_${adPositionPageInfo.id}"  type="hidden" value="${adPositionPageInfo.positionName}"/>
                        ${adPositionPageInfo.positionName}
                      </td>
                     <td>
-                        <input id="code_${adPositionPageInfo.id}" type="hidden" value="${adPositionPageInfo.positionCode}"/>
                         ${adPositionPageInfo.positionCode}
                     </td>
+                    <td>
+                        <c:choose>
+								<c:when test="${adPositionPageInfo.positionType==1}">
+												单向实时广告
+								</c:when>
+								<c:when test="${adPositionPageInfo.positionType==2}">
+												单向非实时广告
+								</c:when>
+								<c:when test="${adPositionPageInfo.positionType==3}">
+												字幕类广告
+								</c:when>
+								<c:otherwise>
+												未知
+								</c:otherwise>
+						</c:choose>
+                    </td>
+                    <td>
+                        <c:choose>
+								<c:when test="${adPositionPageInfo.resourceType==0}">
+												图片
+								</c:when>
+								<c:when test="${adPositionPageInfo.resourceType==1}">
+												视频
+								</c:when>
+								<c:when test="${adPositionPageInfo.resourceType==2}">
+												文字
+								</c:when>
+								<c:otherwise>
+												未知
+								</c:otherwise>
+						</c:choose>
+                    </td>
                    <td>
-                	    <input id="videoType_${adPositionPageInfo.id}"  type="hidden" value="${adPositionPageInfo.isHd}"/>
                 	    <c:choose>
 								<c:when test="${adPositionPageInfo.isHd==0}">
 												标清

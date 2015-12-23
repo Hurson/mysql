@@ -46,11 +46,7 @@ var index = 1;
 var  maTerialType=-1;
 //选择子广告位
 function selectAdPosition() {
-	     //var contractId= document.getElementById("material.contractId").value;
-	     //if (contractId==null || contractId==""){
-			// alert("请选择合同");
-			 //return ;
-		 //} 
+	     
 		 var positionPackIds = document.getElementById("positionPackIds").value;
 		 var structInfo ="<div style='margin:0px;padding:0px;width:600px'>";
 			structInfo+="<iframe id='selectAdPositionFrame' name='selectAdPositionFrame'  frameBorder='0' width='1000px' height='500px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/dmaterial/selectAdPosition.do'> ";
@@ -1942,7 +1938,7 @@ function IsAlpha(cCheck) {
 		                     
 		                     <td align="right"><span class="required">*</span>选择广告位：</td>
 		                     <td >	                
-		                         <input id="material.positionCode" name="material.positionCode" type="text" />
+		                         <input id="material.positionCode" name="material.positionCode" type="hidden" />
 				                 <input id="material.advertPositionName" name="material.advertPositionName" value="" type="text" class="new_input_add" readonly="readonly" onclick="selectAdPosition();"/>
 		                     </td>
 		                     <td align="right">素材位置：</td>
@@ -1967,7 +1963,7 @@ function IsAlpha(cCheck) {
 		                     <td align="right"><span class="required">*</span>素材类型：</td>
 		                     <td>
 		                        
-			              	    <select id="sel_material_type" name="material.resourceType" onclick="changeType2();">
+			              	    <select id="sel_material_type" name="material.resourceType" >
 							    </select>		  
 		                     </td>
 		                  </tr>
@@ -2118,7 +2114,6 @@ function IsAlpha(cCheck) {
 		                         <td align="right"><span class="required"></span> 选择文件：</td>		                         		                         
 		                         <input id="imageMetaName" name="imageMetaName" type="hidden" />
 		                         <td>
-			            	        <div id="upload11"><input id="file_id" name="upload" type="file" class="e_input" /></div>
 			            	        <div id="upload13"><input id="file_id3" name="upload" type="file" class="e_input" /></div>
 							        <input id="backgroundImage" name="" value="" type="hidden"  />
 							        <input id="localFilePath" name="localFilePath"  type="hidden" />

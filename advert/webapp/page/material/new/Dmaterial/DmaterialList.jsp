@@ -111,26 +111,6 @@ function query() {
       window.location.href="<%=path %>/dmaterial/initMaterial.do?materialId="+materialId;
     }
 
-
- 	function selectAdPosition() {
-          	var structInfo = '';
-			var contractid= document.getElementById("ploy.contractId").value;
-			
-          	//$("#content").html('请单击【绑定广告商】文本框进行广告商绑定');
-			//$( "#system-dialog" ).dialog({
-		   //   	modal: true
-		    //});
-          	structInfo+='					<div style="margin:0px;padding:0px;width:600px">';
-			structInfo+='							<iframe id="selectAdPositionFrame" name="selectAdPositionFrame" src="<%=request.getContextPath()%>'+'/page/ploy/queryAdPostionList.do?contract.id='+contractid+'" frameBorder="0" width="600px" height="540px"  scrolling="yes"></iframe>';
-			structInfo+='					</div>';
-			easyDialog.open({
-			container : {
-				header : '选择广告位',
-				content : structInfo
-			},
-			overlay : false
-		});
-	 } 
 </script>
 <style>
 	.easyDialog_wrapper{ width:600px;height:580px;color:#444; border:3px solid rgba(0,0,0,0); -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px; -webkit-box-shadow:0 0 10px rgba(0,0,0,0.4); -moz-box-shadow:0 0 10px rgba(0,0,0,0.4); box-shadow:0 0 10px rgba(0,0,0,0.4); display:none; font-family:"Microsoft yahei", Arial; }
