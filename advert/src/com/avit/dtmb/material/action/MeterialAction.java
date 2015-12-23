@@ -369,7 +369,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	public String saveMaterialBackup() {  
 	    try{
 	        UserLogin userLogin = (UserLogin) this.getRequest().getSession().getAttribute("USER_LOGIN_INFO");
-	        
+	        uploadDir = "images/material";
 		    material.setIsDefault(0);
 		    if(material.getResourceType()==1){
 		      //视频素材	    	
@@ -383,8 +383,8 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                     for (int i=0;i<videoFileNamestemp.length;i++){
                         //String materialName = localFilePath.substring(localFilePath.lastIndexOf("/")+1,localFilePath.length());
                         String[] prams = videoFileNamestemp[i].split("&");
-                        resourceName=request.getParameter("videoFileName-"+prams[0]);
-                        videoKeyword=request.getParameter("videoKeyword-"+prams[0]);
+                        resourceName=this.getRequest().getParameter("videoFileName-"+prams[0]);
+                        videoKeyword=this.getRequest().getParameter("videoKeyword-"+prams[0]);
                         String uploadAllDir = ServletActionContext.getServletContext().getRealPath(uploadDir)+"/"+prams[0];               
                         System.out.println("素材名:"+resourceName);
                              /**  发送文件至ftp */
@@ -436,7 +436,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                             //复制公共属性
                             materialTemp.setResourceType(material.getResourceType());
                             materialTemp.setCategoryId(material.getCategoryId());
-                            materialTemp.setPositionCode(material.getAdvertPositionId());
+                            materialTemp.setPositionCode(material.getPositionCode());
                             materialTemp.setIsDefault(0);
                             materialTemp.setOperationId(userLogin.getUserId());
                             materialService.saveDResource(materialTemp);
@@ -532,9 +532,9 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	                    String imageKeyword="";
 	                    String imageUrl="";
 	                    for (int i=0;i<imageFileNamestemp.length;i++){
-	                         resourceName=request.getParameter("imageFileName-"+imageFileNamestemp[i]);
-	                         imageKeyword=request.getParameter("imageKeyword-"+imageFileNamestemp[i]);
-	                         imageUrl=request.getParameter("imageUrl-"+imageFileNamestemp[i]);
+	                         resourceName=this.getRequest().getParameter("imageFileName-"+imageFileNamestemp[i]);
+	                         imageKeyword=this.getRequest().getParameter("imageKeyword-"+imageFileNamestemp[i]);
+	                         imageUrl=this.getRequest().getParameter("imageUrl-"+imageFileNamestemp[i]);
 	                         System.out.println("素材名:"+resourceName);
 	                         
 	                         String uploadAllDir = ServletActionContext.getServletContext().getRealPath(uploadDir)+"/"+imageFileNamestemp[i];
@@ -600,7 +600,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	                        //复制公共属性
 	                        materialTemp.setResourceType(material.getResourceType());
 	                        materialTemp.setCategoryId(material.getCategoryId());
-	                        materialTemp.setAdvertPositionId(material.getAdvertPositionId());
+	                        materialTemp.setAdvertPositionId(material.getPositionCode());
 	                        materialTemp.setIsDefault(0);
 	                        materialTemp.setOperationId(userLogin.getUserId());
 	                        materialService.saveDResource(materialTemp);

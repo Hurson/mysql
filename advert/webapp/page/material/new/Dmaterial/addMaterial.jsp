@@ -106,7 +106,7 @@ function imagePreview2(imagePreviewName) {
          //alert(imagePreviewName);
 		 var structInfo ="";
 			structInfo+="			<div style='margin:0px;padding:0px;width:426px;height:240px' >";
-			structInfo+="						<iframe id='PreviewImage' name='PreviewImage'  frameBorder='0' width='426px' height='240px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/page/meterial/getAdvertPosition.do?positionCode="+positionCode+"&imagePreviewName="+imagePreviewName+"'> ";
+			structInfo+="						<iframe id='PreviewImage' name='PreviewImage'  frameBorder='0' width='426px' height='240px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/page/meterial/getAdvertPosition.do?advertPositionId="+positionCode+"&imagePreviewName="+imagePreviewName+"'> ";
 			structInfo+="</iframe>";
 			structInfo+="</div>";
 			easyDialog.open({
@@ -125,7 +125,7 @@ function imagePreview2(imagePreviewName) {
 	    var positionCode =document.getElementById('material.positionCode').value;
 	    var imagePreviewLocation = document.getElementById("picLocation").value;
 
-		var url = "getAdvertPosition.do?positionCode="+positionCode+"&imagePreviewName="+imagePreviewName+"&imagePreviewLocation="+imagePreviewLocation;
+		var url = "getAdvertPosition.do?advertPositionId="+positionCode+"&imagePreviewName="+imagePreviewName+"&imagePreviewLocation="+imagePreviewLocation;
 		window.showModalDialog(url, window, "dialogHeight=240px;dialogWidth=426px;center=1;resizable=0;status=0;");
 
 	}
@@ -133,7 +133,7 @@ function imagePreview2(imagePreviewName) {
 	 	 //zip文件图片预览
 	function zipImagePreview(zipImagePreviewName){
 	    var positionCode =document.getElementById('material.positionCode').value;
-		var url = "getAdvertPosition.do?positionCode="+positionCode+"&zipImagePreviewName="+zipImagePreviewName;
+		var url = "getAdvertPosition.do?advertPositionId="+positionCode+"&zipImagePreviewName="+zipImagePreviewName;
 		window.showModalDialog(url, window, "dialogHeight=240px;dialogWidth=426px;center=1;resizable=0;status=0;");
 
 	}
@@ -145,7 +145,7 @@ function videoPreview2(videoPreviewName) {
          //alert(videoPreviewName);
 		 var structInfo ="";
 			structInfo+="			<div style='margin:0px;padding:0px;width:426px;height:240px' >";
-			structInfo+="						<iframe id='PreviewVideo' name='PreviewVideo'  frameBorder='0' width='426px' height='240px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/page/meterial/getAdvertPosition.do?positionCode="+positionCode+"&videoPreviewName="+videoPreviewName+"'> ";
+			structInfo+="						<iframe id='PreviewVideo' name='PreviewVideo'  frameBorder='0' width='426px' height='240px'  scrolling='yes'  align='top' src='<%=request.getContextPath()%>/page/meterial/getAdvertPosition.do?advertPositionId="+positionCode+"&videoPreviewName="+videoPreviewName+"'> ";
 			structInfo+="</iframe>";
 			structInfo+="</div>";
 			easyDialog.open({
@@ -162,7 +162,7 @@ function videoPreview2(videoPreviewName) {
 function videoPreview(videoPreviewName){
 	
 	    var positionCode =document.getElementById('material.positionCode').value;
-		var url = "getAdvertPosition.do?positionCode="+positionCode+"&videoPreviewName="+videoPreviewName;
+		var url = "getAdvertPosition.do?advertPositionId="+positionCode+"&videoPreviewName="+videoPreviewName;
 		window.showModalDialog(url, window, "dialogHeight=240px;dialogWidth=426px;center=1;resizable=0;status=0;");
 
 	} 	 
@@ -394,7 +394,7 @@ $(function(){
     $("#bm").find("tr:odd").addClass("trodd");  //偶数行的样式
     $("#file_id").uploadify({
 		'uploader':'<%=path%>/js/jquery/upload/image/uploadify.swf',
-		'script':'uploadMaterial.do?positionCode='+document.getElementById('material.positionCode').value,
+		'script':'uploadMaterial.do?advertPositionId='+document.getElementById('material.positionCode').value,
 		'cancelImg':'<%=path%>/js/jquery/upload/image/cancel.png',
 		'folder':'/uploadFiles',
 		'queueID':'fileQueue',
@@ -408,7 +408,7 @@ $(function(){
 		'width':'76',
     	'height':'23',
 		'onSelect': function (event, queueID, fileObj){ 
-			$("#file_id").uploadifySettings('script','uploadMaterial.do?positionCode='+document.getElementById('material.positionCode').value); 
+			$("#file_id").uploadifySettings('script','uploadMaterial.do?advertPositionId='+document.getElementById('material.positionCode').value); 
 		 } ,
 		'onComplete':function(event,queueID,fileObj,response,data){
 			var json = eval('(' + response + ')');
@@ -494,7 +494,7 @@ $(function(){
 	
 	$("#file_id3").uploadify({
 		'uploader':'<%=path%>/js/jquery/upload/image/uploadify.swf',
-		'script':'uploadMaterial.do?positionCode='+document.getElementById('material.positionCode').value,
+		'script':'uploadMaterial.do?advertPositionId='+document.getElementById('material.positionCode').value,
 		'cancelImg':'<%=path%>/js/jquery/upload/image/cancel.png',
 		'folder':'/uploadFiles',
 		'queueID':'fileQueue',
@@ -508,7 +508,7 @@ $(function(){
 		'width':'76',
     	'height':'23',
 		'onSelect': function (event, queueID, fileObj){ 
-			$("#file_id3").uploadifySettings('script','uploadMaterial.do?positionCode='+document.getElementById('material.positionCode').value); 
+			$("#file_id3").uploadifySettings('script','uploadMaterial.do?advertPositionId='+document.getElementById('material.positionCode').value); 
 		 } ,
 		'onComplete':function(event,queueID,fileObj,response,data){
 			var json = eval('(' + response + ')');
@@ -605,7 +605,7 @@ $(function(){
 	
 	$("#file_id2").uploadify({
 		'uploader':'<%=path%>/js/jquery/upload/image/uploadify.swf',
-		'script':'uploadMaterialVideo.do?positionCode='+document.getElementById('material.positionCode').value,
+		'script':'uploadMaterialVideo.do?advertPositionId='+document.getElementById('material.positionCode').value,
 		'cancelImg':'<%=path%>/js/jquery/upload/image/cancel.png',
 		'folder':'/uploadFiles',
 		'queueID':'fileQueue2',
@@ -619,7 +619,7 @@ $(function(){
 		'width':'76',
     	'height':'23',
 		'onSelect': function (event, queueID, fileObj){ 
-			$("#file_id2").uploadifySettings('script','uploadMaterialVideo.do?positionCode='+document.getElementById('material.positionCode').value); 
+			$("#file_id2").uploadifySettings('script','uploadMaterialVideo.do?advertPositionId='+document.getElementById('material.positionCode').value); 
 		 } ,
 		'onComplete':function(event,queueID,fileObj,response,data){
 			var json = eval('(' + response + ')');
@@ -701,7 +701,7 @@ $(function(){
 	//<!-- zip start -->
 	$("#zipfile_id").uploadify({
 		'uploader':'<%=path%>/js/jquery/upload/image/uploadify.swf',
-		'script':'uploadMaterialZip.do?positionCode='+document.getElementById('material.positionCode').value,
+		'script':'uploadMaterialZip.do?advertPositionId='+document.getElementById('material.positionCode').value,
 		'cancelImg':'<%=path%>/js/jquery/upload/image/cancel.png',
 		'folder':'/uploadFiles',
 		'queueID':'fileQueue',
@@ -715,7 +715,7 @@ $(function(){
 		'width':'76',
     	'height':'23',
 		'onSelect': function (event, queueID, fileObj){ 
-			$("#zipfile_id").uploadifySettings('script','uploadMaterialZip.do?positionCode='+document.getElementById('material.positionCode').value); 
+			$("#zipfile_id").uploadifySettings('script','uploadMaterialZip.do?advertPositionId='+document.getElementById('material.positionCode').value); 
 		 } ,
 		'onComplete':function(event,queueID,fileObj,response,data){
 			var json = eval('(' + response + ')');
@@ -787,7 +787,7 @@ $(function(){
 	
 	$("#zipfile_id3").uploadify({
 		'uploader':'<%=path%>/js/jquery/upload/image/uploadify.swf',
-		'script':'uploadMaterialZip.do?positionCode='+document.getElementById('material.positionCode').value,
+		'script':'uploadMaterialZip.do?advertPositionId='+document.getElementById('material.positionCode').value,
 		'cancelImg':'<%=path%>/js/jquery/upload/image/cancel.png',
 		'folder':'/uploadFiles',
 		'queueID':'fileQueue',
@@ -801,7 +801,7 @@ $(function(){
 		'width':'76',
     	'height':'23',
 		'onSelect': function (event, queueID, fileObj){ 
-			$("#zipfile_id3").uploadifySettings('script','uploadMaterialZip.do?positionCode='+document.getElementById('material.positionCode').value); 
+			$("#zipfile_id3").uploadifySettings('script','uploadMaterialZip.do?advertPositionId='+document.getElementById('material.positionCode').value); 
 		 } ,
 		'onComplete':function(event,queueID,fileObj,response,data){
 			var json = eval('(' + response + ')');
