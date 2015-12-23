@@ -95,9 +95,9 @@
 				<span>背景预览效果图：</span> 
 			</td>
 			<td colspan="5">
-				<img id="positionViewDivImg" src="<%=path %>/${adposition.bgImagePath}" border="2" width="426px" height="240px"/>
+				<img id="positionViewDivImg" src="<%=path %>/${adposition.backgroundPath}" border="2" width="426px" height="240px"/>
 				<input id="file_id" name="upload" type="file" class="e_input" />
-				<input id="bgImagePath" name="adposition.bgImagePath" value="${adposition.bgImagePath}" type="hidden"  />
+				<input id="backgroundPath" name="adposition.backgroundPath" value="${adposition.backgroundPath}" type="hidden"  />
 			</td>		
 	    </tr>
 		<tr>
@@ -161,7 +161,7 @@
     				if(json.result=='true'){
     					$("#positionViewDivImg").attr("src","<%=path%>/"+json.filepath);
 			            $("#positionViewDivImg").show();
-			            $("#bgImagePath").val(json.filepath);	   				   						   						
+			            $("#backgroundPath").val(json.filepath);	   				   						   						
 					}else{
 						alert('背景图片上传失败');
 					}
@@ -228,7 +228,7 @@
 			}
 		}
 
-		if(isEmpty($$("bgImagePath").value)){
+		if(isEmpty($$("backgroundPath").value)){
 			alert("广告位背景图片不能为空！");
     		return false;
 		}
