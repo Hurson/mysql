@@ -77,7 +77,7 @@ public class DPositionDaoImpl extends BaseDaoImpl implements DPositionDao {
 		return this.getHibernateTemplate().get(VideoSpecification.class, id);
 	}
 
-	public DAdPosition getAdvertPosition(Integer advertPositionId) {
+	public DAdPosition getAdvertPosition(String advertPositionId) {
 		return this.getHibernateTemplate().get(DAdPosition.class, advertPositionId);
 	}
 

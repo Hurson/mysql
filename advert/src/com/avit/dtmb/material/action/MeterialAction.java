@@ -203,12 +203,12 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
             if(material.getResourceType()==0){
                 //图片
                 imageMeta=meterialManagerService.getImageMetaByID(material.getResourceId());
-                imageSpecification = meterialManagerService.getImageMateSpeci(material.getAdvertPositionId());
+                imageSpecification = meterialManagerService.getImageMateSpeci(Integer.parseInt(material.getAdvertPositionId()));
             }
             if(material.getResourceType()==1){
                 //视频
                 videoMeta = meterialManagerService.getVideoMetaByID(material.getResourceId());
-                videoSpecification = meterialManagerService.getVideoMateSpeci(material.getAdvertPositionId());
+                videoSpecification = meterialManagerService.getVideoMateSpeci(Integer.parseInt(material.getAdvertPositionId()));
             }
             if(material.getResourceType()==2){
                 //文字
@@ -268,7 +268,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
             if(material.getResourceType()==4){
                 //ZIP
             	zipMeta=meterialManagerService.getImageMetaByID(material.getResourceId());
-            	zipSpecification = meterialManagerService.getImageMateSpeci(material.getAdvertPositionId());
+            	zipSpecification = meterialManagerService.getImageMateSpeci(Integer.parseInt(material.getAdvertPositionId()));
                 String previewImage = zipMeta.getName().substring(0, zipMeta.getName().lastIndexOf("."))+".jpg";
                 zipMeta.setFileHeigth(previewImage);
             }

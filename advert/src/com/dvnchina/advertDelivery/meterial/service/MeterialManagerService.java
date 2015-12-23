@@ -415,7 +415,7 @@ public interface MeterialManagerService {
      * @author: wangfei@avit.com.cn
      * @date: 2013-5-17 上午11:54:15
      */
-    public ImageSpecification getImageMateSpeci(String positionId);
+    public ImageSpecification getImageMateSpeci(Integer positionId);
     
     /**
      * 
@@ -427,7 +427,7 @@ public interface MeterialManagerService {
      * @author: wangfei@avit.com.cn
      * @date: 2013-5-27 上午11:21:31
      */
-    public VideoSpecification getVideoMateSpeci(String positionId);
+    public VideoSpecification getVideoMateSpeci(Integer positionId);
     
     /**
      * 
