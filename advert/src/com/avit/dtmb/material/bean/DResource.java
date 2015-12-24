@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.dvnchina.advertDelivery.model.CommonObject;
-
 /**
  * DResource entity. @author MyEclipse Persistence Tools
  */
@@ -23,7 +21,7 @@ import com.dvnchina.advertDelivery.model.CommonObject;
  *
  */
 @Entity
-@Table(name = "d_resource", catalog = "ads_x")
+@Table(name = "d_resource")
 public class DResource  implements
 		java.io.Serializable {
 
@@ -37,36 +35,24 @@ public class DResource  implements
 	private Integer resourceId;
 	private String description;
 	private Integer customerId;
-	private char status;
+	private String status;
+	private String statusStr;
 	private Date createTime;
 	private Date modifyTime;
 	private Date auditTime;
 	private Integer categoryId;
 	private Integer isDefault;
 	private String positionCode;
-	private String customerName;
 	private String positionName;
 	private String advertisersName;
-	private Integer positionId;
 	private String keyWords;
 	private Integer contractId;
 	private String backgroundPath;
-	/**
-	 * 有效期开始时间
-	 */
-	private Date      startTime;
-	/**
-	 * 有效期结束时间
-	 */
-	private Date      endTime;
+	
 	/**
 	 * 审核意见 
 	 */
 	private String    examinationOpintions;
-	/**
-	 * 广告位ID
-	 */
-	private String   advertPositionId;
 	/**
 	 * 操作人员ID
 	 */
@@ -74,7 +60,7 @@ public class DResource  implements
 	
 	
 	public DResource(Integer id,String resourceName,Integer resourceType,Integer customerId,Integer categoryId,String positionCode,
-			char status,Date createTime,String positionName,String  advertisersName){
+			String status,Date createTime,String positionName,String  advertisersName){
 		this.id=id;
 		this.resourceName=resourceName;
 		this.resourceType=resourceType;
@@ -88,31 +74,25 @@ public class DResource  implements
 		
 		
 	}
-	public DResource(Integer id,Integer resourceId,String resourceName,Integer resourceType,Integer categoryId,char status,
-			Date createTime,String advertPositionId,String positionName,Integer isDefault,Integer customerId,
-			Integer operationId,Date modifyTime,String advertisersName,Date endTime,Date startTime,String examinationOpintions,String keyWords,Integer contractId,String description
-			,String backgroundPath){
-		this.id = id;
-		this.resourceId = resourceId;
+	public DResource(DResource resource, String positionName, String advertisersName){
+		this.id = resource.id;
+		this.positionCode = resource.getPositionCode();
+		this.resourceId = resource.resourceId;
 		this.advertisersName = advertisersName;
-		this.advertPositionId = advertPositionId;
-		this.categoryId = categoryId;
-		this.createTime = createTime;
-		this.customerId = customerId;
-		this.isDefault = isDefault;
-		this.modifyTime = modifyTime;
-		this.operationId = operationId;
+		this.categoryId = resource.categoryId;
+		this.createTime = resource.createTime;
+		this.customerId = resource.customerId;
+		this.isDefault = resource.isDefault;
+		this.modifyTime = resource.modifyTime;
+		this.operationId = resource.operationId;
 		this.positionName = positionName;
-		this.resourceName = resourceName;
-		this.resourceType = resourceType;
-		this.status = status;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.examinationOpintions = examinationOpintions;
-		this.keyWords = keyWords;
-		this.contractId = contractId;
-		this.description = description;
-		this.backgroundPath = backgroundPath;
+		this.resourceName = resource.resourceName;
+		this.resourceType = resource.resourceType;
+		this.status = resource.status;
+		this.examinationOpintions = resource.examinationOpintions;
+		this.keyWords = resource.keyWords;
+		this.contractId = resource.contractId;
+		this.description = resource.description;
 	}
 	public DResource(){
 		
@@ -174,12 +154,12 @@ public class DResource  implements
 	}
 
 	@Column(name = "STATUS", length = 2)
-	public char getStatus() {
+	public String getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(char c) {
-		this.status = c;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	@Column(name = "CREATE_TIME", length = 19)
@@ -235,13 +215,7 @@ public class DResource  implements
 	public void setPositionCode(String positionCode) {
 		this.positionCode = positionCode;
 	}
-	@Transient
-	public String getCustomerName() {
-		return customerName;
-	}
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
+	
 	@Transient
 	public String getPositionName() {
 		return positionName;
@@ -264,20 +238,7 @@ public class DResource  implements
 	public void setAdvertisersName(String advertisersName) {
 		this.advertisersName = advertisersName;
 	}
-	@Transient
-	public String getAdvertPositionId() {
-		return advertPositionId;
-	}
-	public void setAdvertPositionId(String advertPositionId) {
-		this.advertPositionId = advertPositionId;
-	}
-	@Transient
-	public Integer getPositionId() {
-		return positionId;
-	}
-	public void setPositionId(Integer positionId) {
-		this.positionId = positionId;
-	}
+	
 	@Column(name = "OPERATION_ID",length = 10)
 	public Integer getOperationId() {
 		return operationId;
@@ -285,28 +246,15 @@ public class DResource  implements
 	public void setOperationId(Integer operationId) {
 		this.operationId = operationId;
 	}
-	@Column(name = "START_TIME",length = 19)
-	public Date getStartTime() {
-		return startTime;
-	}
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-	@Column(name = "END_TIME",length = 19)
-	public Date getEndTime() {
-		return endTime;
-	}
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
-	}
-	@Column(name = "EXAMINATION_OPINIONS",length = 19)
+	
+	@Column(name = "EXAMINATION_OPINIONS")
 	public String getExaminationOpintions() {
 		return examinationOpintions;
 	}
 	public void setExaminationOpintions(String examinationOpintions) {
 		this.examinationOpintions = examinationOpintions;
 	}
-	@Column(name = "KEY_WORDS",length = 19)
+	@Column(name = "KEY_WORDS")
 	public String getKeyWords() {
 		return keyWords;
 	}
@@ -320,6 +268,12 @@ public class DResource  implements
 	public void setContractId(Integer contractId) {
 		this.contractId = contractId;
 	}
-	
+	@Transient
+	public String getStatusStr() {
+		return statusStr;
+	}
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
+	}
 	
 }

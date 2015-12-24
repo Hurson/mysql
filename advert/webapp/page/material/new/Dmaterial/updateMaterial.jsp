@@ -1,0 +1,1281 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="/WEB-INF/tags/fmt.tld"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link rel="stylesheet" type="text/css" href="<%=path %>/css/new/main.css"/>
+<link rel="stylesheet" href="<%=path %>/css/popUpDiv.css" type="text/css" />
+
+
+<script type="text/javascript" src="<%=path %>/js/jquery/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="<%=path %>/js/jquery/upload/js/jquery.uploadify.v2.1.4.js"></script>
+<script type="text/javascript" src="<%=path%>/js/new/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="<%=path %>/js/easydialog/easydialog.min.js"></script>
+
+
+<script type="text/javascript" src="<%=path %>/js/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="<%=path %>/js/jquery/ui/jquery.ui.core.js"></script>
+<script src="<%=path%>/js/jquery/ui/jquery.ui.core.js"></script>
+<script src="<%=path%>/js/jquery/ui/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="<%=path%>/js/order/addOrUpdate.js"></script>
+<script type="text/javascript" src="<%=path %>/js/jquery/upload/js/swfobject.js"></script>
+<link rel="stylesheet" href="<%=path %>/css/easydialog/easydialog.css" type="text/css" />
+<script type='text/javascript' src='<%=path %>/js/new/avit.js'></script>
+<script type='text/javascript' src='<%=path %>/js/util/jscolor/jscolor.js'></script>
+  
+<title>广告系统</title>
+
+<script type="text/javascript">
+/** 宽度 */
+var width = 0;
+/** 高度 */
+var height = 0;
+var index = 1;
+	// added by liye 如果有订单关联该素材，则不能修改
+	//window.onload = function() {
+	$(function(){
+	var statusStr = $("#material_state").val();
+	if(statusStr!= 0){
+		$("#saveBtn").attr('disabled',"true");
+	}
+	})
+function init(positionJson){
+	
+	var materialType =document.getElementById('materialType').value;
+	var imageMetaName = document.getElementById('imageMetaName').value;
+	var videoMetaName = document.getElementById('videoMetaName').value;
+	var zipMetaName = document.getElementById('zipMetaName').value;
+	var materialId = document.getElementById('resource.id').value;
+	var viewPath = document.getElementById('viewPath').value;
+	index = ${fn:length(textMeta.pwList)} + 1;
+	
+	if(materialType!=null && materialType!=""){
+		//预览素材
+		preview(positionJson);
+		document.getElementById('sel_material_type').disabled=true;
+		
+		if (materialType == '1' ){//视频
+			document.getElementById("sel_material_type").options.add(new Option("视频","1"));
+			setTimeout("showVideo($$('videoPath').value)", 1000);
+			//showVideo($$('videoPath').value);
+		}
+		else if (materialType == '0' ){//图片
+			document.getElementById('div_video').style.display = "none";      
+			document.getElementById('div_image').style.display = "";
+			document.getElementById("sel_material_type").options.add(new Option("图片","0"));
+			$("#mImage").attr("src",'${viewPath}/${imageMeta.name}'); 
+		}
+		else if (materialType == '2' ){//文字
+			document.getElementById('div_text').style.display = "";      
+			document.getElementById('div_video').style.display = "none";      
+			document.getElementById("sel_material_type").options.add(new Option("文字","2"));
+			showText();
+		}
+		
+	}
+}
+
+/**
+ * 预览
+ */
+function preview(positionJson){
+	var selPosition = eval(positionJson);
+	
+	document.getElementById("coordinateStr").value = selPosition.coordinate.replace(/(^\s+)|(\s+$)/g,"");
+	
+	/**为页面预览区域赋值*/
+	var size = selPosition.domain.split('*');
+	width = size[0];
+	height = size[1];
+	var coordinate = selPosition.coordinate.replace(/(^\s+)|(\s+$)/g,"").split(",")[0].split('*');
+	$("#pImage1").attr("width",426).attr("height",240);
+	$("#pImage2").attr("width",426).attr("height",240);
+	$("#pImage3").attr("width",426).attr("height",240);
+	$("#pImage4").attr("width",426).attr("height",240);
+	$("#pImage").attr("src",getContextPath()+"/"+selPosition.backgroundPath);
+	$("#mImage").attr("width",width).attr("height",height);
+	$("#mImage4").attr("width",width).attr("height",height);
+	
+	$("#mImage,#video").css({
+		width:width+"px",
+		height:height+"px",
+		position:'absolute',
+		left: coordinate[0]+"px", 
+		top: coordinate[1]+"px" 
+	});
+	
+	$("#mImage4").css({
+		width:width+"px",
+		height:height+"px",
+		position:'absolute',
+		left: coordinate[0]+"px", 
+		top: coordinate[1]+"px" 
+	});
+	
+	$("#text").css({
+		position:'absolute',
+		width:width+"px",
+		height:height+"px",
+		left:coordinate[0]+"px",
+		top:coordinate[1]+"px",
+		'z-index':1
+	});
+	$("#text2").css({
+		position:'absolute',
+		width:width+"px",
+		height:height+"px",
+		left:coordinate[0]+"px",
+		top:coordinate[1]+"px",
+		'z-index':1
+	});
+}
+
+	function priviewLocationChange(){
+
+		var imagePreviewLocation = document.getElementById('picLocation').value;
+		var location = parseInt(imagePreviewLocation); 
+	    var coordinates = document.getElementById('coordinateStr').value.split(",");
+	    
+	    var coordinate;
+	    if(location <= coordinates.length){
+	    	coordinate = coordinates[location-1].split('*');
+	    }else{
+	    	coordinate = coordinates[0].split('*');
+	    }
+		
+		$("#mImage,#video").css({
+			left: coordinate[0]+"px", 
+			top: coordinate[1]+"px" 
+		});
+		
+		$("#mImage4").css({
+			left: coordinate[0]+"px", 
+			top: coordinate[1]+"px" 
+		});
+		
+		$("#text").css({
+			left:coordinate[0]+"px",
+			top:coordinate[1]+"px",
+			
+		});
+		$("#text2").css({
+			left:coordinate[0]+"px",
+			top:coordinate[1]+"px",
+			
+		});
+	}
+
+
+/**
+ * 获取上下文路径
+ */ 
+function getContextPath() {
+	var contextPath = document.location.pathname;
+	var index = contextPath.substr(1).indexOf("/");
+	contextPath = contextPath.substr(0, index + 1);
+	delete index;
+	return contextPath;
+}
+
+var i=0;
+//问卷预览	 
+function questionView() {
+         var rand = Math.random();
+         var questionViewPath =document.getElementById('questionViewPath').value;
+         questionViewPath =questionViewPath+"?rand="+rand;
+		 var structInfo ="";
+			structInfo+="			<div style='margin:0px;padding:0px;width:600px'>";
+			structInfo+="						<iframe id='qeustionView' name='qeustionView'  frameBorder='0' width='1000px' height='500px'  scrolling='yes'  align='top' src='"+questionViewPath+"'> ";
+			structInfo+="</iframe>";
+			structInfo+="</div>";
+			easyDialog.open({
+			container : {
+				header : "问卷预览",
+				content : structInfo
+			},
+			overlay : true
+			
+		});
+	 }
+	 
+
+$(function(){  
+		var type = ${adPositionQuery.positionType};
+		var fileExt;
+		var fileDesc;
+		if(type == 0 || type == 1){
+			fileExt = '*.gif;*.png;*.jpg;*.iframe';
+			fileDesc = '*.gif;*.png;*.jpg;*.iframe';
+		}else if(type == 2 || type == 3){
+			fileExt = '*.png;*.jpg;*.iframe';
+			fileDesc = '*.png;*.jpg;*.iframe';
+		}else{
+			fileExt = '*.zip';
+			fileDesc = '*.zip';
+		}
+    $("#bm").find("tr:even").addClass("treven");  //奇数行的样式
+    $("#bm").find("tr:odd").addClass("trodd");  //偶数行的样式
+    $("#file_id").uploadify({
+		'uploader':'<%=path%>/js/jquery/upload/image/uploadify.swf',
+		'script':'uploadMaterial.do?advertPositionId=0',
+		'cancelImg':'<%=path%>/js/jquery/upload/image/cancel.png',
+		'folder':'/uploadFiles',
+		'queueID':'fileQueue',
+		'buttonImg':'<%=path%>/js/jquery/upload/image/uploadify.jpg',
+		'fileDataName': 'backgroundImage',
+		'auto':true,
+		'multi':false,
+		'fileExt':fileExt,
+		'fileDesc':fileDesc,
+		'displayData':'speed',
+		'width':'76',
+    	'height':'23',
+		'onComplete':function(event,queueID,fileObj,response,data){
+			var json = eval('(' + response + ')');
+			
+			var maxSize = '${imageSpecification.fileSize}';
+			var width='${imageSpecification.imageWidth}';
+			var height='${imageSpecification.imageHeight}';
+			
+			if(json!=null){
+					if(json.position=='local'){
+						if(json.result=='true'){
+						   $("#mImage").attr("src","<%=path%>/images/material/"+json.viewpath);
+							               $("#mImage").show();
+							               $("#backgroundImage").val(json.filepath);
+							               						             
+							               document.getElementById("imageSpecReal").innerHTML="大小:"+json.imageFileSize+" 宽度:"+json.imageFileWidth+" 高度:"+json.imageFileHigh;
+							               if(maxSize > parseInt(json.imageFileSize) && width == json.imageFileWidth && json.imageFileHigh){
+	                                          document.getElementById("imageCheckResult").value="通过";   
+	                                       }else{
+	                                       	  document.getElementById("imageCheckResult").value="不通过";
+	                                       }
+							               			   						   						
+						}else{
+							alert('图片上传至FTP失败');
+						}
+					}
+				}	
+		}
+	});
+	
+	$("#file_id2").uploadify({
+		'uploader':'<%=path%>/js/jquery/upload/image/uploadify.swf',
+		'script':'uploadMaterialVideo.do?advertPositionId=0',
+		'cancelImg':'<%=path%>/js/jquery/upload/image/cancel.png',
+		'folder':'/uploadFiles',
+		'queueID':'fileQueue2',
+		'buttonImg':'<%=path%>/js/jquery/upload/image/uploadify.jpg',
+		'fileDataName': 'backgroundImage2',
+		'auto':true,
+		'multi':false,
+		'fileExt':'*.ts',
+		'fileDesc':'*.ts',
+		'displayData':'speed',
+		'width':'76',
+    	'height':'23',
+		'onSelect': function (event, queueID, fileObj){ 
+			$("#file_id2").uploadifySettings('script','uploadMaterialVideo.do?'); 
+		 } ,
+		'onComplete':function(event,queueID,fileObj,response,data){
+			var json = eval('(' + response + ')');
+			var duration=$("#videoFileDuration").val();
+			if(json!=null){
+					if(json.position=='local'){
+						if(json.result=='true'){
+						    document.getElementById("backgroundImage2").value = json.filepath;
+							document.getElementById("videoMeta.runTime").value= json.duration;
+							var vedio_url= '<%= basePath%>'+json.filepath;
+							$("#vlc").css({
+								width:width+"px",
+								height:height+"px"
+							});
+
+							var vlc=document.getElementById("vlc");
+							vlc.playlist.stop();
+							vlc.playlist.clear();
+							 // 添加播放地址
+							 vlc.playlist.add(vedio_url);
+							 // 播放
+							 vlc.playlist.play();
+							 $("#video").show();
+							 
+							 if(duration != json.duration){
+		                               document.getElementById("videoCheckResult").value="不通过";	     
+		                     }else{
+		                               document.getElementById("videoCheckResult").value="通过";
+		                     }
+							
+						}else{
+							alert('视频上传至FTP失败');
+						}
+					}
+				}	
+		}
+	});
+	
+	$("#file_id3").uploadify({
+		'uploader':'<%=path%>/js/jquery/upload/image/uploadify.swf',
+		'script':'uploadMaterialZip.do?',
+		'cancelImg':'<%=path%>/js/jquery/upload/image/cancel.png',
+		'folder':'/uploadFiles',
+		'queueID':'fileQueue',
+		'buttonImg':'<%=path%>/js/jquery/upload/image/uploadify.jpg',
+		'fileDataName': 'zipbackgroundImage',
+		'auto':true,
+		'multi':false,
+		'fileExt':fileExt,
+		'fileDesc':fileDesc,
+		'displayData':'speed',
+		'width':'76',
+    	'height':'23',
+		'onComplete':function(event,queueID,fileObj,response,data){
+			var json = eval('(' + response + ')');
+			if(json!=null){
+					if(json.position=='local'){
+						if(json.result=='true'){
+							var viewpath = json.viewpath;
+							var path = viewpath.substring(0,viewpath.indexOf("."))
+						   $("#mImage4").attr("src","<%=path%>/images/resource/"+path+".jpg");
+							               $("#mImage4").show();
+							               $("#zipbackgroundImage").val(json.filepath);
+							               						             
+							               document.getElementById("zipSpecReal").innerHTML="大小:"+json.imageFileSize;
+							               if(json.checkTag==0){
+		                                          document.getElementById("zipCheckResult").value="不通过";	     
+		                                      }else{
+		                                          document.getElementById("zipCheckResult").value="通过";
+		                                      }						   						   						
+						}else{
+							if(json.dirName != "recommend"){
+								alert("ZIP包内文件夹名称必须为：recommend");
+							}else{
+								alert('ZIP文件上传失败');
+							}
+						}
+					}
+				}	
+		}
+	});
+});
+
+function selectTemplate(tId){
+  if(tId==-1){
+     document.getElementById('div_question2').style.display = "none"; 
+  }else{
+     document.getElementById('div_question2').style.display = ""; 
+  }
+    
+}
+
+function addQuestion(){
+
+    i=i+1;
+	var rowCount = document.getElementById("div_question2").rows.length;
+	var tbObj = document.getElementById("div_question2");
+	var rs = tbObj.rows;
+	var count = rs.length;
+	var row0 = rs[0];
+    var newRow = row0.cloneNode(true);
+    //alert("rowCount:"+rowCount+"/tbObj:"+tbObj+"/rs:"+rs+"/count:"+count+"/row0:"+row0.innerHTML+"/newRow:"+newRow);
+	newRow.cells[0].innerHTML="问题内容：<input id='questionCount' name='questionCount' type='hidden' value='"+i +"'/>";
+	newRow.cells[1].innerHTML="<textarea id='question' name='question' cols=\"30\" rows=\"3\" maxlength=\"100\"></textarea>";
+    
+    document.getElementById("div_question2").appendChild(newRow);
+    
+	newRow = row0.cloneNode(true);
+	newRow.cells[0].innerHTML="问题答案：";
+	newRow.cells[1].innerHTML="1:<input type='text' id='answer1' name='answer1'/></p>2:<input type='text' id='answer2' name='answer2'/></p>3:<input type='text' id='answer3' name='answer3'/></p>4:<input type='text' id='answer4' name='answer4'/></p>5:<input type='text' id='answer5' name='answer5'/></p>6:<input type='text' id='answer6' name='answer6'/>";
+	document.getElementById("div_question2").appendChild(newRow);
+
+}
+
+function closeSavePane() {
+    window.location.href = "<%=path %>/page/resource/queryMeterialList.do";
+}
+
+	function submitForm(){
+		//检查素材公共属性是否合法
+		if(checkMaterial()){
+			return ;
+		}
+	    var materialType = $("#sel_material_type").val();
+	    if (materialType == 0 ){
+            var localFilePath = $$("backgroundImage").value; 
+            $("#localFilePath").val(localFilePath);
+            
+            if ($$("imageCheckResult").value == "不通过" ){
+            alert("图片规格效验不通过");
+            return ;
+            }
+        }else if (materialType == 1 ){
+            var localFilePath = $$("backgroundImage2").value; 
+            $("#localFilePath").val(localFilePath);
+            
+            if ($$("videoCheckResult").value == "不通过" ){
+            alert("视频规格效验不通过");
+            return ;
+            }
+        }else if (materialType == 2 ){
+	    	if(checkText()){
+				return;
+	        }
+	    }else if (materialType == 4 ){
+            var localFilePath = $$("zipbackgroundImage").value;
+            $("#localFilePath").val(localFilePath);
+            if ($$("zipCheckResult").value == "不通过" ){
+            alert("ZIP规格效验不通过");
+            return ;
+            }
+        }
+        $$("resource.resourceTypeTemp").value=$$('materialType').value;
+               
+        
+        //效验素材名称是否重复   
+     var resourceName = $$("resource.resourceName").value;	
+     var resourceId = $$("resource.id").value; 
+	 $.ajax({
+                type:"post",
+                async : false,
+                url:"<%=request.getContextPath()%>/dmaterial/checkMaterialExist.action?",
+                data:{"resource.resourceName":resourceName,"resource.id":resourceId},//Ajax传递的参数
+                success:function(mess)
+                {
+                	if(mess=="0")// 如果获取的数据不为空
+                    {
+                		
+                		document.getElementById("saveForm").submit();
+                		//alert("ok");
+                    }
+                    else
+                    {
+						alert("素材名称已存在，请重新输入！");
+						return;
+                    }
+                   
+                },
+                error:function(mess)
+                {
+                	alert("未知错误");
+                }
+            });
+	    
+	    //document.getElementById("saveForm").submit();
+	}
+	
+	/**
+	* 检查素材公共属性是否合法
+	*
+	*/
+	function checkMaterial(){
+	    
+
+		if(isEmpty($$("resource.resourceName").value)){
+			alert("素材名称不能为空！");
+			$$("resource.resourceName").focus();
+			return true;
+		}
+		if($$("resource.resourceName").value.length>255){
+			alert("素材名称必须小于255个字节！");
+			$$("resource.resourceName").focus();
+    		return true;
+		}
+		if(!isEmpty($$("resource.keyWords").value)){
+			if($$("resource.keyWords").value.length>255){
+			alert("素材关键字必须小于255个字节！");
+			$$("resource.keyWords").focus();
+    		return true;
+		}
+		}
+		
+		if(isEmpty($("#contentSort").val()) || $("#contentSort").val()==-1){
+			alert("请选择素材分类！");
+			$$("contentSort").focus();
+			return true;
+		}
+		if(isEmpty($("#sel_material_type").val()) || $("#sel_material_type").val()==-1){
+			alert("请选择素材类型！");
+			$$("sel_material_type").focus();
+			return true;
+		}
+		
+		
+	    
+		return false;
+	}
+	
+	function dateCompare(startdate,enddate){   
+        var arr=startdate.split("-");    
+        var starttime=new Date(arr[0],arr[1],arr[2]);    
+        var starttimes=starttime.getTime();   
+  
+        var arrs=enddate.split("-");    
+        var lktime=new Date(arrs[0],arrs[1],arrs[2]);    
+        var lktimes=lktime.getTime();   
+  
+        if(starttimes>=lktimes){   
+           return false;   
+        }   
+        else  
+        return true;    
+     }  
+	
+	
+	/**
+	*
+	* 检查文字
+	*/
+	function checkText(){
+		//文字标题
+		if(isEmpty($$("textMeta.name").value)){
+			alert("文字标题不能为空！");
+			$$("textMeta.name").focus();
+    		return true;
+		}
+		if($$("textMeta.name").value.length>255){
+			alert("文字标题必须小于255个字节！");
+			$$("textMeta.name").focus();
+    		return true;
+		}
+		if (validateSpecialCharacterAfter($$("textMeta.name").value))
+		{
+			alert("文字标题不能有特殊字符！");
+			$$("textMeta.name").focus();
+    		return true;
+		}
+		
+		//文字链接
+		if(!isEmpty($$("textMeta.URL").value)){
+			if($$("textMeta.URL").value.length>255){
+			alert("文本URL必须小于255个字节！");
+			$$("textMeta.URL").focus();
+    		return true;
+		    }
+		}
+		
+		//显示时长
+		if(isEmpty($$("textMeta.durationTime").value)){
+			alert("文本显示持续时间不能为空！");
+			$$("textMeta.durationTime").focus();
+    		return true;
+		}
+		if(!isEmpty($$("textMeta.durationTime").value) && !isNumber($$("textMeta.durationTime").value)){
+			alert("文本显示持续时间只能是数字！");
+			$$("textMeta.durationTime").focus();
+    		return true;
+		}
+		
+		//文字大小
+		if(isEmpty($$("textMeta.fontSize").value)){
+			alert("文字大小不能为空！");
+			$$("textMeta.fontSize").focus();
+    		return true;
+		}	
+		if(!isNumber($$("textMeta.fontSize").value)){
+			alert("文字大小只能是数字！");
+			$$("textMeta.fontSize").focus();
+    		return true;
+		}
+		if($$("textMeta.fontSize").value.length>10){
+			alert("文字大小必须小于10个字节！");
+			$$("textMeta.fontSize").focus();
+    		return true;
+		}
+		
+		//文字颜色，无需校验
+		
+		//背景颜色
+		var pat = new RegExp("^[A-Fa-f0-9]+$"); 
+		if(!isEmpty($$("textMeta.bkgColor").value)){
+			if($$("textMeta.bkgColor").value.length>10){
+				alert("文字显示背景色必须小于10个字节！");
+				$$("textMeta.bkgColor").focus();
+	    		return true;
+			}		
+			str = $$("textMeta.bkgColor").value;
+			if(str.length==6 && pat.test(str)){
+				
+			}else{
+			    alert("文字显示背景色格式不正确！");
+				$$("textMeta.bkgColor").focus();
+				return true;
+			}
+		}
+		
+		//滚动速度
+		if(isEmpty($$("textMeta.rollSpeed").value)){
+			alert("文本显示滚动速度不能为空！");
+			$$("textMeta.rollSpeed").focus();
+			return true;
+		}else{
+			if(!isEmpty($$("textMeta.rollSpeed").value) && !isNumber($$("textMeta.rollSpeed").value)){
+				alert("文本显示滚动速度只能是数字！");
+				$$("textMeta.rollSpeed").focus();
+				return true;
+		    }
+		    if($$("textMeta.rollSpeed").value<0){
+			    alert("文本显示滚动速度必须大于等于0！");
+				$$("textMeta.rollSpeed").focus();
+				return true;
+		    }
+		}
+		
+		//显示坐标
+		if(isEmpty($$("textMeta.positionVertexCoordinates").value)){
+			alert("文本显示坐标不能为空！");
+			$$("textMeta.positionVertexCoordinates").focus();
+    		return true;
+		}else{
+			var coordinates = $$("textMeta.positionVertexCoordinates").value.split("*");
+			if(coordinates.length != 2 || !isNumber(coordinates[0]) || !isNumber(coordinates[1])){
+				alert("文本显示坐标格式不正确！");
+				$$("textMeta.positionVertexCoordinates").focus();
+	    		return true;
+			}
+			if($$("textMeta.positionVertexCoordinates").value.length>20){
+				alert("文本显示坐标必须小于20个字节！");
+				$$("textMeta.positionVertexCoordinates").focus();
+	    		return true;
+			}
+		}
+		
+		//显示区域
+		if(isEmpty($$("textMeta.positionWidthHeight").value)){
+			alert("文本显示区域不能为空！");
+			$$("textMeta.positionWidthHeight").focus();
+    		return true;
+		}else{
+			var size = $$("textMeta.positionWidthHeight").value.split("*");
+			if(size.length != 2 || !isNumber(size[0]) || !isNumber(size[1])){
+				alert("文本显示区域格式不正确！");
+				$$("textMeta.positionWidthHeight").focus();
+	    		return true;
+			}
+			if($$("textMeta.positionWidthHeight").value.length>20){
+				alert("文本显示区域必须小于20个字节！");
+				$$("textMeta.positionWidthHeight").focus();
+	    		return true;
+		    }
+		}
+		
+		var msgArray =  document.getElementsByName("textMeta.contentMsg");
+		var priArray = document.getElementsByName("textMeta.priority");
+		var induArray = document.getElementsByName("textMeta.industry");
+		var validateArray = [];	
+		var length = msgArray.length;
+		if(length == 0){
+			alert("字幕条数必须大于0！");
+    		return true;
+		}
+		var flag = false;
+		var sum = 0;
+		for(var i = 0; i < length; i++){
+			if(msgArray[i].getAttribute("class")){
+				msgArray[i].removeAttribute("class");
+			}
+			var msg = msgArray[i].value.replace(/(^\s*)|(\s*$)/g,'');
+			msgArray[i].value = msgArray[i].value.replace(/,/ig,"，").replace(/\|/g,"\丨").replace(/</g,"＜").replace(/>/,"＞");
+			sum += msg.length;
+			if(isEmpty(msg)){
+				alert("文字内容不能为空！");
+	    		return true;
+			}else if(validateSpecCharaNotStrict(msg)){
+				msgArray[i].setAttribute("class","input_error");
+	    		flag =  true;
+			}else if(msg.length > 160){
+				alert("单条字幕文字个数不能超过160个！");
+	    		return true;
+			}  
+			var priority = priArray[i].value;
+			if(isEmpty(priority)){
+				alert("文字优先级不能为空！");
+	    		return true;
+			}else if(!isNumber(priority)){
+				alert("文字优先级只能为数字！");
+	    		return true;
+			}else{
+				if(validateArray[priority]){
+					alert("文字优先级不能相同！");
+		    		return true;
+				}else{
+					validateArray[priority] = 1;
+				}
+			}
+			if(induArray.length != 0){
+				var industry = induArray[i].value;
+				if(isEmpty(industry)){
+					alert("文字行业类别不能为空！");
+		    		return true;
+				}else if(!isNumber(industry)){
+					alert("文字行业类别只能为数字！");
+		    		return true;
+				}
+			}
+		}
+		if(flag){
+			alert("红色区域有特殊字符存在!");
+			return true;
+		}
+		if(sum  > 160*120 ){
+			alert("文字总数量过多，请减少字幕条数或文字数量！");
+    		return true;
+		}
+
+		return false;
+	}
+
+    function changeTextAction(){
+      var textMetaAction = selectOptionVal("sel_textMeta_action");
+        if(textMetaAction==1){
+		   document.getElementById("textMeta.rollSpeed").disabled=false;
+		}
+		if(textMetaAction==0){
+		   document.getElementById("textMeta.rollSpeed").value="0";
+		   document.getElementById("textMeta.rollSpeed").disabled="true";
+		}
+    }
+    
+	function Text(word,priority){ 
+       this.word=word; 
+       this.priority=priority;        
+	} 
+
+	/**预览文字*/
+	function showText(){
+		
+		if(checkText()){
+			return;
+		}
+		
+		var speed = parseInt($$("textMeta.rollSpeed").value);
+		
+		var coordinates = $$("textMeta.positionVertexCoordinates").value.split("*");
+		var coordinateX = coordinates[0]/1280*426;
+		var coordinateY = coordinates[1]/720*240;
+		
+		var size = $$("textMeta.positionWidthHeight").value.split("*");
+		var _width = size[0]/1280*426;
+		var _height = size[1]/720*240;
+		
+		var msgArray =  document.getElementsByName("textMeta.contentMsg");
+		var priArray = document.getElementsByName("textMeta.priority");
+		var length = msgArray.length;
+		var textArray = [];
+		for(var i = 0; i < length; i++){			
+			var msg = msgArray[i].value;
+			var priority = priArray[i].value;
+			textArray[i] = new Text(msg, priority);
+		}
+		textArray.sort(function(o,p){
+			if(typeof o === "object" && typeof p === "object" && o && p){
+				var a = o.priority;
+				var b = p.priority;
+				if(a == b){
+					return 0;
+				}else{
+					return a < b ? -1 : 1;
+				}
+			}else{
+				throw("error");
+			}
+		});
+		var content = "";
+		for(var i = 0; i < length; i++){
+			content += textArray[i].word + "&nbsp;&nbsp;&nbsp;&nbsp"
+		}
+		
+		if(speed != 0){ //滚动
+			
+			$("#textContent").css({
+				'color':$$("textMeta.fontColor").value,
+				'font-size':$$("textMeta.fontSize").value+"px"
+			});
+		
+			$("#textContent").attr({
+				'scrollamount':speed
+			});
+			
+			if(!isEmpty($$("textMeta.bkgColor").value)){
+				$("#textContent").attr({
+					'bgcolor':"#"+$$("textMeta.bkgColor").value
+				});
+			}else{
+				$("#textContent").removeAttr('bgcolor');
+			}
+			
+			$('#text').css({
+				'left':coordinateX,
+				'top': coordinateY,
+				'width':_width,
+				'height':_height*3
+			});					
+			$("#textContent").html(content);
+			$("#text").show();
+			$("#text2").hide();
+			
+		
+		}else{ //静止
+			$("#textContent2").css({
+				'color':$$("textMeta.fontColor").value,
+				'font-size':$$("textMeta.fontSize").value+"px"
+			});
+			if(!isEmpty($$("textMeta.bkgColor").value)){
+				$('#text2').css({
+					'background':"#"+$$("textMeta.bkgColor").value
+				});
+			}else{
+				$('#text2').css({
+					'background':""
+				});
+			}
+			$('#text2').css({
+				'left':coordinateX,
+				'top': coordinateY,
+				'width':_width,
+				'height':_height
+			});
+		
+			$("#textContent2").html(content);
+			$("#text2").show();
+			$("#text").hide();
+		}		
+	}
+
+	/**预览视频*/
+	function showVideo(path){
+
+		$("#vlc").css({
+			width:width+"px",
+			height:height+"px"
+		});
+		var vlc=document.getElementById("vlc");
+		vlc.playlist.stop();
+		vlc.playlist.clear();
+		 // 添加播放地址
+		 vlc.playlist.add(path);
+		 // 播放
+		 vlc.playlist.play();
+	}
+	
+	function deleteTrById(filed){
+		if(confirm("你确定删除吗？")){
+			var tr = filed.parentNode.parentNode;
+			tr.parentNode.removeChild(tr);
+			var prioArray = document.getElementsByName("textMeta.priority");
+			for(var i = 0; i < prioArray.length; i ++){
+				if(prioArray[i].value != i+1){
+					prioArray[i].value = i + 1;
+				}
+			}
+			index = prioArray.length +1;
+		}
+	}
+	
+	function remainWord(field,maxlimit) { 
+		if (field.value.length > maxlimit){ 
+			field.value = field.value.substring(0, maxlimit); 
+		}else{ 
+			
+			field.parentNode.getElementsByTagName("input")[0].value=maxlimit - field.value.length; 
+		} 
+	} 
+	
+	function addContent(){
+		var table = $$('text_content_tbody');
+		var row = document.createElement("tr"); 
+		row.setAttribute("id", 'text_content_row' + index);
+		if(${fn:contains(areaCodes,'20547') ||fn:contains(areaCodes,'20720')}){
+			var td0 = document.createElement("td");	
+			td0.innerHTML = '<input name="textMeta.industry" type="text" maxlength="2" style="width:30px"/>';
+			row.appendChild(td0);
+		}
+		var td1 = document.createElement("td");	
+		td1.innerHTML = '<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,160)" cols="80" rows="2" ></textarea>';
+		td1.innerHTML += '&nbsp;<span>剩余字数:<span><input name="remain_word" type="text" id= "remain_word' + index + '" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="160" size="3" readonly></input>';	
+		var td2 = document.createElement("td");	
+		td2.innerHTML = '<input name="textMeta.priority" type="text" maxlength="3" value="'+index +'" style="width:30px"/>';
+		var td3 = document.createElement("td");	
+		td3.innerHTML = "<a href='#' onclick='deleteTrById(this);'>删除</a>";
+		row.appendChild(td1);
+		row.appendChild(td2);
+		row.appendChild(td3);
+		table.appendChild(row);
+		index +=1;
+	}
+
+</script>
+<style>
+	.easyDialog_wrapper{ width:1000px;height:400px;color:#444; border:3px solid rgba(0,0,0,0); -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px; -webkit-box-shadow:0 0 10px rgba(0,0,0,0.4); -moz-box-shadow:0 0 10px rgba(0,0,0,0.4); box-shadow:0 0 10px rgba(0,0,0,0.4); display:none; font-family:"Microsoft yahei", Arial; }
+	.easyDialog_text{}
+	.input_error{border: solid 1px #ff0000;background-color: #fef2f2;border-radius: 3px;padding: 3px 2px 2px 2px;color: #000;}
+</style>
+</head>
+<body class="mainBody" onload='init(${positionJson});'>
+<form action="<%=path %>/dmaterial/saveMaterialBackup.do" method="post" id="saveForm">	
+<div class="path">首页 >> 素材管理 >> 修改素材</div>
+<div class="searchContent" >
+<div class="listDetail">
+<div style="position: relative">	
+<table>
+   	<tr>
+   	   <td>
+            <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px">
+              <tr class="title"><td colspan="4">素材信息</td></tr>
+                <tr>
+                    
+                    <td align="right"><span class="required">*</span>选择广告位：</td>
+                                                            
+                    <td>	                
+                        <input id="resource.positionCode" name="resource.positionCode" value="${resource.positionCode}" type="hidden" />
+	                    <input id="resource.positionName" name="resource.positionName" value="${resource.positionName}" type="text" disabled="disabled" />		                
+                    
+                        <input id="resource.id" name="resource.id" type="hidden" value="${resource.id}"/>
+                        <input id="viewPath" name="viewPath" type="hidden" value="${viewPath}"/>
+                        <input id="resource.status" name="resource.status" type="hidden" value="${resource.status}"/>
+                        <input id="resource.createTime" name="resource.createTime" type="hidden" value="${resource.createTime}"/>
+                        <input id="materialType" name="resource.resourceType" type="hidden" value="${resource.resourceType}"/>
+                        <input id="resource.resourceTypeTemp" name="resource.resourceTypeTemp" type="hidden" />
+                        <input id="resource.examinationOpintions" name="resource.examinationOpintions" type="hidden" value="${resource.examinationOpintions}"/>
+                        <input id="resource.contractId" name="resource.contractId" type="hidden" value="${resource.contractId}"/>	
+                        <input id="positionJson" name="positionJson" type="hidden" value="${positionJson}"/>
+                        <input id="resource.customerId" name="resource.customerId" type="hidden" value="${resource.customerId}"/>
+                        <input id="resource.operationId" name="resource.operationId" type="hidden" value="${resource.operationId}"/>
+                        <input id="material_state" name="material_state" type="hidden" value="${resource.statusStr}"/> 
+                        <input id="coordinateStr" type="hidden"/> 
+                    </td>
+                     <td align="right">素材位置：</td>
+                     <td >
+                     	 <select disabled="disabled" id="picLocation"  name="picLocation" onchange="javascript:priviewLocationChange();">
+						      <option value="1">1</option>
+					    </select>
+                     </td>
+                    
+                </tr>		           
+                <tr>
+                    <td align="right"><span class="required">*</span>素材名称：</td>
+                    <td>
+               	     <input id="resource.resourceName" name="resource.resourceName" value="${resource.resourceName}" type="text" maxlength="20" />
+                    </td>
+                    <td width="15%" align="right">素材关键字：</td>
+                    <td width="35%">
+                        <input id="resource.keyWords" name="resource.keyWords" type="text" value="${resource.keyWords}"/>					       
+                    </td>		                
+                </tr>
+                <tr>
+                    <td align="right"><span class="required">*</span>素材分类：</td>
+                    <td>
+               	    <select  id="contentSort"  name="resource.categoryId">
+					      <option id="ad_id" value="-1">请选择...</option>
+						         <c:forEach items="${materialCategoryList}" var="typeBean">
+							        <option  value="${typeBean.id }" <c:if test="${resource.categoryId== typeBean.id}">selected="selected"</c:if> >
+							        ${typeBean.categoryName }
+							        </option>
+						         </c:forEach>
+				    </select>
+                    </td>
+                    <td align="right"><span class="required">*</span>素材类型：</td>
+                    <td>
+	              	   <select id="sel_material_type" name="resource.resourceType" >
+					    </select>  
+                    </td>
+                 </tr>
+               
+            </table>
+         </td>
+       </tr>
+		        
+		        
+        <tr>
+        	<td>
+                <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px; display:none;" id ="div_text">
+                      <tr class="title" >
+                          <td colspan="4">文字素材</td>
+                      </tr>
+                      <tr>
+                          <td  align="right"><span class="required"></span>文字标题：</td>
+                          <td>
+                              <input id="textMeta.id" name="textMeta.id" type="hidden" value="${textMeta.id}"/>
+	            		      <input id="textMeta.name" name="textMeta.name" value="${textMeta.name}"/>
+                          </td>
+                          <td  align="right"><span class="required"></span>文本URL：</td>
+                          <td>
+	            		      <input id="textMeta.URL" name="textMeta.URL" value="${textMeta.URL}"/>
+                         </td>
+                      </tr>
+                      <tr>
+                          <td  align="right"><span class="required">*</span>显示持续时间：</td>
+                          <td colspan="3">
+	            		      <input id="textMeta.durationTime" name="textMeta.durationTime" value="${textMeta.durationTime}"/><span class="required">（毫秒）0表示一直显示</span>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td  align="right"><span class="required"></span>文字大小：</td>
+                          <td>
+	            		      <input id="textMeta.fontSize" name="textMeta.fontSize" value="${textMeta.fontSize}"/><span class="required">px</span>
+                          </td>
+                          <td  align="right"><span class="required"></span>文字颜色：</td>
+                          <td>
+	            		      <input id="textMeta.fontColor" class="color"  name="textMeta.fontColor" value="${textMeta.fontColor}"/><span class="required">格式：235612</span>
+                         </td>
+                      </tr>
+                      <tr>
+                          <td  align="right"><span class="required"></span>文本显示背景色：</td>
+                          <td>
+	            		      <input id="textMeta.bkgColor" name="textMeta.bkgColor"  value="${textMeta.bkgColor}"/><span class="required">格式：235612</span>
+                          </td>
+                          <td  align="right"><span class="required"></span>文本显示滚动速度：</td>
+                          <td>
+	            	      	<input id="textMeta.rollSpeed" name="textMeta.rollSpeed" value="${textMeta.rollSpeed}"/>
+                         </td>
+                      </tr>
+                      <tr>
+                          <td  align="right"><span class="required"></span>文本显示坐标：</td>
+                          <td>
+	            		      <input id="textMeta.positionVertexCoordinates" name="textMeta.positionVertexCoordinates" value="${textMeta.positionVertexCoordinates}"/><span class="required">格式：80*80(坐标x*y)</span>
+                          </td>
+                          <td  align="right"><span class="required"></span>文本显示区域：</td>
+                          <td>
+	            		      <input id="textMeta.positionWidthHeight" name="textMeta.positionWidthHeight"  value="${textMeta.positionWidthHeight}"/><span class="required">格式：80*80(宽高w*h)</span>
+                         </td>
+                      </tr>
+                      <tr>
+            	          <td width="15%" align="right" valign="top">
+            	          	<span class="required">*</span>内容：<br/> <br/>
+            	          	<input id="addContentBut" type="button" value="添加" onclick="javascript:addContent();"/> 
+            	          </td>
+                          <td colspan="3">
+                          	<table id="text_content_table" cellspacing="1" class="content" style="margin-bottom: 0px;">
+		                	      	<thead>
+			                	      	<tr class="title">
+			                	      		<c:if test="${fn:contains(areaCodes,'20547')||fn:contains(areaCodes,'20720') }">
+			                	      				<td>行业</td>
+		                	      			</c:if>
+			                	      		<td width="87%">
+			                	      			文字内容
+			                	      		</td>
+			                	      		<td width="7%">
+			                	      			优先级
+			                	      		</td>
+			                	      		<td >
+			                	      			操作
+			                	      		</td>
+			                	      	</tr>
+		                	      	</thead>
+		                	      	<tbody id="text_content_tbody">
+			                	      	<c:forEach items="${textMeta.pwList}" var="pwBean" varStatus="pl">
+			                	      		<tr id="text_content_row${pl.index}">
+			                	      			<c:if test="${fn:contains(areaCodes,'20547') ||fn:contains(areaCodes,'20720')}">
+			                	      				<td><input name="textMeta.industry" type="text" maxlength="2" style="width:30px" value="${pwBean.industry}"/></td>
+			                	      			</c:if>
+			                	      			<td>
+			                	      				<textarea name="textMeta.contentMsg" onpropertychange="remainWord(this,160)" cols="80" rows="2" >${pwBean.word}</textarea>
+			                	      				<span>剩余字数:</span><input name="remain_word" type="text" id= "remain_word${pl.index}" style= "background-color: #D4D0C8; border: 0; color: red; width:24px" value="${160-fn:length(pwBean.word)}" size="3" readonly></input>
+			                	      			</td>
+			                	      			<td>
+			                	      				<input name="textMeta.priority" type="text" maxlength="3" style="width:30px" value="${pwBean.priority}"/>
+			                	      			</td>
+			                	      			<td>
+			                	      				<a href="#" onclick="deleteTrById(this)">删除</a>
+			                	      			</td>
+			                	      		</tr>
+			                	      	</c:forEach>
+		                	      	</tbody>
+	                	      </table>
+                          </td>
+                      </tr>  
+                      <tr>
+					      <td align="right" >
+					                          素材预览效果：<br/><br/>
+					          <input type="button" value="点击预览" onclick="javascript:showText();"/>
+					      </td>
+					      <td colspan="3">
+							  <div style="overflow:hidden;line-height:normal;margin-left:0px;margin-top:0px;background-repeat:no-repeat; width:426px;height:240px;
+							     position: relative;">
+									<img id="pImage1" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
+									<div id="text"><marquee scrollamount="10" id="textContent"></marquee></div>
+									<div id="text2"><span id="textContent2"></span></div>
+								</div>
+					      </td>
+			          </tr>   
+                </table>
+                
+	    <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px;" id ="div_video" >
+             <tr class="title" >
+                     <td colspan="4">视频素材</td>
+                     <input id="videoMeta.id" name="videoMeta.id" type="hidden" value="${videoMeta.id}"/>
+                     <input id="videoMetaName" name="videoMetaName" type="hidden" value="${videoMeta.name}"/>
+             </tr>
+             <tr>     	             
+                     <td width="15%" align="right"><span class="required"></span>时长规格：</td>
+		             <td width="35%" >		                	          
+		                	  <input maxlength="10" id="videoFileDuration" disabled="disabled" type="text" value="${videoSpecification.duration}秒" />
+		             </td>
+                     <td width="15%" align="right"><span class="required"></span>选择文件：                   
+                     </td>
+                     <td>	         
+                        	          
+			          <input id="backgroundImage2" name="" value="" type="hidden"  />
+			          <input id="file_id2" name="upload" type="file" />
+                     </td>
+              </tr>
+              <tr>
+                     <td width="15%" align="right"><span class="required"></span>实际时长：</td>
+                     <td width="35%" >
+           	          <input maxlength="10" id="videoMeta.runTime" name="videoMeta.runTime" type="text" value="${videoMeta.runTime}" />
+                     </td>
+		             <td width="15%" align="right"><span class="required"></span>效验结果：</td>
+		             <td width="35%" >
+		                	<input maxlength="10" id="videoCheckResult" type="text" disabled="disabled" value="通过" />
+		             </td>
+              </tr>
+                     
+	          <tr>
+			      <td align="right" >素材预览效果：</td>
+			      <td colspan="3">
+			      <input id="videoPath" type="hidden" value="${sssspath}"/>
+				    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
+				     position: relative;">
+						<img id="pImage2" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" />
+						<div id="video">
+							<object type='application/x-vlc-plugin' id='vlc'  classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width="150" height="150">
+						           <param name='mrl'  value=''/>
+									<param name='volume' value='50' />
+									<param name='autoplay' value='false' />
+									<param name='loop' value='false' />
+									<param name='fullscreen' value='false' />
+						    </object>
+						</div>
+					</div>
+			      </td>
+	          </tr>
+          </table>
+           
+			   <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px; display:none;" id ="div_image">
+                      <tr class="title" ><td colspan="4">图片素材</td></tr>		            
+                      <tr>		            	
+                         <td align="right"><span class="required"></span>选择文件：                        
+                         </td>
+                         <!-- <div id="fileQueue"></div> -->
+                         
+                         <input id="imageMetaName" name="imageMetaName" type="hidden" value="${imageMeta.name}"/>
+                         <input id="imageMeta.id" name="imageMeta.id" type="hidden" value="${imageMeta.id}"/>
+                         <td>
+	            	        <input id="file_id" name="upload" type="file" class="e_input" onfocus="this.className='e_inputFocus'" onblur="this.className='e_input'"/>
+					        <input id="backgroundImage" name="" value="" type="hidden" class="e_input" onfocus="this.className='e_inputFocus'" onblur="this.className='e_input'" />
+					        <input id="localFilePath" name="localFilePath"  type="hidden" />
+                         </td>
+                         
+                         <td width="15%" align="right"><span class="required"></span>文件规格：</td>
+		                 <td width="35%" >
+		                 
+		                	          
+		                              <span id="imageSpec" >大小:${imageSpecification.fileSize} 宽度:${imageSpecification.imageWidth} 高度:${imageSpecification.imageHeight}</span>
+		                 </td>
+                     </tr>
+                     <tr>		            	
+		                         <td width="15%" align="right"><span class="required"></span>效验结果：</td>
+		                          <td width="35%" >
+		                	          <input maxlength="10" id="imageCheckResult" type="text" disabled="disabled" value="通过" />
+		                          </td>
+		                         <td width="15%" align="right"><span class="required"></span>实际规格：</td>
+		                          <td width="35%" >
+		                              <span id="imageSpecReal">
+		                              大小:${imageMeta.fileSize} 宽度:${imageMeta.fileWidth} 高度:${imageMeta.fileHeigth}
+		                              </span>
+		                	          
+		                	          
+		                          </td>
+		              </tr>
+		                                  
+                     <tr>
+					     <td align="right" >素材预览效果：</td>
+					     <td colspan="3">
+						   
+						    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
+						     position: relative;">
+								<img id="pImage3" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
+								<img id="mImage" src="${viewPath}/${imageMeta.name}" />
+							</div>
+					     </td>						
+			         </tr>
+               </table>
+          
+          
+          <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px; display: none;" id ="div_zip">
+                      <tr class="title" ><td colspan="4">ZIP素材</td></tr>		            
+                      <tr>		            	
+                         <td align="right"><span class="required"></span>选择文件：                        
+                         </td>
+								<input id="zipMetaName" name="zipMetaName" type="hidden" value="${zipMeta.name}"/>
+                         		<input id="zipMeta.id" name="zipMeta.id" type="hidden" value="${zipMeta.id}"/>
+                         <td>
+	            	        <input id="file_id3" name="upload" type="file" class="e_input" onfocus="this.className='e_inputFocus'" onblur="this.className='e_input'"/>
+					        <input id="zipbackgroundImage" name="" value="" type="hidden" class="e_input" onfocus="this.className='e_inputFocus'" onblur="this.className='e_input'" />
+					       <!--   <input id="ziplocalFilePath" name="localFilePath"  type="hidden" />-->
+                         </td>
+                         
+                         <td width="15%" align="right"><span class="required"></span>文件规格：</td>
+		                 <td width="35%" >
+		                 <!-- 
+		                 <input maxlength="10" id="imageSpec" type="text" disabled="disabled" value="大小:${imageSpecification.fileSize} 宽度:${imageSpecification.imageWidth} 高度:${imageSpecification.imageHeight}"/>
+		                  -->
+		                	          
+		                              <span id="imageSpec" >大小:${zipSpecification.fileSize} </span>
+		                 </td>
+                     </tr>
+                     <tr>		            	
+		                         <td width="15%" align="right"><span class="required"></span>效验结果：</td>
+		                          <td width="35%" >
+		                	          <input maxlength="10" id="zipCheckResult" type="text" disabled="disabled" value="通过" />
+		                          </td>
+		                         <td width="15%" align="right"><span class="required"></span>实际规格：</td>
+		                          <td width="35%" >
+		                              <span id="zipSpecReal">
+		                              	大小:${zipMeta.fileSize}
+		                              </span>
+		                	         		                	          
+		                          </td>
+		              </tr>
+                     
+                     <tr>
+					     <td align="right" >素材预览效果：</td>
+					     <td colspan="3">
+						   <!-- <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:345px;height:250px;">
+							<img id="materialViewDivImg" src="" style="background-repeat:no-repeat; width:345px;height:250px;"/>											
+						    </div>	 --> 
+						    <div style="margin-left:0px;margin-right:0px;background-repeat:no-repeat; width:426px;height:240px;
+						     position: relative;">
+								<img id="pImage4" src="<%=path%>/${adPositionQuery.backgroundPath}" width="426px" height="240px" /> 
+								<img id="mImage4" src="${viewPath}/${zipMeta.fileHeigth}" />
+							</div>
+					     </td>						
+			         </tr>
+               </table>
+          
+        </td>
+      </tr>
+	  
+	  <tr>
+       	<td colspan="4">
+       		<input type="button" id="saveBtn" value="保存" class="btn" onclick="submitForm();"/>
+       		<input type="button" value="取消" class="btn" onclick="javascript:closeSavePane();"/>
+       	</td>
+      </tr>
+
+</table>
+</div>
+</div>
+</div>
+</form>
+</body>
+</html>

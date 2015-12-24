@@ -2,23 +2,15 @@ package com.avit.dtmb.material.action;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -30,11 +22,9 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.interceptor.ServletRequestAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.avit.ads.webservice.UploadClient;
 import com.avit.dtmb.material.bean.DResource;
 import com.avit.dtmb.material.service.MaterialService;
 import com.avit.dtmb.position.bean.DAdPosition;
@@ -47,46 +37,31 @@ import com.dvnchina.advertDelivery.log.service.OperateLogService;
 import com.dvnchina.advertDelivery.meterial.action.MeterialManagerAction;
 import com.dvnchina.advertDelivery.meterial.bean.MaterialCategory;
 import com.dvnchina.advertDelivery.meterial.bean.PriorityWordBean;
-import com.dvnchina.advertDelivery.meterial.bean.QuestionInfo;
-import com.dvnchina.advertDelivery.meterial.bean.QuestionType;
 import com.dvnchina.advertDelivery.meterial.service.MeterialManagerService;
 import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.ImageMeta;
 import com.dvnchina.advertDelivery.model.ImageReal;
 import com.dvnchina.advertDelivery.model.MessageMeta;
 import com.dvnchina.advertDelivery.model.MessageReal;
-import com.dvnchina.advertDelivery.model.Question;
-import com.dvnchina.advertDelivery.model.QuestionReal;
-import com.dvnchina.advertDelivery.model.Questionnaire;
-import com.dvnchina.advertDelivery.model.QuestionnaireReal;
-import com.dvnchina.advertDelivery.model.QuestionnaireTemplate;
-import com.dvnchina.advertDelivery.model.ResourceReal;
 import com.dvnchina.advertDelivery.model.UserLogin;
 import com.dvnchina.advertDelivery.model.VideoMeta;
 import com.dvnchina.advertDelivery.model.VideoReal;
-import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.position.bean.ImageSpecification;
 import com.dvnchina.advertDelivery.position.bean.VideoSpecification;
 import com.dvnchina.advertDelivery.utils.ConfigureProperties;
-import com.dvnchina.advertDelivery.utils.StringUtil;
 import com.dvnchina.advertDelivery.utils.ftp.FtpUtils;
 import com.dvnchina.advertDelivery.utils.json.Obj2JsonUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
 @ParentPackage("default")
 @Namespace("/dmaterial")
 @Scope("prototype")
 @Controller
-public class MeterialAction extends BaseAction implements ServletRequestAware{
+public class MeterialAction extends BaseAction{
 	private Logger logger = Logger.getLogger(MeterialManagerAction.class);
 	/**
 	 * 
 	 */
-	private HttpServletRequest request;
 	private static final long serialVersionUID = 3629860605255061545L;
 	@Resource
 	private MaterialService materialService;
@@ -99,18 +74,11 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	private List<MaterialCategory> materialCategoryList;
 	private PageBeanDB adPositionPage;
 	private Integer advertPositionId;
-	private DResource material;
+	private DResource resource;
 	  /**操作日志类*/
 	public OperateLog operLog;
 	private OperateLogService operateLogService;
-		
-		/**
-		 * 接受来自页面中的ajax请求参数
-		 */
-	private String resourceName;
-	private Integer resourceId;
-	private String templateName;
-	private Integer templateId;
+	
 	/**
 	 * 批量上传文件名集合
 	 */
@@ -138,7 +106,6 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	
     private ImageSpecification zipSpecification;
     private String materialId;
-    private Object positionJson;
 	
 	
 	
@@ -175,7 +142,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 			if(getLoginUser().getRoleType() == 1){ //广告商（不具有素材审核的权限）
         		return SUCCESS;
         	}
-            meterialQuery.setStatus("0".charAt(0));
+            meterialQuery.setStatus("0");
 			page = materialService.queryDMaterialList(meterialQuery,page.getPageNo(), page.getPageSize());
 		}catch(Exception e){
 			e.printStackTrace();
@@ -189,31 +156,32 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	 * @return
 	 * @throws ParseException
 	 */
-	@Action(value = "initMaterial",results={@Result(name="success",location="/page/material/new/Dmaterial/auditMaterial.jsp")})
+	@Action(value = "initMaterial",results={@Result(name="success",location="/page/material/new/Dmaterial/updateMaterial.jsp"),
+											@Result(name="audit",location="/page/material/new/Dmaterial/auditMaterial.jsp")})
 	public String initMaterial(){    
 
         try{
         	materialCategoryList=meterialManagerService.getMaterialCategoryList();
             
             int materialIdd = Integer.valueOf(materialId);      
-            material = materialService.getMaterialByID(materialIdd);
-            adPositionQuery = dPositionService.getAdvertPosition(material.getAdvertPositionId());
+            resource = materialService.getMaterialByID(materialIdd);
+            adPositionQuery = dPositionService.getAdvertPosition(resource.getPositionCode());
     		//返回广告位的JSON信息，用于预览
     		getRequest().setAttribute("positionJson", Obj2JsonUtil.object2json(adPositionQuery));
-    		positionJson = Obj2JsonUtil.object2json(adPositionQuery);
-            if(material.getResourceType()==0){
+           
+    		if(resource.getResourceType()==0){
                 //图片
-                imageMeta=meterialManagerService.getImageMetaByID(material.getResourceId());
-                imageSpecification = meterialManagerService.getImageMateSpeci(Integer.parseInt(material.getAdvertPositionId()));
+                imageMeta=meterialManagerService.getImageMetaByID(resource.getResourceId());
+                imageSpecification = materialService.getImageMateSpeci(adPositionQuery.getSpecificationId());
             }
-            if(material.getResourceType()==1){
+            if(resource.getResourceType()==1){
                 //视频
-                videoMeta = meterialManagerService.getVideoMetaByID(material.getResourceId());
-                videoSpecification = meterialManagerService.getVideoMateSpeci(Integer.parseInt(material.getAdvertPositionId()));
+                videoMeta = meterialManagerService.getVideoMetaByID(resource.getResourceId());
+                videoSpecification = materialService.getVideoSpc(adPositionQuery.getSpecificationId());
             }
-            if(material.getResourceType()==2){
+            if(resource.getResourceType()==2){
                 //文字
-                textMeta=meterialManagerService.getTextMetaByID(material.getResourceId());
+                textMeta=meterialManagerService.getTextMetaByID(resource.getResourceId());
                 if(textMeta.getContent()!=null){
                     byte[] contentBlob =textMeta.getContent();
                     String jsonWord = new String(contentBlob,"gbk");
@@ -226,14 +194,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                 }
                 
             }
-            if(material.getResourceType()==4){
-                //ZIP
-            	zipMeta=meterialManagerService.getImageMetaByID(material.getResourceId());
-            	zipSpecification = meterialManagerService.getImageMateSpeci(Integer.parseInt(material.getAdvertPositionId()));
-                String previewImage = zipMeta.getName().substring(0, zipMeta.getName().lastIndexOf("."))+".jpg";
-                zipMeta.setFileHeigth(previewImage);
-            }
-      
+                  
 
             String ip=config.getValueByKey("ftp.ip");
             String path=config.getValueByKey("materila.ftp.tempPath");
@@ -242,20 +203,28 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
             if(videoMeta != null){
             	sssspath = viewPath+"/"+videoMeta.getName();
             }
+            this.getRequest().setAttribute("viewPath", viewPath);
             
-           /* request.setAttribute("viewPath", viewPath);
-            request.setAttribute("material", material);*/
         }catch(Exception e){
         	e.printStackTrace();
         	logger.error("初始化素材信息异常", e);
         }
-        
+        if("1".equals(isAuditTag)){
+        	return "audit";
+        }
         return SUCCESS;
     }
+	
 	@Action(value = "getMateSpec")
 	public void getMateSpec(){
 		String result = materialService.getMaterialSpecification(position);
 		this.renderJson(result);
+	}
+	
+	@Action(value = "checkMaterialExist")
+	public void checkMaterialExist(){
+		String result = materialService.checkMaterialExist(resource);
+		this.renderText(result);
 	}
 	
 	/**
@@ -286,41 +255,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 		 }
 		 return SUCCESS;
 	}
-	/**
-	 * 根据广告位获取视频规格
-	 * @return 
-	 * @return
-	 */
-	@Action(value = "getVideo")
-	public String getVideo(){
-		VideoSpecification videoSpecification = materialService.getVideoSpc(advertPositionId);
-		Map<String,String> resultMap = new HashMap<String,String>();
-        resultMap.put("videoFileDuration",videoSpecification.getDuration().toString());
-        print(Obj2JsonUtil.map2json(resultMap));
-		return NONE;
-	}
-	/**
-	 * 根据广告位获取图片规格
-	 * @param str
-	 */
-	@Action(value = "getImg")
-	public String getImg(){
-		ImageSpecification imageSpecification = materialService.getImageMateSpeci(advertPositionId);
-	    Map<String,String> resultMap = new HashMap<String,String>();
-	    resultMap.put("imageFileWidth",imageSpecification.getImageWidth());
-        resultMap.put("imageFileHigh",imageSpecification.getImageHeight());
-        resultMap.put("imageFileSize",imageSpecification.getFileSize());
-        print(Obj2JsonUtil.map2json(resultMap));
-		return NONE;
-	}
-	private void print(String str) {
-		try {
-			ServletActionContext.getResponse().setCharacterEncoding("utf-8");
-			ServletActionContext.getResponse().getOutputStream().write(str.getBytes("utf-8"));
-		} catch (Exception e) {
-			System.out.println("send response error");
-		}
-	}
+	
 	/**
      * 保存素材
      * @return
@@ -334,10 +269,10 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	    try{
 	        UserLogin userLogin = (UserLogin) this.getRequest().getSession().getAttribute("USER_LOGIN_INFO");
 	        uploadDir = "images/material";
-		    material.setIsDefault(0);
-		    if(material.getResourceType()==1){
+		    resource.setIsDefault(0);
+		    if(resource.getResourceType()==1){
 		      //视频素材	    	
-		        if(material.getId()==null){
+		        if(resource.getId()==null){
 		        	operType = "operate.add";
 		            //新增
 		        	videoFileNames = videoFileNames.replace(" ","");//获取批量文件名集合
@@ -371,9 +306,6 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                                 uploadfile.delete();
                             }
 
-                            
-                            
-
                             VideoMeta  videoMetaTemp = new VideoMeta();
 
                             videoMetaTemp.setName(prams[0]);
@@ -392,15 +324,15 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                                 materialTemp.setCustomerId(userLogin.getCustomerId());
                             }
                             
-                            materialTemp.setStatus("0".charAt(0));       
+                            materialTemp.setStatus("0");       
                             materialTemp.setResourceId(videoMetaTemp.getId());                                               
                             materialTemp.setResourceName(resourceName);
                           //  materialTemp.setKeyWords(videoKeyword);
                             materialTemp.setCreateTime(new Date());//资产创建时间
                             //复制公共属性
-                            materialTemp.setResourceType(material.getResourceType());
-                            materialTemp.setCategoryId(material.getCategoryId());
-                            materialTemp.setPositionCode(material.getPositionCode());
+                            materialTemp.setResourceType(resource.getResourceType());
+                            materialTemp.setCategoryId(resource.getCategoryId());
+                            materialTemp.setPositionCode(resource.getPositionCode());
                             materialTemp.setIsDefault(0);
                             materialTemp.setOperationId(userLogin.getUserId());
                             materialService.saveDResource(materialTemp);
@@ -443,13 +375,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	                        if(uploadfile.exists()&&uploadfile.isFile()){
 	                        	uploadfile.delete();
 	                        }
-	                      //效验该广告位的视频规格
-//	                      VideoSpecification videoSpecification = meterialManagerService.getVideoMateSpeci(material.getAdvertPositionId());
-//	                      if(videoSpecification!=null){
-//	                          if(!videoMeta.getRunTime().equals(videoSpecification.getDuration().toString())){
-//	                              logger.info("上传的视频时长不等于广告位的设置大小### Material_video_duration=" + videoSpecification.getDuration());
-//	                          }
-//	                      } 
+	                    
 	                        
 	                        if(videoMeta==null){
 	                            videoMeta = new VideoMeta();
@@ -459,22 +385,14 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	                        videoMeta.setFileSize(Integer.valueOf(bytesum).toString());
 	                        meterialManagerService.saveVideoMaterial(videoMeta);
 	                }
-		            material.setModifyTime(new Date());//资产修改时间
-		            
-		            //保存素材表
-	                //Contract contract = meterialManagerService.getContractByID(material.getContractId());
-//	                if(userLogin.getRoleType()==2){
-//                        //登陆用户为运营商操作员
-//	                    material.setCustomerId(0);
-//                    }else{
-//                        material.setCustomerId(userLogin.getCustomerId());
-//                    }
-	                material.setStatus("0".charAt(0));       
-	                material.setResourceId(videoMeta.getId());
+		            resource.setModifyTime(new Date());//资产修改时间
+		        
+	                resource.setStatus("0");       
+	                resource.setResourceId(videoMeta.getId());
 	                //material.setOperationId(userLogin.getUserId());
-	                materialService.saveDResource(material);
+	                materialService.saveDResource(resource);
 	                //操作日志
-	                operInfo = material.toString();
+	                operInfo = resource.toString();
 	                operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
 	                operateLogService.saveOperateLog(operLog);
 		        }
@@ -482,13 +400,10 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 		        
 		    }
 		    
-		    if(material.getResourceType()==0){
+		    if(resource.getResourceType()==0){
 	            //图片素材
-	                if(material.getId()==null){
+	                if(resource.getId()==null){
 	                	operType = "operate.add";
-	                    //新增
-	                    //String materialName = localFilePath.substring(localFilePath.lastIndexOf("/")+1,localFilePath.length());
-	                    
 	                    
 	                    imageFileNames = imageFileNames.replace(" ","");//获取批量文件名集合
 	                    String imageFileNamestemp[]= imageFileNames.split(",");
@@ -556,15 +471,15 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                                 materialTemp.setCustomerId(userLogin.getCustomerId());
                             }
 	                        
-	                        materialTemp.setStatus("0".charAt(0));                      
+	                        materialTemp.setStatus("0");                      
 	                        materialTemp.setResourceId(imageMetaTemp.getId());
 	                        materialTemp.setResourceName(resourceName);
 	                        //materialTemp.setDescription(imageKeyword);
 	                        materialTemp.setCreateTime(new Date());//资产创建时间
 	                        //复制公共属性
-	                        materialTemp.setResourceType(material.getResourceType());
-	                        materialTemp.setCategoryId(material.getCategoryId());
-	                        materialTemp.setAdvertPositionId(material.getPositionCode());
+	                        materialTemp.setResourceType(resource.getResourceType());
+	                        materialTemp.setCategoryId(resource.getCategoryId());
+	                        materialTemp.setPositionCode(resource.getPositionCode());
 	                        materialTemp.setIsDefault(0);
 	                        materialTemp.setOperationId(userLogin.getUserId());
 	                        materialService.saveDResource(materialTemp);
@@ -615,28 +530,6 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	                            if(uploadfile.exists()&&uploadfile.isFile()){
 	                            	uploadfile.delete();
 	                            }
-	                            //效验该广告位的图片规格
-//	                          ImageSpecification imageSpecification =new ImageSpecification();
-//	                          imageSpecification = meterialManagerService.getImageMateSpeci(material.getAdvertPositionId());
-//	                          if(imageSpecification!=null){
-//	                              if(!fileWidth.equals(imageSpecification.getImageWidth())){
-//	                                  logger.info("上传的文件宽度不等于广告位的设置大小### Material_image_width=" + imageSpecification.getImageWidth());
-//	                              }else{
-//	                                  if(!fileHigh.equals(imageSpecification.getImageHeight())){
-//	                                      logger.info("上传的文件高度不等于广告位的设置大小### Material_image_high=" + imageSpecification.getImageHeight());
-//	                                  }else{
-//	                                      String maxVal = imageSpecification.getFileSize();                            
-//	                                      if(!maxVal.equals("")&&maxVal!=null){
-//	                                          int maxSize = Integer.valueOf(maxVal) * 1024;//图片规格中文件大小单位为K
-//	                                          if(bytesum>maxSize){
-//	                                              logger.info("上传的文件大小超过广告位的设置大小### Material_image_fileSize=" + imageSpecification.getFileSize()+"K");
-//	                                          }
-//	                                      }
-//	                                  }
-//	                              }
-//	                          }
-	                            
-	                          
 	                            
 	                        if(imageMeta==null){
 	                            imageMeta = new ImageMeta();
@@ -650,35 +543,22 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	                        
 	                        meterialManagerService.saveImageMaterial(imageMeta);
 	                    }
-	                    material.setModifyTime(new Date());//资产修改时间
-	                    
-	                  //保存素材表
-	                    //Contract contract = meterialManagerService.getContractByID(material.getContractId());
-//	                    if(userLogin.getRoleType()==2){
-//                            //登陆用户为运营商操作员
-//	                        material.setCustomerId(0);
-//                        }else{
-//                            material.setCustomerId(userLogin.getCustomerId());
-//                        }
-	                    material.setStatus("0".charAt(0));                      
-	                    material.setResourceId(imageMeta.getId());
+	                    resource.setModifyTime(new Date());//资产修改时间
+	              
+	                    resource.setStatus("0");                      
+	                    resource.setResourceId(imageMeta.getId());
 	                    //material.setOperationId(userLogin.getUserId());
-	                    materialService.saveDResource(material);
+	                    materialService.saveDResource(resource);
 	               
 	                    //操作日志
-	                    operInfo = material.toString();
+	                    operInfo = resource.toString();
 	                    operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
 	                    operateLogService.saveOperateLog(operLog);
 	                }
 	                
-	                
 	        }
 		    
-		    if(material.getResourceType()==2){
-		        //文字素材
-		        
-	            //保存文字素材子表
-	           // byte[] contentBlob = textMeta.getContentMsg().getBytes("utf-8");
+		    if(resource.getResourceType()==2){
 		    	
 		    	String[] words = textMeta.getContentMsg().replace("－", "-").replace("—", "-").split(",");
 		    	String[] priorities = textMeta.getPriority().replace(" ", "").split(",");
@@ -694,41 +574,31 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	            byte[] contentBlob = gson.toJson(list).getBytes("gbk");
 		           
 	            textMeta.setContent(contentBlob);
-	            
-//	            String temp = textMeta.getContentMsg();
-//	            logger.info("convert before:"+temp);
-//               // contentBlob =textMeta.getContentMsg().getBytes("gbk");
-//                temp = new String(contentBlob,"gbk"); 
-//                logger.info("convert end:"+temp);
-//	            
-//                temp = new String(contentBlob,"utf8"); 
-//                logger.info("convert end:"+temp);
+
 	            meterialManagerService.saveTextMaterial(textMeta);
-	            //保存素材表
-//	            Contract contract = meterialManagerService.getContractByID(material.getContractId());
-//	            material.setCustomerId(contract.getCustomerId());
-	            material.setStatus("0".charAt(0));  
-	            if(material.getId()==null){
+	
+	            resource.setStatus("0");  
+	            if(resource.getId()==null){
 	            	operType = "operate.add";
 	                //新增
-	                material.setCreateTime(new Date());
-	                material.setOperationId(userLogin.getUserId());
+	                resource.setCreateTime(new Date());
+	                resource.setOperationId(userLogin.getUserId());
 	                if(userLogin.getRoleType()==2){
 	                    //登陆用户为运营商操作员
-	                    material.setCustomerId(0);
+	                    resource.setCustomerId(0);
 	                }else{
-	                    material.setCustomerId(userLogin.getCustomerId());
+	                    resource.setCustomerId(userLogin.getCustomerId());
 	                }
 	            }else{
 	            	operType = "operate.update";
 	                //修改
-	                material.setModifyTime(new Date());
+	                resource.setModifyTime(new Date());
 	            }           
-	            material.setResourceId(textMeta.getId());
+	            resource.setResourceId(textMeta.getId());
 	            
-	            materialService.saveDResource(material);
+	            materialService.saveDResource(resource);
 	            //操作日志
-		        operInfo = material.toString();
+		        operInfo = resource.toString();
 				operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
 				operateLogService.saveOperateLog(operLog);
 		    }
@@ -771,19 +641,18 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
      * 审核素材
      * @return
      */
-    @Action(value = "auditMaterial",results={@Result(name="success",location="/page/material/new/Dmaterial/auditMaterial.jsp")})
+    @Action(value = "auditMaterial",results={@Result(name="success",type="redirect",location="auditMaterialList.action")})
     public String auditMaterial() {
         HttpServletRequest request = this.getRequest();
         String auditFlag = request.getParameter("auditFlag");      
         String reason = request.getParameter("reason");
-        //reason=new String(reason.getBytes("GBK"),"utf-8");
 
         String materialId = request.getParameter("materialId");
         //获取素材临时表信息
         DResource materialTemp = materialService.getMaterialByID(Integer.parseInt(materialId));
         if(auditFlag.equals("1")){
             //审核通过          
-            materialTemp.setStatus("2".charAt(0));           
+            materialTemp.setStatus("2");           
             materialTemp.setExaminationOpintions(reason);
             materialTemp.setAuditTime(new Date());
             materialService.saveDResource(materialTemp);
@@ -807,16 +676,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                         ftp.downloadToLocal(remoteFileName, localFileName, remoteDirectory, null);
                         String remoteDirectoryReal=config.getValueByKey("materila.ftp.realPath");
                         ftp.uploadFileToRemote(".././"+localFileName, remoteDirectoryReal, localFileName);    
-                       /* AdvertPosition advertPosition =meterialManagerService.getAdvertPosition(materialTemp.getAdvertPositionId());
-                        if(advertPosition!=null){
-                        	if(advertPosition.getPositionPackageType()==0 ||advertPosition.getPositionPackageType()==1){
-                            	//双向图片素材审核时调用下面函数上传至 双向资源服务器
-                            	UploadClient client  = new UploadClient();
-                            	String fileNameToCps = remoteDirectoryReal+"/"+localFileName;
-                            	client.sendFtpFileToCps(fileNameToCps, null);
-                            }
-                        }*/
-                        
+                       
                         //删除本地文件
                         File localFile =new File(".././"+localFileName);
                         if(localFile.exists()&&localFile.isFile()){
@@ -849,33 +709,8 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                         ftp.downloadToLocal(remoteFileName, localFileName, remoteDirectory, null);
                         String remoteDirectoryReal=config.getValueByKey("materila.ftp.realPath"); 
                         ftp.uploadFileToRemote(".././"+localFileName, remoteDirectoryReal, localFileName);
-
-//                        //TODO 调用接口复制视频文件到videoPump
-//                        UploadClient client = new UploadClient();
-//                        String fileNameToVideoPump = remoteDirectoryReal+"/"+localFileName;
-//                        String filePathToVideoPump = materialTemp.getAdvertPositionId()+"/"+materialTemp.getId();
-//                        //client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump+"/"+localFileName);
-//                        client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump);
-//                        videoReal.setVideoPumpPath(filePathToVideoPump);
-//                        AdvertPosition advertPosition =meterialManagerService.getAdvertPosition(materialTemp.getAdvertPositionId());
-//                        if(advertPosition!=null){
-//                        	if(advertPosition.getPositionPackageType()==3){
-//                            	//单向非实时广告
-//                        		videoReal.setVideoPumpPath(videoReal.getFormalFilePath());
-//                            }
-//                        }
-                        
-                        //AdvertPosition advertPosition =meterialManagerService.getAdvertPosition(materialTemp.getAdvertPositionId());
                         videoReal.setVideoPumpPath(videoReal.getFormalFilePath());
-                        /*if(advertPosition!=null && advertPosition.getPositionPackageType()!=3){
-                        	 //TODO 调用接口复制视频文件到videoPump
-                            UploadClient client = new UploadClient();
-                            String fileNameToVideoPump = remoteDirectoryReal+"/"+localFileName;
-                            String filePathToVideoPump = materialTemp.getAdvertPositionId()+"/"+materialTemp.getId();
-                            //client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump+"/"+localFileName);
-                            client.sendFileVideoPump(fileNameToVideoPump, filePathToVideoPump);
-                            videoReal.setVideoPumpPath(filePathToVideoPump);
-                        }    */                                   
+                                                        
                        meterialManagerService.saveVideoMaterialReal(videoReal);
 
                         //删除本地文件
@@ -901,202 +736,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
                 MessageReal textMetaReal = copyToTextReal(textMetaTemp);
                 meterialManagerService.saveTextMaterialReal(textMetaReal);
             }
-            /*if(materialTemp.getResourceType()==3){
-                 //问卷    
-                Questionnaire questionSubject = meterialManagerService.getQueMetaByID(materialTemp.getResourceId());
-                List<Question> questionAnswerList = meterialManagerService.getQuestionAnswerList(materialTemp.getResourceId());
-                //生成问卷页面
-                QuestionnaireTemplate questionTemplate = meterialManagerService.getQuestionTemplateByID(questionSubject.getTemplateId());
-                //FTP文件复制转移
-                FtpUtils ftp = null;
-                    try {
-                        ftp = new FtpUtils();
-                        ftp.connectionFtp();
-                        String localFileName=questionTemplate.getTemplateName();
-                        String remoteFileName=questionTemplate.getTemplateName();
-                        String remoteDirectory=questionTemplate.getHtmlPath();
-                        ftp.downloadToLocal(remoteFileName, localFileName, remoteDirectory, null);
-                        //解压缩文件                      
-                        String fileName = ".././"+localFileName;
-                        String filePath = ".././";
-                        ZipFile zipFile = new ZipFile(fileName);
-                        Enumeration emu = zipFile.entries();
-                        while(emu.hasMoreElements()){
-                        ZipEntry entry = (ZipEntry)emu.nextElement();
-                        //会把目录作为一个file读出一次，所以只建立目录就可以，之下的文件还会被迭代到。
-                        if (entry.isDirectory()){
-                          new File(filePath + entry.getName()).mkdirs();
-                          continue;
-                        }
-                        BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
-                        File file = new File(filePath + entry.getName());
-                        //加入这个的原因是zipfile读取文件是随机读取的，这就造成可能先读取一个文件
-                        //而这个文件所在的目录还没有出现过，所以要建出目录来。
-                        File parent = file.getParentFile();
-                        if(parent != null && (!parent.exists())){
-                            parent.mkdirs();
-                        }
-
-                        FileOutputStream fos = new FileOutputStream(file);
-                        BufferedOutputStream bos = new BufferedOutputStream(fos,2048);
-
-                        int count;
-                        byte data[] = new byte[2048];
-
-                        while ((count = bis.read(data, 0, 2048)) != -1){
-                        bos.write(data, 0, count);
-                        }
-
-                        bos.flush();
-                        bos.close();
-                        bis.close();
-                        }
-                        zipFile.close();
-
-                        //生成页面
-                        String templateFileName =localFileName.substring(0, localFileName.indexOf("."));                      
-                        Configuration cfg = new Configuration();                               
-                        cfg.setDefaultEncoding("UTF-8");
-                        cfg.setObjectWrapper(new DefaultObjectWrapper());
-                        cfg.setDirectoryForTemplateLoading(new File(".././"+templateFileName+"/htmlTemplate/"));
-                        Template temp = cfg.getTemplate(templateFileName+".html","UTF-8");
-                       
-                        Map root = new HashMap();
-                        String requestActionName=config.getValueByKey("materila.question.requesrActionName");
-                        root.put("questionSubjectId", questionSubject.getId());
-                        root.put("questionType", questionSubject.getQuestionnaireType());
-                        root.put("subject", questionSubject.getSummary());
-                        root.put("integral", questionSubject.getIntegral());
-                        root.put("questionSummary", questionSubject.getSummary());
-                        root.put("requestActionName", requestActionName);
-                        
-                        List<Question> questionList = new ArrayList<Question>();
-                        List<Question> answerList = new ArrayList<Question>();
-                        questionList=meterialManagerService.getQuestionList(questionSubject.getId());
-                        for (int i=0; i<questionList.size(); i++) {
-                        	Question que = questionList.get(i);
-                        	que.setId(i+1);
-                        }
-                        answerList=meterialManagerService.getQuestionAnswerList(questionSubject.getId());
-                        for (int j=0; j<answerList.size(); j++) {
-                        	Question ans = answerList.get(j);
-                        	ans.setId(0);
-                        }
-                        String questionJson = Obj2JsonUtil.list2json(questionList);
-               		    String answerJson = Obj2JsonUtil.list2json(answerList);
-               		    //获取总记录数
-               			int recordCount = questionList.size();
-               			//获取总页数（默认每页5条记录）
-               			int totalPage = (recordCount-1)/5+1;
-                    
-                        root.put("questionList", questionList);
-                        root.put("answerList", answerList);
-                        root.put("questionJson", questionJson);
-                        root.put("answerJson", answerJson);
-                        root.put("pageNo", 1);
-                		root.put("pageSize", 5);
-                		root.put("recordCount", recordCount);
-                		root.put("totalPage", totalPage);
-                       
-                        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(".././"+templateFileName+"/html/questionReal.html"),"UTF-8"));
-                        temp.process(root, out);
-                        out.flush();
-                        out.close();
-                        
-                        //删除本地文件(从FTP下载的模板文件压缩包)
-                        File localFile =new File(".././"+localFileName);
-                        if(localFile.exists()&&localFile.isFile()){
-                            localFile.delete();
-                        }
-                        //将新的文件夹上传到FTP
-                        File inFile = new File(".././"+templateFileName);                      
-                        String newFileName =questionSubject.getId().toString();                    
-                        String remoteDirectoryReal=config.getValueByKey("materila.ftp.questionRealPath");
-                        logger.info("inFile.getName:"+inFile.getPath()+File.separator+inFile.getName()+"remoteDirectoryReal:"+remoteDirectoryReal);
-                        ftp.upload(inFile,remoteDirectoryReal);
-                        ftp.removeRemoteDirectory(remoteDirectoryReal+"/"+newFileName);//重命名之前先进行删除,保存重命名成功
-                        ftp.renameRemoteFile(remoteDirectoryReal, templateFileName, remoteDirectoryReal, newFileName);//重命名文件
-                        //删除本地文件
-                        File localFileNewZip =new File(".././"+localFileName);
-                        if(localFileNewZip.exists()&&localFileNewZip.isFile()){
-                            localFileNewZip.delete();
-                        }
-                        File localFileNew =new File(".././"+templateFileName);
-                        this.DeleteFolder(".././"+templateFileName);
-
-                    } catch (Exception e) {
-                    	e.printStackTrace();
-                        logger.error("问卷素材FTP上传异常", e);
-                    } finally{
-                        if (ftp != null) {
-                            ftp.closeFTP();
-                        }
-                    }
-                
-                    
-                    
-                    String filePath = "http://"+config.getValueByKey("ftp.ip")+config.getValueByKey("materila.ftp.questionRealPath").substring(5)+"/"
-                                       +questionSubject.getId().toString()+"/html/questionReal.html";
-                    questionSubject.setFilePath(filePath);
-                    QuestionnaireReal questionSubjectReal = copyToQuestionnaireReal(questionSubject);
-                    List<QuestionReal> questionAnswerRealList = copyToQuestionRealList(questionAnswerList);
-                    meterialManagerService.saveQuestionSubject(questionSubject);
-                    meterialManagerService.saveQuestionSubjectReal(questionSubjectReal);
-                    meterialManagerService.saveQuestionRealList(questionAnswerRealList);
-                
-                
-                
-            }
-            if(materialTemp.getResourceType()==4){
-            	//ZIP
-                ImageMeta  imageMetaTemp = meterialManagerService.getImageMetaByID(materialTemp.getResourceId());
-                ImageReal imageMetaReal = copyToImageReal(imageMetaTemp);
-                meterialManagerService.saveImageMaterialReal(imageMetaReal);
-                //FTP文件复制转移
-                FtpUtils ftp = null;
-                    try {
-                        ftp = new FtpUtils();
-                        ftp.connectionFtp();
-                        String localFileName=imageMetaTemp.getName();
-                        //String localDirectory=config.getValueByKey("resource.locationPath"); ;
-                        String remoteFileName=imageMetaTemp.getName();
-                        String previewImage = imageMetaTemp.getName().substring(0, imageMetaTemp.getName().lastIndexOf("."))+".jpg";
-                        String localPreviewName = previewImage;
-                        String remoteDirectory=imageMetaTemp.getTemporaryFilePath();
-                        ftp.downloadToLocal(remoteFileName, localFileName, remoteDirectory, null);
-                        String remoteDirectoryReal=config.getValueByKey("materila.ftp.realPath");
-
-                        ftp.downloadToLocal(previewImage, localPreviewName, remoteDirectory, null);
-                        
-                       
-                        
-                        ftp.uploadFileToRemote(".././"+localFileName, remoteDirectoryReal, localFileName); 
-                        ftp.uploadFileToRemote(".././"+localPreviewName, remoteDirectoryReal, localPreviewName);  
-                        AdvertPosition advertPosition =meterialManagerService.getAdvertPosition(materialTemp.getAdvertPositionId());
-                        if(advertPosition!=null){
-                        	if(advertPosition.getPositionPackageType()==0 ||advertPosition.getPositionPackageType()==1){
-                            	//双向图片素材审核时调用下面函数上传至 双向资源服务器
-                            	UploadClient client  = new UploadClient();
-                            	String fileNameToCps = remoteDirectoryReal+"/"+localFileName;
-                            	client.sendFtpFileToCps(fileNameToCps, null);
-                            }
-                        }
-                        
-                        //删除本地文件
-                        File localFile =new File(".././"+localFileName);
-                        if(localFile.exists()&&localFile.isFile()){
-                            localFile.delete();
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        logger.error("zip素材FTP上传异常", e);
-                    } finally{
-                        if (ftp != null) {
-                            ftp.closeFTP();
-                        }
-                    }
-            }*/
+           
             //操作日志
 	        operInfo = materialTemp.toString();
 			operType = "operate.aduitOk";
@@ -1104,7 +744,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 			operateLogService.saveOperateLog(operLog);
         }else{
             //审核不通过
-            materialTemp.setStatus("1".charAt(0));
+            materialTemp.setStatus("1");
             materialTemp.setExaminationOpintions(reason);
             materialTemp.setAuditTime(new Date());
             materialService.saveDResource(materialTemp);
@@ -1230,35 +870,12 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 		this.advertPositionId = advertPositionId;
 	}
 	public DResource getMaterial() {
-		return material;
+		return resource;
 	}
 	public void setMaterial(DResource material) {
-		this.material = material;
+		this.resource = material;
 	}
-	public String getResourceName() {
-		return resourceName;
-	}
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-	}
-	public Integer getResourceId() {
-		return resourceId;
-	}
-	public void setResourceId(Integer resourceId) {
-		this.resourceId = resourceId;
-	}
-	public String getTemplateName() {
-		return templateName;
-	}
-	public void setTemplateName(String templateName) {
-		this.templateName = templateName;
-	}
-	public Integer getTemplateId() {
-		return templateId;
-	}
-	public void setTemplateId(Integer templateId) {
-		this.templateId = templateId;
-	}
+	
 	public String getVideoFileNames() {
 		return videoFileNames;
 	}
@@ -1356,11 +973,7 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	public static int getBufferSize() {
 		return BUFFER_SIZE;
 	}
-	@Override
-	public void setServletRequest(HttpServletRequest arg0) {
-		this.request = request; 
-		
-	}
+	
 	public String getLocalFilePath() {
 		return localFilePath;
 	}
@@ -1427,17 +1040,17 @@ public class MeterialAction extends BaseAction implements ServletRequestAware{
 	public void setMaterialId(String materialId) {
 		this.materialId = materialId;
 	}
-	public Object getPositionJson() {
-		return positionJson;
-	}
-	public void setPositionJson(Object positionJson) {
-		this.positionJson = positionJson;
-	}
 	public DAdPosition getPosition() {
 		return position;
 	}
 	public void setPosition(DAdPosition position) {
 		this.position = position;
+	}
+	public DResource getResource() {
+		return resource;
+	}
+	public void setResource(DResource resource) {
+		this.resource = resource;
 	}
 	
 }

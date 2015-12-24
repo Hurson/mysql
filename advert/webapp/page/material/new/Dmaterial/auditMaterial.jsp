@@ -38,7 +38,7 @@
 <script type="text/javascript">
 
 	function init(){
-		var materialType ="${material.resourceType}";
+		var materialType ="${resource.resourceType}";
 		if(materialType!=null && materialType!=""){
 			//预览素材
 			preview(${positionJson});
@@ -85,7 +85,6 @@
 	 */
 	function preview(positionJson){
 		var selPosition = eval(positionJson);
-		alert(selPosition);
 		document.getElementById("coordinateStr").value = selPosition.coordinate.replace(/(^\s+)|(\s+$)/g,"");
 		
 		if(selPosition.isLoop == 1){
@@ -301,13 +300,13 @@
 	}
 	
     function aduitSuccess(){
-        var reason = document.getElementById("material.examinationOpintions").value;
-        var materialId = document.getElementById("material.id").value;
+        var reason = document.getElementById("resource.examinationOpintions").value;
+        var materialId = document.getElementById("resource.id").value;
         
         if(reason!=null||reason!=""){
            if(reason.length>255){
 			alert("审核意见必须小于255个字节！");
-			$$("material.examinationOpintions").focus();
+			$$("resource.examinationOpintions").focus();
     		return true;
 		   }
         }
@@ -315,14 +314,14 @@
     }
     
     function aduitFlase(){
-        var reason = document.getElementById("material.examinationOpintions").value;
-        var materialId = document.getElementById("material.id").value;
+        var reason = document.getElementById("resource.examinationOpintions").value;
+        var materialId = document.getElementById("resource.id").value;
         if(reason==null||reason==""){
             alert("审核被拒时,审核意见不能为空!");
         }else{
             if(reason.length>255){
 			alert("审核意见必须小于255个字节！");
-			$$("material.examinationOpintions").focus();
+			$$("resource.examinationOpintions").focus();
     		return true;
 		   }
             window.location.href="<%=path %>/page/meterial/auditMaterial.do?auditFlag=0$reason="+reason+"&materialId="+materialId;
@@ -350,14 +349,14 @@
 		                     
 		                     <td align="right"><span class="required">*</span>选择广告位：</td>
 		                     <td >	                
-		                         <input id="material.advertPositionId" name="material.advertPositionId" value="${material.advertPositionId}" type="hidden"  readonly="readonly"/>			                 	
-				                 ${material.advertisersName}	      
+		                         <input id="resource.positionCode" name="resource.positionCode" value="${resource.positionCode}" type="hidden"  readonly="readonly"/>			                 	
+				                 ${resource.positionName}	      
 				                 
-				                 <input id="material.id" name="material.id" type="hidden" value="${material.id}"/>
-		                         <input id="material.createTime" name="material.createTime" type="hidden" value="${material.createTime}"/>
-		                         <input id="materialType" name="materialType" type="hidden" value="${material.resourceType}"/>
-		                         <input id="material.resourceTypeTemp" name="material.resourceTypeTemp" type="hidden" />	                         
-		                         <input id="material.contractId" name="material.contractId" type="hidden" value="${material.contractId}"/>          
+				                 <input id="resource.id" name="resource.id" type="hidden" value="${resource.id}"/>
+		                         <input id="resource.createTime" name="resource.createTime" type="hidden" value="${resource.createTime}"/>
+		                         <input id="materialType" name="materialType" type="hidden" value="${resource.resourceType}"/>
+		                         <input id="resource.resourceTypeTemp" name="resource.resourceTypeTemp" type="hidden" />	                         
+		                         <input id="resource.contractId" name="resource.contractId" type="hidden" value="${resource.contractId}"/>          
 		                    	 <input id="coordinateStr" type="hidden"/> 
 		                     </td>
 		                     <td align="right">素材位置：</td>
@@ -370,20 +369,20 @@
 		                 <tr>
 		                     <td align="right"><span class="required">*</span>素材名称：</td>
 		                     <td>
-		                	     ${material.resourceName}
+		                	     ${resource.resourceName}
 		                     </td>
 		                     <td width="15%" align="right">素材关键字：</td>
 		                     <td width="35%">
-		                         ${material.keyWords}					       
+		                         ${resource.keyWords}					       
 		                     </td>		                
 		                 </tr>
 		                 <tr>
 		                     <td align="right"><span class="required">*</span>素材分类：</td>
 		                     <td>
-		                	    <select  id="contentSort"  name="material.categoryId" disabled="disabled">
+		                	    <select  id="contentSort"  name="resource.categoryId" disabled="disabled">
 								     <option id="ad_id" value="-1">请选择...</option>
 							         <c:forEach items="${materialCategoryList}" var="typeBean">
-								        <option  value="${typeBean.id }" <c:if test="${material.categoryId== typeBean.id}">selected="selected"</c:if> >
+								        <option  value="${typeBean.id }" <c:if test="${resource.categoryId== typeBean.id}">selected="selected"</c:if> >
 								        ${typeBean.categoryName }
 								        </option>
 							         </c:forEach>
@@ -391,34 +390,14 @@
 		                     </td>
 		                     <td align="right"><span class="required">*</span>素材类型：</td>
 		                     <td>
-			              	    <select id="sel_material_type" name="material.resourceType" disabled="disabled">
+			              	    <select id="sel_material_type" name="resource.resourceType" disabled="disabled">
 							    </select>		  
 		                     </td>
 		                  </tr>
-		                  <!-- 
-		                  <tr>
-		                     <td align="right"><span class="required">*</span>开始时间：</td>
-		                     <td>		               
-		                         <fmt:formatDate value="${material.startTime}" dateStyle="medium"/>
-		                     </td>
-		                     <td align="right"><span class="required">*</span>结束时间：</td>
-		                     <td>
-			              	     <fmt:formatDate value="${material.endTime}" dateStyle="medium"/>
-		                     </td>
-		                  </tr>
-		                   -->
-		                  
-		                  <tr>
-		                  <!-- 
-		                  <td align="right"><span class="required"></span>素材描述：</td>
-		                     <td>
-		                	     <textarea disabled="disabled" id="material.description" name="material.description" rows="5" maxlength="100">${material.description}</textarea>		              	
-		                     </td>
-		                   -->  
 		                     
 		                     <td width="12%" align="right">审核意见：</td>
                              <td width="33%" colspan="3">
-                                 <textarea id="material.examinationOpintions" name="material.examinationOpintions" rows="5">${material.examinationOpintions}</textarea>
+                                 <textarea id="resource.examinationOpintions" name="resource.examinationOpintions" rows="5">${resource.examinationOpintions}</textarea>
                                  <span id="reason_error"></span>
                              </td>
 		                 </tr>

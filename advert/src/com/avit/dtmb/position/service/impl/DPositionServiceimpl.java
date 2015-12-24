@@ -60,8 +60,8 @@ public class DPositionServiceimpl implements DPositionService {
 		
 	}
 	@Override
-	public DAdPosition getAdvertPosition(String advertPositionId) {
-		DAdPosition dAdPosition = dPositionDao.getAdvertPosition(advertPositionId);
+	public DAdPosition getAdvertPosition(String positionCode) {
+		DAdPosition dAdPosition = dPositionDao.getAdvertPosition(positionCode);
 		return dAdPosition;		
 	}
 

@@ -42,7 +42,7 @@ function query() {
 			alert("广告位名称不能包括特殊字符！");
 			return ;
 		}
-		if(validateSpecialCharacterAfter(document.getElementById("meterialQuery.customerName").value)){
+		if(validateSpecialCharacterAfter(document.getElementById("meterialQuery.advertisersName").value)){
 			alert("广告商名称不能包括特殊字符！");
 			return ;
 		}
@@ -69,7 +69,7 @@ function query() {
      }
     }
   function modifyData(materialId) {
-      window.location.href="<%=path %>/dmaterial/initMaterial.do?materialId="+materialId;
+      window.location.href="<%=path %>/dmaterial/initMaterial.do?materialId="+materialId+"&isAuditTag=1";
     }
     function modifyDataPrecise(ployid) {
       //window.location.href="<%=path %>/page/ploy/initPloy.do?ployId="+ployid;
@@ -132,7 +132,7 @@ function query() {
                   <span>广告位名称：</span>
                   <input type="text" name="meterialQuery.positionName" id="meterialQuery.positionName" value="${meterialQuery.positionName}"/>
                   <span>广告商：</span>
-                  <input type="text" name="meterialQuery.customerName" id="meterialQuery.customerName" value="${meterialQuery.customerName}"/>
+                  <input type="text" name="meterialQuery.advertisersName" id="meterialQuery.advertisersName" value="${meterialQuery.advertisersName}"/>
                   <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <input type="button" value="查询" onclick="javascript:query();" class="btn"/></td>
   </tr>
@@ -175,7 +175,7 @@ function query() {
 								</c:choose>
                             </td>
                             <td>
-                                ${meterialInfo.customerName}
+                                ${meterialInfo.advertisersName}
                             </td>
                             <td>								
 								<c:forEach items="${materialCategoryList}" var="cp" >

@@ -12,10 +12,11 @@ public interface MaterialService {
 	public PageBeanDB queryDMaterialList(DResource meterialQuery,int pageNo,int pageSize);
 	public PageBeanDB queryPositonList(int pageNo,int pageSize);
 	public VideoSpecification getVideoSpc(Integer advertPositionId);
-	public ImageSpecification getImageMateSpeci(Integer advertPositionId);
+	public ImageSpecification getImageMateSpeci(Integer id);
 	public void saveDResource(DResource materialTemp);
 	public VideoMeta getVideoMetaByID(Integer id);
 	public DResource getMaterialByID(int materialId);
 	public ImageMeta getImageMetaByID(Integer resourceId);
 	public String getMaterialSpecification(DAdPosition position);
+	public String checkMaterialExist(DResource resource);
 }

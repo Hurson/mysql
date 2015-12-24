@@ -56,7 +56,7 @@ function query() {
 			alert("广告位名称不能包括特殊字符！");
 			return ;
 		}
-		if(validateSpecialCharacterAfter(document.getElementById("meterialQuery.customerName").value)){
+		if(validateSpecialCharacterAfter(document.getElementById("meterialQuery.advertisersName").value)){
 			alert("广告商名称不能包括特殊字符！");
 			return ;
 		}
@@ -147,7 +147,7 @@ function query() {
                   <input type="text" name="meterialQuery.positionName" id="meterialQuery.positionName" value="${meterialQuery.positionName}"/>
                   
                   <span>广告商：</span>
-                  <input type="text" name="meterialQuery.customerName" id="meterialQuery.customerName" value="${meterialQuery.customerName}"/>
+                  <input type="text" name="meterialQuery.advertisersName" id="meterialQuery.advertisersName" value="${meterialQuery.advertisersName}"/>
                   <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <input type="button" value="查询" onclick="javascript:query();" class="btn"/></td>
   </tr>
@@ -205,16 +205,16 @@ function query() {
                                                        
                             <td>
                                 <c:choose>
-											<c:when test="${fn:escapeXml(meterialInfo.status) eq '0'}">
+											<c:when test="${meterialInfo.status eq '0'}">
 												待审核
 											</c:when>
-											<c:when test="${fn:escapeXml(meterialInfo.status) eq '1'}">
+											<c:when test="${meterialInfo.status eq '1'}">
 												审核不通过
 											</c:when>
-											<c:when test="${fn:escapeXml(meterialInfo.status) eq '2'&&meterialInfo.status==null}">
+											<c:when test="${meterialInfo.status eq '2'&&meterialInfo.statusStr==null}">
 												上线
 											</c:when>
-											<c:when test="${meterialInfo.status!=null}">
+											<c:when test="${meterialInfo.statusStr!=null}">
 												已关联
 											</c:when>
 											<c:otherwise>

@@ -20,5 +20,5 @@ public interface DPositionDao extends BaseDao{
 	public ImageSpecification getImageSpeById(Integer id);
 	public TextSpecification getTextSpeById(Integer id);
 	public VideoSpecification getVideoSpeById(Integer id);
-	public DAdPosition getAdvertPosition(String advertPositionId);
+	public DAdPosition getAdvertPosition(String positionCode);
 }

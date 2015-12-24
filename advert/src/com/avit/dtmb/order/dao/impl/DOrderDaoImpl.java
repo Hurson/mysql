@@ -156,7 +156,7 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	@Override
 	public PageBeanDB queryDResourceList(DResource resource, int pageNo, int pageSize) {
-		String hql = "from DResource res where res.status='1' and res.positionCode='" + resource.getPositionCode()+"'";
+		String hql = "from DResource res where res.status='2' and res.positionCode='" + resource.getPositionCode()+"'";
 		return this.getPageList2(hql, null, pageNo, pageSize);
 	}
 

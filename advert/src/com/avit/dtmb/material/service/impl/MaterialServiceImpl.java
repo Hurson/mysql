@@ -31,13 +31,13 @@ public class MaterialServiceImpl implements MaterialService{
 	}
 
 	@Override
-	public VideoSpecification getVideoSpc(Integer advertPositionId) {
-		return materialDao.getVideoSpc(advertPositionId);
+	public VideoSpecification getVideoSpc(Integer id) {
+		return (VideoSpecification)materialDao.get(VideoSpecification.class, id);
 	}
 
 	@Override
-	public ImageSpecification getImageMateSpeci(Integer advertPositionId) {
-		return materialDao.getImageMateSpeci(advertPositionId);
+	public ImageSpecification getImageMateSpeci(Integer id) {
+		return (ImageSpecification)materialDao.get(ImageSpecification.class, id);
 	}
 
 	@Override
@@ -78,5 +78,16 @@ public class MaterialServiceImpl implements MaterialService{
 		Gson gson = new Gson();
 		result = gson.toJson(spec);
 		return result;
+	}
+
+	@Override
+	public String checkMaterialExist(DResource resource) {
+		DResource res = materialDao.getDRsourceByName(resource.getResourceName());
+		if(res == null){
+			return "0";
+		}else if(res.getId().equals(resource.getId())){
+			return "0";
+		}
+		return "1";
 	}
 }

@@ -508,49 +508,28 @@ $(function(){
 		 } ,
 		'onComplete':function(event,queueID,fileObj,response,data){
 			var json = eval('(' + response + ')');
+			var maxSize = $("#imageFileSize").val();
+			var width=$("#imageFileWidth").val();
+			var height=$("#imageFileHigh").val();
+			
 			if(json!=null){
 					if(json.position=='local'){
 						if(json.result=='true'){
 
-						   //if(json.image_width_fail!=null){
-						     // alert(json.image_width_fail);
-						      //}else{
-						        // if(json.image_high_fail!=null){
-						          //  alert(json.image_high_fail);
-						           //}else{
-						             // if(json.image_fileSize_fail!=null){
-						               //  alert(json.image_fileSize_fail);
-						                 //}else{
-						                   //效验通过
-						                 //}
-						           //}
-						      //}
-
-						                   //$("#mImage").attr("src","<%=path%>/images/material/"+json.viewpath);
-							               //$("#mImage").show();
 							               $("#backgroundImage").val(json.filepath);
-				
-										   var adsPositionCode = document.getElementById('material.positionCode').value;
-										   var showUrl = false;
-										   if(adsPositionCode == 24 || adsPositionCode == 23){
-										   	    showUrl = true;
-										   }
-				
+										   
 							               if(uploadImage==""){
 							                  uploadImage=json.viewpath+"/"+json.imageFileSize+"/"+json.imageFileWidth+"/"+json.imageFileHigh+"/"+json.oldFileName+"/ /"+json.checkTag+"/ ";
 							               }else{
 							                  uploadImage = uploadImage+","+json.viewpath+"/"+json.imageFileSize+"/"+json.imageFileWidth+"/"+json.imageFileHigh+"/"+json.oldFileName+"/ /"+json.checkTag+"/ ";
 							               }
-							               
+							              
 							               var imageList= "<table cellspacing='1' class='searchList'>";
 	                                           imageList=imageList+  "<tr class=\"title\" ><td colspan='10'>已上传图片</td></tr>";
 	                                           imageList=imageList+"<tr >";
 	                                           imageList=imageList+"    <td >序号</td>";
 	                                           imageList=imageList+"    <td >素材名</td>";
 	                                           imageList=imageList+"    <td >素材关键字</td>";
-				                               if(showUrl){
-				                                  imageList=imageList+"    <td >素材Url</td>";
-				                               }
 	                                           imageList=imageList+"    <td>文件名</td>";
 	                                           imageList=imageList+"    <td>文件大小</td>";
 	                                           imageList=imageList+"    <td>文件宽度</td>";
@@ -560,27 +539,26 @@ $(function(){
 	                                           imageList=imageList+"  </tr>";
 	                                           
 	                                      var ss= new Array();
-                                          ss = uploadImage.split(",");
+                                          	ss = uploadImage.split(",");
                                           for(var i=0;i<ss.length;i++){
                                               var ww= new Array();
                                               ww = ss[i].split("/");
-                                               
+                                          
                                               imageList=imageList+"  <tr>";
 		                                      imageList=imageList+"    <td>"+(i+1)+"</td>";
 		                                      imageList=imageList+"    <td><input  type=\"text\" id='imageFileName-"+ww[0]+"' name='imageFileName-"+ww[0]+"' value='"+ww[4]+"' onchange='imageNameChange(\""+ww[0]+"\");' /></td>";
 		                                      imageList=imageList+"    <td><input  type=\"text\" id='imageKeyword-"+ww[0]+"' name='imageKeyword-"+ww[0]+"' value='"+ww[5]+"' onchange='imageKeywordChange(\""+ww[0]+"\");' /></td>";
-		                                      if(showUrl){
-		                                          imageList=imageList+"    <td><input  type=\"text\" id='imageUrl-"+ww[0]+"' name='imageUrl-"+ww[0]+"' value='"+ww[7]+"' onchange='imageUrlwordChange(\""+ww[0]+"\");' /></td>";
-		                                      }       
+		                                        
 		                                      imageList=imageList+"    <td>"+ww[0]+"</td>";
 		                                      imageList=imageList+" <input id='imageFileNames' name='imageFileNames' type='hidden' value='"+ww[0] +"'/>";
 		                                      imageList=imageList+"    <td>"+ww[1]+"</td>";
 		                                      imageList=imageList+"    <td>"+ww[2]+"</td>";
 		                                      imageList=imageList+"    <td>"+ww[3]+"</td>";
-		                                      if(ww[6]==0){
-		                                          imageList=imageList+" <td>不通过</td>";	     
+		                                      if(maxSize > parseInt(ww[1]) && width == ww[2] && height==ww[3]){
+		                                          imageList=imageList+" <td>通过</td>";     
 		                                      }else{
-		                                          imageList=imageList+" <td>通过</td>";
+		                                       	  imageList=imageList+" <td>不通过<input type='hidden' value='0' name='flag'/></td>";
+		                                          
 		                                      }
 		                                      
 		                                      imageList=imageList+"    <td><a href='#' onclick='imagePreview(\""+ww[0]+"\");'>预览</a>&nbsp;&nbsp;<a href='#' onclick='deleteImageFile(\""+ww[0]+"\");'>删除</a></td>";                      
@@ -619,6 +597,7 @@ $(function(){
 		 } ,
 		'onComplete':function(event,queueID,fileObj,response,data){
 			var json = eval('(' + response + ')');
+			var duration = $("#videoFileDuration").val();
 			if(json!=null){
 					if(json.position=='local'){
 						if(json.result=='true'){
@@ -670,8 +649,8 @@ $(function(){
 		                                      videoList=videoList+"    <td>"+ww[0]+"</td>";
 		                                      videoList=videoList+" <input id='videoFileNames' name='videoFileNames' type='hidden' value='"+ww[0] +"&"+ww[1]+"'/>";
 		                                      videoList=videoList+"    <td>"+ww[1]+"</td>";
-		                                      if(ww[4]==0){
-		                                          videoList=videoList+" <td>不通过</td>";	     
+		                                      if(ww[1]!= duration){
+		                                          videoList=videoList+" <td>不通过<input type='hidden' name='vflag'/></td>";	     
 		                                      }else{
 		                                          videoList=videoList+" <td>通过</td>";
 		                                      }
@@ -1235,18 +1214,12 @@ function closeSavePane() {
 	   for (var i=0;i<ss.length;i++){            
                 ww = ss[i].split("/");                                                          
 	            resourceName=$$("imageFileName-"+ww[0]).value;
-	            //alert("素材名:"+resourceName);
-	            if(ww[6]==0){
-                    //图片效验不通过
-                    alert("图片规格效验不通过");
-                    tag="0"
-                    break;
-                }            
+	           
 	            $.ajax({
                 type:"post",
                 async : false,
-                url:"<%=request.getContextPath()%>/page/material/checkMaterialExist.do?",
-                data:{"resourceName":resourceName},//Ajax传递的参数
+                url:"<%=request.getContextPath()%>/dmaterial/checkMaterialExist.action",
+                data:{'resource.resourceName':resourceName},//Ajax传递的参数
                 success:function(mess)
                 {
                 	if(mess=="0")// 如果获取的数据不为空
@@ -1481,6 +1454,11 @@ function closeSavePane() {
 			alert("上传的文件不能为空!");
 			return true;
 		}
+		var flags = document.getElementsByName("flag");
+		if(flags.length >0){
+			alert("图片规格校验不通过!");
+			return true;
+		}
 		return false;
     }
     
@@ -1506,6 +1484,11 @@ function closeSavePane() {
         $("#localFilePath").val(localFilePath);
 		if(isEmpty($("#localFilePath").val())){
 			alert("上传的文件不能为空!");
+			return true;
+		}
+		var vflags = document.getElementsByName("vflag");
+		if(vflags.length > 0){
+			alert("视频素材规格校验不通过!");
 			return true;
 		}
 		return false;
@@ -1926,15 +1909,6 @@ function IsAlpha(cCheck) {
 		               <table cellspacing="1" class="content" align="left" style="margin-bottom: 0px">
 		                 <tr class="title"><td colspan="4">素材信息</td></tr>
 		                 <tr>
-		                 <!-- 
-		                 <td width="15%" align="right"><span class="required">*</span>选择合同：</td>
-		                     <td width="35%">	
-		                         <input id="material.contractId" name="material.contractId" type="hidden" />	              		                	
-							     <input id="material.contractName" name="material.contractName" class="new_input_add" 
-							     type="text" readonly="readonly" onclick="selectContract();" />	
-						     </td>
-		                  -->
-		                     
 		                     
 		                     <td align="right"><span class="required">*</span>选择广告位：</td>
 		                     <td >	                
@@ -2091,7 +2065,6 @@ function IsAlpha(cCheck) {
 		                      <tr>
 		            	          <td width="15%" align="right"><span class="required"></span>时长规格：</td>
 		                          <td width="35%" >
-		                          <!-- <input maxlength="10" id="videoMeta.runTime" name="videoMeta.runTime" type="text" /> -->
 		                	          
 		                	          <input maxlength="10" id="videoFileDuration" disabled="disabled" type="text" />
 		                          </td>

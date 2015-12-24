@@ -11,15 +11,11 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.stereotype.Repository;
 
 import com.avit.dtmb.material.bean.DResource;
-import com.avit.dtmb.position.bean.DAdPosition;
 import com.avit.dtmb.material.dao.MaterialDao;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 import com.dvnchina.advertDelivery.model.ImageMeta;
-import com.dvnchina.advertDelivery.model.Resource;
 import com.dvnchina.advertDelivery.model.VideoMeta;
-import com.dvnchina.advertDelivery.position.bean.ImageSpecification;
-import com.dvnchina.advertDelivery.position.bean.VideoSpecification;
 @Repository("MaterialDao")
 public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
 	@Override
@@ -48,12 +44,14 @@ public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
 			 if(StringUtils.isNotBlank(meterialQuery.getPositionName())){
 				 sql += " and p.positionName like '%" + meterialQuery.getPositionName().trim() + "%'";
 			 }
-			 if(StringUtils.isNotBlank(meterialQuery.getCustomerName())){
-				 sql += " and c.advertisersName like '%" + meterialQuery.getCustomerName().trim() + "%'";
+			 if(StringUtils.isNotBlank(meterialQuery.getAdvertisersName())){
+				 sql += " and c.advertisersName like '%" + meterialQuery.getAdvertisersName().trim() + "%'";
+			 }
+			 if(StringUtils.isNotBlank(meterialQuery.getStatus())){
+				 sql += " and r.status ='" + meterialQuery.getStatus() + "'";
 			 }
 		 }
 		sql += " order by r.id desc";
-		System.out.println(sql);
 		PageBeanDB pageResultList = this.getPageList2(sql, null, pageNo, pageSize);
 		return pageResultList;
 	}
@@ -85,19 +83,6 @@ public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
 		return page;
 	}
 
-	@Override
-	public VideoSpecification getVideoSpc(Integer advertPositionId) {
-		String hql =  "select  new com.dvnchina.advertDelivery.position.bean.VideoSpecification(t.id,t.duration,t.fileSize) from VideoSpecification t,DAdPosition a where a.specificationId=t.id and a.id ="+advertPositionId;
-
-        List list = this.getList(hql,null);
-        VideoSpecification videoSpecification =null;
-        if (list!=null && list.size()>0)
-        {
-            videoSpecification = (VideoSpecification)(list.get(0));
-        }
-
-        return videoSpecification;
-	}
 	public List getList(final String hql, final List params ) {
 		return (List) this.getHibernateTemplate().execute(new HibernateCallback(){
 			public Object doInHibernate(Session session) throws HibernateException, SQLException{
@@ -112,20 +97,6 @@ public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
 					return  query.list();
 				}
 		});
-	}
-
-	@Override
-	public ImageSpecification getImageMateSpeci(Integer advertPositionId) {
-		String hql =  "select  new com.dvnchina.advertDelivery.position.bean.ImageSpecification(t.id,t.imageWidth,t.imageHeight,t.type,t.fileSize ) from ImageSpecification t,DAdPosition a where a.specificationId=t.id and a.id ="+advertPositionId;
-
-        List list = this.getList(hql,null);
-        ImageSpecification imageSpecification =null;
-        if (list!=null && list.size()>0)
-        {
-            imageSpecification = (ImageSpecification)(list.get(0));
-        }
-
-        return imageSpecification;
 	}
 
 	@Override
@@ -149,14 +120,9 @@ public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
 
 	@Override
 	public DResource getMaterialByID(int materialId) {
-		String hql = "select distinct new com.avit.dtmb.material.bean.DResource(" +
-		        "r.id,r.resourceId,r.resourceName,r.resourceType,r.categoryId,"
-		        + "r.status,r.createTime," +
-		        "a.id,a.positionName,r.isDefault,r.customerId,r.operationId,r.modifyTime,b.advertisersName,"
-		        + "r.startTime,r.endTime,r.examinationOpintions,r.keyWords,r.contractId,r.description,a.backgroundPath )" +      
+		String hql = "select distinct new com.avit.dtmb.material.bean.DResource(r,a.positionName,b.advertisersName)" +      
 		        " from DResource r,DAdPosition a,Customer b "+
 		        "where r.positionCode = a.positionCode and r.customerId=b.id and r.id="+materialId;
-				System.out.println(hql);
 		        List list = this.getList(hql,null);
 		        DResource material =null;
 		        if (list!=null && list.size()>0)
@@ -164,7 +130,7 @@ public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
 		            material = (DResource)(list.get(0));
 		            
 		            int mid=material.getId();
-			    	 String sql1="SELECT COUNT(1) FROM t_order_mate_rel rel, t_order o WHERE rel.MATE_ID ="+mid+"  AND rel.ORDER_ID = o.ID AND o.STATE <> '7'";
+			    	 String sql1="SELECT COUNT(1) FROM d_order_mate_rel rel, d_order o WHERE rel.RESOURCE_ID ="+mid+"  AND rel.ORDER_CODE = o.ORDER_CODE AND o.STATE <> '7'";
 			    	 Query query = getSession().createSQLQuery(sql1);
 			    	 List a=query.list();	    	 
 			    	 /*if(a.get(0).toString()!="0"){
@@ -187,6 +153,17 @@ public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
         }
 
         return imageMeta;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public DResource getDRsourceByName(String resourceName) {
+		String hql = "from DResource res where res.resourceName = ?";
+		List<DResource> list = this.list(hql, resourceName);
+		if(list != null && list.size() > 0){
+			return list.get(0);
+		}
+		return null;
 	}
 	
 

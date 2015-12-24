@@ -1,20 +1,13 @@
 package com.avit.dtmb.position.dao.impl;
 
-import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.stereotype.Repository;
 
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.avit.dtmb.position.dao.DPositionDao;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
-import com.dvnchina.advertDelivery.position.bean.AdvertPosition;
 import com.dvnchina.advertDelivery.position.bean.ImageSpecification;
 import com.dvnchina.advertDelivery.position.bean.TextSpecification;
 import com.dvnchina.advertDelivery.position.bean.VideoSpecification;
@@ -77,8 +70,14 @@ public class DPositionDaoImpl extends BaseDaoImpl implements DPositionDao {
 		return this.getHibernateTemplate().get(VideoSpecification.class, id);
 	}
 
-	public DAdPosition getAdvertPosition(String advertPositionId) {
-		return this.getHibernateTemplate().get(DAdPosition.class, advertPositionId);
+	@SuppressWarnings("unchecked")
+	public DAdPosition getAdvertPosition(String positionCode) {
+		String hql = "from DAdPosition ap where ap.positionCode = ?";
+		List<DAdPosition> list = this.getHibernateTemplate().find(hql, positionCode);
+		if(list != null && list.size() > 0){
+			return list.get(0);
+		}
+		return new DAdPosition();
 	}
 
 
