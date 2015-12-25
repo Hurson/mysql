@@ -27,7 +27,7 @@ public  class DChannelGroupRef implements java.io.Serializable {
 	private static final long serialVersionUID = 1252233680288482434L;
 	private Long id;
 	private Long groupId;
-	private Long serviceId;
+	private String serviceId;
 
 	// Constructors
 
@@ -57,11 +57,11 @@ public  class DChannelGroupRef implements java.io.Serializable {
 		this.groupId = groupId;
 	}
 	@Column(name = "SERVICE_ID")
-	public Long getServiceId() {
+	public String getServiceId() {
 		return serviceId;
 	}
 
-	public void setServiceId(Long serviceId) {
+	public void setServiceId(String serviceId) {
 		this.serviceId = serviceId;
 	}
 

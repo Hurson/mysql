@@ -247,7 +247,7 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 			    		temp.setGroupId(Long.valueOf(channelGroupIdTemp));
 			    	}
 			    	
-			    	temp.setServiceId(Long.valueOf(ids[i].trim()));
+			    	temp.setServiceId(ids[i].trim());
 			    	
 			    	channelGroupRefList.add(temp);
 			    }
