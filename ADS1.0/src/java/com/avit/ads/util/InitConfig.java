@@ -14,6 +14,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.avit.ads.dtmb.cache.SendAdsTypesMap;
 import com.avit.ads.pushads.task.cache.SendAdsElementMap;
 import com.avit.ads.pushads.task.service.DataInitService;
 import com.avit.ads.util.bean.Ads;
@@ -105,6 +106,17 @@ public class InitConfig {
 		}
 		//读取数据库 初始化频道
 		dataInitService.initChannel();
+		/**
+		 * 读取数据库 初始化无线频道
+		 */
+		dataInitService.initDtmbChannel();
+		/**
+		 * 初始化无线广告位
+		 */
+		dataInitService.initDtmbAdPosition();
+		SendAdsTypesMap.initRealTimeAdsMap();
+		dataInitService.initDtmbAreaTSFile();
+		
 		//读取数据库 初始化NVOD主界面分类
 		dataInitService.initNvodMenuType();
 		//读取数据库 初始化默认素材 
@@ -189,10 +201,21 @@ public class InitConfig {
 		dataInitService= (DataInitService)ContextHolder.getApplicationContext().getBean("DatainitService");
 		//读取数据库 初始化频道
 		dataInitService.initChannel();
+		//读取数据库 初始化无线频道
+		dataInitService.initDtmbChannel();
 		//读取数据库 初始化NVOD主界面分类
 		dataInitService.initNvodMenuType();
 		//读取数据库 初始化默认素材 
 		dataInitService.initAdDefalult();
+		/**
+		 * 读取数据库 初始化无线频道
+		 */
+		dataInitService.initDtmbChannel();
+		/**
+		 * 初始化无线广告位
+		 */
+		dataInitService.initDtmbAdPosition();
+		dataInitService.initDtmbAreaTSFile();
 		
 		SendAdsElementMap.refreshSendAdsElementMap();
 		//dataInitService.initAdvertPosition();
@@ -350,6 +373,20 @@ public class InitConfig {
 			//广播背景
 			(new File(adsConfig.getUnRealTimeAds().getAdsaudioHDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.ADVRESOURCE_HD_PATH )).mkdirs();
 			(new File(adsConfig.getUnRealTimeAds().getAdsaudioSDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.ADVRESOURCE_SD_PATH)).mkdirs();
+			
+			//无线单向实时
+			(new File(adsConfig.getDrealTimeAds().getAdsTempPath()+File.separator+areaCode)).mkdirs();
+			(new File(adsConfig.getDrealTimeAds().getAdsTempConfigPath()+File.separator+areaCode)).mkdirs();
+			
+			//无线单向非实时
+			(new File(adsConfig.getDunRealTimeAds().getAdsTempPath()+File.separator+areaCode)).mkdirs();
+			//无线开机图片
+			(new File(adsConfig.getDunRealTimeAds().getAdsIframeSDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.START_RESOURCE_PATH)).mkdirs();
+			(new File(adsConfig.getDunRealTimeAds().getAdsIframeHDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.START_RESOURCE_PATH)).mkdirs();
+			
+			//无线广播背景
+			(new File(adsConfig.getDunRealTimeAds().getAdsaudioHDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.ADVRESOURCE_HD_PATH )).mkdirs();
+			(new File(adsConfig.getDunRealTimeAds().getAdsaudioSDTempPath()+File.separator+areaCode+File.separator+ConstantsAdsCode.ADVRESOURCE_SD_PATH)).mkdirs();
 		}
 		
 		for (int i=0;i<adsConfig.getDtvList().size();i++)
@@ -363,6 +400,17 @@ public class InitConfig {
 		if(!untLogFile.exists()){
 			try {
 				untLogFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		(new File(configMap.get(ConstantsHelper.D_DEST_FILE_PATH))).mkdirs();
+		(new File(configMap.get(ConstantsHelper.D_LOG_FILE_PATH))).mkdirs();
+		File dUntLogFile = new File(configMap.get(ConstantsHelper.D_LOG_FILE_PATH)+File.separator+ConstantsHelper.LOG_FILE_NAME);
+		if(!untLogFile.exists()){
+			try {
+				dUntLogFile.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

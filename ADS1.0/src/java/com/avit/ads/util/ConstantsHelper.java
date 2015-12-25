@@ -168,6 +168,12 @@ public class ConstantsHelper {
     public static final String LOG_FILE_PATH = "unt_logger_path";
     public static final String LOG_FILE_NAME = "datapackage.log";
     
+    /**
+     * 无线unt生成文件和log文件配置
+     */
+    public static final String D_DEST_FILE_PATH = "d_unt_generated_ts_store_path";
+    public static final String D_LOG_FILE_PATH = "d_unt_logger_path";
+    
     /** UI更新类型 
 	    1：开机图片initPic.iframe更新
 	    2：栏目配置文件，dataDefine.dat更新 

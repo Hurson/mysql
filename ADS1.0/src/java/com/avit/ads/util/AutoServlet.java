@@ -1,16 +1,19 @@
 package com.avit.ads.util;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServlet;
 
+import com.avit.ads.dtmb.thread.DtmbThread;
 import com.avit.ads.pushads.ocg.service.OcgService;
 import com.avit.ads.pushads.ocg.service.impl.OcgServiceImpl;
 import com.avit.ads.pushads.task.AutoAllThread;
 import com.avit.ads.pushads.task.AutoMessageLinkThread;
 import com.avit.ads.pushads.task.AutoStartStbThread;
 import com.avit.ads.pushads.task.cache.SendAdsElementMap;
-import com.avit.ads.util.message.UNTMessage;
 
 
 
@@ -61,7 +64,14 @@ public class AutoServlet extends HttpServlet {
 				allThread.start();				
 				Thread.sleep(500);	
 				
-
+				/**
+				 * 无线投放任务
+				 */
+				DtmbThread dtmbThread = new DtmbThread();
+				//dtmbThread.start();
+				//Thread.sleep(500);
+				ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+				service.scheduleWithFixedDelay(dtmbThread, 1, 30, TimeUnit.SECONDS);
 //				startStbThread =new AutoStartStbThread();
 //				startStbThread.start();				
 //				Thread.sleep(500);	

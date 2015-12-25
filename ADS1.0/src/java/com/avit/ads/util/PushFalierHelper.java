@@ -11,8 +11,8 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.stereotype.Component;
 
+import com.avit.ads.dtmb.bean.PlayList;
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
-import com.avit.ads.util.InitConfig;
 import com.avit.ads.util.bean.Ads;
 import com.avit.common.page.dao.impl.BaseDaoImpl;
 
@@ -44,6 +44,24 @@ public class PushFalierHelper extends BaseDaoImpl{
 		//修改订单状态  
 		changeOrderStateToFailed(orderIdList);
 	}
+	public void changeDtmbStateToFailed(List<PlayList> playlist){
+		List<String> orderCodeList = new ArrayList<String>();
+		
+		for(PlayList entity : playlist){
+		
+			//修改播出单状态
+			entity.setStatus("3");
+			save(entity);
+			//需要修改状态的订单id
+			String orderCode = entity.getOrderCode();
+			if(!orderCodeList.contains(orderCode)){
+				orderCodeList.add(orderCode);
+			}
+		
+		}
+		//修改订单状态  
+		changeDOrderStateToFailed(orderCodeList);
+	}
 	
 	public boolean rePush(String areaCode){
 		for(AdPlaylistGis entity : newGisEntityList){
@@ -67,6 +85,18 @@ public class PushFalierHelper extends BaseDaoImpl{
 	private void changeOrderStateToFailed(List<BigDecimal> orderIdList){
 		for(BigDecimal orderId : orderIdList){
 			final String updateSql = "UPDATE t_order SET state = '9' WHERE id = " + toInteger(orderId);
+			getHibernateTemplate().execute(new HibernateCallback(){
+				public Object doInHibernate(Session session) throws HibernateException, SQLException {
+					session.createSQLQuery(updateSql).executeUpdate();
+					return null;
+				}
+			});
+		}
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void changeDOrderStateToFailed(List<String> orderCodeList){
+		for(String orderCode : orderCodeList){
+			final String updateSql = "UPDATE d_order SET state = '9' WHERE order_code = '" + orderCode + "'";
 			getHibernateTemplate().execute(new HibernateCallback(){
 				public Object doInHibernate(Session session) throws HibernateException, SQLException {
 					session.createSQLQuery(updateSql).executeUpdate();

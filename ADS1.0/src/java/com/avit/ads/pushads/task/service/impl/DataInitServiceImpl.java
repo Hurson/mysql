@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.avit.ads.dtmb.cache.DtmbAdPositionMap;
+import com.avit.ads.dtmb.cache.DtmbChannelMap;
 import com.avit.ads.pushads.ocg.dao.OcgInfoDao;
 import com.avit.ads.pushads.task.bean.AdDefault;
 import com.avit.ads.pushads.task.bean.OcgInfo;
@@ -38,6 +40,10 @@ public class DataInitServiceImpl implements DataInitService {
 	public void initChannel() {
 		// TODO Auto-generated method stub
 		ChannelMap.setChannelMap(datainitDao.queryChannel());
+	}
+	public void initDtmbChannel() {
+
+		DtmbChannelMap.setDtmbChannelMap(datainitDao.queryDtmbChannel());
 	}
 	public void initNvodMenuType(){
 		NvodMenuTypeMap.setMenuTypeMap(datainitDao.queryNvodMenuType());
@@ -82,6 +88,40 @@ public class DataInitServiceImpl implements DataInitService {
 			}
 		}catch(Exception e){
 			logger.error("init area ts file error" + e);
+		}
+		//logger.info("初始化各县频点信息完成！");
+	}
+	public void initDtmbAreaTSFile(){
+		
+		String path = InitConfig.getConfigMap().get(ConstantsHelper.D_DEST_FILE_PATH);
+		List<String> areaCodeList = initAreasDao.getAreas();
+		try{
+			for(String areaCode : areaCodeList){
+				String destPath = path + File.separator + areaCode;
+				File file = new File(destPath);
+				//创建县级及以下目录
+				if(!file.exists()){
+					file = new File(destPath + File.separator + ConstantsHelper.NORMAL_FILE);
+					file.mkdirs();
+					file = new File(destPath + File.separator + ConstantsHelper.CHANNEL_SUBTITLE);
+					file.mkdirs();
+					file = new File(destPath + File.separator + ConstantsHelper.CHANNEL_RECOMMEND);
+					file.mkdirs();
+					file = new File(destPath + File.separator + ConstantsHelper.SEND_FILE);
+					file.mkdirs();
+				}
+				List<OcgInfo> ocgInfoList = ocgInfoDao.getOcgMulticastInfoList(areaCode, null);
+				for(OcgInfo ocg : ocgInfoList){
+					String fileName = destPath + File.separator + ConstantsHelper.CHANNEL_RECOMMEND + File.separator + ocg.getTsId() + ConstantsHelper.DATA_FILE_SUFFIX;
+					File tsFile = new File(fileName);
+					if(!tsFile.exists()){
+						tsFile.createNewFile();
+					}
+				}
+			
+			}
+		}catch(Exception e){
+			logger.error("init wireless area ts file error" + e);
 		}
 		//logger.info("初始化各县频点信息完成！");
 	}
@@ -184,5 +224,8 @@ public class DataInitServiceImpl implements DataInitService {
 	public 	void initAdvertPosition()
 	{
 		AdvertPositionMap.setAdpositionMapMap(datainitDao.queryAdvertPosition());
+	}
+	public 	void initDtmbAdPosition(){
+		DtmbAdPositionMap.setAdpositionMapMap(datainitDao.queryDtmbAdPosition());
 	}
 }

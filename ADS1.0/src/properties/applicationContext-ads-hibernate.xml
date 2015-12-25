@@ -86,6 +86,7 @@
 		<property name="packagesToScan">
 			<list>
 				<value>com.avit.ads.pushads.task.bean</value>
+				<value>com.avit.ads.dtmb.bean</value>
 			</list>
 		</property>
 		<property name="annotatedClasses">

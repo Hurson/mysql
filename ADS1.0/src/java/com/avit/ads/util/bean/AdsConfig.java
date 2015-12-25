@@ -8,10 +8,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.avit.ads.requestads.bean.request.AdInsertRequestXmlBean;
-import com.avit.ads.requestads.bean.request.AdStatusReportReqXmlBean;
-import com.avit.ads.requestads.bean.response.AdInsertResponsetPlaylistXmlBean;
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="AdsConfig")
 public class AdsConfig {
@@ -27,6 +23,13 @@ public class AdsConfig {
 	//单向非实时广告配置  开机广告
 	@XmlElement(name="UnRealTimeAds")
 	private UnRealTimeAds unRealTimeAds;
+	
+	@XmlElement(name="DtmbRealTimeAds")
+	private DRealTimeAds drealTimeAds;
+	//单向非实时广告配置  开机广告
+	@XmlElement(name="DtmbUnRealTimeAds")
+	private DUnRealTimeAds dunRealTimeAds;
+	
 	//单向非实时广告配置   回看菜单  点播菜单 点播随片
 	@XmlElement(name="CpsAds")
 	private CpsAds cpsAds;
@@ -125,4 +128,17 @@ public class AdsConfig {
 	public void setVideoPump(List<VideoPump> videoPump) {
 		this.videoPump = videoPump;
 	}
+	public DRealTimeAds getDrealTimeAds() {
+		return drealTimeAds;
+	}
+	public void setDrealTimeAds(DRealTimeAds drealTimeAds) {
+		this.drealTimeAds = drealTimeAds;
+	}
+	public DUnRealTimeAds getDunRealTimeAds() {
+		return dunRealTimeAds;
+	}
+	public void setDunRealTimeAds(DUnRealTimeAds dunRealTimeAds) {
+		this.dunRealTimeAds = dunRealTimeAds;
+	}
+	
 }

@@ -1,12 +1,9 @@
 package com.avit.ads.pushads.task.cache;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.avit.ads.pushads.task.bean.SendAds;
 import com.avit.ads.pushads.task.bean.TChannelinfo;
 
 public class ChannelMap {

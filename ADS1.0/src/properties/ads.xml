@@ -2,7 +2,7 @@
 <AdsConfig preSecond="11" >
 	<!-- 广告资源接口服务器配置 -->
 	<!-- 由于素材管理存储的是ＦＴＰ完整路径，故此出设空 -->
-	<AdResource ip="192.168.2.224" port="21" user="root" pwd="111111" adsResourcePath="/"/>
+	<AdResource ip="192.168.2.224" port="21" user="root" pwd="111111" adsResourcePath="/root/advertres/temp/materialReal"/>
 	
 	<!--单向非实时广告  adsTempPath="/root/adstemp/start"-->	
 	<UnRealTimeAds preSecond="11" 
@@ -53,6 +53,19 @@
 		<Ads adsCode="02432" position="6" filename="next_event_bg.png" defaultRes="/home/advertres/temp/materialReal/volume_ad_2_HD.png"/>
 		
 	</RealTimeAds>
+	<DtmbUnRealTimeAds preSecond="11" 
+		adsTempPath="/home/adstemp/dstart" 
+		adsIframeHDTempPath="/home/adstemp/start/diframehd" 
+		adsIframeSDTempPath="/home/adstemp/start/diframesd" 
+		adsaudioHDTempPath="/home/adstemp/start/dhdaudio" 
+		adsaudioSDTempPath="/home/adstemp/start/dsdaudio" 
+		adsTargetPath="/OC/dui/" 
+		recommendTargetPath="/OC/drecommend/" >
+	</DtmbUnRealTimeAds>
+	<DtmbRealTimeAds adsConfigFile="adConfig.js" adsTempConfigPath="/home/adstemp/drealtimeconfig" 
+	             adsTargetConfigPath="/OC/unt/dAdConfig/" adsTempPath="/home/adstemp/drealtime"
+	              adsTargetPath="/OC/unt/dAdPic/" untUrl="http://192.168.16.100:8899/UNT/">
+	</DtmbRealTimeAds>
 	<!-- 双向实时广告    回看菜单，点播菜单 点播随片-->
 	<CpsAds preSecond="11" adsConfigFile="cpsadConfigFile.js" adsTempPath="/home/adstemp/cps" adsTargetPath="/js/ad/" adsImageTargetPath="/images/ad/">
 		<Ads adsCode="02071" defaultRes="volume_ad_2_HD.png"/>	

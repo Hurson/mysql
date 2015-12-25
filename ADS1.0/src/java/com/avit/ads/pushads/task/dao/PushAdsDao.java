@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
+import com.avit.ads.dtmb.bean.PlayList;
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
-import com.avit.ads.pushads.task.bean.TMulticastInfo;
 import com.avit.ads.util.bean.Ads;
 
 // TODO: Auto-generated Javadoc
@@ -64,6 +64,13 @@ public interface PushAdsDao {
 	void updateAdsFlag(String adsids,String flag);
 	
 	/**
+	 * 
+	 * @param adsid
+	 * @param flag
+	 */
+	public void updateDAdsFlag(Integer adsid,String flag);
+	
+	/**
 	 * 通过区域码和serviceId获得频道的频点Id
 	 * @param areaCode
 	 * @param serviceId
@@ -77,5 +84,28 @@ public interface PushAdsDao {
 	 * @param flag
 	 */
 	public void updateOrderState(Long adsid,String flag);
+	
+	/**
+	 * 
+	 * @param adsid
+	 * @param flag
+	 */
+	public void updateDOrderState(final Integer adsid, final String flag);
+	/**
+	 * 查询无线实时广告有效播出单
+	 */
+	public List<PlayList> querySendDTMBAds();
+	/**
+	 * 
+	 * @param adsTypeCode
+	 * @return
+	 */
+	public List<PlayList> queryDStartAds(String adsTypeCode);
+	/**
+	 * 
+	 * @param adsTypeCode
+	 * @return
+	 */
+	public List<PlayList> queryDEndAds(String adsTypeCode);
 	
 }

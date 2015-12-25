@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.avit.ads.dtmb.bean.DAdPosition;
+import com.avit.ads.dtmb.bean.DChannelinfo;
 import com.avit.ads.pushads.task.bean.AdDefault;
 import com.avit.ads.pushads.task.bean.AdvertPosition;
 import com.avit.ads.pushads.task.bean.NvodMenuType;
@@ -20,6 +22,16 @@ public class DatainitDaoImpl extends CommonDaoImpl implements DatainitDao {
 		// TODO Auto-generated method stub
 		  StringBuffer sb = new StringBuffer();
 	      sb.append("select distinct new com.avit.ads.pushads.task.bean.TChannelinfo(t.channelName,t.channelCode,t.serviceId) from TChannelinfo t  where 1=1");
+	      
+	      List params = new ArrayList();
+	     // sb.append(" order by ads.id desc "); //按id升序排序
+	      return this.getListForAll(sb.toString(), params); 
+	    
+	}
+	public List<DChannelinfo> queryDtmbChannel() {
+		// TODO Auto-generated method stub
+		  StringBuffer sb = new StringBuffer();
+	      sb.append("select distinct new DChannelinfo(t.channelName,t.channelCode,t.serviceId) from DChannelinfo t  where 1=1");
 	      
 	      List params = new ArrayList();
 	     // sb.append(" order by ads.id desc "); //按id升序排序
@@ -64,6 +76,15 @@ public class DatainitDaoImpl extends CommonDaoImpl implements DatainitDao {
 	      
 	      List params = new ArrayList();
 	     // sb.append(" order by ads.id desc "); //按id升序排序
+	      return this.getListForAll(sb.toString(), params); 
+	}
+	
+	public List<DAdPosition> queryDtmbAdPosition(){
+		 StringBuffer sb = new StringBuffer();
+	      sb.append("from DAdPosition where 1=1");
+	      
+	      List params = new ArrayList();
+	     
 	      return this.getListForAll(sb.toString(), params); 
 	}
 

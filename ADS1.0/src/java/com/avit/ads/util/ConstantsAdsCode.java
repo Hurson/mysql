@@ -1,6 +1,5 @@
 package com.avit.ads.util;
 
-import java.io.File;
 
 public class ConstantsAdsCode {
 	
@@ -92,6 +91,38 @@ public class ConstantsAdsCode {
 	public static final String PUSH_FREQUENCE_SD = "02061";
 	public static final String PUSH_FREQUENCE_HD = "02062";
 	
+	/**
+	 * 无线广告位code
+	 */
+	/**无线音频背景广告*/
+	public static final String DPUSH_FREQUENCE_SD = "01301";
+	public static final String DPUSH_FREQUENCE_HD = "01302";
+	/**无线频道字幕广告*/
+	public static final String DPUSH_CHANNEL_SUBTITLE = "02612";
+	/**无线菜单字幕广告*/
+	public static final String DPUSH_SUBTITLE = "02602";
+	/**无线直播下排广告*/
+	public static final String DPUSH_LIVE_UNDER_HD = "01402";
+	
+	/** 无线开机视频广告 **/
+	public static final String DPUSH_STARTSTB_VIDEO_SD = "01203";
+	public static final String DPUSH_STARTSTB_VIDEO_HD = "01204";
+	
+	/** 无线开机图片广告 **/
+	public static final String DPUSH_STARTSTB_SD = "01201";
+	public static final String DPUSH_STARTSTB_HD = "01202";
+	
+	public static final String DPUSH_STARTSTB_SD_VIDEO_FILE = "initVideo-a.ts";
+	public static final String DPUSH_STARTSTB_HD_VIDEO_FILE = "initVideo-c.ts";
+	
+	public static final String DPUSH_STARTSTB_SD_IFRAME_FILE = "initPic-a.iframe";
+	public static final String DPUSH_STARTSTB_HD_IFRAME_FILE = "initPic-c.iframe";
+	
+	//广告资源压缩目录 
+	public static final String DADVRESOURCE_HD_PATH = "advResource-c" + "/" +"htmldata"+"/"+"advresource";
+	public static final String DADVRESOURCE_SD_PATH = "advResource-a" + "/"+"htmldata"+"/"+"advresource";
+	
+		
 	//频道字幕广告
 	public static final String PUSH_CHANNEL_SUBTITLE = "02302";
 	

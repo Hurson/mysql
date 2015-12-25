@@ -13,6 +13,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.avit.ads.dtmb.bean.PlayList;
 import com.avit.ads.pushads.task.bean.AdPlaylistGis;
 import com.avit.ads.pushads.task.dao.PushAdsDao;
 import com.avit.ads.util.bean.Ads;
@@ -70,6 +71,21 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 	      return this.getListForAll(sb.toString(), params); 
 
 	}
+	@SuppressWarnings("all")
+	public List<PlayList> queryDStartAds(String adsTypeCode) {
+		  StringBuffer sb = new StringBuffer();
+	      sb.append("from PlayList ads where ads.status=0 and curdate() between ads.startDate and ads.endDate and date_format(now(),'%H:%i:%s') between ads.startTime and ads.endTime ");  
+	      List params = new ArrayList();
+	       
+	      if (adsTypeCode!=null && !adsTypeCode.equals(""))
+	      {
+	    	  sb.append(" and ads.positionCode =? ");
+	    	  params.add(adsTypeCode);
+	      }
+	      sb.append(" order by ads.id desc "); //按id升序排序
+	      return this.getListForAll(sb.toString(), params); 
+
+	}
 
 	public List<AdPlaylistGis> queryNewPlayList(Date startTime, List<Ads> adsList) {
 		if(null == adsList || adsList.size() == 0){
@@ -111,6 +127,21 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 	      return this.getListForAll(sb.toString(), params); 
 	}
 	
+	@SuppressWarnings("all")
+	public List<PlayList> queryDEndAds(String adsTypeCode) {
+		 StringBuffer sb = new StringBuffer();
+	      sb.append("from PlayList ads where ads.status='1' ");  
+	      List params = new ArrayList();
+	     
+	      if (adsTypeCode!=null && !adsTypeCode.equals(""))
+	      {
+	    	  sb.append(" and ads.positionCode =?" );
+	    	  params.add(adsTypeCode);
+	      }
+	      sb.append(" order by ads.id desc "); //按id升序排序
+	      return this.getListForAll(sb.toString(), params); 
+	}
+	
 	
 
 	@SuppressWarnings("rawtypes")
@@ -138,10 +169,24 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 		 }
 	     this.executeByHQL(updateSql,(Object[])null);
 	}
+	public void updateDAdsFlag(Integer adsid,String flag) {
+		 String updateSql;
+		 updateSql ="update PlayList ads set ads.status="+flag ;
+		 if (adsid!=null && !adsid.equals(0))
+		 {
+			 updateSql = updateSql + " where ads.id="+adsid;
+		 }
+	     this.executeByHQL(updateSql,(Object[])null);
+	}
 	public void updateOrderState(final Long adsid, final String flag) {
 		// TODO Auto-generated method stub
 		String hql = "update TOrder ord set ord.state=? where ord.id=(select ads.orderId from AdPlaylistGis ads where ads.id=?)";
 		this.executeByHQL(hql, new Object[]{flag, new BigDecimal(adsid)});
+		
+	}
+	public void updateDOrderState(final Integer adsid, final String flag) {
+		String hql = "update DOrder ord set ord.state=? where ord.orderCode=(select ads.orderCode from PlayList ads where ads.id=?)";
+		this.executeByHQL(hql, new Object[]{flag, adsid});
 		
 	}
 	public void updateAdsFlag(String adsids,String flag) {
@@ -167,5 +212,12 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 			}
 				
 		});
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PlayList> querySendDTMBAds() {
+		String hql = "select new PlayList(pl,ap.isHd,ap.position) from PlayList pl,DAdPosition ap where pl.positionCode = ap.positionCode " +
+				     " and curdate() between pl.startDate and pl.endDate and date_format(now(),'%H:%i:%s') between pl.startTime and pl.endTime and ap.positionType = '1'";
+		return (List<PlayList>)this.getListForAll(hql, new Object[]{});
 	}
 	}

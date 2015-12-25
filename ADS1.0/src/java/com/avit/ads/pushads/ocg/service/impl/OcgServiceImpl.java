@@ -170,7 +170,7 @@ public class OcgServiceImpl implements OcgService {
 		sendMsgEntity.setAdsType(adsType);
 
 		String sendMsg = helper.toXML(sendMsgEntity);
-		
+		logger.info("SendMsg: " + sendMsg);
 		int port = ConstantsHelper.OCG_UDP_PORT;
 		byte[] retBuf = sendUdpMsg(ip, port, sendMsg);
 		if (null == retBuf || retBuf.length == 0) {
