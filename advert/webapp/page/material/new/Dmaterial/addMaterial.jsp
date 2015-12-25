@@ -121,7 +121,7 @@ function imagePreview2(imagePreviewName) {
 	    var positionCode =document.getElementById('material.positionCode').value;
 	    var imagePreviewLocation = document.getElementById("picLocation").value;
 
-		var url = "getAdvertPosition.do?advertPositionId="+positionCode+"&imagePreviewName="+imagePreviewName+"&imagePreviewLocation="+imagePreviewLocation;
+		var url = "getAdvertPosition.do?resource.positionCode="+positionCode+"&imagePreviewName="+imagePreviewName+"&imagePreviewLocation="+imagePreviewLocation;
 		window.showModalDialog(url, window, "dialogHeight=240px;dialogWidth=426px;center=1;resizable=0;status=0;");
 
 	}
@@ -556,9 +556,11 @@ $(function(){
 		                                      imageList=imageList+"    <td>"+ww[3]+"</td>";
 		                                      if(maxSize > parseInt(ww[1]) && width == ww[2] && height==ww[3]){
 		                                          imageList=imageList+" <td>通过</td>";     
-		                                      }else{
-		                                       	  imageList=imageList+" <td>不通过<input type='hidden' value='0' name='flag'/></td>";
+		                                      }else if(ww[0].substring(ww[0].length-7)=='.iframe'){
+		                                      	  imageList=imageList+" <td>通过</td>";
 		                                          
+		                                      }else{
+		                                      	  imageList=imageList+" <td>不通过<input type='hidden' value='0' name='flag'/></td>";
 		                                      }
 		                                      
 		                                      imageList=imageList+"    <td><a href='#' onclick='imagePreview(\""+ww[0]+"\");'>预览</a>&nbsp;&nbsp;<a href='#' onclick='deleteImageFile(\""+ww[0]+"\");'>删除</a></td>";                      
@@ -1169,7 +1171,7 @@ function addQuestion(){
 }
 
 function closeSavePane() {
-    window.location.href = "<%=path %>/page/material/queryMeterialList.do";
+    window.location.href = "<%=path %>/dmaterial/queryMaterialList.action";
 }
 
 	function submitForm(){

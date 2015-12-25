@@ -324,13 +324,13 @@
 			$$("resource.examinationOpintions").focus();
     		return true;
 		   }
-            window.location.href="<%=path %>/page/meterial/auditMaterial.do?auditFlag=0$reason="+reason+"&materialId="+materialId;
+            window.location.href="<%=path %>/dmaterial/auditMaterial.do?auditFlag=0$reason="+reason+"&materialId="+materialId;
         }
         
     }
 	
 	function gotoList(){
-        window.location.href="<%=path %>/page/meterial/auditMaterialList.do";
+    	window.location.href = "<%=path %>/dmaterial/auditMaterialList.action";
     }
 </script>
 </head>

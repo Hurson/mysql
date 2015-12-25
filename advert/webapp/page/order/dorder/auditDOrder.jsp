@@ -198,7 +198,7 @@
 	
 	<tr id="periodDate">
 		<td align="right"><span class="required">*</span>开始日期：</td>
-		<td><fmt:formatDate type="date" value="${order.endDate }"/></td>
+		<td><fmt:formatDate type="date" value="${order.startDate }"/></td>
 		<td align="right"><span class="required">*</span>结束日期：</td>
 		<td><fmt:formatDate type="date" value="${order.endDate }"/></td>
 	</tr>

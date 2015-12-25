@@ -15,7 +15,7 @@
 <link id="maincss"  rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/new/main.css" media="all"/>
 <title></title>
  <script type='text/javascript' src='<%=request.getContextPath()%>/js/jquery.min.js'></script>
-    <script type='text/javascript' src='<%=request.getContextPath()%>/js/avit.js'></script>
+ <script type='text/javascript' src='<%=request.getContextPath()%>/js/avit.js'></script>
 
 <script type="text/javascript">
 
@@ -29,6 +29,7 @@
 
    
 	function selectPositin(positionCode,type,positionName,widthHeight,coordinate,backgroundPath,speId){
+		
 		parent.document.getElementById("material.positionCode").value=positionCode;
     	parent.document.getElementById("material.advertPositionName").value=positionName;
     	

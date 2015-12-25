@@ -399,9 +399,8 @@ function addQuestion(){
 	document.getElementById("div_question2").appendChild(newRow);
 
 }
-
 function closeSavePane() {
-    window.location.href = "<%=path %>/page/resource/queryMeterialList.do";
+    window.location.href = "<%=path %>/dmaterial/queryMaterialList.action";
 }
 
 	function submitForm(){

@@ -296,7 +296,7 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	@Override
 	public List<String> getChannelGroupServiceIds(Integer groupId) {
 		String hql = "select ref.serviceId from DChannelGroupRef ref where ref.groupId = ?";
-		return this.getListForAll(hql, new Object[]{groupId.longValue()});
+		return (List<String>)this.getListForAll(hql, new Object[]{groupId.longValue()});
 	}
 
 	@SuppressWarnings("unchecked")

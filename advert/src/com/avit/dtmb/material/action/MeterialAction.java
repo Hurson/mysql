@@ -8,9 +8,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -760,6 +758,36 @@ public class MeterialAction extends BaseAction{
      
         return SUCCESS;
     }
+    @Action(value = "getAdvertPosition",results={@Result(name="successForImage",location="/page/material/new/Dmaterial/imagePreview.jsp"),
+    											 @Result(name="successForVideo",location="/page/material/new/Dmaterial/videoPreview.jsp")})
+    public String getAdvertPosition(){
+    	HttpServletRequest request = this.getRequest();
+	    adPositionQuery = dPositionService.getAdvertPosition(resource.getPositionCode());
+        //返回广告位的JSON信息，用于预览
+	    request.setAttribute("positionJson", Obj2JsonUtil.object2json(adPositionQuery));
+	    
+	    String imagePreviewLocation = request.getParameter("imagePreviewLocation"); 
+	    request.setAttribute("imagePreviewLocation", imagePreviewLocation); //传递下图片的预览位置
+	    
+        String imagePreviewName = request.getParameter("imagePreviewName");
+        String videoPreviewName = request.getParameter("videoPreviewName");
+        String zipImagePreviewName = request.getParameter("zipImagePreviewName");
+        if(imagePreviewName==null||imagePreviewName.equals("")){
+        	 if(videoPreviewName==null||videoPreviewName.equals("")){
+        		 request.setAttribute("zipImagePreviewName", zipImagePreviewName);
+                 return "successForZip";
+        	 }else{
+                 request.setAttribute("videoPreviewName", videoPreviewName);
+                 return "successForVideo";
+        	 }
+        }else{
+            request.setAttribute("imagePreviewName", imagePreviewName);
+            return "successForImage";
+        }
+        
+        
+        //return SUCCESS;
+	}
     /**
      * 
      * @description: 复制图片素材表
