@@ -112,7 +112,7 @@ function query() {
                     <c:forEach items="${page.dataList}" var="ployInfo" varStatus="pl">
                         <tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
                             <td>
-                                <input type="checkbox" value="<c:out value='${ployInfo.id}'/>" name="dataIds"/>
+                                <input type="checkbox" value="<c:out value='${ployInfo.id}'/>" name="dataIds" <c:if test="${ployInfo.status==4 }">disabled</c:if> />
                              </td>
                             <td align="center">
                                 <a href="javascript:modifyData('${ployInfo.id}','${ployInfo.status}');">${ployInfo.ployName}</a>

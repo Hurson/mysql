@@ -54,11 +54,7 @@ public class DPloyDaoImpl extends BaseDaoImpl implements DPloyDao {
 		
 		return (DPloy)this.get(DPloy.class, id);
 	}
-	@Override
-	public void deleteDTMBPloy(Integer id) {
-		this.delete(this.get(DPloy.class, id));
-
-	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DAdPosition> queryPositionList() {

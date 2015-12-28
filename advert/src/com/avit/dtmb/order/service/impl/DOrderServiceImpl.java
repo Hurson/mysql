@@ -228,7 +228,6 @@ public class DOrderServiceImpl implements DOrderService {
 	}
 	
 	private String getResourcePath(DResource resource){
-		String matePath = ConfigureProperties.getInstance().get("materila.ftp.realPath");
 		if(resource == null){
 			return "";
 		}
@@ -237,11 +236,11 @@ public class DOrderServiceImpl implements DOrderService {
 		switch(resourceType){
 		case 0:
 			ImageMeta image = (ImageMeta)dOrderDao.get(ImageMeta.class, resource.getResourceId());
-			resourcePath =matePath+ "/" + image.getName();
+			resourcePath = image.getName();
 			break;
 		case 1:
 			VideoMeta video = (VideoMeta)dOrderDao.get(VideoMeta.class, resource.getResourceId());
-			resourcePath = matePath + "/" + video.getName();
+			resourcePath = video.getName();
 			break;
 		case 2:
 			MessageMeta message = (MessageMeta)dOrderDao.get(MessageMeta.class, resource.getResourceId());
@@ -303,8 +302,8 @@ public class DOrderServiceImpl implements DOrderService {
 		String matePath = this.getResourcePath(res);
 		if(res.getResourceType() != 2){
 			String ip=config.getValueByKey("ftp.ip");
-			matePath=matePath.substring(5);
-	        matePath="http://"+ip+matePath;
+			String path = config.get("materila.ftp.tempPath");
+			matePath = "http://" + ip + path.substring(5) + "/" + matePath;
 		}
 		
 		Map<String, String> map = new HashMap<String, String>();

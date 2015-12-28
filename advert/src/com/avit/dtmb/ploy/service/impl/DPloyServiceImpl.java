@@ -107,7 +107,10 @@ public class DPloyServiceImpl implements DPloyService {
 	public void deleteDTMBPloy(List<String> ids) {
 		if(ids != null){
 			for(String id: ids){
-				dPloyDao.deleteDTMBPloy(Integer.valueOf(id));
+				DPloy ploy = (DPloy)dPloyDao.get(DPloy.class, Integer.valueOf(id));
+				if(!"4".equals(ploy.getStatus())){
+					dPloyDao.delete(ploy);
+				}
 			}
 		}
 

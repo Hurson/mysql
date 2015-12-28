@@ -385,7 +385,7 @@
 	function showChannelGroupRef(channelGroupId) {
 		    var	height = 550;
 				var width=750;
-				var actinUrl = "<%=path %>/page/channelGroup/queryChannelGroupRefList.action?channelGroupId="+channelGroupId;
+				var actinUrl = "<%=path %>/dchannelGroup/queryChannelGroupRefList.action?channelGroupId="+channelGroupId;
 				var modelWin = window.showModalDialog(actinUrl,window,"resizable=no;status=no;scroll=no;center=yes;dialogHeight="+height+"px;dialogWidth="+width+"px");
 				if(modelWin){
 					

@@ -21,8 +21,6 @@ public interface DPloyDao extends BaseDao {
 	
 	public DPloy getDTMBPloy(Integer id);
 	
-	public void deleteDTMBPloy(Integer id);
-	
 	public List<DAdPosition> queryPositionList();	
 	
 	public DAdPosition getPositionByCode(String positionCode);

@@ -61,7 +61,7 @@ public class DPloyAction extends BaseAction {
 		return SUCCESS;
 	}
 	@Action(value = "getDPloy", results = { 
-			@Result(name = "success", location = "/page/ploy/dploy/dPloy.jsp"),
+			@Result(name = "success", location = "/page/ploy/dploy/addDPloy.jsp"),
 			@Result(name = "audit", location = "/page/ploy/dploy/auditDPloy.jsp")})
 	public String getDTMBPloy(){
 		if(ploy != null){
