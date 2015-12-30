@@ -1,5 +1,6 @@
 package com.avit.dtmb.order.dao.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -244,8 +245,8 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	@Override
 	public int updatePlayListEndDate(DOrder order) {
-		String sql = "update d_play_list set end_date =? where order_code = '" +order.getOrderCode()+"'";
-		return this.executeBySQL(sql, new Object[]{order.getEndDate()});
+		String sql = "update d_play_list set end_date =? , end_time= ? where order_code = '" +order.getOrderCode()+"'";
+		return this.executeBySQL(sql, new Object[]{order.getEndDate(),new SimpleDateFormat("HH:mm:ss").format(order.getEndDate())});
 	}
 
 	@SuppressWarnings("unchecked")
