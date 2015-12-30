@@ -96,7 +96,7 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	public String intoAddChannelGroup(){
 		return SUCCESS;
 	}
-	@Action(value = "saveChannelGroup")
+	@Action(value = "saveChannelGroup",results={@Result(name="success",location="/page/channelGroup/dtmbChannelGroup/channelGroupList.jsp")})
 	public String saveChannelGroup() {
 	    
 	       try{
@@ -312,8 +312,20 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 				selChannelIdList.addAll(h);
 
 			}*/
-		   
-	
+	@Action(value="initChannelGroup",results={@Result(name = "success",location = "/page/channelGroup/dtmbChannelGroup/addChannelGroup.jsp")})	   
+	 public String initChannelGroup(){
+		  
+	        try{
+	            channelGroup = channelGroupService.getChannelGroupByID(channelGroupId);
+	            channelGroup.setType(channelGroupType);
+	        }catch(Exception e){
+	        	e.printStackTrace();
+	        	logger.error("初始化频道组信息异常", e);
+	        }
+
+
+	        return SUCCESS;
+	    }
 	
 	
 	public PageBeanDB getChannelGroupPage() {

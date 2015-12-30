@@ -31,4 +31,6 @@ public interface ChannelGroupDao {
 
 	boolean deleteChannelGroupRef(String ids);
 
+	DChannelGroup getChannelGroupByID(Long channelGroupId);
+
 }

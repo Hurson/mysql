@@ -61,5 +61,9 @@ public class ChannelGroupServiceImpl implements ChannelGroupService {
 		boolean flag = channelGroupDao.deleteChannelGroupRef("("+dataIds+")");
         return flag;
 	}
+	@Override
+	public DChannelGroup getChannelGroupByID(Long channelGroupId) {
+		return channelGroupDao.getChannelGroupByID(channelGroupId);
+	}
 
 }

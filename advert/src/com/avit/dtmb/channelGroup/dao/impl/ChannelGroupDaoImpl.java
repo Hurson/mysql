@@ -25,6 +25,7 @@ import com.avit.dtmb.channelGroup.bean.DChannelInfoSync;
 import com.avit.dtmb.channelGroup.dao.ChannelGroupDao;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.channelGroup.bean.ChannelGroupRef;
+import com.dvnchina.advertDelivery.channelGroup.bean.TChannelGroup;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 import com.dvnchina.advertDelivery.model.UserLogin;
 import com.dvnchina.advertDelivery.utils.HibernateSQLTemplete;
@@ -292,6 +293,39 @@ public class ChannelGroupDaoImpl extends HibernateSQLTemplete implements Channel
 	        ts.commit();
 	        session.close();
 	        return true;
+	}
+
+
+
+	@Override
+	public DChannelGroup getChannelGroupByID(Long channelGroupId) {
+		String hql =" from DChannelGroup t " +     
+		        "where t.id="+channelGroupId;
+
+		        List list = this.getList(hql,null);
+		        DChannelGroup DchannelGroup =null;
+		        if (list!=null && list.size()>0)
+		        {
+		        	DchannelGroup = (DChannelGroup)(list.get(0));
+		        }
+
+		        return DchannelGroup;
+	}
+	
+	public List getList(final String hql, final List params ) {
+		return (List) this.getHibernateTemplate().execute(new HibernateCallback(){
+			public Object doInHibernate(Session session) throws HibernateException, SQLException{
+				
+				Query query = session.createQuery(hql);
+				if (params != null){
+					for (int i = 0; i < params.size(); i++){
+						query.setParameter(i, params.get(i));
+					}
+				}
+				
+					return  query.list();
+				}
+		});
 	}
 }
 

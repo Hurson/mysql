@@ -38,4 +38,6 @@ public interface ChannelGroupService {
 
 	public boolean deleteChannelGroupRef(String dataIds);
 
+	public DChannelGroup getChannelGroupByID(Long channelGroupId);
+
 }
