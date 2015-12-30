@@ -8,7 +8,9 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -35,12 +37,15 @@ import com.dvnchina.advertDelivery.log.service.OperateLogService;
 import com.dvnchina.advertDelivery.meterial.action.MeterialManagerAction;
 import com.dvnchina.advertDelivery.meterial.bean.MaterialCategory;
 import com.dvnchina.advertDelivery.meterial.bean.PriorityWordBean;
+import com.dvnchina.advertDelivery.meterial.bean.QuestionInfo;
+import com.dvnchina.advertDelivery.meterial.bean.QuestionType;
 import com.dvnchina.advertDelivery.meterial.service.MeterialManagerService;
 import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.ImageMeta;
 import com.dvnchina.advertDelivery.model.ImageReal;
 import com.dvnchina.advertDelivery.model.MessageMeta;
 import com.dvnchina.advertDelivery.model.MessageReal;
+import com.dvnchina.advertDelivery.model.Question;
 import com.dvnchina.advertDelivery.model.UserLogin;
 import com.dvnchina.advertDelivery.model.VideoMeta;
 import com.dvnchina.advertDelivery.model.VideoReal;
@@ -69,6 +74,7 @@ public class MeterialAction extends BaseAction{
 	private DPositionService dPositionService;
 	private PageBeanDB page;
 	private DResource meterialQuery;
+	private DResource material;
 	private List<MaterialCategory> materialCategoryList;
 	private PageBeanDB adPositionPage;
 	private Integer advertPositionId;
@@ -758,36 +764,6 @@ public class MeterialAction extends BaseAction{
      
         return SUCCESS;
     }
-    @Action(value = "getAdvertPosition",results={@Result(name="successForImage",location="/page/material/new/imagePreview.jsp"),
-    											 @Result(name="successForVideo",location="/page/material/new/videoPreview.jsp")})
-    public String getAdvertPosition(){
-    	HttpServletRequest request = this.getRequest();
-	    adPositionQuery = dPositionService.getAdvertPosition(resource.getPositionCode());
-        //返回广告位的JSON信息，用于预览
-	    request.setAttribute("positionJson", Obj2JsonUtil.object2json(adPositionQuery));
-	    
-	    String imagePreviewLocation = request.getParameter("imagePreviewLocation"); 
-	    request.setAttribute("imagePreviewLocation", imagePreviewLocation); //传递下图片的预览位置
-	    
-        String imagePreviewName = request.getParameter("imagePreviewName");
-        String videoPreviewName = request.getParameter("videoPreviewName");
-        String zipImagePreviewName = request.getParameter("zipImagePreviewName");
-        if(imagePreviewName==null||imagePreviewName.equals("")){
-        	 if(videoPreviewName==null||videoPreviewName.equals("")){
-        		 request.setAttribute("zipImagePreviewName", zipImagePreviewName);
-                 return "successForZip";
-        	 }else{
-                 request.setAttribute("videoPreviewName", videoPreviewName);
-                 return "successForVideo";
-        	 }
-        }else{
-            request.setAttribute("imagePreviewName", imagePreviewName);
-            return "successForImage";
-        }
-        
-        
-        //return SUCCESS;
-	}
     /**
      * 
      * @description: 复制图片素材表
@@ -865,7 +841,69 @@ public class MeterialAction extends BaseAction{
         return textReal;
     }
     
-    
+    /**
+	 * 进入素材修改页面
+	 * @return
+	 * @throws ParseException
+	 */
+    @Action(value = "initMaterials",results={@Result(name="success",location="/page/material/new/Dmaterial/updateMaterial.jsp")})
+	public String initMaterials(){    
+
+		  try{
+	        	materialCategoryList=meterialManagerService.getMaterialCategoryList();
+	            
+	            int materialIdd = Integer.valueOf(materialId);      
+	            resource = materialService.getMaterialByID(materialIdd);
+	            adPositionQuery = dPositionService.getAdvertPosition(resource.getPositionCode());
+	    		//返回广告位的JSON信息，用于预览
+	    		getRequest().setAttribute("positionJson", Obj2JsonUtil.object2json(adPositionQuery));
+	           
+	    		if(resource.getResourceType()==0){
+	                //图片
+	                imageMeta=meterialManagerService.getImageMetaByID(resource.getResourceId());
+	                imageSpecification = materialService.getImageMateSpeci(adPositionQuery.getSpecificationId());
+	            }
+	            if(resource.getResourceType()==1){
+	                //视频
+	                videoMeta = meterialManagerService.getVideoMetaByID(resource.getResourceId());
+	                videoSpecification = materialService.getVideoSpc(adPositionQuery.getSpecificationId());
+	            }
+	            if(resource.getResourceType()==2){
+	                //文字
+	                textMeta=meterialManagerService.getTextMetaByID(resource.getResourceId());
+	                if(textMeta.getContent()!=null){
+	                    byte[] contentBlob =textMeta.getContent();
+	                    String jsonWord = new String(contentBlob,"gbk");
+	                    textMeta.setContentMsg(jsonWord);
+	                    
+	                    Gson gson = new Gson();
+	                    List<PriorityWordBean> list = gson.fromJson(jsonWord, new TypeToken<List<PriorityWordBean>>(){ }.getType());
+	                    textMeta.setPwList(list);
+	                  
+	                }
+	                
+	            }
+	                  
+
+	            String ip=config.getValueByKey("ftp.ip");
+	            String path=config.getValueByKey("materila.ftp.tempPath");
+	            path=path.substring(5, path.length());
+	            String viewPath="http://"+ip+path;
+	            if(videoMeta != null){
+	            	sssspath = viewPath+"/"+videoMeta.getName();
+	            }
+	            this.getRequest().setAttribute("viewPath", viewPath);
+	            
+	        }catch(Exception e){
+	        	e.printStackTrace();
+	        	logger.error("初始化素材信息异常", e);
+	        }
+	        if("1".equals(isAuditTag)){
+	        	return "audit";
+	        }
+	        return SUCCESS;
+        
+    }
     
 	public PageBeanDB getPage() {
 		return page;
