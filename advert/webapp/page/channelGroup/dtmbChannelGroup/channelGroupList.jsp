@@ -86,7 +86,7 @@ function modifyChannelGroupRef(channelGroupId,channelGroupType) {
     }
     
     function modifyData(channelGroupId,channelGroupType) {
-      window.location.href="<%=path %>/page/channelGroup/initChannelGroup.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType;
+      window.location.href="<%=path %>/dchannelGroup/initChannelGroup.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType;
     }
 </script>
 <style>

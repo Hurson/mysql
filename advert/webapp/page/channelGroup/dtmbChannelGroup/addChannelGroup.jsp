@@ -90,7 +90,7 @@
     
     function gotoList(){
 
-        window.location.href="<%=path %>/dchannelGroup/queryChannelGroupList.do";
+        window.location.href="<%=path %>/dchannelGroup/queryChanelGroupList.do";
     }
 
 
