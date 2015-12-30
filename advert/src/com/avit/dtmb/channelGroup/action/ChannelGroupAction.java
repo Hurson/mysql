@@ -67,6 +67,7 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	private List selChannelIdList;
 	private String channelGroupIdTemp;
 	private String serviceIds;
+	private String selServiceIds;
 	
 	@Action(value = "queryChanelGroupList",results={@Result(name="success",location="/page/channelGroup/dtmbChannelGroup/channelGroupList.jsp")})
 	public String queryChanelGroupList(){
@@ -237,10 +238,10 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	       return SUCCESS;
 	   }
 	 @Action(value = "saveChannelGroupRef",results={@Result(name = "success",location = "/page/channelGroup/dtmbChannelGroup/channelGroupRefList.jsp")})
-	 public void saveChannelGroupRef() {	   
+	 public String saveChannelGroupRef() {	   
 		    try{
 		    	List<DChannelGroupRef> channelGroupRefList = new ArrayList<DChannelGroupRef>();
-			    String[] ids = serviceIds.split(",");
+			    String[] ids = selServiceIds.split(",");
 			    for(int i=0;i<ids.length;i++){
 			    	DChannelGroupRef temp =new DChannelGroupRef();
 			    	if(channelGroupIdTemp!=null&&!channelGroupIdTemp.equals("")){
@@ -260,8 +261,40 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 		    	e.printStackTrace();
 		    	logger.error("保存频道组频道关联关系异常", e);
 		    }
+		    return SUCCESS;
 	   }
-	 
+	 /**
+	  * 删除关联
+	  * @return
+	  */
+	 @Action(value = "deleteChannelGroupRef",results={@Result(name = "success",location = "/page/channelGroup/dtmbChannelGroup/channelGroupRefList.jsp")})
+	 public String deleteChannelGroupRef(){
+	       if(StringUtils.isNotBlank(dataIds)){
+	           try {
+	               
+	               boolean flag = channelGroupService.deleteChannelGroupRef(dataIds);
+	               if(flag){
+	               	//记录操作日志
+	               	StringBuffer delInfo = new StringBuffer();
+	           		delInfo.append("删除频道组频道关联关系：");
+	                delInfo.append("共").append(dataIds.split(",").length).append("条记录(channelIds:"+dataIds+")");
+	       			operType = "operate.delete";
+	       			operInfo = delInfo.toString();
+	       			operLog = this.setOperationLog(Constant.OPERATE_MODULE_CHANNEL_GROUP);
+	       			operateLogService.saveOperateLog(operLog);
+	                
+	       			channelQuery=null;
+	       			//channelGroupId=
+	       			queryChannelGroupRefList();
+	       			return SUCCESS;
+	               }
+	           } catch (RuntimeException e) {
+	               e.printStackTrace();
+	               logger.error("删除频道组频道关联关系异常", e);
+	           }
+	       }
+	       return NONE;
+	   }
 	 
 	 /*public String selectChannelIds(){
 		   
@@ -423,6 +456,15 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getSelServiceIds() {
+		return selServiceIds;
+	}
+	public void setSelServiceIds(String selServiceIds) {
+		this.selServiceIds = selServiceIds;
+	}
+	public void setServiceIds(String serviceIds) {
+		this.serviceIds = serviceIds;
 	}
 	
 	

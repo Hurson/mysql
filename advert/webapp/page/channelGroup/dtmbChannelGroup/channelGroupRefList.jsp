@@ -86,7 +86,7 @@ function query() {
      }
      if (confirm("您确定删除所选吗？")){
           var dataIds = getCheckValue("dataIds");	
-          document.forms[0].action="<%=path %>/page/channelGroup/deleteChannelGroupRef.do";
+          document.forms[0].action="<%=path %>/dchannelGroup/deleteChannelGroupRef.do";
           document.forms[0].submit();
      }
         
@@ -94,7 +94,7 @@ function query() {
 
     
     function goback() {
-    window.location.href="<%=path%>/page/channelGroup/queryChannelGroupList.do"; 
+    window.location.href="<%=path%>/dchannelGroup/queryChanelGroupList.do"; 
     }
          
     function refreshChannelList(){
@@ -103,7 +103,7 @@ function query() {
     function test(){
     	 var channelGroupId=document.getElementById("channelGroupId").value;
     	 var channelGroupType=document.getElementById("channelGroupType").value;
-         window.location.href="<%=path%>/page/channelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType;
+         window.location.href="<%=path%>/dchannelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType;
    }
     
     
@@ -124,7 +124,7 @@ function query() {
 
 </head>
 <body class="mainBody">
- <form action="<%=path %>/page/channelGroup/queryChannelGroupRefList.do" method="post" id="queryForm">
+ <form action="<%=path %>/dchannelGroup/queryChanelGroupList.do" method="post" id="queryForm">
 
 
          <s:set name="page" value="%{channelListPage}" />
@@ -163,7 +163,7 @@ function query() {
                     <c:forEach items="${channelListPage.dataList}" var="channelInfo" varStatus="pl">
                         <tr <c:if test="${pl.index%2==1}">class="sec"</c:if>>
                             <td>
-                                <input type="checkbox" value="<c:out value='${channelInfo.channelId}'/>" name="dataIds"/>
+                                <input type="checkbox" value="<c:out value='${channelInfo.serviceId}'/>" name="dataIds"/>
                              </td>
                             <td>
                                 ${channelInfo.channelName}

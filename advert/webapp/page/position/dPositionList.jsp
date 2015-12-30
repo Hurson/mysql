@@ -12,7 +12,29 @@
 <script type="text/javascript" src="<%=path %>/js/jquery/jquery-1.9.0.js"></script>
 <title>广告位列表查询</title>
 <script type="text/javascript">
-    function viewPositionOccupy(id){
+   	function type(temp){
+   	var re = /1/;
+   	var type ="";
+   	if(re.test(temp)){
+   		type=type+"区域  ";
+   	}
+   	re = /2/;
+   	if(re.test(temp)){
+   		type=type+"时段  ";
+   	}
+   	re = /3/;
+   	if(re.test(temp)){
+   		type=type+"直播频道  ";
+   	}
+   	re = /4/;
+   	if(re.test(temp)){
+   	   	type=type+"音频频道  ";
+   	}
+   	document.getElementById("ployTypes").innerHTML(type); 
+   	}
+   	
+   	
+	function viewPositionOccupy(id){
     	$.ajax({   
  	       url:'checkSession.do',       
  	       type: 'POST',    
@@ -54,7 +76,7 @@
 	    <td >投放策略</td>
 		<td>操作</td>
     </tr>
-    <c:forEach items="${page.dataList}" var="detail" varStatus="pl">
+    <c:forEach items="${page.dataList}" var="detail" varStatus="pl" >
 		<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>
 			onmouseout="this.style.backgroundColor=''" onmouseover="this.style.backgroundColor='#fffed9'">
 			<td><a href="queryDPositionById.do?id=${detail.id }"><c:out value="${detail.positionCode}" /></a></td>
@@ -66,7 +88,29 @@
 					<c:when test="${detail.positionType==3}">字幕</c:when>
 				</c:choose>
 			</td>
-			<td><c:out value="${detail.ployTypes}" /></td>
+			<td id = "${detail.positionCode}"> 
+			<script type="text/javascript">
+			var re = /1/;
+		   	var type ="";
+		   	temp = "${detail.ployTypes}";
+		   	if(re.test(temp)){
+		   		type=type+"区域  ";
+		   	}
+		   	re = /2/;
+		   	if(re.test(temp)){
+		   		type=type+"时段  ";
+		   	}
+		   	re = /3/;
+		   	if(re.test(temp)){
+		   		type=type+"直播频道  ";
+		   	}
+		   	re = /4/;
+		   	if(re.test(temp)){
+		   	   	type=type+"音频频道  ";
+		   	}
+		   	document.getElementById("${detail.positionCode}").innerHTML=type;
+			</script>
+			</td>
 			<td><a href="#" onclick="viewPositionOccupy('${detail.id }')">查看占用情况</a></td>
 		</tr>
 	</c:forEach>

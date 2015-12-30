@@ -29,4 +29,6 @@ public interface ChannelGroupDao {
 
 	boolean saveChannelGroupRefList(List<DChannelGroupRef> channelGroupRefList);
 
+	boolean deleteChannelGroupRef(String ids);
+
 }

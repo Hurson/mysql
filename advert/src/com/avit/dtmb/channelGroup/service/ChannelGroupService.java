@@ -36,4 +36,6 @@ public interface ChannelGroupService {
 	public boolean saveChannelGroupRefList(
 			List<DChannelGroupRef> channelGroupRefList);
 
+	public boolean deleteChannelGroupRef(String dataIds);
+
 }

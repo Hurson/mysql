@@ -108,7 +108,7 @@ function query() {
      
     }
   function modifyData(materialId) {
-      window.location.href="<%=path %>/dmaterial/initMaterial.do?materialId="+materialId;
+      window.location.href="<%=path %>/dmaterial/initMaterials.do?materialId="+materialId;
     }
 
 </script>

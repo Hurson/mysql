@@ -276,5 +276,22 @@ public class ChannelGroupDaoImpl extends HibernateSQLTemplete implements Channel
 		this.getHibernateTemplate().saveOrUpdateAll(channelGroupRefList);
         return true;
 	}
+
+
+
+	@Override
+	public boolean deleteChannelGroupRef(String ids) {
+		ids = ids.replace(" ", "");
+	        Session session = this.getSessionFactory().openSession();
+	        Transaction ts = session.beginTransaction();
+	        String hqlUpdate = "DELETE from D_CHANNEL_GROUP_REF WHERE SERVICE_ID IN "+ids;
+	        Query query = session.createSQLQuery(hqlUpdate);
+
+	        query.executeUpdate();
+
+	        ts.commit();
+	        session.close();
+	        return true;
+	}
 }
 

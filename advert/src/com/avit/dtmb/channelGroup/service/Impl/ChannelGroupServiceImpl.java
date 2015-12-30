@@ -56,5 +56,10 @@ public class ChannelGroupServiceImpl implements ChannelGroupService {
 			List<DChannelGroupRef> channelGroupRefList) {
 		return channelGroupDao.saveChannelGroupRefList(channelGroupRefList);
 	}
+	@Override
+	public boolean deleteChannelGroupRef(String dataIds) {
+		boolean flag = channelGroupDao.deleteChannelGroupRef("("+dataIds+")");
+        return flag;
+	}
 
 }
