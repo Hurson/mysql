@@ -171,7 +171,7 @@ selectData = document.getElementById("selServiceIds").value
                 <td width="20%" align="center">类型</td>
                 <td width="15%" align="center">SERVICE_ID</td>
                 <td width="15%" align="center">TS_ID</td>
-                <td width="10%" align="center">NETWORK_ID</td>
+                <td width="15%" align="center">NETWORK_ID</td>
                 <td width="15%" align="center">是否回放频道</td>
                 <input id="selServiceIds" name="selServiceIds" type="hidden"  value="${selServiceIds}"/>
             </tr>
