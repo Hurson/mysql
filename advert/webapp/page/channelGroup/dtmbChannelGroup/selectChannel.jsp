@@ -138,7 +138,7 @@ selectData = document.getElementById("selServiceIds").value
 </head>
 
 <body class="mainBody">
-<form action="<%=path %>/dchannelGroup/saveChannelGroupRef.do" method="post" id="queryForm">
+<form action="<%=path %>/dchannelGroup/selectChannel.do" method="post" id="queryForm">
 <s:set name="page" value="selectchannelPage" />
  <input type="hidden" id="pageNo" name="selectchannelPage.pageNo" value="${selectchannelPage.pageNo}"/>
  <input type="hidden" id="pageSize" name="selectchannelPage.pageSize" value="${selectchannelPage.pageSize}"/>
