@@ -67,6 +67,7 @@ public class DPositionDaoImpl extends BaseDaoImpl implements DPositionDao {
 
 	@Override
 	public VideoSpecification getVideoSpeById(Integer id) {
+		
 		return this.getHibernateTemplate().get(VideoSpecification.class, id);
 	}
 

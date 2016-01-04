@@ -91,15 +91,15 @@ public class DPositionAction extends BaseAction{
 	public String specificationAdpter(){
 		String A;
 		try{
-			if(type==1){
+			if(type==0){
 				imageSpe = dPositionService.getImageSpeById(id);
 				A = "IMG";
 				return A;
-			}else if(type==2){
+			}else if(type==1){
 				videoSpe = dPositionService.getVideoSpeById(id);
 				A = "VIDEO";
 				return A;
-			}else if(type==3){
+			}else if(type==2){
 				textSpe = dPositionService.getTextSpeById(id);
 				A = "TEXT";
 				return A;
@@ -112,7 +112,7 @@ public class DPositionAction extends BaseAction{
 		}
 	}
 	@Action(value = "getVideoSpe",results = {@Result(name = "success",location = "/page/position/editVideoSpecification.jsp")})
-	public String getVideoSpe(){
+	public String VideoSpeQuery(){
 		videoSpe = dPositionService.getVideoSpeById(id);
 		return SUCCESS;
 	}
@@ -155,6 +155,10 @@ public class DPositionAction extends BaseAction{
 	}
 	public void setTextSpe(TextSpecification textSpe) {
 		this.textSpe = textSpe;
+	}
+	
+	public VideoSpecification getVideoSpe() {
+		return videoSpe;
 	}
 	public void setVideoSpe(VideoSpecification videoSpe) {
 		this.videoSpe = videoSpe;
