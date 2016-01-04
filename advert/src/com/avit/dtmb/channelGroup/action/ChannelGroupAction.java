@@ -119,7 +119,7 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	   	        //操作日志
 	   	        operInfo = channelGroup.toString();
 	   			operType = "operate.update";
-	   			operLog = this.setOperationLog(Constant.OPERATE_MODULE_CHANNEL_GROUP);
+	   			operLog = this.setOperationLog(Constant.OPERATE_MODULE_DCHANNEL_GROUP);
 	   			operateLogService.saveOperateLog(operLog);
 	   	    }else{
 	   	    	channelGroup.setOperatorId(user.getUserId());
@@ -129,7 +129,7 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	   	        //操作日志
 	   	        operInfo = channelGroup.toString();
 	   			operType = "operate.add";
-	   			operLog = this.setOperationLog(Constant.OPERATE_MODULE_CHANNEL_GROUP);
+	   			operLog = this.setOperationLog(Constant.OPERATE_MODULE_DCHANNEL_GROUP);
 	   			operateLogService.saveOperateLog(operLog);
 	   	    }
 	   	   channelGroupQuery = null; 
@@ -280,7 +280,7 @@ public class ChannelGroupAction extends BaseActionSupport<Object> implements Ser
 	                delInfo.append("共").append(dataIds.split(",").length).append("条记录(channelIds:"+dataIds+")");
 	       			operType = "operate.delete";
 	       			operInfo = delInfo.toString();
-	       			operLog = this.setOperationLog(Constant.OPERATE_MODULE_CHANNEL_GROUP);
+	       			operLog = this.setOperationLog(Constant.OPERATE_MODULE_DCHANNEL_GROUP);
 	       			operateLogService.saveOperateLog(operLog);
 	                
 	       			channelQuery=null;

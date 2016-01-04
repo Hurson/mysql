@@ -1,6 +1,7 @@
 package com.avit.dtmb.ploy.bean;
 // default package
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -193,6 +195,20 @@ public class DPloy implements java.io.Serializable {
 
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sb.append("策略ID：").append(id);
+		sb.append(",策略名称： ").append(ployName);
+		sb.append(dposition == null || StringUtils.isBlank(dposition.getPositionName())?"":",广告位:" + dposition.getPositionName());
+		sb.append(createTime == null ? "":", 创建时间： " + sdf.format(createTime));
+		sb.append(modifyTime == null ? "":", 修改时间： " + sdf.format(modifyTime));
+		sb.append(auditTime == null ? "":", 审核时间： " + sdf.format(auditTime));
+		sb.append(StringUtils.isBlank(auditAdvice)?"":", 审核意见：" + auditAdvice);
+		return sb.toString();
 	}
 	
 	

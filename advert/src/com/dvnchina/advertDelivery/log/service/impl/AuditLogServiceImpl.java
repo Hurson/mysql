@@ -20,6 +20,10 @@ public class AuditLogServiceImpl implements AuditLogService{
 		return auditLogDao.queryAuditLogList(log,pageNo,pageSize);
 	}
 	
+	public PageBeanDB queryDAuditLogList(AuditLog log, int pageNo, int pageSize){
+		return auditLogDao.queryDAuditLogList(log,pageNo,pageSize);
+	}
+	
 	/**
 	 * 保存审核日志
 	 * @param log

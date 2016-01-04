@@ -4,6 +4,7 @@ package com.avit.dtmb.material.bean;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * DResource entity. @author MyEclipse Persistence Tools
@@ -275,5 +278,18 @@ public class DResource  implements
 	public void setStatusStr(String statusStr) {
 		this.statusStr = statusStr;
 	}
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		 sb.append("无线素材 ID=").append(id).append(", 素材名称=").append(resourceName);
+		 sb.append(", 客户ID=").append(customerId).append(", 创建时间=").append(sdf.format(createTime));
+		 sb.append(", 广位编码=").append(positionCode);
+		 sb.append(modifyTime == null ?"":", 修改时间=" + sdf.format(modifyTime));
+		 sb.append(auditTime == null ? "":", 审核时间=" + sdf.format(auditTime));
+		 sb.append(StringUtils.isBlank(examinationOpintions) ? "":", 审核意见=" + examinationOpintions);
+		return sb.toString();
+	}
+	
 	
 }

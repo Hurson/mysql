@@ -2,6 +2,7 @@ package com.avit.dtmb.material.service.impl;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.avit.dtmb.material.bean.DResource;
@@ -89,5 +90,15 @@ public class MaterialServiceImpl implements MaterialService{
 			return "0";
 		}
 		return "1";
+	}
+
+	@Override
+	public void deleteMaterial(String ids) {
+		if(StringUtils.isNotBlank(ids)){
+			for(String id : ids.split(",")){
+				materialDao.deleteObj(DResource.class.getName(), Integer.valueOf(id));
+			}
+		}
+		
 	}
 }

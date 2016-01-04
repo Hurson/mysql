@@ -213,6 +213,14 @@ public class DAdPosition implements Serializable {
 		
 		return mainPloyMap;
 	}
+	@Override
+	public String toString() {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("广告位编码：" + positionCode);
+		sb.append(",广告位名称：" + positionName);
+		return sb.toString();
+	}
 	
 
 }

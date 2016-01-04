@@ -104,6 +104,7 @@
 			op = 1;
 			var orderId = '${order.id}';
 			var endDate = '${order.endDate}';
+			var state = '${order.state}';
 			$.ajax( {
 				type : "post",
 				url : 'auditDOrder.action',
@@ -112,6 +113,7 @@
 					'order.id':orderId,
 					'order.endDate':endDate,
 					'flag': flag,
+					'order.state':state,
 					'order.auditAdvice':$("#checkOpinion").val()
 				},
 				success : function(result) {
@@ -136,7 +138,7 @@
 	}
 	//显示订单审核日志
 	function showAuditLog(relationId){
-    	var url = "queryOrderAuditLog.do?auditLog.relationType=1&auditLog.relationId="+relationId;
+    	var url = "queryDOrderAuditLog.action?auditLog.relationType=2&auditLog.relationId="+relationId;
     	window.showModalDialog(url, window, "dialogHeight=480px;dialogWidth=820px;center=1;resizable=0;status=0;");
 	}
 </script>

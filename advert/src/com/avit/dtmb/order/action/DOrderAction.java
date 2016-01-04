@@ -22,6 +22,11 @@ import com.avit.dtmb.ploy.bean.DPloy;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.common.BaseAction;
+import com.dvnchina.advertDelivery.constant.Constant;
+import com.dvnchina.advertDelivery.log.bean.AuditLog;
+import com.dvnchina.advertDelivery.log.bean.OperateLog;
+import com.dvnchina.advertDelivery.log.service.AuditLogService;
+import com.dvnchina.advertDelivery.log.service.OperateLogService;
 import com.dvnchina.advertDelivery.model.Customer;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.UserLogin;
@@ -44,8 +49,15 @@ public class DOrderAction extends BaseAction {
 	private DResource resource;
 	private String flag;
 	private List<Customer> customerList;
+
+	/**操作日志类*/
+	public OperateLog operLog;
+	private AuditLog auditLog;
 	
-	
+	@Resource
+	private OperateLogService operateLogService;
+	@Resource
+	private AuditLogService auditLogService;
 	@Resource
 	private DOrderService dOrderService;
 	
@@ -128,11 +140,15 @@ public class DOrderAction extends BaseAction {
 	public String saveDOrder(){
 		
 		if(order.getId() == null){
+			operType = "operate.add";
+			
 			order.setCreateTime(new Date());
 			order.setModifyTime(new Date());
 			order.setState("0");
 			
 		}else{
+			operType = "operate.update";
+			
 			if(!"0".equals(order.getState())){
 				order.setState("1");
 			}
@@ -142,8 +158,12 @@ public class DOrderAction extends BaseAction {
 		UserLogin user = getLoginUser();
 		order.getCustomer().setId(user.getCustomerId());
 		order.setOperatorId(user.getUserId());
-		
 		dOrderService.saveDOrder(order);
+		
+		operInfo = order.toString();
+        operLog = this.setOperationLog(Constant.OPERATE_MODULE_DPLOY);
+        operateLogService.saveOperateLog(operLog);
+		
 		return SUCCESS;
 	}
 	
@@ -151,6 +171,15 @@ public class DOrderAction extends BaseAction {
 	public String deleteDOrder(){
 		List<String> idList = Arrays.asList(ids.split(","));
 		dOrderService.deleteDOrder(idList);
+		
+		StringBuffer delInfo = new StringBuffer();
+		delInfo.append("删除素材：");
+        delInfo.append("共").append(ids.split(",").length).append("条记录(ids:"+ids+")");
+		operType = "operate.delete";
+		operInfo = delInfo.toString();
+		operLog = this.setOperationLog(Constant.OPERATE_MODULE_DORDER);
+		operateLogService.saveOperateLog(operLog);
+		
 		return SUCCESS;
 	}
 	
@@ -177,6 +206,14 @@ public class DOrderAction extends BaseAction {
 	@Action(value = "auditDOrder")
 	public void auditDPloy(){
 		String result = dOrderService.auditDTMBPloy(order, flag);
+		int state = 0;
+		if("-1".equals(flag)){
+			state = Integer.parseInt(order.getState()) + 1;
+		}else if("1".equals(flag)){
+			state = Integer.parseInt(order.getState()) * 2;
+			
+		}
+		saveAuditLog(order.getId(),order.getAuditAdvice(),state);
 		this.renderText(result);
 	}
 	@Action(value = "checkDOrderRule")
@@ -202,6 +239,33 @@ public class DOrderAction extends BaseAction {
 		Map<String, String> map = dOrderService.previewResource(resource);
 		this.getRequest().setAttribute("map", map);
 		return SUCCESS;
+	}
+	
+	/**
+	 * 查询订单审核日志
+	 * @return
+	 */
+	@Action(value = "queryDOrderAuditLog", results = { 
+			@Result(name = "success", location = "/page/order/orderAuditLogList.jsp")})
+	public String queryDOrderAuditLog(){
+		try{
+			if(page == null){
+				page = new PageBeanDB();
+			}
+			page = auditLogService.queryDAuditLogList(auditLog, page.getPageNo(), page.getPageSize());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+	private void saveAuditLog(Integer orderId,String opinion, int auditState) {
+		AuditLog auditLog = new AuditLog();
+		auditLog.setRelationType(Constant.AUDIT_RELATION_TYPE_DORDER);
+		auditLog.setRelationId(orderId);
+		auditLog.setState(auditState);
+		auditLog.setOperatorId(getUserId());
+		auditLog.setAuditOpinion(opinion);
+		auditLogService.saveAuditLog(auditLog);
 	}
 	public DOrder getOrder() {
 		return order;
@@ -266,6 +330,14 @@ public class DOrderAction extends BaseAction {
 
 	public void setCustomerList(List<Customer> customerList) {
 		this.customerList = customerList;
+	}
+
+	public AuditLog getAuditLog() {
+		return auditLog;
+	}
+
+	public void setAuditLog(AuditLog auditLog) {
+		this.auditLog = auditLog;
 	}
 	
 	

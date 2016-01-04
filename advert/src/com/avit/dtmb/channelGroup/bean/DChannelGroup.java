@@ -1,26 +1,26 @@
 package com.avit.dtmb.channelGroup.bean;
 // default package
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
-
-import static javax.persistence.GenerationType.IDENTITY;
-
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
 
 /**
  * AbstractDChannelGroup entity provides the base persistence definition of the
  * DChannelGroup entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_channel_group", catalog = "ads_x")
+@Table(name = "d_channel_group")
 public class DChannelGroup implements java.io.Serializable {
 
 	// Fields
 
+	private static final long serialVersionUID = -150702093071816942L;
+	
 	private Long id;
 	private String code;
 	private String name;
@@ -105,6 +105,17 @@ public class DChannelGroup implements java.io.Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("频道组:[ID=").append(id);
+		sb.append(",名称=").append(name);
+		sb.append(",CODE=").append(code);
+		sb.append(",类型=").append(type);
+		sb.append("]");
+		return sb.toString();
 	}
 	
 }

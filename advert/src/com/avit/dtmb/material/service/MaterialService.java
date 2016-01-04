@@ -19,4 +19,5 @@ public interface MaterialService {
 	public ImageMeta getImageMetaByID(Integer resourceId);
 	public String getMaterialSpecification(DAdPosition position);
 	public String checkMaterialExist(DResource resource);
+	public void deleteMaterial(String ids);
 }

@@ -13,6 +13,14 @@ public interface AuditLogService {
 	 * @return
 	 */
 	public PageBeanDB queryAuditLogList(AuditLog log, int pageNo, int pageSize);
+	/**
+	 * 查询无线订单审核日志
+	 * @param log
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	public PageBeanDB queryDAuditLogList(AuditLog log, int pageNo, int pageSize);
 	
 	/**
 	 * 保存审核日志

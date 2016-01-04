@@ -1971,6 +1971,18 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
                         if(localFile.exists()&&localFile.isFile()){
                             localFile.delete();
                         }
+                        /**
+                         * //将生成好的html文件压缩
+                        File inFile = new File(".././"+newFileName);
+
+                        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(".././"+localFileName));
+                        zos.setComment("多文件处理");
+                        zipFile(inFile, zos, "");
+                        zos.close();
+                        //将新的压缩文件上传到ftp
+                        String remoteDirectoryReal=config.getValueByKey("materila.ftp.questionRealPath"); 
+                        ftp.uploadFileToRemote(".././"+localFileName, remoteDirectoryReal, localFileName);
+                         */
                         //将新的文件夹上传到FTP
                         File inFile = new File(".././"+templateFileName);                      
                         String newFileName =questionSubject.getId().toString();                    
@@ -2333,7 +2345,7 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 	 * @author: wangfei@avit.com.cn
 	 * @date: 2013-8-9 上午11:16:10
 	 */
-	public String getImageMate(){
+	public String getImageMateSpeci(){
 	    
 	    ImageSpecification imageSpecification = meterialManagerService.getImageMateSpeci(advertPositionId);
 	    Map<String,String> resultMap = new HashMap<String,String>();
@@ -2366,6 +2378,16 @@ public class MeterialManagerAction extends BaseAction implements ServletRequestA
 	    adPositionQuery = positionService.getAdvertPosition(advertPositionId);
         //返回广告位的JSON信息，用于预览
 	    request.setAttribute("positionJson", Obj2JsonUtil.object2json(adPositionQuery));
+	    //positionJson=Obj2JsonUtil.object2json(adPositionQuery);
+//        String ip=config.getValueByKey("ftp.ip");
+//        String path=config.getValueByKey("materila.ftp.tempPath");
+//        path=path.substring(5, path.length());
+//        String viewPath="http://"+ip+path;
+//        if(videoMeta != null){
+//            sssspath = viewPath+"/"+videoMeta.getName();
+//        }
+//        
+//      request.setAttribute("viewPath", viewPath);
 	    
 	    String imagePreviewLocation = request.getParameter("imagePreviewLocation"); 
 	    request.setAttribute("imagePreviewLocation", imagePreviewLocation); //传递下图片的预览位置

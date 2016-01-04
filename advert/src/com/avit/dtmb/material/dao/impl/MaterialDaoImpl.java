@@ -3,7 +3,10 @@ package com.avit.dtmb.material.dao.impl;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -15,6 +18,8 @@ import com.avit.dtmb.material.dao.MaterialDao;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.dao.impl.BaseDaoImpl;
 import com.dvnchina.advertDelivery.model.ImageMeta;
+import com.dvnchina.advertDelivery.model.Resource;
+import com.dvnchina.advertDelivery.model.UserLogin;
 import com.dvnchina.advertDelivery.model.VideoMeta;
 @Repository("MaterialDao")
 public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
@@ -51,8 +56,28 @@ public class MaterialDaoImpl extends BaseDaoImpl implements MaterialDao{
 				 sql += " and r.status ='" + meterialQuery.getStatus() + "'";
 			 }
 		 }
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN_INFO");
+		List<Integer> accessUserId = userLogin.getAccessUserIds();
+		
+		sql +=" and r.operationId in ("+accessUserId.toString().replaceAll("\\[|\\]|\\s", "")+")";
+		sql +=" and p.id in (" + userLogin.getDtmbPositionIds()+")";
+		
 		sql += " order by r.id desc";
 		PageBeanDB pageResultList = this.getPageList2(sql, null, pageNo, pageSize);
+		
+	     //给已使用的素材一个特征值
+	     for(Object obj : pageResultList.getDataList()){
+	    	 DResource entity = (DResource)obj;
+	    	 int id=entity.getId();
+	    	 String sql1="SELECT COUNT(1) FROM d_order_mate_rel rel, d_order o WHERE rel.RESOURCE_ID ="+id+"  AND rel.ORDER_CODE = o.ORDER_CODE AND o.STATE <> '7'";
+	    	 Query query = getSession().createSQLQuery(sql1);
+	    	 List a=query.list();	    	 
+	    	 if(a.get(0).toString()!="0"){
+	    	 	entity.setStatusStr("7");
+	    	 }
+	     }
+		
 		return pageResultList;
 	}
 

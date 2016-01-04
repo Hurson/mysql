@@ -19,6 +19,9 @@ import com.avit.dtmb.ploy.service.DPloyService;
 import com.avit.dtmb.position.bean.DAdPosition;
 import com.dvnchina.advertDelivery.bean.PageBeanDB;
 import com.dvnchina.advertDelivery.common.BaseAction;
+import com.dvnchina.advertDelivery.constant.Constant;
+import com.dvnchina.advertDelivery.log.bean.OperateLog;
+import com.dvnchina.advertDelivery.log.service.OperateLogService;
 import com.dvnchina.advertDelivery.model.ReleaseArea;
 import com.dvnchina.advertDelivery.model.UserLogin;
 import com.dvnchina.advertDelivery.sysconfig.bean.UserIndustryCategory;
@@ -42,7 +45,11 @@ public class DPloyAction extends BaseAction {
 	private  UserIndustryCategory userIndustryCategory;
 	private DChannelGroup channelGroup;
 	
+	/**操作日志类*/
+	public OperateLog operLog;
 	
+	@Resource
+	private OperateLogService operateLogService;
    	@Resource
 	private DPloyService dPloyService;
 	private UserRankService userRankService;
@@ -83,6 +90,8 @@ public class DPloyAction extends BaseAction {
 	@Action(value = "saveDPloy", results = { @Result(name = "success",type="redirect", location = "queryDPloyList.action") })
 	public String saveDPloy(){
 		if(ploy.getId() == null){
+			operType = "operate.add";
+			
 			ploy.setCreateTime(new Date());
 			UserLogin user = getLoginUser();
 			ploy.getCustomer().setId(user.getCustomerId());
@@ -92,6 +101,12 @@ public class DPloyAction extends BaseAction {
 		ploy.setModifyTime(new Date());
 		ploy.setStatus("1");
 		dPloyService.saveDTMBPloy(ploy);
+		
+		operType = "operate.update";
+		operInfo = ploy.toString();
+        operLog = this.setOperationLog(Constant.OPERATE_MODULE_DPLOY);
+        operateLogService.saveOperateLog(operLog);
+		
 		ploy = null;
 		return SUCCESS;
 	}
@@ -99,6 +114,15 @@ public class DPloyAction extends BaseAction {
 	public String deleteDPloy(){
 		List<String> idList = Arrays.asList(ids.split(","));
 		dPloyService.deleteDTMBPloy(idList);
+		
+		StringBuffer delInfo = new StringBuffer();
+		delInfo.append("删除素材：");
+        delInfo.append("共").append(ids.split(",").length).append("条记录(ids:"+ids+")");
+		operType = "operate.delete";
+		operInfo = delInfo.toString();
+		operLog = this.setOperationLog(Constant.OPERATE_MODULE_DPLOY);
+		operateLogService.saveOperateLog(operLog);
+		
 		return SUCCESS;
 	}
 	@Action(value = "checkDPloy")
@@ -112,6 +136,12 @@ public class DPloyAction extends BaseAction {
 		dploy.setStatus(ploy.getStatus());
 		dploy.setAuditTime(new Date());
 		dPloyService.saveDTMBPloy(dploy);
+		
+		operInfo = dploy.toString();
+		operType = "2".equals(ploy.getStatus())?"operate.aduitOk":"operate.aduitFalse";
+		operLog = this.setOperationLog(Constant.OPERATE_MODULE_DPLOY);
+		operateLogService.saveOperateLog(operLog);
+		
 		return SUCCESS;
 	}
 	@Action(value = "queryChannelGroupList", results = { @Result(name = "success", location = "/page/ploy/dploy/bindingChannelGroup.jsp")})

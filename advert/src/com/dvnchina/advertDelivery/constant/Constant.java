@@ -190,12 +190,18 @@ public class Constant {
 	public static final String OPERATE_MODULE_CUSTOMER="广告商管理";
 	public static final String OPERATE_MODULE_CONTRACT="合同管理";
 	public static final String OPERATE_MODULE_RESOURCE="素材管理";
+	public static final String OPERATE_MODULE_DRESOURCE="无线素材管理";
 	public static final String OPERATE_MODULE_PLOY="投放策略管理";
+	public static final String OPERATE_MODULE_DPLOY="无线策略管理";
 	public static final String OPERATE_MODULE_ORDER="订单管理";
+	public static final String OPERATE_MODULE_DORDER="无线订单管理";
 	public static final String OPERATE_MODULE_CHANNEL_GROUP="频道组管理";
+	public static final String OPERATE_MODULE_DCHANNEL_GROUP="无线频道组管理";
 	
 	/** 审核订单关联类型 */
 	public static final int AUDIT_RELATION_TYPE_ORDER = 1;
+	/** 审核无线订单关联类型 */
+	public static final int AUDIT_RELATION_TYPE_DORDER = 2;
 	/** 审核通过 */
 	public static final int AUDIT_LOG_STATUS_PASS = 0;
 	/** 审核不通过 */

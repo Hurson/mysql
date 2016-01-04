@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -204,6 +205,17 @@ public class DOrder  implements java.io.Serializable {
 
 	public void setIsDefault(String isDefault) {
 		this.isDefault = isDefault;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("ID=").append(id);
+		sb.append(", 订单编号:").append(orderCode);
+		sb.append(dposition == null || StringUtils.isBlank(dposition.getPositionName())?"":",广告位名称: ").append(dposition.getPositionName());
+		sb.append(dploy == null || StringUtils.isBlank(dploy.getPloyName())?"":",策略名称: " + dploy.getPloyName());
+		sb.append(customer == null || StringUtils.isBlank(customer.getAdvertisersName())?"":",运营商：" + customer.getAdvertisersName());
+		return  sb.toString();
 	}
 	
 

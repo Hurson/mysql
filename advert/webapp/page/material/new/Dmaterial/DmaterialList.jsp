@@ -76,39 +76,12 @@ function query() {
                 return;
      }
      var dataIds = getCheckValue("dataIds");	 
-	 $.ajax({
-                type:"post",
-                async : false,
-                url:"<%=request.getContextPath()%>/page/meterial/checkDelMeterial.do?",
-                data:{"dataIds":dataIds},//Ajax传递的参数
-                success:function(mess)
-                {
-                	if(mess=="0")// 如果获取的数据不为空
-                    {
-                		var ret = window.confirm("您确定要删除吗？");
-						 if (ret==1)
-					     {
-							//alert("可删");
-							 document.forms[0].action="<%=path %>/page/meterial/deleteMaterial.do";
-                             document.forms[0].submit();
-					     }
-                    }
-                    else
-                    {
-						alert("您要删除的素材还有订单未执行完毕，请确认后，再操作！");
-						return;
-                    }
-                   
-                },
-                error:function(mess)
-                {
-                	alert("未知错误");
-                }
-            });
-     
+     document.forms[0].action="<%=path %>/dmaterial/deleteMaterial.action";
+     document.forms[0].submit();
+                        
     }
-  function modifyData(materialId) {
-      window.location.href="<%=path %>/dmaterial/initMaterials.do?materialId="+materialId;
+  function modifyData(materialId, statusStr) {
+      window.location.href="<%=path %>/dmaterial/initMaterials.do?materialId="+materialId+"&resource.statusStr="+statusStr;
     }
 
 </script>
@@ -168,10 +141,10 @@ function query() {
                     <c:forEach items="${page.dataList}" var="meterialInfo" varStatus="pl">
                         <tr <c:if test="${pl.index%2==1}">class="sec"</c:if> align="center">
                             <td>
-                                <input type="checkbox" value="1" name="dataIds"/>
+                                <input type="checkbox" value="<c:out value='${meterialInfo.id}'/>" name="dataIds" <c:if test="${meterialInfo.statusStr!=null}">disabled</c:if>/>
                              </td>
                             <td>
-                                 <a href="javascript:modifyData('${meterialInfo.id}');">${meterialInfo.resourceName}</a> 
+                                 <a href="javascript:modifyData('${meterialInfo.id}','${meterialInfo.statusStr }');">${meterialInfo.resourceName}</a> 
                             </td>
                             <td>
                                  <c:choose>

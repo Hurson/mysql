@@ -74,7 +74,6 @@ public class MeterialAction extends BaseAction{
 	private DPositionService dPositionService;
 	private PageBeanDB page;
 	private DResource meterialQuery;
-	private DResource material;
 	private List<MaterialCategory> materialCategoryList;
 	private PageBeanDB adPositionPage;
 	private Integer advertPositionId;
@@ -110,6 +109,7 @@ public class MeterialAction extends BaseAction{
 	
     private ImageSpecification zipSpecification;
     private String materialId;
+    private String dataIds;
 	
 	
 	
@@ -156,66 +156,29 @@ public class MeterialAction extends BaseAction{
 	
 	
 	/**
-	 * 进入素材修改页面
+	 * 删除素材
 	 * @return
 	 * @throws ParseException
 	 */
-	@Action(value = "initMaterial",results={@Result(name="success",location="/page/material/new/Dmaterial/updateMaterial.jsp"),
-											@Result(name="audit",location="/page/material/new/Dmaterial/auditMaterial.jsp")})
-	public String initMaterial(){    
+	@Action(value = "deleteMaterial",results={@Result(name="success",type="redirect", location="queryMaterialList.action")})
+	public String deleteMaterial(){    
 
         try{
-        	materialCategoryList=meterialManagerService.getMaterialCategoryList();
-            
-            int materialIdd = Integer.valueOf(materialId);      
-            resource = materialService.getMaterialByID(materialIdd);
-            adPositionQuery = dPositionService.getAdvertPosition(resource.getPositionCode());
-    		//返回广告位的JSON信息，用于预览
-    		getRequest().setAttribute("positionJson", Obj2JsonUtil.object2json(adPositionQuery));
-           
-    		if(resource.getResourceType()==0){
-                //图片
-                imageMeta=meterialManagerService.getImageMetaByID(resource.getResourceId());
-                imageSpecification = materialService.getImageMateSpeci(adPositionQuery.getSpecificationId());
-            }
-            if(resource.getResourceType()==1){
-                //视频
-                videoMeta = meterialManagerService.getVideoMetaByID(resource.getResourceId());
-                videoSpecification = materialService.getVideoSpc(adPositionQuery.getSpecificationId());
-            }
-            if(resource.getResourceType()==2){
-                //文字
-                textMeta=meterialManagerService.getTextMetaByID(resource.getResourceId());
-                if(textMeta.getContent()!=null){
-                    byte[] contentBlob =textMeta.getContent();
-                    String jsonWord = new String(contentBlob,"gbk");
-                    textMeta.setContentMsg(jsonWord);
-                    
-                    Gson gson = new Gson();
-                    List<PriorityWordBean> list = gson.fromJson(jsonWord, new TypeToken<List<PriorityWordBean>>(){ }.getType());
-                    textMeta.setPwList(list);
-                  
-                }
-                
-            }
-                  
-
-            String ip=config.getValueByKey("ftp.ip");
-            String path=config.getValueByKey("materila.ftp.tempPath");
-            path=path.substring(5, path.length());
-            String viewPath="http://"+ip+path;
-            if(videoMeta != null){
-            	sssspath = viewPath+"/"+videoMeta.getName();
-            }
-            this.getRequest().setAttribute("viewPath", viewPath);
-            
+        	materialService.deleteMaterial(dataIds);
+        	//记录操作日志
+        	StringBuffer delInfo = new StringBuffer();
+    		delInfo.append("删除素材：");
+            delInfo.append("共").append(dataIds.split(",").length).append("条记录(ids:"+dataIds+")");
+			operType = "operate.delete";
+			operInfo = delInfo.toString();
+			operLog = this.setOperationLog(Constant.OPERATE_MODULE_DRESOURCE);
+			operateLogService.saveOperateLog(operLog);
+			
         }catch(Exception e){
         	e.printStackTrace();
-        	logger.error("初始化素材信息异常", e);
+        	logger.error("删除素材信息异常", e);
         }
-        if("1".equals(isAuditTag)){
-        	return "audit";
-        }
+        
         return SUCCESS;
     }
 	
@@ -397,7 +360,7 @@ public class MeterialAction extends BaseAction{
 	                materialService.saveDResource(resource);
 	                //操作日志
 	                operInfo = resource.toString();
-	                operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
+	                operLog = this.setOperationLog(Constant.OPERATE_MODULE_DRESOURCE);
 	                operateLogService.saveOperateLog(operLog);
 		        }
 		        
@@ -490,7 +453,7 @@ public class MeterialAction extends BaseAction{
 	                   
 	                        //操作日志
 	                        operInfo = materialTemp.toString();
-	                        operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
+	                        operLog = this.setOperationLog(Constant.OPERATE_MODULE_DRESOURCE);
 	                        operateLogService.saveOperateLog(operLog);
 	                    }
 	                    
@@ -556,7 +519,7 @@ public class MeterialAction extends BaseAction{
 	               
 	                    //操作日志
 	                    operInfo = resource.toString();
-	                    operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
+	                    operLog = this.setOperationLog(Constant.OPERATE_MODULE_DRESOURCE);
 	                    operateLogService.saveOperateLog(operLog);
 	                }
 	                
@@ -603,7 +566,7 @@ public class MeterialAction extends BaseAction{
 	            materialService.saveDResource(resource);
 	            //操作日志
 		        operInfo = resource.toString();
-				operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
+				operLog = this.setOperationLog(Constant.OPERATE_MODULE_DRESOURCE);
 				operateLogService.saveOperateLog(operLog);
 		    }
 		    isAuditTag="0";
@@ -744,7 +707,7 @@ public class MeterialAction extends BaseAction{
             //操作日志
 	        operInfo = materialTemp.toString();
 			operType = "operate.aduitOk";
-			operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
+			operLog = this.setOperationLog(Constant.OPERATE_MODULE_DRESOURCE);
 			operateLogService.saveOperateLog(operLog);
         }else{
             //审核不通过
@@ -755,7 +718,7 @@ public class MeterialAction extends BaseAction{
             //操作日志
 	        operInfo = materialTemp.toString();
 			operType = "operate.aduitFalse";
-			operLog = this.setOperationLog(Constant.OPERATE_MODULE_RESOURCE);
+			operLog = this.setOperationLog(Constant.OPERATE_MODULE_DRESOURCE);
 			operateLogService.saveOperateLog(operLog);
         }
         
@@ -764,6 +727,36 @@ public class MeterialAction extends BaseAction{
      
         return SUCCESS;
     }
+    @Action(value = "getAdvertPosition",results={@Result(name="successForImage",location="/page/material/new/Dmaterial/imagePreview.jsp"),
+    											 @Result(name="successForVideo",location="/page/material/new/Dmaterial/videoPreview.jsp")})
+    public String getAdvertPosition(){
+    	HttpServletRequest request = this.getRequest();
+	    adPositionQuery = dPositionService.getAdvertPosition(resource.getPositionCode());
+        //返回广告位的JSON信息，用于预览
+	    request.setAttribute("positionJson", Obj2JsonUtil.object2json(adPositionQuery));
+	    
+	    String imagePreviewLocation = request.getParameter("imagePreviewLocation"); 
+	    request.setAttribute("imagePreviewLocation", imagePreviewLocation); //传递下图片的预览位置
+	    
+        String imagePreviewName = request.getParameter("imagePreviewName");
+        String videoPreviewName = request.getParameter("videoPreviewName");
+        String zipImagePreviewName = request.getParameter("zipImagePreviewName");
+        if(imagePreviewName==null||imagePreviewName.equals("")){
+        	 if(videoPreviewName==null||videoPreviewName.equals("")){
+        		 request.setAttribute("zipImagePreviewName", zipImagePreviewName);
+                 return "successForZip";
+        	 }else{
+                 request.setAttribute("videoPreviewName", videoPreviewName);
+                 return "successForVideo";
+        	 }
+        }else{
+            request.setAttribute("imagePreviewName", imagePreviewName);
+            return "successForImage";
+        }
+        
+        
+        //return SUCCESS;
+	}
     /**
      * 
      * @description: 复制图片素材表
@@ -846,14 +839,17 @@ public class MeterialAction extends BaseAction{
 	 * @return
 	 * @throws ParseException
 	 */
-    @Action(value = "initMaterials",results={@Result(name="success",location="/page/material/new/Dmaterial/updateMaterial.jsp")})
+    @Action(value = "initMaterials",results={@Result(name="success",location="/page/material/new/Dmaterial/updateMaterial.jsp"),
+    										 @Result(name="audit",location="/page/material/new/Dmaterial/auditMaterial.jsp")})
 	public String initMaterials(){    
 
 		  try{
 	        	materialCategoryList=meterialManagerService.getMaterialCategoryList();
 	            
-	            int materialIdd = Integer.valueOf(materialId);      
+	            int materialIdd = Integer.valueOf(materialId);
+	            String statusStr = resource == null?null :resource.getStatusStr();
 	            resource = materialService.getMaterialByID(materialIdd);
+	            resource.setStatusStr(statusStr);
 	            adPositionQuery = dPositionService.getAdvertPosition(resource.getPositionCode());
 	    		//返回广告位的JSON信息，用于预览
 	    		getRequest().setAttribute("positionJson", Obj2JsonUtil.object2json(adPositionQuery));
@@ -1117,6 +1113,12 @@ public class MeterialAction extends BaseAction{
 	}
 	public void setResource(DResource resource) {
 		this.resource = resource;
+	}
+	public String getDataIds() {
+		return dataIds;
+	}
+	public void setDataIds(String dataIds) {
+		this.dataIds = dataIds;
 	}
 	
 }

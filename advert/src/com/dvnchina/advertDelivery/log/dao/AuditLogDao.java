@@ -14,5 +14,13 @@ public interface AuditLogDao extends BaseDao{
 	 * @return
 	 */
 	public PageBeanDB queryAuditLogList(AuditLog log, int pageNo, int pageSize);
+	/**
+	 * 查询无线订单审核日志
+	 * @param log
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	public PageBeanDB queryDAuditLogList(AuditLog log, int pageNo, int pageSize);
 
 }

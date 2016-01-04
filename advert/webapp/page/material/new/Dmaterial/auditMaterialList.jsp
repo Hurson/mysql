@@ -69,7 +69,7 @@ function query() {
      }
     }
   function modifyData(materialId) {
-      window.location.href="<%=path %>/dmaterial/initMaterial.do?materialId="+materialId+"&isAuditTag=1";
+      window.location.href="<%=path %>/dmaterial/initMaterials.do?materialId="+materialId+"&isAuditTag=1";
     }
     function modifyDataPrecise(ployid) {
       //window.location.href="<%=path %>/page/ploy/initPloy.do?ployId="+ployid;
