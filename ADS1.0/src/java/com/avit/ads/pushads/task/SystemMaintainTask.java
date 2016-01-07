@@ -22,7 +22,17 @@ public class SystemMaintainTask {
 	private OcgService ocgService;
 	@Value("${systemMaintain.ip}")
 	private String url;
-
+	/**
+	 * 测试用
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		SystemMaintainTask a = new SystemMaintainTask();
+		a.maintainTask();
+	}
+	/**
+	 * 定时任务，用于发送有线待机指令
+	 */
 	public void maintainTask() {
 		try {
 			Time sysDate = new Time(System.currentTimeMillis());
@@ -30,21 +40,18 @@ public class SystemMaintainTask {
 			SystemMaintainBean systemMaintainBean = maintainService.getAllMaintain();
 			if (systemMaintainBean != null ) {
 				Time sendTime = systemMaintainBean.getSendTime();
-				if(sendTime.getHours()==sysDate.getHours()&& sendTime.getMinutes()==sysDate.getMinutes()
-						&&sendTime.getSeconds() == sysDate.getSeconds()){
-					log.info("开始待机指令发送!");
-					SystemMaintain unt = new SystemMaintain();
-					unt.setActionCode(systemMaintainBean.getActionCode());
-					unt.setActiveHour(systemMaintainBean.getActiveHour());
-					String[] Codes = systemMaintainBean.getAreaCodes().trim().split(",");
-					for(int i=0;i<Codes.length;i++){
-						ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_STB, unt,Codes[i], null);
-					}
-					/*maintainService.sendSystemMainToUnt(unt, systemMaintain);
-					Thread.sleep(systemMaintain.getDuration() * 1000L);
-					maintainService.sendActionCode(unt, systemMaintain)*/;
-					log.info("结束待机指令发送!");	
+				log.info("开始待机指令发送!");
+				SystemMaintain unt = new SystemMaintain();
+				unt.setActionCode(systemMaintainBean.getActionCode());
+				unt.setActiveHour(systemMaintainBean.getActiveHour());
+				String[] Codes = systemMaintainBean.getAreaCodes().trim().split(",");
+				for(int i=0;i<Codes.length;i++){
+					ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_STB, unt,Codes[i], null);
 				}
+				/*maintainService.sendSystemMainToUnt(unt, systemMaintain);
+				Thread.sleep(systemMaintain.getDuration() * 1000L);
+				maintainService.sendActionCode(unt, systemMaintain)*/;
+				log.info("结束待机指令发送!");	
 				
 			}
 		} catch (Exception e) {

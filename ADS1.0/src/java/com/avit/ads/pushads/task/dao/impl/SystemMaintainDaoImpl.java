@@ -29,7 +29,7 @@ public class SystemMaintainDaoImpl extends HibernateDaoSupport implements System
 		// TODO Auto-generated method stub
 		List<SystemMaintainBean> mainmainList=new ArrayList<SystemMaintainBean>();
 		Session session=getSession();
-		Query query=session.createQuery("from SystemMaintain");
+		Query query=session.createQuery("from SystemMaintainBean");
 		mainmainList=query.list();
 		session.close();
 		if(mainmainList.size()!=0){
