@@ -39,7 +39,7 @@ public class SystemMaintainTask {
 			log.debug("系统时间:"+sysDate.getTime());
 			SystemMaintainBean systemMaintainBean = maintainService.getAllMaintain();
 			if (systemMaintainBean != null ) {
-				Time sendTime = systemMaintainBean.getSendTime();
+				Date sendTime = systemMaintainBean.getSendTime();
 				log.info("开始待机指令发送!");
 				SystemMaintain unt = new SystemMaintain();
 				unt.setActionCode(systemMaintainBean.getActionCode());
@@ -48,8 +48,13 @@ public class SystemMaintainTask {
 				for(int i=0;i<Codes.length;i++){
 					ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_STB, unt,Codes[i], null);
 				}
+				Thread.sleep(systemMaintainBean.getDuration() * 1000L);
+				//发送周期结束后，发送停止指令（0）
+				unt.setActionCode(0);
+				for(int i=0;i<Codes.length;i++){
+					ocgService.sendUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_STB, unt,Codes[i], null);
+				}
 				/*maintainService.sendSystemMainToUnt(unt, systemMaintain);
-				Thread.sleep(systemMaintain.getDuration() * 1000L);
 				maintainService.sendActionCode(unt, systemMaintain)*/;
 				log.info("结束待机指令发送!");	
 				

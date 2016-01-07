@@ -464,8 +464,8 @@ public class DOcgServiceImpl implements DOcgService {
 		adsImage.setUiId("c");
 		//5.待机
 		SystemMaintain stb = new SystemMaintain();
-		stb.setActionCode("0");
-		stb.setActiveHour("5");
+		stb.setActionCode(0);
+		stb.setActiveHour(5);
 		//6.频道字幕
 		TvnTarget tvnTarget1 = new TvnTarget();
 		tvnTarget1.setServiceID("100");
