@@ -1,7 +1,7 @@
 package com.avit.ads.pushads.task.bean;
 
 import java.io.Serializable;
-import java.sql.Time;
+import java.util.Date;
 
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -22,7 +22,7 @@ public class SystemMaintainBean implements Serializable {
 	private Integer id;
 	private Integer activeHour;
 	private Integer actionCode;
-	private Time sendTime;
+	private Date sendTime;
 	private Integer duration;
 	private String cycle;
 	private String AreaCodes;
@@ -50,10 +50,10 @@ public class SystemMaintainBean implements Serializable {
 		this.actionCode = actionCode;
 	}
 	@Column(name="SendTime")
-	public Time getSendTime() {
+	public Date getSendTime() {
 		return sendTime;
 	}
-	public void setSendTime(Time sendTime) {
+	public void setSendTime(Date sendTime) {
 		this.sendTime = sendTime;
 	}
 	@Column(name="Duration")
