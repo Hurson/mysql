@@ -1,6 +1,6 @@
 package com.avit.ads.pushads.task.dao;
 
-import com.avit.ads.pushads.task.bean.SystemMaintain;
+import com.avit.ads.pushads.task.bean.SystemMaintainBean;
 
 
 public interface SystemMaintainDao{
@@ -8,13 +8,13 @@ public interface SystemMaintainDao{
 	 * 查询记录
 	 * @return
 	 */
-	public SystemMaintain getAllMaintain();
+	public SystemMaintainBean getAllMaintain();
 	/**
 	 * 指定时间更新unt待机数据
 	 */
 	public void sendSystemMainToUnt();
-	public SystemMaintain fin();
+	public SystemMaintainBean fin();
 	
-	public int saveOrUpdate(SystemMaintain o);
+	public int saveOrUpdate(SystemMaintainBean o);
 
 }

@@ -15,7 +15,7 @@ import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import com.avit.ads.pushads.task.bean.SystemMaintain;
+import com.avit.ads.pushads.task.bean.SystemMaintainBean;
 import com.avit.ads.pushads.task.dao.SystemMaintainDao;
 
 
@@ -25,9 +25,9 @@ public class SystemMaintainDaoImpl extends HibernateDaoSupport implements System
 	public void setSuperSessionFactory(SessionFactory sessionFactory) {
 		super.setSessionFactory(sessionFactory);
 	}
-    public SystemMaintain getAllMaintain() {
+    public SystemMaintainBean getAllMaintain() {
 		// TODO Auto-generated method stub
-		List<SystemMaintain> mainmainList=new ArrayList<SystemMaintain>();
+		List<SystemMaintainBean> mainmainList=new ArrayList<SystemMaintainBean>();
 		Session session=getSession();
 		Query query=session.createQuery("from SystemMaintain");
 		mainmainList=query.list();
@@ -43,7 +43,7 @@ public class SystemMaintainDaoImpl extends HibernateDaoSupport implements System
 	
 	public void sendSystemMainToUnt() {
 		// TODO Auto-generated method stub
-		SystemMaintain systemMaintain=this.getAllMaintain();
+		SystemMaintainBean systemMaintain=this.getAllMaintain();
 		//Timestamp sendTime=systemMaintain.getSendTime();
 		//Timestamp nowTime = new Timestamp(System.currentTimeMillis());
 		//if(sendTime==nowTime){
@@ -84,9 +84,9 @@ public class SystemMaintainDaoImpl extends HibernateDaoSupport implements System
 		}
 
 	
-	public SystemMaintain fin() {
+	public SystemMaintainBean fin() {
 		// TODO Auto-generated method stub
-		List<SystemMaintain> mainmainList=new ArrayList<SystemMaintain>();
+		List<SystemMaintainBean> mainmainList=new ArrayList<SystemMaintainBean>();
 		Session session=getSession();
 		Query query=session.createQuery("from SystemMaintain");
 		mainmainList=query.list();
@@ -97,7 +97,7 @@ public class SystemMaintainDaoImpl extends HibernateDaoSupport implements System
 		}
 		
 	}
-	public int saveOrUpdate(SystemMaintain o) {
+	public int saveOrUpdate(SystemMaintainBean o) {
 		// TODO Auto-generated method stub
 		getHibernateTemplate().saveOrUpdate(o);
 		return 0;

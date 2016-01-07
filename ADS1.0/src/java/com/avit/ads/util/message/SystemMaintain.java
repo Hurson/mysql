@@ -9,26 +9,27 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="systemMaintain")
 public class SystemMaintain {
+	
 
 	@XmlAttribute(name="activeHour", required = true)
-	private String activeHour;
+	private Integer activeHour;
 	
 	@XmlAttribute(name="actionCode", required = true)
-	private String actionCode;
+	private Integer actionCode;
 
-	public String getActiveHour() {
+	public Integer getActiveHour() {
 		return activeHour;
 	}
 
-	public void setActiveHour(String activeHour) {
+	public void setActiveHour(Integer activeHour) {
 		this.activeHour = activeHour;
 	}
 
-	public String getActionCode() {
+	public Integer getActionCode() {
 		return actionCode;
 	}
 
-	public void setActionCode(String actionCode) {
+	public void setActionCode(Integer actionCode) {
 		this.actionCode = actionCode;
 	}
 

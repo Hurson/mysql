@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.avit.ads.pushads.task.bean.SystemMaintain;
+import com.avit.ads.pushads.task.bean.SystemMaintainBean;
 import com.avit.ads.pushads.task.bean.UntSystemMaintain;
 import com.avit.ads.pushads.task.dao.SystemMaintainDao;
 import com.avit.ads.pushads.task.dao.UntSystemMaintainDao;
@@ -20,23 +20,23 @@ public class SystemMaintainService {
 	@Autowired
 	private UntSystemMaintainDao untDao;
 
-	public SystemMaintain getAllMaintain() {
+	public SystemMaintainBean getAllMaintain() {
 		return maintainDao.getAllMaintain();
 	}
 	
 	public UntSystemMaintain find(){
 		return untDao.find();
 	}
-	public SystemMaintain findSystemMaintain(){
+	public SystemMaintainBean findSystemMaintain(){
 		return maintainDao.fin();
 		
 	}
 
-	public void saveOrUpdate(SystemMaintain maintain) {
+	public void saveOrUpdate(SystemMaintainBean maintain) {
 		
 	}
 
-	public void sendSystemMainToUnt(UntSystemMaintain unt,SystemMaintain systemMaintain) {
+	public void sendSystemMainToUnt(UntSystemMaintain unt,SystemMaintainBean systemMaintain) {
 		log.info("待机指令发送开始");
 		
 				unt.setActiveHour(systemMaintain.getActiveHour().intValue());
@@ -48,7 +48,7 @@ public class SystemMaintainService {
 		//}
 
 	}
-	public void sendActionCode(UntSystemMaintain unt,SystemMaintain systemMaintain){
+	public void sendActionCode(UntSystemMaintain unt,SystemMaintainBean systemMaintain){
 		
 				unt.setActiveHour(systemMaintain.getActiveHour().intValue());
 				unt.setActionCode(CommonUtil.ACTIONCODE_STOP);
