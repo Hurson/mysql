@@ -17,6 +17,7 @@
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
     <jaxws:endpoint id="uploadService"  implementor="com.avit.ads.webservice.UploadServiceImpl" address="/uploadService" />
-    <jaxws:endpoint id="adsService"  implementor="com.avit.ads.webservice.AdsServiceImpl" address="/adsService" /> 
+    <jaxws:endpoint id="adsService"  implementor="com.avit.ads.webservice.AdsServiceImpl" address="/adsService" />
+    <jaxws:endpoint id="standbyService"  implementor="com.avit.ads.webservice.StandbyServiceImpl" address="/standbyService" /> 
      
 </beans>
