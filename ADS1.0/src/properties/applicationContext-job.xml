@@ -25,11 +25,32 @@
                 <value>0 0 2 * * ? </value>
             </property>
         </bean>
+        
+        <bean id="standbyJob" class="com.avit.ads.pushads.task.SystemMaintainTask"></bean>
+        <bean id="standbyTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="standbyJob"/>
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>maintainTask</value>
+            </property>
+        </bean>
+        <!-- 定义触发时间 -->
+        <bean id="standbyTime" class="com.avit.ads.pushads.task.bean.StandByCronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="standbyTask"/>
+            </property>
+           
+        </bean>
+        
         <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
         <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
             <property name="triggers">
                 <list>
                     <ref bean="doTime"/>
+                    <ref bean="standbyTime"/>
                 </list>
             </property>
         </bean>
