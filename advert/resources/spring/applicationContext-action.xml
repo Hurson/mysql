@@ -168,4 +168,9 @@
    <!-- 游动字幕广告  -->
    <bean name="subtitleAction" class="com.dvnchina.advertDelivery.subtitle.action.SubtitleAction" scope="prototype"/>
    
+   <!-- 系统待机指令发送 -->
+    <bean name="systemMaintainAction" class = "com.dvnchina.advertDelivery.pushInfo.action.SystemMaintainAction" scope="prototype">
+   		<property name="maintainService" ref="systemMaintainService"/>
+   </bean>
+   
 </beans>

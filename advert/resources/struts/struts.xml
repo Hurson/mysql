@@ -45,7 +45,7 @@
 	<include file="struts/struts-pushScrolling.xml"/>
 	<include file="struts/struts-systemMaintain.xml"/>
 	<include file="struts/struts-subtitle.xml"/>
-	
+	<include file="struts/struts-systemMaintain.xml"/>
 	<!-- 打开开发者模式 -->
 	<constant name="struts.devMode" value="true" />
 	

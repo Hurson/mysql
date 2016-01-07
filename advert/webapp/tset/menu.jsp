@@ -46,10 +46,10 @@ function resizeMe(){
  */
 function  showColumn(){
 	
-	var menu_first = ['ggzcgl','ggstfgl','bpgl','xtgl','ggwgl','ggsgl','htgl','tfclgl','yxgzgl','ddgl','flsjtbgl','xtcx','rzgl']; 
+	var menu_first = ['ggzcgl','ggstfgl','bpgl','xtgl','ggwgl','ggsgl','htgl','tfclgl','yxgzgl','ddgl','flsjtbgl','xtcx','rzgl','djzlgl']; 
 	
 
-var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','dggwbgl','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','wxscwh','wxscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','ddwh','wxddwh','ddsh','wxddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','dtfclwh','tfclwh','wxtfclsh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','wxpdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
+var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl','mrscpz','dggwbgl','ggwglwh','zcgl','scsc','tcwjgl','yysscsh','wxscwh','wxscsh','yyszcgl','tfqyxxgl','pdxxgl','yhqygl','yhjbgl','yhhylbcx','zcsxxgl','tpggwh','spggwh','wzggwh','dcwjggwh','yxgzglwh','ggsxz','ggswh','ggssh','htwh','htsh','djzlwh','ddwh','wxddwh','ddsh','wxddsh','fbgl','yhgl','jsgl','lmgl','ggmrpz','tfptpz','sjjkpz','ggxswzpz','tbcps','cpxxcx','ypflcx','ypxxcx','dtfclwh','tfclwh','wxtfclsh','tfclsh','tfclzdy','jzppgl','htsh','tbcpyp','czrz','wjmbwh','pdzgl','wxpdzgl','uimsf','scsjb','zxsj','rbb','zbb','ybb','hkpdzgl','zmggdd'];
 
 	
 	var columns = $('#columns').val();//
@@ -207,6 +207,16 @@ var menu_second = ['qbb','zybwh','mrscwh','xtcspz','hylxsjpz ','yhjbwh','ggwbgl'
 	                    	<li id="htwh" style="display: none;" ><a href="#"  onclick="openPage('/page/contract/queryContractList8.do?method=queryContractList', '61', '合同维护', '合同维护')">&gt;&gt;&nbsp;合同维护</a></li>
 							<li id="htsh" style="display: none;" ><a href="#"  onclick="openPage('/page/contract/auditContractList.do?method=queryContractList', '62', '合同审核', '合同审核')">&gt;&gt;&nbsp;合同审核</a></li>
 	                    	
+	                    </ul>
+	                </li>
+	            </ul>
+	        </li>
+	        <li class="menu">
+	            <ul>
+	                <li id="djzlgl" class="button" style="display: none;"><a href="#"><img src="<%=request.getContextPath()%>/images/filder.gif" width="15" height="13"/>待机指令管理</a></li>
+	                <li class="dropdown">
+	                    <ul>
+	                    	<li id="djzlwh" style="display: none;" ><a href="#"  onclick="openPage('/page/systemMaintain/getMaintain.do', '65', '待机指令维护', '待机指令维护')">&gt;&gt;&nbsp;待机指令维护</a></li>
 	                    </ul>
 	                </li>
 	            </ul>

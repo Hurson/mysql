@@ -225,6 +225,11 @@
 	 	<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
+	<!-- 待机指令发送 -->
+	<bean name="systemMaintainDao" class="com.dvnchina.advertDelivery.pushInfo.dao.impl.SystemMaintainDaoImpl">
+	 	<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
 </beans>
 
 

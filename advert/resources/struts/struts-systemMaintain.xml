@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="page/systemMaintain" extends="default">
+		<!--  base config block -->
+		<action name="getMaintain" class="systemMaintainAction" method="getAllMaintain">
+			<result name="success">/page/pushInfo/standby.jsp</result>
+		</action>
+		<action name="saveMaintain" class="systemMaintainAction" method="saveMaintain">
+			<result name="success">/page/pushInfo/standby.jsp</result>
+		</action>
+	</package>
+	
+</struts>
+	

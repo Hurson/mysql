@@ -1,0 +1,23 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://cxf.apache.org/jaxws
+		http://cxf.apache.org/schemas/jaxws.xsd
+		http://cxf.apache.org/transports/http/configuration
+		http://cxf.apache.org/schemas/configuration/http-conf.xsd">
+
+	<http-conf:conduit name="*.http-conduit">
+		<http-conf:client ConnectionTimeout="100000"
+			ReceiveTimeout="180000" />
+	</http-conf:conduit>
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<jaxws:client id="standbyServiceClient"
+		serviceClass="com.avit.ads.webservice.StandbyServerWs" address="${unt.standby.webservice}">
+	</jaxws:client>
+
+</beans>

@@ -204,5 +204,9 @@
 	<!-- 游动字幕广告 -->
  	<bean name="subtitleService" class="com.dvnchina.advertDelivery.subtitle.service.impl.SubtitleServiceImpl">
  	</bean>
-
+ 	
+	<!-- 系统待机指令 -->
+ 	<bean name="systemMaintainService"  class="com.dvnchina.advertDelivery.pushInfo.service.SystemMaintainService">
+ 		<property name="maintainDao" ref="systemMaintainDao"/>
+ 	</bean>
 </beans>
