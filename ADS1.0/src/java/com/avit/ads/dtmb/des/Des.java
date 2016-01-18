@@ -11,6 +11,12 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 
+import qwe.Test;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
+import com.avit.ads.util.InitConfig;
+
 
 public class Des {
 	/** 加密工具 */
@@ -127,7 +133,7 @@ public class Des {
 	public void DesCryptFile(String sourceFileName, String diminationFileName) throws Exception{
 		try{
 			Des d = new Des();
-			String k = "1234567812345678123456781234567812345678123456781234567812345678";
+			String k = InitConfig.getConfigMap().get("des.key");
 			d.initialize_encryptKey(k);
 			d.encrypt(sourceFileName,diminationFileName);
 		}catch(Exception e){
@@ -144,40 +150,44 @@ public class Des {
 	 */
 	public String DesCryptString(String s) throws Exception{
 		Des d = new Des();
+		BASE64Encoder enc = new BASE64Encoder();
+		BASE64Decoder dec = new BASE64Decoder();
 		byte[] b = s.getBytes();
-		String k = "1234567812345678123456781234567812345678123456781234567812345678";
+		String k = InitConfig.getConfigMap().get("des.key");
 		d.initialize_encryptKey(k);
 		byte[] c = d.encrypt(b);
-		String r = new String(c);
+		String r = enc.encode(c);
 		return r;
 	}
 	
 	
 	
 	public static void main(String[] args) throws Exception {
+		BASE64Encoder enc = new BASE64Encoder();
+		BASE64Decoder dec = new BASE64Decoder();
 		Des t = new Des();
-		String k = "1234567812345678123456781234567812345678123456781234567812345678";
+		String k = "00000000";
 		t.initialize_encryptKey(k);
 		t.initalize_dencryptkey(k);
-		String input = "F:\\李胜\\A.png";
-		String output = "F:\\李胜\\AA.png";
-		String dec = "F:\\李胜\\AAA.png";
-		t.encrypt(input,output);
-		t.decrypt(output,dec);
-		System.out.println("complite");
-		
-		byte[] b = {0,0,1,1,0,0,1,1};
+		String s = "佳创视讯";
+		byte[] b = s.getBytes();
+		for(byte i :b){
+			System.out.println(i);
+		}
+		System.out.println("===============");
 		byte[] c = t.encrypt(b);
-		byte[] d = t.decrypt(c);
-		for(byte i:b){
+		for(byte i : c){
 			System.out.println(i);
 		}
-		for(byte i:c){
+		String d = enc.encodeBuffer(c);
+		System.out.println(d);
+		byte[] e = dec.decodeBuffer(d);
+		for(byte i : e){
 			System.out.println(i);
 		}
-		for(byte i:d){
-			System.out.println(i);
-		}
+		byte[] f = t.decrypt(e);
+		String g = new String(f);
+		System.out.println("解密后————   " + g);
 	}
 
 }
