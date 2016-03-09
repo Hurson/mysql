@@ -11,7 +11,6 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 
-import qwe.Test;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -149,13 +148,12 @@ public class Des {
 	 * @throws Exception
 	 */
 	public String DesCryptString(String s) throws Exception{
-		Des d = new Des();
 		BASE64Encoder enc = new BASE64Encoder();
 		BASE64Decoder dec = new BASE64Decoder();
 		byte[] b = s.getBytes();
-		String k = InitConfig.getConfigMap().get("des.key");
-		d.initialize_encryptKey(k);
-		byte[] c = d.encrypt(b);
+		String k = "12345678";
+		initialize_encryptKey(k);
+		byte[] c = encrypt(b);
 		String r = enc.encode(c);
 		return r;
 	}
@@ -166,26 +164,28 @@ public class Des {
 		BASE64Encoder enc = new BASE64Encoder();
 		BASE64Decoder dec = new BASE64Decoder();
 		Des t = new Des();
-		String k = "00000000";
-		t.initialize_encryptKey(k);
-		t.initalize_dencryptkey(k);
+		
 		String s = "佳创视讯";
 		byte[] b = s.getBytes();
 		for(byte i :b){
-			System.out.println(i);
+			System.out.print(i + " ");
 		}
-		System.out.println("===============");
-		byte[] c = t.encrypt(b);
-		for(byte i : c){
-			System.out.println(i);
+		System.out.println("\n===============");
+		t.initialize_encryptKey("12345678");
+		byte[] d = t.encrypt(b);
+		for(byte i : d){
+			System.out.print(i + " ");
 		}
-		String d = enc.encodeBuffer(c);
-		System.out.println(d);
-		byte[] e = dec.decodeBuffer(d);
-		for(byte i : e){
-			System.out.println(i);
+		System.out.println();
+		String e = enc.encodeBuffer(d);
+		System.out.println(e);
+		t.initalize_dencryptkey("12345678");
+		byte[] p = dec.decodeBuffer(e);
+		byte[] f = t.decrypt(p);
+		for(byte i : f){
+			System.out.print(i + " ");
 		}
-		byte[] f = t.decrypt(e);
+		System.out.println();
 		String g = new String(f);
 		System.out.println("解密后————   " + g);
 	}
