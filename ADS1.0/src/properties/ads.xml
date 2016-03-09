@@ -54,17 +54,17 @@
 		
 	</RealTimeAds>
 	<DtmbUnRealTimeAds preSecond="11" 
-		adsTempPath="/home/adstemp/dstart" 
-		adsIframeHDTempPath="/home/adstemp/start/diframehd" 
-		adsIframeSDTempPath="/home/adstemp/start/diframesd" 
-		adsaudioHDTempPath="/home/adstemp/start/dhdaudio" 
-		adsaudioSDTempPath="/home/adstemp/start/dsdaudio" 
-		adsTargetPath="/OC/dui/" 
-		recommendTargetPath="/OC/drecommend/" >
+		adsTempPath="/home/adstemp/start" 
+		adsIframeHDTempPath="/home/adstemp/start/iframehd" 
+		adsIframeSDTempPath="/home/adstemp/start/iframesd" 
+		adsaudioHDTempPath="/home/adstemp/start/hdaudio" 
+		adsaudioSDTempPath="/home/adstemp/start/sdaudio" 
+		adsTargetPath="/OC/ui/" 
+		recommendTargetPath="/OC/recommend/" >
 	</DtmbUnRealTimeAds>
 	<DtmbRealTimeAds adsConfigFile="adConfig.js" adsTempConfigPath="/home/adstemp/drealtimeconfig" 
-	             adsTargetConfigPath="/OC/unt/dAdConfig/" adsTempPath="/home/adstemp/drealtime"
-	              adsTargetPath="/OC/unt/dAdPic/" untUrl="http://192.168.16.100:8899/UNT/">
+	             adsTargetConfigPath="/OC/unt/adConfig/" adsTempPath="/home/adstemp/drealtime"
+	              adsTargetPath="/OC/unt/adPic/" untUrl="http://192.168.16.100:8899/UNT/">
 	</DtmbRealTimeAds>
 	<!-- 双向实时广告    回看菜单，点播菜单 点播随片-->
 	<CpsAds preSecond="11" adsConfigFile="cpsadConfigFile.js" adsTempPath="/home/adstemp/cps" adsTargetPath="/js/ad/" adsImageTargetPath="/images/ad/">
