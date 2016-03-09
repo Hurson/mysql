@@ -16,6 +16,19 @@
 		<property name="jobDetail" ref="setOrderStateJob" />
 		<property name="cronExpression" value="0 0 3 * * ?" />
 	</bean>
+	
+	<!-- 定时将执行完毕的无线订单状态设置成”执行完毕“  -->
+	<bean id="setDOrderStateTask" class="com.dvnchina.advertDelivery.task.SetDtmbOrderStateTask"/>
+		
+	<bean id="setDOrderStateJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="setDOrderStateTask" />
+		<property name="targetMethod" value="setOrderState" />
+	</bean>
+	<bean id="setDOrderStateTimer" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="setDOrderStateJob" />
+		<property name="cronExpression" value="0 0 4 * * ?" />
+	</bean>
 
 
 	<!-- 定时同步vod数据  -->
@@ -51,6 +64,7 @@
 		<property name="triggers">
 			<list>
 				<ref bean="setOrderStateTimer" />
+				<ref bean="setDOrderStateTimer" />
 				<!-- 
 				 <ref bean="generateReportTimer" />
 				 <ref bean="vodSyncTaskTimer" /> 
