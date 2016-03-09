@@ -455,6 +455,8 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 		}
 		return value;
 	}
+
+	
 	
 	
 }
