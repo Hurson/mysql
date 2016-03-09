@@ -159,11 +159,11 @@
 			$("#user_customer_ids").focus();
 			return false;
 		}
-		if(roleType == 2 && $("#user_positions").val() == '' ){
+		/*if(roleType == 2 && $("#user_positions").val() == '' ){
 			alert("请选择广告位！");
 			$("#user_positions").focus();
 			return false;
-		}
+		}*/
 		
 		if(roleType == 2 && $("#user_area_names").val() == '' ){
 			alert("请选择区域！");
