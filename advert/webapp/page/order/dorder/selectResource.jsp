@@ -69,7 +69,9 @@
 		<table cellspacing="1" class="searchList">
     		<tr class="title">
     			
-    			<td height="28" class="dot"></td>
+    			<td height="28" class="dot"><c:if test="${resource.positionCode eq '01202'}">
+    				<input type="checkbox" name="chkAll" onclick="selectAll(this, 'ids');" id="chkAll"/>
+    				</c:if></td>
     			<td width="30%">素材名称</td>
     			<td width="15%">素材类型</td>
     			<td width="50%">描述</td>
@@ -77,8 +79,13 @@
     		<c:forEach items="${page.dataList}" var="resource" varStatus="pl">
     		<tr <c:if test="${pl.index%2==1}">class="sec"</c:if>
     			onmouseout="this.style.backgroundColor=''" onmouseover="this.style.backgroundColor='#fffed9'">
-    			<td><input id="${resource.id}_resource" type="radio"
-    				name="ids" value="${resource.id}_${resource.resourceName}" /></td>
+    			<td><c:if test="${resource.positionCode eq '01202'}">
+    				<input id="${resource.id}_resource" type="checkbox" name="ids" value="${resource.id}_${resource.resourceName}" />
+    				</c:if>
+    				<c:if test="${resource.positionCode ne '01202'}">
+    				<input id="${resource.id}_resource" type="radio" name="ids" value="${resource.id}_${resource.resourceName}" />
+    				</c:if>
+    			</td>
     			<td><c:out value="${resource.resourceName}" /></td>
     			
     			<td>

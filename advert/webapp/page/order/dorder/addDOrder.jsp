@@ -133,7 +133,7 @@
 		$("#isDefault").hide();
 		ployId = -1;
 		var positionCode = document.getElementById("positionCode").value;
-		if(positionCode == '2015'){
+		if(positionCode == '01202'){
 			$("#isDefault").show();
 		}
 				

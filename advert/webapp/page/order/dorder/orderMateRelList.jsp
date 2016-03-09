@@ -64,20 +64,36 @@
 		var url = "queryDResourceList.do?resource.positionCode="+$("#positionCode").val();
 		var resourceArray = window.showModalDialog(url, window, "dialogHeight=480px;dialogWidth=820px;center=1;resizable=0;status=0;");
 		if (resourceArray && resourceArray != null) {
-			var resourceId ;
+			var resourceId ="" ;
 			var materialName = "";
         	if(resourceArray.length>0){
-				for(var i=0;i<resourceArray.length;i++){
+        		if(resourceArray.length == 1){
+        			resourceId = resourceArray[0].resourceId;
+					materialName = resourceArray[0].resourceName;
+        			for (var i = 0; i < idss.length; i++) {
+        	        	if (idss[i].checked) {
+        	        		document.getElementById(idss[i].value).innerHTML = materialName;
+        	            }
+                	}
+        		}else{
+        			var j=0;
+        			for (var i = 0; i < idss.length; i++) {
+        	        	if (idss[i].checked) {
+        	        		if(j<resourceArray.length){
+        	        			resourceId +=(j==0?"":",")+resourceArray[j].resourceId;
+        	        			document.getElementById(idss[i].value).innerHTML = resourceArray[j].resourceName;
+        	        		}
+        	        		j++;
+        	            }
+                	}
+        		}
+				/*for(var i=0;i<resourceArray.length;i++){
 					resourceId = resourceArray[i].resourceId;
 					materialName = resourceArray[i].resourceName;
 					break;
-				}
+				}*/
         	}
-        	for (var i = 0; i < idss.length; i++) {
-	        	if (idss[i].checked) {
-	        		document.getElementById(idss[i].value).innerHTML = materialName;
-	            }
-        	}
+        	
         	var ids  = getCheckValue('ids');
         	$.ajax({   
 	 		       url:'saveDOrderMateRelTmp.action',       
@@ -85,7 +101,7 @@
 	 		       dataType: 'text',   
 	 		       data: {
 	 		    	  ids:ids,
-	 		    	  id:resourceId
+	 		    	  resourceIds:resourceId
 	 				},                   
 	 		       timeout: 1000000000,                              
 	 		       error: function(){                      
@@ -97,7 +113,7 @@
 	 		    	   }
 	 			   }  
 	 		   });
-        	$("[name='ids']").removeAttr("checked");//取消全选  
+        	$("input[name='ids']").removeAttr("checked");//取消全选  
     	}
 	}
 	
@@ -108,7 +124,7 @@
 	<input type="hidden" id="pageSize" name="page.pageSize" value="${page.pageSize}"/>
 	<input type="hidden" id="positionCode" name="order.dposition.positionCode" value="${order.dposition.positionCode}"/>
 	<input type="hidden" id="orderCode" name="omrTmp.orderCode" value="${omrTmp.orderCode}"/>
-	<input type="hidden" id="orderCode" name="omrTmp.resource.id" value="${omrTmp.resource.id}"/>
+	<!-- <input type="hidden" id="orderCode" name="omrTmp.resource.id" value="${omrTmp.resource.id}"/> -->
 	<div class="searchContent">
 		<table cellspacing="1" class="searchList">
             <tr class="title">
