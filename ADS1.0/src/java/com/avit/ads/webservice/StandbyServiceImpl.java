@@ -23,7 +23,6 @@ public class StandbyServiceImpl implements StandbyService {
 			StandByCronTriggerBean trigger = (StandByCronTriggerBean)scheduler.getTrigger("standbyTime", Scheduler.DEFAULT_GROUP);
 			trigger.init();
 			scheduler.rescheduleJob("standbyTime", Scheduler.DEFAULT_GROUP, trigger);
-			System.out.println(scheduler.isInStandbyMode());
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}

@@ -26,10 +26,10 @@ import com.avit.ads.dtmb.bean.DOcgInfo;
 import com.avit.ads.dtmb.bean.PlayList;
 import com.avit.ads.dtmb.cache.SendAdsTypesMap;
 import com.avit.ads.dtmb.dao.DOcgInfoDao;
+import com.avit.ads.dtmb.des.Des;
 import com.avit.ads.dtmb.service.DOcgService;
 import com.avit.ads.dtmb.service.DUixService;
 import com.avit.ads.dtmb.service.PushDtmbAdService;
-import com.avit.ads.pushads.task.bean.StartMaterial;
 import com.avit.ads.pushads.task.bean.TReleaseArea;
 import com.avit.ads.pushads.task.bean.TextMate;
 import com.avit.ads.pushads.task.dao.PushAdsDao;
@@ -81,24 +81,21 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 	private DtmbUnRealTimeAdsPushHelper unRealTimeAdsPushHelper;
 	@Autowired
 	private PushFalierHelper pushFalierHelper;
-	
+	private Des des = new Des();
 	public void sendRealTimeDTMBAd() {
 		List<PlayList> playlistList = pushAdsDao.querySendDTMBAds();
 		
 		Map<String, Map<String, String[]>> channelAdsMap = SendAdsTypesMap.getDtmbChannelAdsMap();
-		
 		List<TReleaseArea> areaList = areaDao.getAllArea();
 		
 		for(TReleaseArea area : areaList){
-			if(!"1".equals(area.getOcsId())){
+			if(StringUtils.isBlank(area.getOcsId())){
 				continue;
 			}
 			String areaCode = area.getAreaCode();
-			String configPath = InitConfig.getAdsConfig().getDrealTimeAds().getAdsTempConfigPath();
-			String configFileName = configPath + File.separator + area.getAreaCode()+"/"+ InitConfig.getAdsConfig().getDrealTimeAds().getAdsConfigFile();
-			
+			String configPath = InitConfig.getAdsConfig().getDrealTimeAds().getAdsTempConfigPath() + File.separator + areaCode;
+			String configFileName = configPath + "/"+ InitConfig.getAdsConfig().getDrealTimeAds().getAdsConfigFile();
 			String oldMD5 = FileDigestUtil.getFileNameMD5(configFileName);
-			
 			Map<String, Map<String, String[]>> areaAdsMap = new HashMap<String, Map<String, String[]>>();
 			areaAdsMap = putAll(channelAdsMap);
 			for(PlayList playlist : playlistList){
@@ -121,8 +118,15 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 			}
 			
 			log.info("生成【"+area.getAreaName()+"】配置文件....");
-			Set<String> fileSet = generateConfigFile(configFileName, areaAdsMap);
-			
+			String temConfigFileName = "tem_" + InitConfig.getAdsConfig().getDrealTimeAds().getAdsConfigFile();
+			Set<String> fileSet = generateConfigFile(configPath + "/" + temConfigFileName, areaAdsMap);
+			try {
+				des.DesCryptFile(configPath + "/" + temConfigFileName, configFileName);
+				//删除临时文件
+				//this.deleteFile(configPath, temConfigFileName);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 			String newMD5 = FileDigestUtil.getFileNameMD5(configFileName);
 			if(!newMD5.equals(oldMD5)){
 				log.info("【"+area.getAreaName()+"】区域广告配置有更新，执行投放流程......");
@@ -134,7 +138,7 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 				String pword = adResource.getPwd(); 
 				
 				String materialPath =  adResource.getAdsResourcePath();
-				String localMaterialPath = InitConfig.getAdsConfig().getDrealTimeAds().getAdsTempPath();
+				String localMaterialPath = InitConfig.getAdsConfig().getDrealTimeAds().getAdsTempPath() + "/" + areaCode;
 				
 				if(!ftpService.connectServer(host, 21, uname, pword)){
 					
@@ -144,9 +148,20 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 					ftpService.deleteDirFile(localMaterialPath);
 					
 					for(String fileName : fileSet){
-							
+						String temFileName = "";	
 						if(StringUtils.isNotEmpty(fileName)){
-							ftpService.downloadFile(fileName, fileName, materialPath, localMaterialPath);
+							temFileName = "tem_" + fileName;
+							ftpService.downloadFile(fileName, temFileName, materialPath, localMaterialPath);
+							
+							try {
+								//加密临时文件
+								des.DesCryptFile(localMaterialPath + "/" + temFileName, localMaterialPath + "/" + fileName);
+								//删除临时文件
+								this.deleteFile(localMaterialPath, temFileName);
+							} catch (Exception e) {
+								log.error(e);
+								e.printStackTrace();
+							}
 						}
 					}
 					ftpService.disConnectFtpServer();
@@ -178,7 +193,7 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 		}
 	}
 	public void sendStartVideoAds() {
-	//查询过期播出单，删除OCG上的广告素材
+			//查询过期播出单，删除OCG上的广告素材
 			processOverduePlayList(new Date(), ConstantsAdsCode.DPUSH_STARTSTB_VIDEO_HD, "高清开机视频", ConstantsAdsCode.DPUSH_STARTSTB_HD_VIDEO_FILE);
 				
 			//查询新增播出单
@@ -208,10 +223,21 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 					if (StringUtils.isNotBlank(adGis.getResourcePath())){
 						
 						String downLoadPath = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsTempPath() + "/" + areaCode;
-						String downLoadFilePath = downLoadPath + "/" + ConstantsAdsCode.DPUSH_STARTSTB_HD_VIDEO_FILE;			
+						String downLoadFilePath = downLoadPath + "/" + ConstantsAdsCode.DPUSH_STARTSTB_HD_VIDEO_FILE;
+						String remotePath = InitConfig.getAdsResourcePath();
+						String temFileName = "tem_" + ConstantsAdsCode.DPUSH_STARTSTB_HD_VIDEO_FILE;
 						
 						log.info("下载开机视频素材到本地..");
-						ftpService.downloadFile(adGis.getResourcePath(), ConstantsAdsCode.DPUSH_STARTSTB_HD_VIDEO_FILE, downLoadPath);
+						ftpService.downloadFile(adGis.getResourcePath(), ConstantsAdsCode.DPUSH_STARTSTB_HD_VIDEO_FILE, remotePath, downLoadPath);
+						/*ftpService.downloadFile(adGis.getResourcePath(), temFileName, remotePath, downLoadPath);
+						Des des = new Des();
+						try {
+							des.DesCryptFile(downLoadPath + "/" + temFileName, downLoadFilePath);
+							this.deleteFile(downLoadPath, temFileName);
+						} catch (Exception e) {
+							log.error(e);
+							e.printStackTrace();
+						}*/
 													
 						List<DOcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 
@@ -289,12 +315,27 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 		}
 	//查询过期播出单，删除OCG上的广告素材
 		private void processOverduePlayList(Date startTime, String adsCode, String adsDesc, String remoteFileName){
-			List<PlayList> deadAdsList = pushAdsDao.queryDEndAds(adsCode);		
-			if (deadAdsList!=null && deadAdsList.size()>0){
+			List<PlayList> deadAdsList = pushAdsDao.queryDEndAds(adsCode);	
+			
+			List<TReleaseArea> areaList = areaDao.getAllArea();
+			if(deadAdsList == null || deadAdsList.size() == 0){
+				return;
+			}
+			// TODO 循环处理播出单
+			for (TReleaseArea area : areaList){
+				
+				String areaCode = area.getAreaCode();
+				List<Integer> playIdList = new ArrayList<Integer>();
+				boolean isDefault = false;
 				for(PlayList adGis : deadAdsList){
-					//long playListId = adGis.getId().longValue();
-					String areaCode = adGis.getAreaCode(); //单向投放广告，播出单只会有具体某个地市的区域码
-					
+					if(areaCode.equals(adGis.getAreaCode())){ //单向投放广告，播出单只会有具体某个地市的区域码
+						playIdList.add(adGis.getId());
+						if("1".equals(adGis.getIsDefault())){
+							isDefault = true;
+						}
+					}
+				}
+				if(playIdList.size() > 0){
 					List<DOcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 					for (DOcgInfo ocg : ocgList) {
 						
@@ -320,9 +361,7 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 					
 					//删除描述符
 					if(ConstantsAdsCode.DPUSH_STARTSTB_HD.equals(adsCode)){
-						Gson gson = new Gson();		
-						StartMaterial startMaterial =(StartMaterial)gson.fromJson(adGis.getResourcePath(), StartMaterial.class);
-						if(StringUtils.isNotBlank(startMaterial.getPic())){ //默认开机图片
+						if(isDefault){ //默认开机图片
 							uixService.delUiUpdateMsg(areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),true);
 							//默认图片到期更新adctrl=1
 							areaDao.updateAdCtrlByAreaCode(areaCode, "1");
@@ -334,9 +373,10 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 					}else if(ConstantsAdsCode.DPUSH_STARTSTB_VIDEO_HD.equals(adsCode)){
 						uixService.delUiUpdateMsg(areaCode, UIUpdate.VIDEO.getType(), UIUpdate.VIDEO.getFileName(),false);
 					}
+					for(Integer id : playIdList){
+						pushAdsDao.updateDAdsFlag(id, "4");
+					}
 					
-					//unRealTimeAdsPushHelper.cleanDelMap(playListId);
-					pushAdsDao.updateDAdsFlag(adGis.getId(), "4");
 				}
 			}
 		}
@@ -347,94 +387,115 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 			
 			//查询新增播出单
 			List<PlayList> newAdsList = pushAdsDao.queryDStartAds(ConstantsAdsCode.DPUSH_STARTSTB_HD);
-			
+			List<TReleaseArea> areaList = areaDao.getAllArea();
+			if(newAdsList == null || newAdsList.size() == 0){
+				return;
+			}
 			// TODO 循环处理播出单
-			if (newAdsList!=null && newAdsList.size()>0)
-			{
-				for (PlayList adGis : newAdsList)
-				{
-					String areaCode = adGis.getAreaCode(); //单向投放广告，播出单只会有具体某个地市的区域码
-					Integer playListId = adGis.getId();
-				
-					log.info("开始往区域"+areaCode+"发送高清开机图片广告");
-									
-					//连接素材FTP服务器
-					boolean conSuccessful = ftpService.connectServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
+			for (TReleaseArea area : areaList){
+				String areaCode = area.getAreaCode(); //单向投放广告，播出单只会有具体某个地市的区域码
+				String downLoadPath = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsIframeHDTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.START_RESOURCE_PATH;
+				String remotePath = InitConfig.getAdsResourcePath();
+				boolean isDefault = false;
+				List<Integer> playIdList = new ArrayList<Integer>();
+				for (PlayList adGis : newAdsList){
+					if(areaCode.equals(adGis.getAreaCode())){
+						
+						Integer playListId = adGis.getId();
+						playIdList.add(playListId);
 					
-					if(!conSuccessful){
-						//还可以重新投放
-						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
-							continue;
-						}else{ //投放三次失败
-							failedToPush(playListId);
-							continue;
+						log.info("开始往区域"+areaCode+"发送高清开机图片广告");
+										
+						//连接素材FTP服务器
+						boolean conSuccessful = ftpService.connectServer(InitConfig.getAdsConfig().getAdResource().getIp(), Integer.valueOf(InitConfig.getAdsConfig().getAdResource().getPort()), InitConfig.getAdsConfig().getAdResource().getUser(), InitConfig.getAdsConfig().getAdResource().getPwd());
+						
+						if(!conSuccessful){
+							//还可以重新投放
+							if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
+								continue;
+							}else{ //投放三次失败
+								failedToPush(playListId);
+								continue;
+							}
+						}
+														
+						log.info("下载开机图片素材到本地..");
+						
+						if ("1".equals(adGis.getIsDefault())){	
+							isDefault = true;
+							ftpService.downloadFile(adGis.getResourcePath(), "24.iframe", remotePath, downLoadPath);
+							
+						}else{	
+							ftpService.downloadFile(adGis.getResourcePath(), adGis.getIndexNum()+".iframe", remotePath, downLoadPath);
+							
 						}
 					}
-													
-					log.info("下载开机图片素材到本地..");
-					String downLoadPath = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsIframeHDTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.START_RESOURCE_PATH;
-					
-					boolean isDefault = false;
-					
-					if ("1".equals(adGis.getIsDefault())){	
-						isDefault = true;
-						ftpService.downloadFile(adGis.getResourcePath(), "24.iframe", downLoadPath);
-						
-					}else{	
-						ftpService.downloadFile(adGis.getResourcePath(), adGis.getIndexNum()+".iframe",downLoadPath);
-						
-					}
-			
-					log.info("压缩开机图片素材..");
-					String zipFilePath = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsTempPath()+"/"+areaCode;
-					linuxRun("zip -r",downLoadPath,zipFilePath+"/"+ConstantsAdsCode.DPUSH_STARTSTB_HD_IFRAME_FILE);
-					
-					List<DOcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
+				}
+				if(playIdList.size() == 0){
+					continue;
+				}
+				log.info("压缩开机图片素材..");
+				String zipFilePath = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsTempPath()+"/"+areaCode;
+				//String temFileName = "tem_" + ConstantsAdsCode.DPUSH_STARTSTB_HD_IFRAME_FILE;
+				linuxRun("zip -r",downLoadPath,zipFilePath+"/"+ConstantsAdsCode.DPUSH_STARTSTB_HD_IFRAME_FILE);
+				/*Des des = new Des();
+				try {
+					des.DesCryptFile(zipFilePath+"/"+temFileName, zipFilePath+"/"+ConstantsAdsCode.DPUSH_STARTSTB_HD_IFRAME_FILE);
+					this.deleteFile(zipFilePath, temFileName);
+				} catch (Exception e) {
+					log.error(e);
+					e.printStackTrace();
+				}*/
+				
+				List<DOcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 
-					boolean ocgExist = false;
-					boolean ocgSuccess = false;
-					
-					for (DOcgInfo ocg : ocgList) {
+				boolean ocgExist = false;
+				boolean ocgSuccess = false;
+				
+				for (DOcgInfo ocg : ocgList) {
 
-						if (ocg.getAreaCode().equals(areaCode)) {
-							
-							ocgExist = true;
-							
-							String ocgIp = ocg.getIp();
-							int ocgPort = Integer.parseInt(ocg.getPort());
-							String ocgUser = ocg.getUser();
-							String ocgPwd = ocg.getPwd();
-							
-							//建立OCG服务器的FTP连接
-							if(!ocgService.connectFtpServer(ocgIp, ocgPort, ocgUser, ocgPwd) ){
-								continue;
-							}
-							//向OCG发送开机素材
-			            	log.info("向OCG发送开机图片素材..");
-			            	String remoteDir = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsTargetPath();
-			            	ocgService.sendFileToFtp(zipFilePath+"/"+ConstantsAdsCode.DPUSH_STARTSTB_HD_IFRAME_FILE, remoteDir);
-			            	
-			            	//断开OCG服务器的FTP连接
-			            	ocgService.disConnectFtpServer();
-			            	
-			            	//通知OCG投放广告
-							if(!ocgService.startOcgPlayByIp(ocgIp, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
-								continue;
-							}
-							ocgSuccess = true;
-						}	
-					}
-					
-					if(!ocgExist){
-						String errMsg = "未配置区域【" + areaCode + "】的OCG FTP连接信息";
-						log.error(errMsg);
-						warnHelper.writeWarnMsgToDb(areaCode,errMsg);
+					if (ocg.getAreaCode().equals(areaCode)) {
+						
+						ocgExist = true;
+						
+						String ocgIp = ocg.getIp();
+						int ocgPort = Integer.parseInt(ocg.getPort());
+						String ocgUser = ocg.getUser();
+						String ocgPwd = ocg.getPwd();
+						
+						//建立OCG服务器的FTP连接
+						if(!ocgService.connectFtpServer(ocgIp, ocgPort, ocgUser, ocgPwd) ){
+							continue;
+						}
+						//向OCG发送开机素材
+		            	log.info("向OCG发送开机图片素材..");
+		            	String remoteDir = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsTargetPath();
+		            	ocgService.sendFileToFtp(zipFilePath+"/"+ConstantsAdsCode.DPUSH_STARTSTB_HD_IFRAME_FILE, remoteDir);
+		            	
+		            	//断开OCG服务器的FTP连接
+		            	ocgService.disConnectFtpServer();
+		            	
+		            	//通知OCG投放广告
+						if(!ocgService.startOcgPlayByIp(ocgIp, remoteDir, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
+							continue;
+						}
+						ocgSuccess = true;
+					}	
+				}
+				
+				if(!ocgExist){
+					String errMsg = "未配置区域【" + areaCode + "】的OCG FTP连接信息";
+					log.error(errMsg);
+					warnHelper.writeWarnMsgToDb(areaCode,errMsg);
+					for(Integer playListId : playIdList){
 						failedToPush(playListId);
-						continue;
 					}
-					
-					if(!ocgSuccess){
-						//还可以重试
+					continue;
+				}
+				
+				if(!ocgSuccess){
+					//还可以重试
+					for(Integer playListId : playIdList){
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{  //三次都失败
@@ -442,21 +503,23 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 							continue;
 						}
 					}
-					
-					//往区域发送NIT描述符插入信息
-					
-					boolean uiUpdateSuccess;
-					
-					if(isDefault){
-						uiUpdateSuccess = uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),true);
-						//默认开机图片更新adctrl值为0
-						areaDao.updateAdCtrlByAreaCode(areaCode, "0");
-					}else{
-						uiUpdateSuccess = uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName());
-					}
-					
-					if(!uiUpdateSuccess){
-						//UI更新通知，若不成功
+				}
+				
+				//往区域发送NIT描述符插入信息
+				
+				boolean uiUpdateSuccess;
+				
+				if(isDefault){
+					uiUpdateSuccess = uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName(),true);
+					//默认开机图片更新adctrl值为0
+					areaDao.updateAdCtrlByAreaCode(areaCode, "0");
+				}else{
+					uiUpdateSuccess = uixService.sendUiUpdateMsg(ConstantsHelper.UI_PLAY, areaCode, UIUpdate.PIC.getType(), UIUpdate.PIC.getFileName());
+				}
+				
+				if(!uiUpdateSuccess){
+					//UI更新通知，若不成功
+					for(Integer playListId : playIdList){
 						if(unRealTimeAdsPushHelper.pushDecreaseAndTryAgain(playListId)){
 							continue;
 						}else{
@@ -464,14 +527,16 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 							continue;
 						}
 					}
-									
-					log.info("往区域"+areaCode+"发送高清开机图片广告结束");
-					
-					//更新播出单状态为已执行
+				}
+								
+				log.info("往区域"+areaCode+"发送高清开机图片广告结束");
+				
+				//更新播出单状态为已执行
+				for(Integer playListId : playIdList){
 					unRealTimeAdsPushHelper.cleanPushMap(playListId);
-					pushAdsDao.updateDAdsFlag(adGis.getId(), "1");             	
-	            }				
-			}
+					pushAdsDao.updateDAdsFlag(playListId, "1");    
+				}
+            }				
 		}
 		@SuppressWarnings("unchecked")
 		public void sendAdResourceAds() {	
@@ -483,11 +548,12 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 				
 				boolean changed = false;
 				
+				String romatePath = InitConfig.getAdsResourcePath();
 				String downLoadPath = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsaudioHDTempPath()+"/"+areaCode+"/"+ConstantsAdsCode.DADVRESOURCE_HD_PATH;				
 				String zipFilePath = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsTempPath()+"/"+areaCode;
 				
 				//查询过期列表，删除本地素材（根据播出单删除素材）	 
-		        String hql =  "from PlayList ads where ads.status=1 and ads.areaCode = ? and ads.endDate <curdate() and (ads.positionCode =? or ads.positionCode =? )";
+		        String hql =  "from PlayList ads where ads.status=1 and ads.areaCode = ? and ads.endDate <=curdate() and ads.endTime<= date_format(now(),'%H:%i:%s') and (ads.positionCode =? or ads.positionCode =? )";
 		            
 		        List<PlayList> resultList = pushAdsDao.getTemplate().find(hql, areaCode, ConstantsAdsCode.DPUSH_FREQUENCE_HD, ConstantsAdsCode.DPUSH_LIVE_UNDER_HD);
 		        
@@ -528,11 +594,10 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 		        }
 			
 				//查询新增列表， 下载素材到本地 
-		        String newHql =  "from PlayList ads where ads.status = 0 and ads.areaCode = ? and curdate() between ads.startDate and ads.endDate and now() between ads.startTime and ads.endTime and (ads.positionCode =? or ads.positionCode =? )";
+		        String newHql =  "from PlayList ads where ads.status = 0 and ads.areaCode = ? and curdate() between ads.startDate and ads.endDate and curtime() between ads.startTime and ads.endTime and (ads.positionCode =? or ads.positionCode =? )";
 		        List<PlayList> newResultList = pushAdsDao.getTemplate().find(newHql, areaCode, ConstantsAdsCode.DPUSH_FREQUENCE_HD, ConstantsAdsCode.DPUSH_LIVE_UNDER_HD);
 				if(null != newResultList && newResultList.size() > 0){
 					changed = true; 
-					Gson gson = new Gson();	
 					for(PlayList playListEntity : newResultList){
 						
 						Integer playListId = playListEntity.getId();
@@ -550,7 +615,7 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 							}else{
 								log.info("下载广播收听背景素材到本地..");
 								for(String serviceId : serviceIdList){
-									ftpService.downloadFile(playListEntity.getResourcePath(),serviceId+".iframe", downLoadPath);
+									ftpService.downloadFile(playListEntity.getResourcePath(),serviceId+".iframe", romatePath, downLoadPath);
 								}
 							}			
 						}else if(ConstantsAdsCode.DPUSH_LIVE_UNDER_HD.equals(playListEntity.getPositionCode())){
@@ -559,7 +624,7 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 							if(null != playListEntity.getResourcePath()){
 								log.info("下载直播下排素材到本地..");
 								
-								ftpService.downloadFile(playListEntity.getResourcePath(), ConstantsAdsCode.LIVE_UNDER_HD_FILE_PREFIX + playListEntity.getIndexNum() + ConstantsAdsCode.LIVE_UNDER_HD_FILE_POSTFIX, downLoadPath);
+								ftpService.downloadFile(playListEntity.getResourcePath(), ConstantsAdsCode.LIVE_UNDER_HD_FILE_PREFIX + playListEntity.getIndexNum() + ConstantsAdsCode.LIVE_UNDER_HD_FILE_POSTFIX, romatePath, downLoadPath);
 								
 							}
 						}					
@@ -575,7 +640,16 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 					//压缩文件
 					log.info("压缩素材文件..");
 					String sourcePath = InitConfig.getAdsConfig().getDunRealTimeAds().getAdsaudioHDTempPath()+"/"+areaCode+"/" + "advResource-c";				
-					linuxRun("zip -r",sourcePath,zipFilePath+"/"+ConstantsAdsCode.ADVRESOURCE_C);
+					String temFileName = "tem_" + ConstantsAdsCode.ADVRESOURCE_C;
+					linuxRun("zip -r",sourcePath,zipFilePath+"/"+temFileName);
+					Des des = new Des();
+					try {
+						des.DesCryptFile(zipFilePath+"/"+temFileName, zipFilePath+"/"+ConstantsAdsCode.ADVRESOURCE_C);
+						this.deleteFile(zipFilePath, temFileName);
+					} catch (Exception e) {
+						log.error(e);
+						e.printStackTrace();
+					}
 					
 					List<DOcgInfo> ocgList = ocgInfoDao.getOcgInfoList();
 
@@ -625,11 +699,11 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 		public void sendSubtitleAds() {
 			
 			//查询过期列表（播出单结束时间 < 当前时间），发送不显示字幕，更新播出单状态为4	 
-			String overdueHql =  "from PlayList pl where pl.status=1 and pl.endDate <=curdate() and pl.positionCode =? ";			            
+			String overdueHql =  "from PlayList pl where pl.status=1 and pl.endDate <=curdate() and pl.endTime<= date_format(now(),'%H:%i:%s') and pl.positionCode =? ";			            
 			List<PlayList> overdueList = pushAdsDao.getTemplate().find(overdueHql, ConstantsAdsCode.DPUSH_SUBTITLE);
 			sendSubtitle(overdueList, "0", "4");
 			//查询过期列表（播出单结束时间 < 当前时间），发送不显示字幕，更新播出单状态为4	 
-			String overWindowHql =  "from PlayList pl where pl.status=1 and pl.endTime <=date_format(now(),'%H:%i:%s') and pl.positionCode =? ";			            
+			String overWindowHql =  "from PlayList pl where pl.status=1 and curtime() >= str_to_date(pl.endTime,'%H:%i:%s') and pl.positionCode =? ";			            
 			List<PlayList> overWindowList = pushAdsDao.getTemplate().find(overWindowHql, ConstantsAdsCode.DPUSH_SUBTITLE);
 			sendSubtitle(overWindowList, "0", "2");
 			
@@ -648,6 +722,7 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 		
 		private void sendSubtitle(List<PlayList> playLists, String actionType, String state){
 			if(null != playLists && playLists.size() > 0){
+				//Des des = new Des();
 				for(PlayList adGis : playLists){
 					String areaCode = adGis.getAreaCode(); 
 					
@@ -679,6 +754,12 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 					List<SubtitlePart> subtitleInfoList = new ArrayList<SubtitlePart>();
 					for(int i =0; i < words.length; i ++){
 						String word = words[i].trim();
+						/*try {
+							word = des.DesCryptString(word);
+						} catch (Exception e) {
+							log.error(e);
+							e.printStackTrace();
+						}*/
 						if(StringUtils.isBlank(word)){
 							continue;
 						}
@@ -690,6 +771,8 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 					SubtitleContent content = new SubtitleContent();
 					content.setSubtitleList(subtitleInfoList);
 					Subtitle subtitle = new Subtitle();
+					subtitle.setEncryption("1");
+					subtitle.setKey(InitConfig.getConfigMap().get("des.key"));
 					subtitle.setSubtitleInfo(subtitleInfo);
 					subtitle.setSubtileContent(content);
 			
@@ -709,11 +792,11 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 		public void sendChannelSubtitleAds() {
 						
 			//查询过期列表（播出单结束时间 < 当前时间），发送不显示字幕，更新播出单状态为4	 
-			String overdueHql =  "from PlayList ads where ads.status=1 and ads.endDate <=curdate() and ads.positionCode =? ";			            
+			String overdueHql =  "from PlayList ads where ads.status=1 and ads.endDate <=curdate() and ads.endTime<= date_format(now(),'%H:%i:%s') and ads.positionCode =? ";			            
 			List<PlayList> overdueList = pushAdsDao.getTemplate().find(overdueHql, ConstantsAdsCode.DPUSH_CHANNEL_SUBTITLE);
 			sendChannelSubtitle3(overdueList,"0","4");
 			//查询过期列表（播出单结束时间 < 当前时间），发送不显示字幕，更新播出单状态为4	 
-			String overwindowHql =  "from PlayList ads where ads.status=1 and ads.endTime <=date_format(now(),'%H:%i:%s') and ads.positionCode =? ";			            
+			String overwindowHql =  "from PlayList ads where ads.status=1 and curtime()>= str_to_date(ads.endTime,'%H:%i:%s') and ads.positionCode =? ";			            
 			List<PlayList> overwindowList = pushAdsDao.getTemplate().find(overwindowHql, ConstantsAdsCode.DPUSH_CHANNEL_SUBTITLE);
 			sendChannelSubtitle3(overwindowList,"0","2");
 			if(overdueList != null && overdueList.size() > 0){
@@ -725,14 +808,14 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 			}
 			
 			//查询新增列表（播出单结束时间 > 当前时间，且状态为0），发送显示字幕，更新播出单状态为1
-			String newHql =  "from PlayList ads where ads.status = 0 and curdate() between ads.startDate and ads.endDate and date_format(now(),'%H:%i:%s') between ads.startTime and ads.endTime and ads.positionCode =? ";    
-			Date now = new Date();
+			String newHql =  "from PlayList ads where ads.status = 0 and curdate() between ads.startDate and ads.endDate and curtime() between ads.startTime and ads.endTime and ads.positionCode =? ";    
 			List<PlayList> newList = pushAdsDao.getTemplate().find(newHql, ConstantsAdsCode.DPUSH_CHANNEL_SUBTITLE);
 			sendChannelSubtitle3(newList,"1","1");
 			
 		}
 		private void sendChannelSubtitle3(List<PlayList> playLists, String actionType, String state){
 			List<String> areaList = InitAreas.getInstance().getAreas();
+			//Des des = new Des();
 			for(String areaCode : areaList){
 				List<PlayList> pickedList = pickPlayListByAreaCode(playLists, areaCode);
 				if(pickedList.size() > 0){
@@ -787,7 +870,12 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 								if(StringUtils.isBlank(word)){
 									continue;
 								}
-								
+								/*try {
+									word = des.DesCryptString(word);
+								} catch (Exception e) {
+									log.error(e);
+									e.printStackTrace();
+								}*/
 								SubtitlePart part = new SubtitlePart();
 								part.setId(i + "");
 								part.setWord(word);
@@ -819,6 +907,8 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 					
 						ChannelSubtitle channelSubtitle = new ChannelSubtitle();
 						channelSubtitle.setTsId(tsId);
+						channelSubtitle.setEncryption("1");
+						channelSubtitle.setKey(InitConfig.getConfigMap().get("des.key"));
 						channelSubtitle.setChannelSubtitleElemList(channelSubtitleList);
 						//向OCG发送UNT消息
 						success = ocgService.sendDtmbUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_CHANNEL_SUBTITLE, channelSubtitle, areaCode, tsId);
@@ -935,15 +1025,17 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
     	ocgService.disConnectFtpServer();
     	
     	String sendPath = getParentPath(ocgMaterialPath);
-		if(!ocgService.startOcgPlayByIp(ocgIp, sendPath, ConstantsHelper.MAIN_CHANNEL, ConstantsHelper.UI_TYPE)){
+		if(!ocgService.startOcgPlayByIp(ocgIp, sendPath, ConstantsHelper.ALL_CHANNEL, ConstantsHelper.UNT_TYPE)){
 			sendFlagHelper.decreaseSendTimes(ocg.getAreaCode());
 			log.error("start ocg play failed! areacode : " + ocg.getAreaCode() + ", ip: " + ocgIp);
 		}
 	}
 	private void sendUNTMessage(String areaCode){
-		
+		String ocgMaterialPath = InitConfig.getAdsConfig().getDrealTimeAds().getAdsTargetPath();
+		String ocgConfigPath = InitConfig.getAdsConfig().getDrealTimeAds().getAdsTargetConfigPath();
+		String configFileName = InitConfig.getAdsConfig().getDrealTimeAds().getAdsConfigFile();
 		log.info("向OCG发送UNT素材更新通知..");
-		String imageUpdatePath = ConstantsHelper.UNT_UPDATE_PATH_PREFIX + "" + "/";
+		String imageUpdatePath = ConstantsHelper.UNT_UPDATE_PATH_PREFIX + getDeepestDir(ocgMaterialPath) + "/";
 		
 		AdsImage imageUpdateMsg = new AdsImage();
 		
@@ -953,7 +1045,7 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 		boolean picUpdateSuccess = ocgService.sendDtmbUntUpdateByAreaCode(ConstantsHelper.REALTIME_UNT_MESSAGE_ADIMAGE, imageUpdateMsg, areaCode, null);			
 		
 		log.info("发UNT配置文件更新通知..");
-		String configUpdatePath = ConstantsHelper.UNT_UPDATE_PATH_PREFIX + ""  + "/" + "";
+		String configUpdatePath = ConstantsHelper.UNT_UPDATE_PATH_PREFIX + getDeepestDir(ocgConfigPath)  + "/" + configFileName;
 		
 		AdsConfigJs configUpdateMsg = new AdsConfigJs();
 		
@@ -970,7 +1062,7 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 			}
 		}
 	}
-	private static Map<String, Map<String, String[]>> putAll(Map<String, Map<String, String[]>> map){
+	private Map<String, Map<String, String[]>> putAll(Map<String, Map<String, String[]>> map){
 		Map<String, Map<String, String[]>> newMap = new HashMap<String, Map<String, String[]>>();
 		
 		for(String key : map.keySet()){
@@ -1014,4 +1106,12 @@ public class PushDtmbAdServiceImpl implements PushDtmbAdService {
 		   }
 		   return path.substring(0, path.lastIndexOf("/"));
    }
+	private String getDeepestDir(String path){
+		   String[] dirs = path.split("/");
+			int length = dirs.length;		
+			if(length > 0){
+				return dirs[length -1];
+			}	   
+		   return path;
+	   }
 }

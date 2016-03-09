@@ -1,12 +1,17 @@
 package com.avit.ads.dtmb.thread;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.avit.ads.dtmb.service.PushDtmbAdService;
+import com.avit.ads.pushads.task.service.DataInitService;
 import com.avit.ads.util.ContextHolder;
 
 
 public class DtmbThread extends Thread {
 	
+	private Log log = LogFactory.getLog(this.getClass());
 	
 	public void run(){
 
@@ -16,6 +21,7 @@ public class DtmbThread extends Thread {
 			/**
 			 * 投放实时广告
 			 */
+			log.info("投放单向实时....");
 			pushDtmbAdService.sendRealTimeDTMBAd();
 			/**
 			 * 投放开机图片广告

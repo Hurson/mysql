@@ -74,7 +74,7 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 	@SuppressWarnings("all")
 	public List<PlayList> queryDStartAds(String adsTypeCode) {
 		  StringBuffer sb = new StringBuffer();
-	      sb.append("from PlayList ads where ads.status=0 and curdate() between ads.startDate and ads.endDate and date_format(now(),'%H:%i:%s') between ads.startTime and ads.endTime ");  
+	      sb.append("from PlayList ads where ads.status=0 and curdate() between ads.startDate and ads.endDate and curtime() between ads.startTime and ads.endTime ");  
 	      List params = new ArrayList();
 	       
 	      if (adsTypeCode!=null && !adsTypeCode.equals(""))
@@ -138,6 +138,7 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 	    	  sb.append(" and ads.positionCode =?" );
 	    	  params.add(adsTypeCode);
 	      }
+	      sb.append(" and ads.endDate<=curdate() and ads.endTime <=date_format(now(),'%H:%i:%s')");
 	      sb.append(" order by ads.id desc "); //按id升序排序
 	      return this.getListForAll(sb.toString(), params); 
 	}
@@ -217,7 +218,7 @@ public class PushAdsDaoImpl extends CommonDaoImpl implements PushAdsDao {
 	@SuppressWarnings("unchecked")
 	public List<PlayList> querySendDTMBAds() {
 		String hql = "select new PlayList(pl,ap.isHd,ap.position) from PlayList pl,DAdPosition ap where pl.positionCode = ap.positionCode " +
-				     " and curdate() between pl.startDate and pl.endDate and date_format(now(),'%H:%i:%s') between pl.startTime and pl.endTime and ap.positionType = '1'";
+				     " and curdate() between pl.startDate and pl.endDate and curtime() between pl.startTime and pl.endTime and ap.positionType = '1'";
 		return (List<PlayList>)this.getListForAll(hql, new Object[]{});
 	}
 	}

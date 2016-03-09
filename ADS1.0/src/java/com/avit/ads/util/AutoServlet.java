@@ -7,6 +7,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServlet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.avit.ads.dtmb.thread.DtmbThread;
 import com.avit.ads.pushads.ocg.service.OcgService;
 import com.avit.ads.pushads.ocg.service.impl.OcgServiceImpl;
@@ -27,6 +30,7 @@ public class AutoServlet extends HttpServlet {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	private Log log = LogFactory.getLog(this.getClass());
 	
 	/** The thread. */
 	AutoAllThread  allThread ;
@@ -58,12 +62,12 @@ public class AutoServlet extends HttpServlet {
 //				uiService.addUiDesc(typeList, nameList);
 			
 				//SendFileMap.initSendFileMap();
-				SendAdsElementMap.initSendAdsElementMap();
+				//SendAdsElementMap.initSendAdsElementMap();
 				
-				allThread = new AutoAllThread();
+				/*allThread = new AutoAllThread();
 				allThread.start();				
-				Thread.sleep(500);	
-				
+				Thread.sleep(500);	*/
+				log.info("开始投放无线dtmb广告");
 				/**
 				 * 无线投放任务
 				 */

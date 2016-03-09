@@ -9,8 +9,10 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.avit.ads.dtmb.bean.DOcgInfo;
 import com.avit.ads.dtmb.cache.DtmbAdPositionMap;
 import com.avit.ads.dtmb.cache.DtmbChannelMap;
+import com.avit.ads.dtmb.dao.DOcgInfoDao;
 import com.avit.ads.pushads.ocg.dao.OcgInfoDao;
 import com.avit.ads.pushads.task.bean.AdDefault;
 import com.avit.ads.pushads.task.bean.OcgInfo;
@@ -34,6 +36,8 @@ public class DataInitServiceImpl implements DataInitService {
 	private InitAreasDao initAreasDao;
 	@Inject
 	private OcgInfoDao ocgInfoDao;
+	@Inject
+	private DOcgInfoDao docgInfoDao;
 	
 	private Logger logger = Logger.getLogger(this.getClass());
 	
@@ -110,8 +114,8 @@ public class DataInitServiceImpl implements DataInitService {
 					file = new File(destPath + File.separator + ConstantsHelper.SEND_FILE);
 					file.mkdirs();
 				}
-				List<OcgInfo> ocgInfoList = ocgInfoDao.getOcgMulticastInfoList(areaCode, null);
-				for(OcgInfo ocg : ocgInfoList){
+				List<DOcgInfo> ocgInfoList = docgInfoDao.getOcgMulticastInfoList(areaCode, null);
+				for(DOcgInfo ocg : ocgInfoList){
 					String fileName = destPath + File.separator + ConstantsHelper.CHANNEL_RECOMMEND + File.separator + ocg.getTsId() + ConstantsHelper.DATA_FILE_SUFFIX;
 					File tsFile = new File(fileName);
 					if(!tsFile.exists()){

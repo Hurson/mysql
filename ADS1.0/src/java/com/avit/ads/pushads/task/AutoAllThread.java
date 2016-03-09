@@ -58,6 +58,7 @@ public class AutoAllThread extends Thread {
 
 				//初始化区域频点目录
 				dataInitService.initAreaTSFile();
+				dataInitService.initDtmbAreaTSFile();
 				/*	*/
 				Thread[] tdArray = new Thread[40];
 				List<Ads> adsList = InitConfig.getAdList();//InitConfig.getAdsConfig().getRealTimeAds().getAdsList();

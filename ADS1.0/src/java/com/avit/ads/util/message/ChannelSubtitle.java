@@ -16,6 +16,12 @@ public class ChannelSubtitle {
 	@XmlAttribute(name="ts_id")
 	private String tsId;
 	
+	@XmlAttribute(name="encryption")
+	private String encryption = "0";
+	
+	@XmlAttribute(name="key")
+	private String key = "";
+	
 	@XmlElement(name="channelSubtitleElement")
 	private List<ChannelSubtitleElement> channelSubtitleElemList;
 	
@@ -24,6 +30,20 @@ public class ChannelSubtitle {
 	}
 	public void setTsId(String tsId) {
 		this.tsId = tsId;
+	}
+	
+	public String getEncryption() {
+		return encryption;
+	}
+	public void setEncryption(String encryption) {
+		this.encryption = encryption;
+	}
+	
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
 	}
 	public List<ChannelSubtitleElement> getChannelSubtitleElemList() {
 		return channelSubtitleElemList;
