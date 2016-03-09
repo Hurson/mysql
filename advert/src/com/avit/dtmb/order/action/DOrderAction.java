@@ -196,7 +196,8 @@ public class DOrderAction extends BaseAction {
 	
 	@Action(value = "saveDOrderMateRelTmp")
 	public void saveDOrderMateRelTmp(){
-		dOrderService.saveOrderMateRelTmp(ids, id);
+		String resourceIds = this.getRequest().getParameter("resourceIds");
+		dOrderService.saveOrderMateRelTmp(ids, resourceIds);
 	}
 	
 	@Action(value = "checkDPloy")
@@ -204,8 +205,8 @@ public class DOrderAction extends BaseAction {
 		
 	}
 	@Action(value = "auditDOrder")
-	public void auditDPloy(){
-		String result = dOrderService.auditDTMBPloy(order, flag);
+	public void auditDOrder(){
+		String result = dOrderService.auditDTMBOrder(order, flag);
 		int state = 0;
 		if("-1".equals(flag)){
 			state = Integer.parseInt(order.getState()) + 1;

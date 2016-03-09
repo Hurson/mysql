@@ -25,12 +25,13 @@ public interface DOrderService {
 	public PageBeanDB queryDOrderMateRelTmpList(DOrderMateRelTmp omrTmp, int pageNo, int pageSize);
 	public List<ReleaseArea> queryReleaseAreaList();
 	public PageBeanDB queryDResourceList(DResource resource, int pageNo, int pageSize);
-	public void saveOrderMateRelTmp(String ids, Integer id);
+	public void saveOrderMateRelTmp(String ids, String resourceIds);
 	public String getOrderResourceJson(DOrderMateRelTmp omrTmp);
-	public String auditDTMBPloy(DOrder order, String flag);
+	public String auditDTMBOrder(DOrder order, String flag);
 	public String checkDOrderRule(DOrder order);
 	public void delDOrderMateRelTmp(String ids);
 	public List<Customer> getCustomerList();
 	public String repushOrder(String orderCode);
 	public Map<String, String> previewResource(DResource resource);
+	public void completeOrder();
 }

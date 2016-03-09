@@ -16,7 +16,7 @@ import javax.persistence.MappedSuperclass;
  * the DChannelGroupRef entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "d_channel_group_ref", catalog = "ads_x")
+@Table(name = "d_channel_group_ref")
 public  class DChannelGroupRef implements java.io.Serializable {
 
 	// Fields

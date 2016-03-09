@@ -59,8 +59,7 @@ public class DPloyServiceImpl implements DPloyService {
 			}
 			if("1".equals(detail.getPloyType())){
 				areaFlag = true;
-			}
-			if("2".equals(detail.getPloyType())){
+			}else if("2".equals(detail.getPloyType())){
 				timeFlag = true;
 			}
 		}

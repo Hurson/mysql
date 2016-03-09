@@ -1,6 +1,5 @@
 package com.avit.dtmb.order.dao.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -162,9 +161,19 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	}
 
 	@Override
-	public void saveOrderMateRelTmp(String ids, Integer id) {
-		String sql = "update d_order_mate_rel_tmp omr set omr.resource_id = ? where omr.id in ("+ ids +")";
-		this.executeBySQL(sql, new Object[]{id});
+	public void saveOrderMateRelTmp(String ids, String resourceIds) {
+		String[] resourceIdss = resourceIds.split(",");
+		if(resourceIdss != null && resourceIdss.length == 1){
+			String sql = "update d_order_mate_rel_tmp omr set omr.resource_id = ? where omr.id in ("+ ids +")";
+			this.executeBySQL(sql, new Object[]{resourceIdss[0]});
+		}else{
+			String[] idss = ids.split(",");
+			for(int i = 0; i < resourceIdss.length; i++){
+				String sql = "update d_order_mate_rel_tmp omr set omr.resource_id = ? where omr.id = ?";
+				this.executeBySQL(sql, new Object[]{resourceIdss[i],idss[i]});
+			}
+		}
+		
 		
 	}
 
@@ -245,8 +254,8 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 
 	@Override
 	public int updatePlayListEndDate(DOrder order) {
-		String sql = "update d_play_list set end_date =? , end_time= ? where order_code = '" +order.getOrderCode()+"'";
-		return this.executeBySQL(sql, new Object[]{order.getEndDate(),new SimpleDateFormat("HH:mm:ss").format(order.getEndDate())});
+		String sql = "update d_play_list set end_date =? where order_code = '" +order.getOrderCode()+"'";
+		return this.executeBySQL(sql, new Object[]{order.getEndDate()});
 	}
 
 	@SuppressWarnings("unchecked")
@@ -311,6 +320,38 @@ public class DOrderDaoImpl extends BaseDaoImpl implements DOrderDao {
 	public DAdPosition getDPostionByPositionCode(String positionCode) {
 		String hql = "from DAdPosition ap where ap.positionCode = ?";
 		return (DAdPosition)this.get(hql, positionCode);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getAllChannelServiceIds() {
+		String hql = "select distinct ch.serviceId from DChannelInfoSync ch";
+		return getListForAll(hql, null);
+	}
+
+	@Override
+	public int updateOrderState() {
+		String hql = "update DOrder set state = '7' where endDate<curdate() and state < '7'";
+		return this.executeByHQL(hql, null);
+	}
+
+	@Override
+	public int deletePlayList(DOrder order) {
+		String sql = "delete from d_play_list where (start_date > curdate() or (start_date = curdate() and start_time > date_format(now(),'%H:%i:%s'))) and order_code = ?";
+		return this.executeBySQL(sql, new Object[]{order.getOrderCode()});
+	}
+
+	@Override
+	public int updatePlayListEndTime(DOrder order) {
+		String sql = "update d_play_list set end_date = curdate(),end_time = date_format(now(),'%H:%i:%s') where (start_date < curdate() or (start_date = curdate() and start_time < date_format(now(),'%H:%i:%s'))) and order_code=?";
+		return this.executeBySQL(sql, new Object[]{order.getOrderCode()});
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ReleaseArea> getAllReleaseArea() {
+		String hql = "from ReleaseArea area where area.areaCode !='152000000000'";
+		return getListForAll(hql, null);
 	}
 
 }

@@ -105,8 +105,8 @@ public class DOrderServiceImpl implements DOrderService {
 	}
 
 	@Override
-	public void saveOrderMateRelTmp(String ids, Integer id) {
-		dOrderDao.saveOrderMateRelTmp(ids, id);
+	public void saveOrderMateRelTmp(String ids, String resourceIds) {
+		dOrderDao.saveOrderMateRelTmp(ids, resourceIds);
 		
 	}
 
@@ -118,7 +118,7 @@ public class DOrderServiceImpl implements DOrderService {
 	}
 
 	@Override
-	public String auditDTMBPloy(DOrder order, String flag) {
+	public String auditDTMBOrder(DOrder order, String flag) {
 		String result = "-1";
 		
 		DOrder dorder = (DOrder)dOrderDao.get(DOrder.class, order.getId());
@@ -133,7 +133,7 @@ public class DOrderServiceImpl implements DOrderService {
 				result = "0";
 			}else if("2".equals(dorder.getState())){
 				dorder.setEndDate(new Date());
-				if(updatePlayListEndDate(dorder) > 0){
+				if(deletePlayList(dorder) > 0 | updatePlayListEndTime(dorder) > 0){
 					dorder.setState("7");
 					result = "0";
 				}else{
@@ -176,27 +176,54 @@ public class DOrderServiceImpl implements DOrderService {
 		List<DOrderMateRel> orderMateRelList = dOrderDao.getOrderMateRelList(order.getOrderCode());
 		List<PlayList> playList = new ArrayList<PlayList>();
 		for(DOrderMateRel omr : orderMateRelList){
-			PlayList play = new PlayList();
-			
-			play.setAreaCode(omr.getAreaCode());
-			play.setOrderCode(order.getOrderCode());
-			play.setPositionCode(order.getDposition().getPositionCode());
-			play.setStartDate(order.getStartDate());
-			play.setEndDate(order.getEndDate());
-			play.setStartTime(omr.getStartTime());
-			play.setEndTime(omr.getEndTime());
-			play.setIndexNum(omr.getIndexNum());
-			play.setIsDefault(order.getIsDefault());
-			play.setPloyType(omr.getPloyType());
-			play.setTypeValue(getTypeValue(omr.getPloyType(), omr.getTypeValue()));
-			play.setUserIndustries(getUserData(order.getDploy().getId(),PloyType.UserIndustry.getKey()));
-			play.setUserLevels(getUserData(order.getDploy().getId(),PloyType.UserLevel.getKey()));
-			play.setTvn(getUserData(order.getDploy().getId(),PloyType.UserTVNNO.getKey()));
-			play.setResourceId(omr.getResource().getId());
-			play.setResourcePath(getResourcePath(omr.getResource()));
-			play.setStatus("0");
-			
-			playList.add(play);
+			if(omr.getAreaCode().equals("152000000000")){
+				List<ReleaseArea> areaList =dOrderDao.getAllReleaseArea();
+				for(ReleaseArea area : areaList){
+					PlayList play = new PlayList();
+					
+					play.setAreaCode(area.getAreaCode());
+					play.setOrderCode(order.getOrderCode());
+					play.setPositionCode(order.getDposition().getPositionCode());
+					play.setStartDate(order.getStartDate());
+					play.setEndDate(order.getEndDate());
+					play.setStartTime(omr.getStartTime());
+					play.setEndTime(omr.getEndTime());
+					play.setIndexNum(omr.getIndexNum());
+					play.setIsDefault(order.getIsDefault());
+					play.setPloyType(omr.getPloyType());
+					play.setTypeValue(getTypeValue(omr.getPloyType(), omr.getTypeValue()));
+					play.setUserIndustries(getUserData(order.getDploy().getId(),PloyType.UserIndustry.getKey()));
+					play.setUserLevels(getUserData(order.getDploy().getId(),PloyType.UserLevel.getKey()));
+					play.setTvn(getUserData(order.getDploy().getId(),PloyType.UserTVNNO.getKey()));
+					play.setResourceId(omr.getResource().getId());
+					play.setResourcePath(getResourcePath(omr.getResource()));
+					play.setStatus("0");
+					
+					playList.add(play);
+				}
+			}else{
+				PlayList play = new PlayList();
+				
+				play.setAreaCode(omr.getAreaCode());
+				play.setOrderCode(order.getOrderCode());
+				play.setPositionCode(order.getDposition().getPositionCode());
+				play.setStartDate(order.getStartDate());
+				play.setEndDate(order.getEndDate());
+				play.setStartTime(omr.getStartTime());
+				play.setEndTime(omr.getEndTime());
+				play.setIndexNum(omr.getIndexNum());
+				play.setIsDefault(order.getIsDefault());
+				play.setPloyType(omr.getPloyType());
+				play.setTypeValue(getTypeValue(omr.getPloyType(), omr.getTypeValue()));
+				play.setUserIndustries(getUserData(order.getDploy().getId(),PloyType.UserIndustry.getKey()));
+				play.setUserLevels(getUserData(order.getDploy().getId(),PloyType.UserLevel.getKey()));
+				play.setTvn(getUserData(order.getDploy().getId(),PloyType.UserTVNNO.getKey()));
+				play.setResourceId(omr.getResource().getId());
+				play.setResourcePath(getResourcePath(omr.getResource()));
+				play.setStatus("0");
+				
+				playList.add(play);
+			}
 			
 		}
 		int result = dOrderDao.saveAll(playList).size();
@@ -205,7 +232,12 @@ public class DOrderServiceImpl implements DOrderService {
 	private String getTypeValue(String type, String value){
 		String values = "";
 		if("3".equals(type) || "4".equals(type)){
-			List<String> serviceIdList = dOrderDao.getChannelGroupServiceIds(Integer.valueOf(value));
+			List<String> serviceIdList = null;
+			if("0".equals(value)){
+				serviceIdList = dOrderDao.getAllChannelServiceIds();
+			}else{
+				serviceIdList = dOrderDao.getChannelGroupServiceIds(Integer.valueOf(value));
+			}
 			if(serviceIdList == null){
 				return values;
 			}
@@ -245,16 +277,19 @@ public class DOrderServiceImpl implements DOrderService {
 		case 2:
 			MessageMeta message = (MessageMeta)dOrderDao.get(MessageMeta.class, resource.getResourceId());
 			TextMate textMate = new TextMate();
-             if(message.getContent()!=null){
-            	 try{
-            		BeanUtils.copyProperties(textMate, message);
-            		textMate.setContent(message.getContent());
-            	 }catch(Exception e){
-            		 e.printStackTrace();
-            	 }
-            	 Gson gson = new Gson();
-            	 resourcePath = gson.toJson(textMate);
-             }
+	        if(message.getContent()!=null){
+	        	try{
+	        		BeanUtils.copyProperties(textMate, message);
+	        		textMate.setContent(message.getContent());
+	        	}catch(Exception e){
+	        		 e.printStackTrace();
+	        	}
+	        	Gson gson = new Gson();
+	        	resourcePath = gson.toJson(textMate);
+	        }
+            break;
+        default:
+        	   break;
 		}
 		return resourcePath;
 	}
@@ -314,6 +349,19 @@ public class DOrderServiceImpl implements DOrderService {
 		map.put("position", gson.toJson(position));
 		
 		return map;
+	}
+
+	@Override
+	public void completeOrder() {
+		dOrderDao.updateOrderState();
+	}
+	private int deletePlayList(DOrder order){
+		int result = dOrderDao.deletePlayList(order);
+		return result;
+	}
+	private int updatePlayListEndTime(DOrder order){
+		int result = dOrderDao.updatePlayListEndTime(order);
+		return result;
 	}
 	
 }
