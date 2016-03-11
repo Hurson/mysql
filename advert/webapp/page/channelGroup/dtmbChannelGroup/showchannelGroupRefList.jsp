@@ -52,6 +52,7 @@
 
 <title>频道组管理</title>
 <script>	
+alert(123);
 function query() {
 
         if(validateSpecialCharacterAfter(document.getElementById("channelQuery.channelName").value)){
@@ -119,7 +120,7 @@ function query() {
 
 </head>
 <body class="mainBody">
- <form action="<%=path %>/page/channelGroup/showChannelGroupRefList.do" method="post" id="queryForm">
+ <form action="<%=path %>/page/channelGroup/dtmbChannelGroup/showChannelGroupRefList.do" method="post" id="queryForm">
 
 
          <s:set name="page" value="%{channelListPage}" />

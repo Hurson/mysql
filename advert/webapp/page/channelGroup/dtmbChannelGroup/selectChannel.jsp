@@ -34,7 +34,7 @@ var selectData="";
     	if(selectData==""){
     	    selectData=getCheckValue("serviceIds");
     	}
-    <%-- 	//document.forms[0].action="<%=path %>/dchannelGroup/saveChannelGroupRef.do"; --%>
+    	document.forms[0].action="<%=path %>/dchannelGroup/saveChannelGroupRef.do";
     	document.forms[0].submit(); 
     	parent.refreshChannelList();
         parent.easyDialog.close();

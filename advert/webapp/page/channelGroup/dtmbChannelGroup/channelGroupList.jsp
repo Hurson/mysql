@@ -51,7 +51,6 @@
 
 <title>频道组管理</title>
 <script>
-
 function query() {
 
        if(validateSpecialCharacterAfter(document.getElementById("channelGroupQuery.name").value)){
@@ -105,7 +104,7 @@ function modifyChannelGroupRef(channelGroupId,channelGroupType) {
 
 </head>
 <body class="mainBody">
- <form action="<%=path %>/page/channelGroup/queryChannelGroupList.do" method="post" id="queryForm">
+ <form action="<%=path %>/page/dchannelGroup/queryChannelGroupList.do" method="post" id="queryForm">
  <!-- 
   <input type="hidden" id="pageno" name="contractPage.pageNo" value="${contractPage.pageNo}"/>
  <input type="hidden" id="pagesize" name="contractPage.pageSize" value="${contractPage.pageSize}"/>
