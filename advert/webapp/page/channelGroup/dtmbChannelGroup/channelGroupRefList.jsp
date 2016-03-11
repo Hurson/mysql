@@ -169,7 +169,17 @@ function query() {
                                 ${channelInfo.channelName}
                             </td>
                             <td>
-                                ${channelInfo.channelType}
+                            	<c:choose>
+											<c:when test="${channelInfo.channelType == '1'}">
+												视频直播类业务
+											</c:when>
+											<c:when test="${channelInfo.channelType == '2'}">
+												音频直播类业务
+											</c:when>
+											<c:otherwise>
+												无
+											</c:otherwise>
+							   </c:choose>
                             </td>
                             <td>
                                ${channelInfo.serviceId} 

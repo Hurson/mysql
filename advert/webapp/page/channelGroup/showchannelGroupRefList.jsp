@@ -51,7 +51,8 @@
 <script type='text/javascript' src='<%=path %>/js/new/avit.js'></script>
 
 <title>频道组管理</title>
-<script>	
+<script>
+alert(456);	
 function query() {
 
         if(validateSpecialCharacterAfter(document.getElementById("channelQuery.channelName").value)){

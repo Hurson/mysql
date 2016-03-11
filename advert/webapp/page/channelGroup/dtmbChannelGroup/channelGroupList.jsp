@@ -81,7 +81,14 @@ function query() {
     }
 
 function modifyChannelGroupRef(channelGroupId,channelGroupType) {
-    window.location.href="<%=path %>/dchannelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId+"&channelGroupType="+channelGroupType; 
+	var type;
+	if(channelGroupType=="视频直播类业务"){
+		type = 1;
+	}else if(channelGroupType=="音频直播类业务"){
+		type = 2;
+	}
+	
+    window.location.href="<%=path %>/dchannelGroup/queryChannelGroupRefList.do?channelGroupId="+channelGroupId+"&channelGroupType="+type; 
     }
     
     function modifyData(channelGroupId,channelGroupType) {
